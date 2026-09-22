@@ -167,6 +167,56 @@ h1 span{color:var(--red-2)}
 .podium li:nth-child(2){box-shadow:inset 0 0 0 2px #c0c6cf}
 .podium li:nth-child(3){box-shadow:inset 0 0 0 2px #b8783a}
 .podium li span:last-child{font-family:Anton,sans-serif;font-weight:400;font-size:20px}
+
+/* multiplayer, votes, awards */
+.codebig{font-family:Anton,sans-serif;font-size:clamp(52px,15vw,88px);letter-spacing:.18em;color:var(--gold);line-height:1;padding-left:.18em}
+.qr{background:#fff;padding:10px;border-radius:12px;display:inline-block;line-height:0;min-height:0}
+.qr:empty{display:none}
+.qr svg,.qr img{width:200px;height:200px;display:block}
+.lobby{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.lobby .panel.center{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.lobby .players .hint{flex:0 0 auto}
+.roomchip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:var(--ground);color:var(--muted);font-size:12px;font-weight:800;letter-spacing:.06em;white-space:nowrap}
+.roomchip b{color:var(--gold);font-family:Anton,sans-serif;font-weight:400;font-size:14px;letter-spacing:.12em}
+.dot{width:9px;height:9px;border-radius:50%;background:#5a6478;display:inline-block;flex:0 0 auto}
+.dot.on{background:var(--green);box-shadow:0 0 0 3px rgba(63,166,107,.25)}
+.stage.voting .turn,.stage.voting .deck,.stage.voting .actions{display:none}
+.votebox{width:100%;max-width:560px;background:var(--ground);border-radius:14px;padding:22px 18px;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;animation:pop .4s both}
+.votebox h3{font-family:Anton,sans-serif;font-weight:400;letter-spacing:.05em;text-transform:uppercase;margin:0;color:var(--gold);font-size:26px}
+.votebox .bar{width:100%;height:12px;border-radius:999px;background:var(--ground-2);overflow:hidden}
+.votebox .bar i{display:block;height:100%;background:var(--gold);transition:width .3s}
+.awards{width:100%;display:flex;flex-direction:column;gap:8px}
+.award{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:var(--ground-2);text-align:left;animation:pop .45s both}
+.award .em{font-size:32px;line-height:1}
+.award .t{font-family:Anton,sans-serif;letter-spacing:.04em;text-transform:uppercase;color:var(--gold)}
+.award .d{font-size:13px;color:var(--muted)}
+.award .w{margin-left:auto;font-family:Anton,sans-serif;font-size:18px;white-space:nowrap;text-align:right}
+.award .w small{color:var(--green);font-size:14px;margin-left:6px;font-family:Nunito,sans-serif;font-weight:800}
+.podium li.win{background:var(--gold);color:#14223f}
+#revealBtn{font-size:18px;padding:16px 22px;animation:blink 1.6s ease-in-out infinite}
+.joinbox{display:flex;flex-direction:column;gap:14px}
+.joinbox input{width:100%;padding:12px 14px;border-radius:10px;border:2px solid transparent;background:var(--ground);color:var(--ink);font:inherit;font-size:16px}
+.joinbox input.code{text-align:center;font-family:Anton,sans-serif;font-size:44px;letter-spacing:.3em;padding:8px 0 8px .3em;color:var(--gold);text-transform:uppercase}
+.phone{max-width:480px;margin:0 auto;display:flex;flex-direction:column;gap:14px;text-align:center}
+.phone .who{font-family:Anton,sans-serif;font-size:clamp(26px,7.5vw,38px);text-transform:uppercase;letter-spacing:.03em;line-height:1.1}
+.phone .who b{color:var(--gold);font-weight:400}
+.phone .minicard{background:var(--card);color:var(--card-ink);border-radius:14px;padding:12px;box-shadow:var(--shadow)}
+.phone .minicard .frame{border:2px solid var(--red);outline:1px solid var(--red);outline-offset:3px;border-radius:6px;padding:14px 12px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.phone .minicard .pic{width:72px;height:80px;margin-bottom:2px}
+.phone .minicard .pic.sil{width:88px;height:88px}
+.phone .minicard .text{font-size:20px}
+.phtimer{justify-content:center;font-size:44px}
+.phact{flex-direction:column;width:100%}
+.phact .btn{width:100%;min-width:0;font-size:20px;padding:18px}
+.phdraw .tier{min-width:96px;flex:1}
+.ballot{display:flex;flex-direction:column;gap:8px}
+.ballot .btn{font-size:18px;padding:16px}
+.phone .players li.me{box-shadow:inset 0 0 0 2px var(--red-2)}
+.phone .players li.active.me{box-shadow:inset 0 0 0 2px var(--gold)}
+.phone-msg{display:flex;flex-direction:column;gap:12px;align-items:center;padding:30px 0}
+.phone .hint{margin:0}
+.rules input{font-size:16px}
+@media(max-width:700px){header h1,header .script{display:none}header{margin-bottom:6px}.deck{width:min(250px,64vw)}.topbar .btn{min-height:40px}}
 </style>
 </head>
 <body>
@@ -345,9 +395,11 @@ h1 span{color:var(--red-2)}
     <div class="deckart"><div class="ghost g1"></div><div class="ghost g2"></div><div class="top"><div class="frame"><svg viewBox="0 0 64 64"><use href="#i-mic"/></svg></div></div></div>
     <div class="title">Karaoke <span>Challenge</span></div>
     <div class="menu">
-      <button class="btn btn-red" id="homeStart">▶ Start game</button>
-      <button class="btn btn-ghost" id="homeSettings">⚙ Settings</button>
       <button class="btn btn-ghost" id="homeResume" hidden>↩ Resume game</button>
+      <button class="btn btn-red" id="homeStart">▶ Start game</button>
+      <button class="btn btn-gold" id="homeHost">📱 Host with phones</button>
+      <button class="btn btn-ghost" id="homeJoin">📲 Join with your phone</button>
+      <button class="btn btn-ghost" id="homeSettings">⚙ Settings</button>
     </div>
     <div class="stat" id="homeStat"></div>
   </div>
@@ -384,8 +436,10 @@ h1 span{color:var(--red-2)}
       <label>Bonus per hand-over <input type="number" id="bonus" value="10" min="0"></label>
       <label>Rounds (0 = endless) <input type="number" id="rounds" value="3" min="0"></label>
       <label>Timer seconds (0 = off) <input type="number" id="timerSec" value="90" min="0"></label>
+      <label>Best-performance bonus per round (phones, 0 = off) <input type="number" id="mvpBonus" value="20" min="0"></label>
+      <label>Secret award bonus at the end (0 = off) <input type="number" id="awardBonus" value="15" min="0"></label>
     </div>
-    <p class="hint">Passing costs points. The card moves to the next player and is worth more. A round is over when every player has started one card.</p>
+    <p class="hint">Passing costs points. The card moves to the next player and is worth more. A round is over when every player has started one card. With phones, everyone votes for the best performance after each round. At the end, three secret awards (most hard cards, most passes…) are revealed one by one.</p>
   </section>
   <section class="panel">
     <h2>Sound</h2>
@@ -414,11 +468,16 @@ h1 span{color:var(--red-2)}
 <!-- FINAL SCREEN -->
 <div class="screen" id="scrFinal">
   <div class="final">
-    <div class="trophy">🏆</div>
-    <div class="round">Game over</div>
-    <div class="winner" id="winnerName"></div>
-    <div class="pts" id="winnerPts"></div>
-    <ol class="podium" id="podium"></ol>
+    <div class="trophy" id="finalTrophy">🏆</div>
+    <div class="round" id="finalTitle">Game over</div>
+    <div id="finalPre" hidden></div>
+    <div class="awards" id="awards"></div>
+    <button class="btn btn-gold" id="revealBtn" hidden>🎁 Reveal secret award</button>
+    <div id="finalWin" style="display:contents">
+      <div class="winner" id="winnerName"></div>
+      <div class="pts" id="winnerPts"></div>
+      <ol class="podium" id="podium"></ol>
+    </div>
     <div class="actions">
       <button class="btn btn-gold" id="againBtn">Play again (same players)</button>
       <button class="btn btn-ghost" id="setupBtn">Home</button>
@@ -426,11 +485,51 @@ h1 span{color:var(--red-2)}
   </div>
 </div>
 
+<!-- LOBBY SCREEN (host with phones) -->
+<div class="screen lobby" id="scrLobby">
+  <div class="topbar" style="justify-content:space-between"><button class="btn btn-ghost" id="lobbyBack">← Close room</button><span class="round">Host with phones</span><button class="btn btn-ghost" id="lobbySettings">⚙ Settings</button></div>
+  <section class="panel center">
+    <div class="round">Room code</div>
+    <div class="codebig" id="lobbyCode">····</div>
+    <div class="qr" id="lobbyQr"></div>
+    <div class="hint">Scan the code, or open <b id="lobbyUrl" style="color:var(--ink);word-break:break-all"></b> and type the code.</div>
+    <div class="hint" id="lobbyStatus">Connecting…</div>
+  </section>
+  <section class="panel">
+    <h2>Players</h2>
+    <ul class="players" id="lobbyPlayers"></ul>
+    <form class="addrow" id="lobbyAdd" style="margin-top:10px"><input id="lobbyName" placeholder="Add a player without phone" maxlength="18" autocomplete="off"><button class="btn btn-ghost" type="submit">+</button></form>
+    <p class="hint">Players without a phone are controlled from this screen. Turn order = join order.</p>
+  </section>
+  <div class="start"><button class="btn btn-red" id="lobbyStart" disabled>Waiting for players…</button></div>
+</div>
+
+<!-- JOIN SCREEN (phone) -->
+<div class="screen setup" id="scrJoin">
+  <div class="topbar"><button class="btn btn-ghost" id="joinBack">← Back</button><span class="round">Join a game</span></div>
+  <section class="panel joinbox">
+    <h2 style="margin:0">Room code</h2>
+    <input id="joinCode" class="code" maxlength="4" placeholder="ABCD" autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="text">
+    <h2 style="margin:6px 0 0">Your name</h2>
+    <input id="joinName" maxlength="18" placeholder="Your name" autocomplete="off">
+    <p class="hint">Ask the host for the 4-letter code on their screen. Keep this page open during the game – it becomes your controller.</p>
+  </section>
+  <div class="start"><button class="btn btn-red" id="joinBtn">Join</button></div>
+</div>
+
+<!-- PHONE CONTROLLER SCREEN -->
+<div class="screen" id="scrPhone">
+  <div class="phone">
+    <div class="topbar" style="justify-content:space-between"><span class="roomchip"><span class="dot" id="phDot"></span><span id="phRoom"></span></span><span class="round" id="phRound"></span><button class="btn btn-ghost" id="phLeave">Leave</button></div>
+    <div id="phBody"></div>
+  </div>
+</div>
+
 <!-- GAME SCREEN -->
 <div class="screen grid" id="scrGame">
   <section class="panel stage" id="stage">
     <div class="topbar" style="width:100%;justify-content:space-between">
-      <span class="round" id="roundLbl"></span>
+      <span style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="round" id="roundLbl"></span><span class="roomchip" id="roomChip" hidden><span class="dot on"></span>Room <b id="roomCode"></b> · <span id="roomN">0</span> 📱</span></span>
       <div class="timer" id="timer" hidden><span id="timerVal">1:30</span><button class="btn btn-ghost" id="timerBtn">▶</button></div>
       <span style="display:flex;gap:6px"><button class="btn btn-ghost" id="homeBtn">⌂</button><button class="btn btn-ghost" id="muteBtn2" title="Mute">🔊</button><button class="btn btn-ghost" id="endBtn">End game</button></span>
     </div>
@@ -439,6 +538,7 @@ h1 span{color:var(--red-2)}
       <div class="sub" id="sub">At least 2 players, then draw a card.</div>
     </div>
 
+    <div class="votebox" id="votebox" hidden></div>
     <div class="deck">
       <div class="ghost g1"></div><div class="ghost g2"></div>
       <div class="card" id="card">
@@ -498,7 +598,7 @@ const CHALLENGES = [
  ["Classics","Sing a song in a language you don't speak",3],
  ["Classics","Sing the song that played at your last birthday",2],
  ["Classics","Sing a song your parents love",2],
- ["Classics","Sing a Eurovision song",2],
+ ["Classics","Sing an Eurovision song",2],
  ["Classics","Sing a boyband anthem",1],
  ["Classics","Sing a song that makes you cry",2],
  ["Classics","Sing a song you'd never admit to liking",2],
@@ -518,7 +618,7 @@ const CHALLENGES = [
  ["2000s","Sing a song that was your MySpace profile song",2],
  ["2000s","Sing a 2000s song that was on every school disco playlist",1],
  ["2000s","Sing a Kelly Clarkson breakup anthem at full power",2],
- ["2000s","Sing a Usher song with the R&B runs",3],
+ ["2000s","Sing an Usher song with the R&B runs",3],
  ["2000s","Sing a Green Day song from the 2000s",1],
  ["2000s","Sing a Lady Gaga song from 2008–2009 with a dramatic pose",2],
  ["2000s","Sing a 2000s ringtone song – the one everyone had on their flip phone",2],
@@ -718,15 +818,15 @@ const CHALLENGES = [
  ["Word Hunt","The group picks a word – sing a song that contains it",3],
  // Artists
  ["Artists","Sing a Justin Bieber song",1],
- ["Artists","Sing a Ariana Grande song",2],
+ ["Artists","Sing an Ariana Grande song",2],
  ["Artists","Sing a Taylor Swift song",1],
- ["Artists","Sing a Ed Sheeran song",1],
- ["Artists","Sing a Adele song",2],
+ ["Artists","Sing an Ed Sheeran song",1],
+ ["Artists","Sing an Adele song",2],
  ["Artists","Sing a Billie Eilish song",1],
  ["Artists","Sing a The Weeknd song",2],
  ["Artists","Sing a Dua Lipa song",1],
  ["Artists","Sing a Harry Styles song",1],
- ["Artists","Sing a Olivia Rodrigo song",1],
+ ["Artists","Sing an Olivia Rodrigo song",1],
  ["Artists","Sing a Bruno Mars song",2],
  ["Artists","Sing a Lady Gaga song",2],
  ["Artists","Sing a Rihanna song",1],
@@ -744,11 +844,11 @@ const CHALLENGES = [
  ["Artists","Sing a Queen song",2],
  ["Artists","Sing a Coldplay song",1],
  ["Artists","Sing a Maroon 5 song",1],
- ["Artists","Sing a Imagine Dragons song",1],
- ["Artists","Sing a Elton John song",2],
+ ["Artists","Sing an Imagine Dragons song",1],
+ ["Artists","Sing an Elton John song",2],
  ["Artists","Sing a Bon Jovi song",1],
  ["Artists","Sing a Nirvana song",2],
- ["Artists","Sing a Oasis song",1],
+ ["Artists","Sing an Oasis song",1],
  ["Artists","Sing a Selena Gomez song",1],
  ["Artists","Sing a Doja Cat song",2],
  ["Artists","Sing a Charli XCX song",2],
@@ -756,13 +856,13 @@ const CHALLENGES = [
  ["Artists","Sing a Benson Boone song",2],
  ["Artists","Sing a Teddy Swims song",2],
  ["Artists","Sing a Lewis Capaldi song",2],
- ["Artists","Sing a Alicia Keys song",2],
+ ["Artists","Sing an Alicia Keys song",2],
  ["Artists","Sing a Céline Dion song",3],
- ["Artists","Sing a Elvis Presley song",2],
+ ["Artists","Sing an Elvis Presley song",2],
  ["Artists","Sing a The Beatles song",1],
  ["Artists","Sing a Bob Marley song",1],
  ["Artists","Sing a Spice Girls song",1],
- ["Artists","Sing a One Direction song",1],
+ ["Artists","Sing an One Direction song",1],
  ["Artists","Sing a song by the artist the person on your left names",2],
  ["Artists","Sing a song by an artist who has the same first letter as your name",2],
  ["Artists","Sing a song by an artist who is no longer alive",2],
@@ -902,26 +1002,26 @@ const CHALLENGES = [
  // Voice
  ["Voice","Sing the whole song as an opera singer",2],
  ["Voice","Sing like a robot",2],
- ["Voice","Sing the song in slow motion",2],
- ["Voice","Sing the song at double speed",3],
+ ["Voice","Pick any song and sing it in slow motion",2],
+ ["Voice","Pick any song and sing it at double speed",3],
  ["Voice","Sing one octave higher than you actually can",2],
  ["Voice","Sing any song in your deepest voice",2],
- ["Voice","Sing the song as if you're absolutely furious",2],
+ ["Voice","Pick any song and sing it as if you're absolutely furious",2],
  ["Voice","Whisper the entire song",1],
  ["Voice","Sing like a news anchor reading the lyrics",2],
  ["Voice","Sing with your mouth full (water, chips, whatever)",3],
- ["Voice","Sing the song in a baby voice",2],
- ["Voice","Sing the song in an accent of your choice",2],
+ ["Voice","Pick any song and sing it in a baby voice",2],
+ ["Voice","Pick any song and sing it in an accent of your choice",2],
  ["Voice","Sing a rap song as a slow ballad",3],
  ["Voice","Sing a ballad as death metal",3],
  ["Voice","Sing like your teacher or your boss",2],
  // Performance
  ["Performance","Sing with your eyes closed while dancing",1],
- ["Performance","Sing on one leg until the song ends",2],
+ ["Performance","Pick any song and sing it standing on one leg until it ends",2],
  ["Performance","Sing while walking backwards around the room",2],
  ["Performance","Sing while doing push-ups",3],
  ["Performance","Impersonate the original artist as closely as you can",2],
- ["Performance","Sing the song as a musical number with huge gestures",2],
+ ["Performance","Pick any song and perform it as a musical number with huge gestures",2],
  ["Performance","Rock concert mode – air guitar is mandatory",1],
  ["Performance","Sing with sunglasses on and full rockstar attitude",1],
  ["Performance","Sing without moving – only your face is allowed to act",2],
@@ -951,17 +1051,17 @@ const CHALLENGES = [
  ["Chaos","The group picks your song – no refusing",2],
  ["Chaos","Sing without saying 'I', 'you' or 'love' – replace them with 'cheese'",3],
  ["Chaos","Make up new lyrics: the song must be about the person on your right",3],
- ["Chaos","Sing the song without looking at the lyrics",2],
+ ["Chaos","Pick any song and sing it without looking at the lyrics",2],
  ["Chaos","Sing while the group tries to distract you with questions",2],
  ["Chaos","Sing whatever is on the radio right now – turn it on",2],
  ["Chaos","Sing the chorus of a song you only half know",2],
  ["Chaos","Sing the last song you played on your phone",2],
- ["Chaos","Replace every 'baby' in the song with a player's name",2],
- ["Chaos","Turn the song into a commercial for an object in the room",3],
+ ["Chaos","Pick a song with 'baby' in it and replace every 'baby' with a player's name",2],
+ ["Chaos","Pick any song and turn it into a commercial for an object in the room",3],
  ["Chaos","Sing a song picked by the youngest person in the room",2],
  ["Chaos","Every time someone claps, you must change tempo",3],
  ["Chaos","Sing nursery rhyme lyrics to the melody of a pop hit",3],
- ["Chaos","Perform the song as a flight attendant's safety announcement",3],
+ ["Chaos","Pick any song and perform it as a flight attendant's safety announcement",3],
  // Trivia
  ["Trivia","Sing the opening lines of 3 different songs – the group must name all 3 artists",2],
  ["Trivia","Sing a song released the year you were born",2],
@@ -1025,11 +1125,14 @@ const BASE = {1:10,2:20,3:30};
 
 // ---- State ----
 const KEY="karaoke-challenge-en-v1";
-let S = {players:[], turn:0, cats:[...CATS], penalty:5, bonus:10, current:null, disabledArtists:[], hiddenArtists:[], log:[], used:[], customArtists:[], rounds:3, timerSec:90, round:1, started:0, screen:"home", volume:0.7, muted:false};
+let S = {players:[], turn:0, cats:[...CATS], penalty:5, bonus:10, current:null, disabledArtists:[], hiddenArtists:[], log:[], used:[], customArtists:[], rounds:3, timerSec:90, round:1, started:0, screen:"home", volume:0.7, muted:false, mode:"local", room:null, inGame:false, mvpBonus:20, awardBonus:15, vote:null, awards:null, awardsDone:false, timer:null, timerBuzzed:false, catsV:0, back:null, lastVote:null};
 let draft=null;
-try{const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.players){S={...S,...s};for(const c of ["2000s","K-Pop","Disney","High School Musical","Word Hunt","Artists","Genres","Years","Mood"])if(!S.cats.includes(c))S.cats.push(c);if(!Array.isArray(S.disabledArtists))S.disabledArtists=[];if(!Array.isArray(S.hiddenArtists))S.hiddenArtists=[];if(!S.customArtists)S.customArtists=[];if(S.rounds==null)S.rounds=3;if(S.volume==null)S.volume=.7;if(S.muted==null)S.muted=false;if(S.timerSec==null)S.timerSec=90;if(!S.round)S.round=1;if(!S.started)S.started=0;if(!["home","settings","players","game","final"].includes(S.screen))S.screen="home";if(S.screen==="setup")S.screen="home";}}catch(e){}
+try{const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.players){S={...S,...s};if(!S.catsV){for(const c of ["2000s","K-Pop","Disney","High School Musical","Word Hunt","Artists","Genres","Years","Mood"])if(!S.cats.includes(c))S.cats.push(c);}if(!Array.isArray(S.disabledArtists))S.disabledArtists=[];if(!Array.isArray(S.hiddenArtists))S.hiddenArtists=[];if(!S.customArtists)S.customArtists=[];if(S.rounds==null)S.rounds=3;if(S.volume==null)S.volume=.7;if(S.muted==null)S.muted=false;if(S.timerSec==null)S.timerSec=90;if(!S.round)S.round=1;if(!S.started)S.started=0;if(!["home","settings","players","game","final","lobby","join","phone"].includes(S.screen))S.screen="home";if(S.screen==="setup")S.screen="home";}}catch(e){}
+S.catsV=2;S.players.forEach(p=>{p.stats=p.stats||{}});if(!S.mode)S.mode="local";if(S.mvpBonus==null)S.mvpBonus=20;if(S.awardBonus==null)S.awardBonus=15;
+if(S.inGame==null)S.inGame=!!(S.current||(S.players.length>=2&&(S.round>1||S.started>0||S.players.some(p=>p.score!==0))));
+if(S.screen==="lobby"&&!(S.mode==="host"&&S.room))S.screen="home";
 const $=id=>document.getElementById(id);
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}netPush()}
 function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2200)}
 function fmt(n){return (n>0?"+":"")+n}
 
@@ -1115,8 +1218,8 @@ function pic(cat,text){
 }
 function calSvg(label){const fs=label.length>4?15:19;return `<svg viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="14" width="52" height="40" rx="4"/><path d="M6 26h52M20 8v10M44 8v10"/></g><text x="32" y="47" text-anchor="middle" font-family="Anton,Impact,sans-serif" font-size="${fs}" letter-spacing="1" fill="currentColor">${esc(label)}</text></svg>`}
 function tagSvg(id,label){const n=label.length;const fs=n>11?8:n>8?10:n>5?12:13;return `<svg viewBox="0 0 64 74"><use href="#${id}" x="8" y="0" width="48" height="48"/><rect x="4" y="54" width="56" height="18" rx="9" fill="currentColor"/><text x="32" y="67" text-anchor="middle" font-family="Anton,Impact,sans-serif" font-size="${fs}" letter-spacing=".8" fill="#f7f3ea">${esc(label.toUpperCase())}</text></svg>`}
-function setPic(cat,text){const p=pic(cat,text);const el=$("pic");el.className="pic"+(p.sil?" sil":"");
-  const holder=S.current&&S.players[S.current.holder];
+function setPic(cat,text,el,holderName){const p=pic(cat,text);el=el||$("pic");el.className="pic"+(p.sil?" sil":"");
+  const holder=holderName!=null?{name:holderName}:(S.current&&S.players[S.current.holder]);
   const yr=/\b((?:19|20)\d{2})\b/.exec(text), dec=/\b(\d0s|2000s)\b/i.exec(text), word=/'([A-Z][A-Z ]{1,14})'/.exec(text);
   let html=null;
   if(p.sil){html=null}
@@ -1145,9 +1248,8 @@ function sfxDraw(){try{sfx.draw()}catch(e){}}
 // ---- Render ----
 function render(){
   $("penalty").value=S.penalty; $("bonus").value=S.bonus; $("rounds").value=S.rounds; $("timerSec").value=S.timerSec;
-  document.querySelector("header").style.display=S.screen==="home"?"none":"";
-  document.querySelectorAll(".screen").forEach(el=>el.classList.toggle("on",el.id==={home:"scrHome",settings:"scrSettings",players:"scrPlayers",game:"scrGame",final:"scrFinal"}[S.screen]));
-  $("homeResume").hidden=!(S.current&&S.players.length>=2);
+  document.querySelector("header").style.display=["home","phone"].includes(S.screen)?"none":"";
+  document.querySelectorAll(".screen").forEach(el=>el.classList.toggle("on",el.id==={home:"scrHome",settings:"scrSettings",players:"scrPlayers",game:"scrGame",final:"scrFinal",lobby:"scrLobby",join:"scrJoin",phone:"scrPhone"}[S.screen]));
   const allD=deck(), nD=allD.filter(c=>S.cats.includes(c[0])).length;
   $("homeStat").textContent=`${nD} cards · ${S.cats.length} categories`;
   $("homeStart").disabled=S.cats.length===0;
@@ -1159,7 +1261,7 @@ function render(){
     [...$("names").querySelectorAll("input")].forEach((inp,i)=>inp.classList.toggle("bad",!!names[i]&&lower.indexOf(lower[i])!==i));
     $("startBtn").disabled=names.some(n=>!n)||new Set(lower).size!==lower.length;
   }
-  $("roundLbl").textContent=S.rounds?`Round ${S.round} of ${S.rounds}`:`Round ${S.round}`;
+  {const rl=S.rounds?Math.min(S.round,S.rounds):S.round;$("roundLbl").textContent=S.rounds?`Round ${rl} of ${S.rounds}`:`Round ${rl}`;}
   $("timer").hidden=!S.timerSec||!S.current;
   $("volume").value=Math.round(S.volume*100);$("volVal").textContent=Math.round(S.volume*100)+"%";
   $("muteBtn").textContent=S.muted?"🔇 Muted":"🔊 Sound on";$("muteBtn2").textContent=S.muted?"🔇":"🔊";$("muteBtn2").title=S.muted?"Unmute":"Mute";
@@ -1170,7 +1272,7 @@ function render(){
     <span class="pts ${p.score<0?'neg':''}">${p.score}</span>
     <button class="x" data-del="${p.i}" title="Remove player">×</button></li>`).join("")
     || `<li style="color:var(--muted)">No players yet</li>`;
-  $("scoreboard").innerHTML=sorted.map((p,r)=>`<li class="${p.i===(S.current?S.current.holder:S.turn)?'active':''}"><span class="rank">${r+1}</span><span class="name">${esc(p.name)}</span><span class="pts ${p.score<0?'neg':''}">${p.score}</span></li>`).join("");
+  $("scoreboard").innerHTML=sorted.map((p,r)=>`<li class="${p.i===(S.current?S.current.holder:S.turn)?'active':''}"><span class="rank">${r+1}</span>${p.pid?`<span class="dot${online(p)?' on':''}" title="phone"></span>`:''}<span class="name">${esc(p.name)}</span><span class="pts ${p.score<0?'neg':''}">${p.score}</span></li>`).join("");
   // filters
   const all=deck(), cnt={};all.forEach(c=>cnt[c[0]]=(cnt[c[0]]||0)+1);
   $("filters").innerHTML=CATS.map(c=>`<button class="chip ${S.cats.includes(c)?'on':''}" data-cat="${c}">${c}<b>${cnt[c]||0}</b></button>`).join("");
@@ -1205,6 +1307,7 @@ function render(){
     $("card").classList.remove("flipped");
   }
   $("log").innerHTML=S.log.slice(0,8).map(l=>`<li>${l}</li>`).join("");
+  renderExtra();
 }
 function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
 
@@ -1219,7 +1322,7 @@ $("filters").onclick=e=>{const b=e.target.closest("[data-cat]");if(!b)return;con
 $("artistsToggle").onclick=()=>{$("artistsCfg").hidden=!$("artistsCfg").hidden;if(!$("artistsCfg").hidden)$("artistIn").focus()};
 $("artistForm").onsubmit=e=>{e.preventDefault();const a=$("artistIn").value.trim();if(!a)return;
   if(S.customArtists.some(x=>x.toLowerCase()===a.toLowerCase())){toast("Already added");return}
-  S.customArtists.push(a);$("artistIn").value="";save();render();toast(`Added: Sing a ${a} song`)};
+  S.customArtists.push(a);$("artistIn").value="";save();render();toast(`Added: Sing ${art(a)} ${a} song`)};
 $("artistList").onclick=e=>{const b=e.target.closest("[data-art]");if(!b)return;S.customArtists.splice(+b.dataset.art,1);save();render()};
 $("builtinList").onclick=e=>{const d=e.target.closest("[data-del]");if(d){e.stopPropagation();const a=d.dataset.del;if(!artistHidden(a))S.hiddenArtists.push(a);save();render();toast(`${a} removed – restore anytime`);return}
   const b=e.target.closest("[data-builtin]");if(!b)return;const a=b.dataset.builtin;
@@ -1233,25 +1336,11 @@ $("volume").onchange=e=>{save();render();sfx.tick()};
 $("rounds").onchange=e=>{S.rounds=Math.max(0,+e.target.value||0);save();render()};
 $("timerSec").onchange=e=>{S.timerSec=Math.max(0,+e.target.value||0);save();render()};
 $("catsAll").onclick=()=>{S.cats=S.cats.length===CATS.length?[]:[...CATS];save();render()};
-$("homeStart").onclick=()=>{draft=null;S.screen="players";save();render();$("names").querySelector("input")?.focus()};
-$("homeSettings").onclick=()=>{S.screen="settings";save();render()};
-$("homeResume").onclick=()=>{S.screen="game";save();render();startTimer()};
-$("settingsBack").onclick=$("settingsDone").onclick=()=>{S.screen="home";save();render()};
 $("playersBack").onclick=()=>{S.screen="home";save();render()};
 $("cntMinus").onclick=()=>{if(draft.length>2){draft.pop();render()}};
 $("cntPlus").onclick=()=>{if(draft.length<12){draft.push("");render();[...$("names").querySelectorAll("input")].pop().focus()}};
 $("names").oninput=e=>{const i=+e.target.dataset.n;if(!isNaN(i)){draft[i]=e.target.value;render()}};
 $("names").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();const inputs=[...$("names").querySelectorAll("input")];const i=inputs.indexOf(e.target);if(i<inputs.length-1)inputs[i+1].focus();else if(!$("startBtn").disabled)$("startBtn").click()}};
-$("startBtn").onclick=()=>{if(draft)S.players=draft.map(n=>({name:n.trim(),score:0}));S.screen="game";S.round=1;S.started=0;S.turn=0;S.current=null;S.log=[];S.used=[];S.players.forEach(p=>p.score=0);save();render();sfx.start()};
-$("endBtn").onclick=()=>{if(!confirm("End the game now and show the results?"))return;stopTimer();finish()};
-$("homeBtn").onclick=()=>{stopTimer();S.screen="home";save();render()};
-$("againBtn").onclick=()=>{$("startBtn").onclick()};
-$("setupBtn").onclick=()=>{S.screen="home";S.current=null;save();render()};
-function finish(){S.current=null;S.screen="final";$("card").classList.remove("flipped");
-  const sorted=[...S.players].sort((a,b)=>b.score-a.score);const w=sorted[0];
-  $("winnerName").textContent=w?w.name:"—";$("winnerPts").textContent=w?`${w.score} points`:"";
-  $("podium").innerHTML=sorted.map(p=>`<li><span>${esc(p.name)}</span><span>${p.score}</span></li>`).join("");
-  save();render();sfx.win()}
 $("penalty").onchange=e=>{S.penalty=Math.max(0,+e.target.value||0);save()};
 $("bonus").onchange=e=>{S.bonus=Math.max(0,+e.target.value||0);save()};
 
@@ -1259,58 +1348,7 @@ const ART_RE=/^Sing an? (.+?) song$/;
 function builtinArtists(){return CHALLENGES.filter(c=>c[0]==="Artists").map(c=>(c[1].match(ART_RE)||[])[1]).filter(Boolean).sort((a,b)=>a.localeCompare(b))}
 function artistOff(a){a=a.toLowerCase();return S.disabledArtists.some(x=>x.toLowerCase()===a)||artistHidden(a)}
 function artistHidden(a){a=a.toLowerCase();return S.hiddenArtists.some(x=>x.toLowerCase()===a)}
-function deck(){return CHALLENGES.filter(c=>{if(c[0]!=="Artists")return true;const m=c[1].match(ART_RE);return !m||!artistOff(m[1])}).concat(S.customArtists.map(a=>["Artists","Sing a "+a+" song",2]))}
-$("draw").onclick=e=>{
-  const b=e.target.closest("[data-diff]");if(!b||b.disabled)return;const want=+b.dataset.diff;
-  const all=deck().filter(c=>S.cats.includes(c[0])&&(!want||c[2]===want));
-  if(!all.length)return;
-  let pool=all.filter(c=>!S.used.includes(c[1]));
-  if(!pool.length){S.used=S.used.filter(t=>!all.some(c=>c[1]===t));pool=all;toast(want?`${BASE[want]}-point cards reshuffled`:"Deck reshuffled")}
-  const [cat,text,diff]=pool[Math.floor(Math.random()*pool.length)];S.used.push(text);
-  S.current={cat,text,raw:text,pick:null,diff,worth:BASE[diff],holder:S.turn,starter:S.turn,chain:0,passedBy:[]};
-  save();render();sfx.draw();startTimer();
-};
-$("done").onclick=()=>{
-  const p=S.players[S.current.holder];p.score+=S.current.worth;
-  S.log.unshift(`<b>${esc(p.name)}</b> hat's gemacht: <span class="up">${fmt(S.current.worth)}</span> – ${esc(S.current.text)}`);
-  toast(`${p.name} +${S.current.worth} points!`);sfx.ok();
-  endCard();
-};
-$("pass").onclick=()=>{
-  const p=S.players[S.current.holder];p.score-=S.penalty;
-  S.log.unshift(`<b>${esc(p.name)}</b> passed: <span class="down">${fmt(-S.penalty)}</span>`);
-  sfx.pass();S.current.passedBy.push(S.current.holder);
-  S.current.chain++;
-  if(S.current.chain>=S.players.length){
-    S.log.unshift(`Everyone passed – card discarded: ${esc(S.current.text)}`);
-    toast("Everyone passed – card gone");endCard();return;
-  }
-  S.current.holder=(S.current.holder+1)%S.players.length;S.current.pick=null;
-  S.current.worth+=S.bonus;startTimer();
-  toast(`Over to ${S.players[S.current.holder].name} – now worth ${S.current.worth} points!`);
-  save();render();
-};
-function endCard(){
-  stopTimer();
-  S.turn=(S.current.starter+1)%S.players.length;
-  S.current=null;S.started++;
-  if(S.started>=S.players.length){S.started=0;S.round++;
-    if(S.rounds&&S.round>S.rounds){setTimeout(finish,400);save();$("card").classList.remove("flipped");return}
-    toast(`Round ${S.round}`)}
-  save();
-  $("card").classList.remove("flipped");
-  setTimeout(render,350);
-}
-if($("resetScores"))$("resetScores").onclick=()=>{if(!confirm("Reset all scores to 0?"))return;S.players.forEach(p=>p.score=0);S.log=[];S.current=null;S.turn=0;S.used=[];save();render()};
-if($("resetAll"))$("resetAll").onclick=()=>{if(!confirm("New game? All players and scores will be deleted."))return;S={players:[],turn:0,cats:[...CATS],penalty:S.penalty,bonus:S.bonus,current:null,log:[],used:[],customArtists:S.customArtists,hiddenArtists:S.hiddenArtists,disabledArtists:S.disabledArtists};save();render()};
-
-// ---- Timer ----
-let tLeft=0,tId=null;
-function fmtT(n){return Math.floor(n/60)+":"+String(n%60).padStart(2,"0")}
-function paintTimer(){$("timerVal").textContent=fmtT(tLeft);$("timer").classList.toggle("warn",tLeft<=10&&tLeft>0);$("timerBtn").textContent=tId?"⏸":"▶"}
-function startTimer(){stopTimer();if(!S.timerSec)return;tLeft=S.timerSec;paintTimer();tId=setInterval(()=>{tLeft--;paintTimer();if(tLeft===10)sfx.tick();if(tLeft<=0){stopTimer();sfx.buzz();toast("Time's up! Done or pass?")}},1000);paintTimer()}
-function stopTimer(){if(tId)clearInterval(tId);tId=null;paintTimer()}
-$("timerBtn").onclick=()=>{if(tId){stopTimer()}else if(tLeft>0){tId=setInterval(()=>{tLeft--;paintTimer();if(tLeft<=0){stopTimer();sfx.buzz();toast("Time's up!")}},1000);paintTimer()}else startTimer()};
+function deck(){return CHALLENGES.filter(c=>{if(c[0]!=="Artists")return true;const m=c[1].match(ART_RE);return !m||!artistOff(m[1])}).concat(S.customArtists.map(a=>["Artists","Sing "+art(a)+" "+a+" song",2]))}
 
 // ---- Sounds (Web Audio, no files needed) ----
 const sfx=(()=>{let ctx;const ac=()=>{try{ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();if(ctx.state==="suspended")ctx.resume();return ctx}catch(e){return null}};
@@ -1325,12 +1363,290 @@ const sfx=(()=>{let ctx;const ac=()=>{try{ctx=ctx||new (window.AudioContext||win
     win(){[523,659,784,1047,784,1047,1319].forEach((f,i)=>tone(f,i*.12,.25,"triangle"))},
   }})();
 
+// ===== Multiplayer rooms (phones as controllers), round votes, secret awards, deadline timer =====
+const NET_LOCAL=/^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+const DB_URL=NET_LOCAL?"http://127.0.0.1:3130":"__DB_URL__";
+const NET_OK=!/__DB_URL__/.test(DB_URL);
+const TS={".sv":"timestamp"};
+const db={
+  url(p){return DB_URL.replace(/\/$/,"")+"/"+p+".json"},
+  async get(p){const r=await fetch(this.url(p),{cache:"no-store"});if(!r.ok)throw new Error("db "+r.status);return r.json()},
+  put(p,v){return fetch(this.url(p)+"?print=silent",{method:"PUT",body:JSON.stringify(v)})},
+  patch(p,v){return fetch(this.url(p)+"?print=silent",{method:"PATCH",body:JSON.stringify(v)})},
+  post(p,v){return fetch(this.url(p)+"?print=silent",{method:"POST",body:JSON.stringify(v)})},
+  del(p){return fetch(this.url(p)+"?print=silent",{method:"DELETE"})},
+  stream(p,onData,onErr){const es=new EventSource(this.url(p));let cur=null;
+    const segs=path=>path.split("/").filter(Boolean);
+    const setAt=(sg,val)=>{if(!sg.length){cur=val;return}if(cur==null||typeof cur!=="object")cur={};let n=cur;for(let i=0;i<sg.length-1;i++){const s=sg[i];if(n[s]==null||typeof n[s]!=="object")n[s]={};n=n[s]}const l=sg[sg.length-1];if(val==null)delete n[l];else n[l]=val};
+    es.addEventListener("put",e=>{const {path,data}=JSON.parse(e.data);setAt(segs(path),data);onData(cur,path)});
+    es.addEventListener("patch",e=>{const {path,data}=JSON.parse(e.data);const base=segs(path);Object.keys(data||{}).forEach(k=>setAt([...base,...segs(k)],data[k]));onData(cur,path)});
+    es.onerror=()=>{if(onErr)onErr(es.readyState)};
+    return es}
+};
+const CODE_CHARS="ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+function genCode(){let c="";for(let i=0;i<4;i++)c+=CODE_CHARS[Math.floor(Math.random()*CODE_CHARS.length)];return c}
+function online(p){return !!p.pid&&!!p.seen&&Date.now()-p.seen<120e3}
+function stat(p,k,n=1){p.stats=p.stats||{};p.stats[k]=(p.stats[k]||0)+n}
+function art(a){return /^[aeiou]/i.test(a)?"an":"a"}
+function joinUrl(code){return location.origin+location.pathname.replace(/index\.html$/,"")+"?join="+code}
+function fmtT(n){return Math.floor(n/60)+":"+String(n%60).padStart(2,"0")}
+
+// ---- Timer (deadline based: survives reload, Home/Resume keeps the remaining time) ----
+let tId=null,tLast=-1;
+function tLeftNow(){const t=S.timer;if(!t)return 0;if(t.left!=null)return t.left;return Math.max(0,Math.ceil((t.end-Date.now())/1000))}
+function paintTimer(){const l=tLeftNow();$("timerVal").textContent=fmtT(l);$("timer").classList.toggle("warn",!!S.timer&&l<=10);$("timerBtn").textContent=S.timer&&S.timer.end?"⏸":"▶"}
+function stopTick(){if(tId)clearInterval(tId);tId=null}
+function runTick(){stopTick();tLast=-1;paintTimer();tId=setInterval(()=>{const l=tLeftNow();if(l===tLast)return;tLast=l;paintTimer();if(l===10)sfx.tick();
+  if(l<=0){stopTick();if(!S.timerBuzzed){S.timerBuzzed=true;sfx.buzz();toast("Time's up! Done or pass?");save()}}},250)}
+function startTimer(){stopTick();S.timerBuzzed=false;if(!S.timerSec){S.timer=null;paintTimer();return}S.timer={end:Date.now()+S.timerSec*1000};runTick()}
+function pauseTimer(){if(S.timer&&S.timer.end)S.timer={left:tLeftNow()};stopTick();paintTimer()}
+function resumeTimer(){stopTick();if(!S.timer){paintTimer();return}if(S.timer.left!=null)S.timer={end:Date.now()+S.timer.left*1000};runTick()}
+function stopTimer(){stopTick();S.timer=null;paintTimer()}
+$("timerBtn").onclick=()=>{if(!S.timer)startTimer();else if(S.timer.end)pauseTimer();else resumeTimer();save()};
+
+// ---- Game core: draw / done / pass / rounds ----
+function tiersAvail(){const av=deck().filter(c=>S.cats.includes(c[0]));return [1,2,3,0].filter(d=>av.some(c=>d===0||c[2]===d))}
+function drawCard(want){if(S.current||S.vote||S.players.length<2)return false;
+  const all=deck().filter(c=>S.cats.includes(c[0])&&(!want||c[2]===want));if(!all.length)return false;
+  let pool=all.filter(c=>!S.used.includes(c[1]));
+  if(!pool.length){S.used=S.used.filter(t=>!all.some(c=>c[1]===t));pool=all;toast(want?`${BASE[want]}-point cards reshuffled`:"Deck reshuffled")}
+  const [cat,text,diff]=pool[Math.floor(Math.random()*pool.length)];S.used.push(text);
+  S.current={cat,text,raw:text,pick:null,diff,worth:BASE[diff],holder:S.turn,starter:S.turn,chain:0,passedBy:[]};resolveText();
+  startTimer();save();render();sfx.draw();return true}
+function doDone(){const c=S.current;if(!c)return;const p=S.players[c.holder];p.score+=c.worth;
+  stat(p,"done");stat(p,"pts",c.worth);if(c.diff===3)stat(p,"hard");if(c.chain>0)stat(p,"rescue");
+  if(c.pick!=null&&needsPartner(c.raw||c.text))stat(p,"duet");if(S.timer&&S.timerSec&&tLeftNow()>S.timerSec/2)stat(p,"fast");
+  S.log.unshift(`<b>${esc(p.name)}</b> did it: <span class="up">${fmt(c.worth)}</span> – ${esc(c.text)}`);
+  toast(`${p.name} +${c.worth} points!`);sfx.ok();endCard()}
+function doPass(){const c=S.current;if(!c)return;const p=S.players[c.holder];p.score-=S.penalty;stat(p,"pass");
+  S.log.unshift(`<b>${esc(p.name)}</b> passed: <span class="down">${fmt(-S.penalty)}</span>`);sfx.pass();c.passedBy.push(c.holder);c.chain++;
+  if(c.chain>=S.players.length){S.log.unshift(`Everyone passed – card discarded: ${esc(c.text)}`);toast("Everyone passed – card gone");endCard();return}
+  c.holder=(c.holder+1)%S.players.length;c.pick=null;c.worth+=S.bonus;resolveText();startTimer();
+  toast(`Over to ${S.players[c.holder].name} – now worth ${c.worth} points!`);save();render()}
+$("draw").onclick=e=>{const b=e.target.closest("[data-diff]");if(!b||b.disabled)return;drawCard(+b.dataset.diff)};
+$("done").onclick=doDone;$("pass").onclick=doPass;
+function endCard(){stopTimer();const c=S.current;S.current=null;$("done").hidden=$("pass").hidden=true;$("card").classList.remove("flipped");
+  S.turn=(c.starter+1)%S.players.length;S.started++;
+  if(S.started>=S.players.length){S.started=0;
+    if(S.mode==="host"&&S.mvpBonus>0&&voters().length>=2){openVote();return}
+    nextRound();return}
+  save();setTimeout(render,350)}
+function nextRound(){S.round++;
+  if(S.rounds&&S.round>S.rounds){S.round=S.rounds;save();setTimeout(finish,400);return}
+  toast(`Round ${S.round}`);S.players.forEach(p=>p.rs=p.score);save();setTimeout(render,350)}
+function startGame(){S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0});S.screen="game";S.round=1;S.started=0;S.turn=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=false;S.lastVote=null;S.log=[];S.used=[];S.inGame=true;S.timer=null;S.timerBuzzed=false;save();render();sfx.start()}
+
+// ---- Round vote: best performance (phones) ----
+function voters(){return S.players.map((p,i)=>i).filter(i=>online(S.players[i]))}
+function openVote(){S.vote={round:S.round,votes:{}};save();render();sfx.start();if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});toast(`Round ${S.round} done – vote on your phones!`)}
+function tallyVote(){const v=S.vote,t={};Object.values(v.votes).forEach(n=>{n=String(n).toLowerCase();t[n]=(t[n]||0)+1});
+  let max=0;Object.values(t).forEach(n=>max=Math.max(max,n));const win=S.players.map((p,i)=>i).filter(i=>max>0&&t[S.players[i].name.toLowerCase()]===max);return{t,max,win}}
+function closeVote(){const v=S.vote;if(!v)return;const {t,max,win}=tallyVote();
+  S.players.forEach(p=>{const n=t[p.name.toLowerCase()];if(n)stat(p,"mvp",n)});
+  if(win.length){win.forEach(i=>{const p=S.players[i];p.score+=S.mvpBonus;stat(p,"mvpWins")});const names=win.map(i=>S.players[i].name).join(" & ");
+    S.log.unshift(`🏅 Best performance in round ${v.round}: <b>${esc(names)}</b> <span class="up">+${S.mvpBonus}</span>`);toast(`🏅 ${names} +${S.mvpBonus} – best performance!`);sfx.win()}
+  else toast("No votes came in – no bonus this round");
+  S.lastVote={round:v.round,win};S.vote=null;if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});nextRound()}
+function checkVote(){const v=S.vote;if(!v)return;const need=voters().filter(i=>S.players[i].pid);if(need.length&&need.every(i=>v.votes[S.players[i].pid]!=null))closeVote()}
+
+// ---- Secret end-of-game awards (Mario Party style) ----
+const AWARDS=[
+ {id:"hard",em:"🎯",t:"Daredevil",d:"Most 30-point cards done"},
+ {id:"done",em:"🎤",t:"Iron voice",d:"Most cards sung"},
+ {id:"rescue",em:"🦸",t:"Rescue hero",d:"Most passed-on cards rescued"},
+ {id:"pass",em:"🐔",t:"Chicken of the night",d:"Most passes – yes, that pays too"},
+ {id:"duet",em:"💞",t:"Duet darling",d:"Most partner cards"},
+ {id:"fast",em:"⚡",t:"Quick draw",d:"Most cards done with half the timer left"},
+ {id:"mvp",em:"👏",t:"Crowd favourite",d:"Most best-performance votes"},
+ {id:"comeback",em:"📈",t:"Comeback kid",d:"Biggest gain in the final round"}];
+function awardVal(p,id){if(id==="comeback")return p.rs==null?0:p.score-p.rs;return (p.stats||{})[id]||0}
+function pickAwards(){const cand=AWARDS.map(a=>{const vals=S.players.map(p=>awardVal(p,a.id));const max=Math.max(...vals);if(!(max>0))return null;
+    const winners=vals.map((v,i)=>v===max?i:-1).filter(i=>i>=0);if(winners.length>=S.players.length)return null;return{id:a.id,em:a.em,t:a.t,d:a.d,winners,val:max,revealed:false}}).filter(Boolean);
+  for(let i=cand.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cand[i],cand[j]]=[cand[j],cand[i]]}return cand.slice(0,3)}
+function finish(){stopTimer();S.current=null;S.vote=null;S.inGame=false;S.screen="final";$("card").classList.remove("flipped");
+  S.awards=S.awardBonus>0&&S.players.length>=2?pickAwards():[];S.awardsDone=!S.awards.length;save();render();if(S.awardsDone)sfx.win();else sfx.start()}
+function revealAward(){const a=(S.awards||[]).find(x=>!x.revealed);if(!a)return;a.revealed=true;a.winners.forEach(i=>{S.players[i].score+=S.awardBonus});sfx.ok();
+  if(!S.awards.some(x=>!x.revealed)){S.awardsDone=true;setTimeout(()=>sfx.win(),700)}save();render()}
+$("revealBtn").onclick=revealAward;
+function renderFinal(){const done=!!S.awardsDone;const sorted=[...S.players].sort((a,b)=>b.score-a.score);const top=sorted.length?sorted[0].score:0;const wins=sorted.filter(p=>p.score===top);
+  $("awards").innerHTML=(S.awards||[]).filter(a=>a.revealed).map(a=>`<div class="award"><span class="em">${a.em}</span><span><div class="t">${a.t}</div><div class="d">${a.d}</div></span><span class="w">${a.winners.map(i=>esc(S.players[i].name)).join(" &amp; ")}<small>+${S.awardBonus}</small></span></div>`).join("");
+  const left=(S.awards||[]).filter(a=>!a.revealed).length;$("revealBtn").hidden=!left;$("revealBtn").textContent=`🎁 Reveal secret award (${left} left)`;
+  $("finalWin").hidden=!done;$("finalTitle").textContent=done?"Game over":"Secret awards";$("finalTrophy").textContent=done?"🏆":"🎁";$("finalPre").hidden=done;
+  $("finalPre").innerHTML=`<div class="hint" style="margin:0">Standings so far: ${sorted.map(p=>`${esc(p.name)} ${p.score}`).join(" · ")}</div>`;
+  $("winnerName").textContent=wins.map(p=>p.name).join(" & ");$("winnerPts").textContent=`${top} points${wins.length>1?" – it's a tie!":""}`;
+  $("podium").innerHTML=sorted.map(p=>`<li class="${p.score===top?'win':''}"><span>${esc(p.name)}</span><span>${p.score}</span></li>`).join("")}
+
+// ---- Host: room lifecycle ----
+let HS=null,pushT=null;const doneActions=new Set();
+function netPush(){if(S.mode!=="host"||!S.room)return;clearTimeout(pushT);pushT=setTimeout(()=>{const code=S.room&&S.room.code;if(!code)return;db.patch(`rooms/${code}`,{state:snapshot(),updatedAt:TS}).catch(()=>{})},60)}
+function snapshot(){const phase=S.screen==="final"?"final":S.vote?"vote":S.inGame?"game":"lobby";const c=S.current;
+  return{phase,round:S.round,rounds:S.rounds,turn:S.turn,
+    players:S.players.map(p=>({name:p.name,score:p.score,pid:p.pid||null,on:online(p)})),
+    current:c?{cat:c.cat,text:c.text,worth:c.worth,chain:c.chain,holder:c.holder,pick:c.pick==null?null:c.pick,partner:c.pick!=null&&needsPartner(c.raw||c.text)}:null,
+    timer:S.timer||null,timerSec:S.timerSec,penalty:S.penalty,bonus:S.bonus,mvpBonus:S.mvpBonus,awardBonus:S.awardBonus,tiers:tiersAvail(),
+    vote:S.vote?{round:S.vote.round,voted:Object.keys(S.vote.votes),total:voters().filter(i=>S.players[i].pid).length}:null,
+    lastVote:S.lastVote?{round:S.lastVote.round,win:S.lastVote.win.map(i=>S.players[i]&&S.players[i].name).filter(Boolean)}:null,
+    awards:(S.awards||[]).filter(a=>a.revealed).map(a=>({em:a.em,t:a.t,d:a.d,winners:a.winners.map(i=>S.players[i].name)})),
+    awardsLeft:(S.awards||[]).filter(a=>!a.revealed).length,awardsDone:!!S.awardsDone,log:S.log.slice(0,4),at:Date.now()}}
+function netStatusText(){if(!S.room)return"";const n=S.players.filter(online).length;return `${n} phone${n===1?"":"s"} connected`}
+async function hostCreate(){if(!NET_OK){toast("Phones aren't set up on this copy yet");return}
+  toast("Opening a room…");let code=genCode();
+  try{for(let i=0;i<6;i++){const st=await db.get(`rooms/${code}/updatedAt`);if(!st||Date.now()-st>8*3600e3)break;code=genCode()}}catch(e){toast("Can't reach the server – check your internet");return}
+  if(S.room)hostClose(true);
+  S.mode="host";S.room={code,key:Math.random().toString(36).slice(2)};S.players=[];S.inGame=false;S.current=null;S.vote=null;S.awards=null;S.awardsDone=false;S.log=[];S.timer=null;S.screen="lobby";
+  try{await db.put(`rooms/${code}`,{hostKey:S.room.key,createdAt:TS,updatedAt:TS,state:snapshot()})}catch(e){toast("Couldn't create the room");S.room=null;S.mode="local";S.screen="home";save();render();return}
+  save();render();hostConnect();sfx.start()}
+function hostConnect(){if(HS){HS.close();HS=null}if(!S.room)return;const code=S.room.code;
+  HS=db.stream(`rooms/${code}`,(room,path)=>{if(!S.room||S.room.code!==code)return;room=room||{};
+    if(path==="/"||path.startsWith("/members"))syncMembers(room.members||{});
+    if(path==="/"||path.startsWith("/actions"))handleActions(room.actions||{});
+    if(path==="/"||path.startsWith("/votes"))syncVotes(room.votes||{});
+    $("lobbyStatus").textContent=netStatusText()},()=>{$("lobbyStatus").textContent="Reconnecting…"})}
+function hostClose(del){if(HS){HS.close();HS=null}const r=S.room;S.room=null;S.mode="local";S.vote=null;S.players.forEach(p=>{delete p.pid;delete p.seen});if(del&&r)db.del(`rooms/${r.code}`).catch(()=>{});save()}
+function uniqueName(n){let x=n,i=2;while(S.players.some(p=>p.name.toLowerCase()===x.toLowerCase()))x=n+" "+(i++);return x}
+function syncMembers(m){let changed=false,seenChanged=false;const seen=new Set();
+  for(const [pid,mem] of Object.entries(m)){if(!mem||!mem.name)continue;const name=String(mem.name).trim().slice(0,18);if(!name)continue;seen.add(pid);
+    let p=S.players.find(p=>p.pid===pid);
+    if(!p){p=S.players.find(p=>!p.pid&&p.name.toLowerCase()===name.toLowerCase())||S.players.find(p=>p.name.toLowerCase()===name.toLowerCase()&&!seen.has(p.pid)&&!m[p.pid]);if(p){p.pid=pid;changed=true}}
+    if(!p){if(S.players.length>=12)continue;p={name:uniqueName(name),score:0,stats:{},pid,rs:0};S.players.push(p);changed=true;if(S.inGame)toast(`${p.name} joined the game`);else sfx.tick()}
+    if(p.seen!==mem.seen){p.seen=mem.seen||Date.now();seenChanged=true}}
+  if(!S.inGame&&S.screen!=="final"){const n=S.players.length;S.players=S.players.filter(p=>!p.pid||seen.has(p.pid));if(S.players.length!==n)changed=true}
+  if(changed){save();render()}else if(seenChanged)render()}
+function handleActions(acts){for(const k of Object.keys(acts).sort()){if(doneActions.has(k))continue;doneActions.add(k);const a=acts[k]||{};
+  db.del(`rooms/${S.room.code}/actions/${k}`).catch(()=>{});
+  const i=S.players.findIndex(p=>p.pid===a.pid);if(i<0)continue;
+  if(a.type==="draw"){if(S.inGame&&S.screen!=="final"&&!S.current&&!S.vote&&S.turn===i)drawCard(+a.diff||0)}
+  else if(a.type==="done"){if(S.current&&S.current.holder===i)doDone()}
+  else if(a.type==="pass"){if(S.current&&S.current.holder===i)doPass()}}}
+function syncVotes(v){if(!S.vote)return;const votes={};
+  for(const [pid,target] of Object.entries(v)){const voter=S.players.find(p=>p.pid===pid);if(!voter||typeof target!=="string")continue;
+    if(voter.name.toLowerCase()===target.toLowerCase())continue;if(!S.players.some(p=>p.name.toLowerCase()===target.toLowerCase()))continue;votes[pid]=target}
+  S.vote.votes=votes;save();render();checkVote()}
+let qrLib=null;
+function renderQr(){const el=$("lobbyQr");if(!S.room)return;const url=joinUrl(S.room.code);if(el.dataset.url===url)return;
+  const draw=()=>{try{const q=qrcode(0,"M");q.addData(url);q.make();el.innerHTML=q.createSvgTag({cellSize:4,margin:0,scalable:true});el.dataset.url=url}catch(e){el.innerHTML=""}};
+  if(window.qrcode){draw();return}if(qrLib)return;
+  qrLib=document.createElement("script");qrLib.src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js";qrLib.onload=draw;qrLib.onerror=()=>{el.innerHTML="";qrLib=null};document.head.appendChild(qrLib)}
+$("lobbyAdd").onsubmit=e=>{e.preventDefault();const n=$("lobbyName").value.trim().slice(0,18);if(!n)return;if(S.players.length>=12){toast("Max 12 players");return}S.players.push({name:uniqueName(n),score:0,stats:{},rs:0});$("lobbyName").value="";save();render()};
+$("lobbyPlayers").onclick=e=>{const b=e.target.closest("[data-kick]");if(!b)return;const i=+b.dataset.kick,p=S.players[i];if(!p)return;if(p.pid&&S.room)db.del(`rooms/${S.room.code}/members/${p.pid}`).catch(()=>{});S.players.splice(i,1);save();render()};
+$("lobbyStart").onclick=()=>{if(S.players.length<2)return;startGame()};
+$("lobbyBack").onclick=()=>{if(!confirm("Close this room? Phones will be disconnected."))return;hostClose(true);S.screen="home";save();render()};
+$("lobbySettings").onclick=()=>{S.back="lobby";S.screen="settings";save();render()};
+
+// ---- Phone: controller client ----
+let PH=null,PHt=null,TAPPED=false;addEventListener("pointerdown",()=>{TAPPED=true},{once:true,passive:true});
+function phoneSave(){try{if(PH)localStorage.setItem("kc-phone",JSON.stringify({code:PH.code,pid:PH.pid,name:PH.name}));else localStorage.removeItem("kc-phone")}catch(e){}}
+async function joinRoom(code,name){code=(code||"").toUpperCase().replace(/[^A-Z0-9]/g,"");name=(name||"").trim().slice(0,18);
+  if(code.length!==4){toast("Enter the 4-letter room code");$("joinCode").focus();return}if(!name){toast("Enter your name");$("joinName").focus();return}
+  if(!NET_OK){toast("Phones aren't set up on this copy yet");return}
+  $("joinBtn").disabled=true;
+  try{const st=await db.get(`rooms/${code}/state`);if(!st){toast("No room with that code");$("joinBtn").disabled=false;return}
+    let old=null;try{old=JSON.parse(localStorage.getItem("kc-phone"))}catch(e){}
+    const pid=(old&&old.code===code&&old.pid)||("p"+Math.random().toString(36).slice(2,10));
+    await db.put(`rooms/${code}/members/${pid}`,{name,at:TS,seen:TS});
+    try{localStorage.setItem("kc-name",name)}catch(e){}
+    if(PH&&PH.es)PH.es.close();PH={code,pid,name,state:st};phoneSave();S.screen="phone";save();render();phoneConnect();sfx.start()}
+  catch(e){toast("Can't reach the server – check your internet")}
+  $("joinBtn").disabled=false}
+function phoneConnect(){if(!PH)return;if(PH.es)PH.es.close();clearInterval(PH.hb);
+  PH.es=db.stream(`rooms/${PH.code}/state`,st=>{PH.state=st;PH.err=false;renderPhone()},()=>{PH.err=true;renderPhone()});
+  PH.hb=setInterval(()=>{db.patch(`rooms/${PH.code}/members/${PH.pid}`,{seen:TS}).catch(()=>{})},30000);
+  clearInterval(PHt);PHt=setInterval(()=>{if(S.screen==="phone"&&PH&&PH.state&&PH.state.timer)paintPhoneTimer()},500)}
+function phoneLeave(){if(PH){if(PH.es)PH.es.close();clearInterval(PH.hb);db.del(`rooms/${PH.code}/members/${PH.pid}`).catch(()=>{})}PH=null;phoneSave();clearInterval(PHt);S.screen="home";save();render()}
+function phoneAct(type,extra){if(!PH)return;db.post(`rooms/${PH.code}/actions`,Object.assign({pid:PH.pid,type,at:TS},extra||{})).catch(()=>toast("Not sent – check your connection"))}
+function phoneVote(name){if(!PH)return;PH.myVote={round:PH.state&&PH.state.vote?PH.state.vote.round:0,name};db.put(`rooms/${PH.code}/votes/${PH.pid}`,name).catch(()=>toast("Not sent – check your connection"));renderPhone()}
+function phoneTimerLeft(st){const t=st&&st.timer;if(!t)return null;if(t.left!=null)return t.left;return Math.max(0,Math.ceil((t.end-Date.now())/1000))}
+function paintPhoneTimer(){const el=$("phTimer");if(!el||!PH||!PH.state)return;const l=phoneTimerLeft(PH.state);if(l==null){el.hidden=true;return}el.hidden=false;el.textContent=fmtT(l);el.classList.toggle("warn",l<=10)}
+function renderPhone(){if(S.screen!=="phone"||!PH)return;const st=PH.state;const body=$("phBody");
+  $("phRoom").textContent="Room "+PH.code;$("phDot").className="dot"+(st&&!PH.err?" on":"");
+  if(st===null){$("phRound").textContent="";body.innerHTML=`<div class="phone-msg"><div class="who">Room closed</div><p class="hint">The host ended the session.</p><button class="btn btn-gold" data-act="leave">Back to start</button></div>`;return}
+  if(!st){body.innerHTML=`<div class="phone-msg"><div class="who">Connecting…</div></div>`;return}
+  const players=st.players||[];const meI=players.findIndex(p=>p.pid===PH.pid);const me=players[meI];
+  $("phRound").textContent=(st.phase==="game"||st.phase==="vote")?(st.rounds?`Round ${st.round} of ${st.rounds}`:`Round ${st.round}`):"";
+  const c=st.current;const holder=c?players[c.holder]:players[st.turn];const mine=meI>=0&&(c?c.holder===meI:st.turn===meI);
+  const board=`<ul class="players phboard">${players.map((p,i)=>({...p,i})).sort((a,b)=>b.score-a.score).map((p,r)=>`<li class="${st.phase==="game"&&p.i===(c?c.holder:st.turn)?'active':''}${p.pid===PH.pid?' me':''}"><span class="rank">${r+1}</span>${p.pid?`<span class="dot${p.on?' on':''}"></span>`:''}<span class="name">${esc(p.name)}</span><span class="pts ${p.score<0?'neg':''}">${p.score}</span></li>`).join("")}</ul>`;
+  if(meI<0){body.innerHTML=`<div class="phone-msg"><div class="who">You're not in this game</div><p class="hint">The host may have removed you. Join again with your name.</p><button class="btn btn-gold" data-act="rejoin">Join again</button></div>${board}`;return}
+  let html="";
+  if(st.phase==="lobby"){html=`<div class="who">You're in, <b>${esc(me.name)}</b>!</div><p class="hint">Waiting for the host to start the game…</p>${board}`}
+  else if(st.phase==="vote"){const v=st.vote||{round:st.round,voted:[],total:0};const voted=(v.voted||[]).includes(PH.pid)||(PH.myVote&&PH.myVote.round===v.round);
+    if(voted)html=`<div class="who">Vote received 🗳️</div><p class="hint">${(v.voted||[]).length} of ${v.total} voted – waiting for the rest…</p>${board}`;
+    else html=`<div class="who">Round ${v.round} done!</div><p class="hint">Who had the best performance? Winner gets +${st.mvpBonus}.</p><div class="ballot">${players.filter(p=>p.pid!==PH.pid).map(p=>`<button class="btn btn-ghost" data-act="vote" data-name="${esc(p.name)}">${esc(p.name)}</button>`).join("")}</div>`}
+  else if(st.phase==="final"){const aw=(st.awards||[]).map(a=>`<div class="award"><span class="em">${a.em}</span><span><div class="t">${esc(a.t)}</div><div class="d">${esc(a.d)}</div></span><span class="w">${a.winners.map(esc).join(" &amp; ")}<small>+${st.awardBonus}</small></span></div>`).join("");
+    if(!st.awardsDone)html=`<div class="who">Secret awards 🎁</div><p class="hint">The host is revealing ${st.awardsLeft} more award${st.awardsLeft===1?"":"s"}…</p><div class="awards">${aw}</div>${board}`;
+    else{const top=Math.max(...players.map(p=>p.score));const wins=players.filter(p=>p.score===top).map(p=>p.name);
+      html=`<div style="font-size:56px;line-height:1">🏆</div><div class="who"><b>${wins.map(esc).join(" & ")}</b></div><p class="hint">${top} points${wins.length>1?" – it's a tie!":""}${wins.includes(me.name)?" – that's you! 🎉":""}</p><div class="awards">${aw}</div>${board}`}}
+  else{const timer=`<div class="timer phtimer" id="phTimer" hidden></div>`;
+    if(c){const card=`<div class="minicard"><div class="frame"><div class="pic" id="phPic"></div><div class="cat">${esc(c.cat)}</div><div class="text">${esc(c.text)}</div><div class="worth">Worth <b>${c.worth}</b></div>${c.pick!=null&&players[c.pick]?`<div class="picked">🎲 ${c.partner?"Partner:":"Player:"} <b>${esc(players[c.pick].name)}</b></div>`:""}${c.chain>0?`<div class="chain">Passed on ${c.chain}× – bonus!</div>`:""}</div></div>`;
+      if(mine)html=`<div class="who">Your turn, <b>${esc(me.name)}</b>!</div>${timer}${card}<div class="actions phact"><button class="btn btn-green" data-act="done">✓ Done it (+${c.worth})</button><button class="btn btn-ghost" data-act="pass">${c.chain>=players.length-1?"Pass (card is discarded)":"Pass ➜ hand over"}</button></div>`;
+      else html=`<div class="who"><b>${esc(holder?holder.name:"?")}</b> is up</div>${timer}${card}<p class="hint">${c.pick===meI?"You're the partner – get ready!":"Cheer them on! 🎉"}</p>${board}`}
+    else{if(mine)html=`<div class="who">Your turn, <b>${esc(me.name)}</b>!</div><p class="hint">Pick your points to draw a card.</p><div class="drawrow phdraw">${[[1,"10","easy"],[2,"20","medium"],[3,"30","hard"]].map(([d,n,l])=>`<button class="btn btn-red tier" data-act="draw" data-diff="${d}" ${(st.tiers||[]).includes(d)?"":"disabled"}><b>${n}</b><span>${l}</span></button>`).join("")}<button class="btn btn-ghost" data-act="draw" data-diff="0" ${(st.tiers||[]).includes(0)?"":"disabled"}>🎲 Random</button></div>${board}`;
+      else html=`<div class="who">Up next: <b>${esc(holder?holder.name:"?")}</b></div><p class="hint">Waiting for them to draw a card…</p>${st.lastVote&&st.lastVote.win.length&&st.lastVote.round===st.round-1?`<p class="hint">🏅 Best performance in round ${st.lastVote.round}: <b>${st.lastVote.win.map(esc).join(" &amp; ")}</b></p>`:""}${board}`}}
+  body.innerHTML=html;
+  if(c&&$("phPic"))setPic(c.cat,c.text,$("phPic"),holder&&holder.name);
+  paintPhoneTimer();
+  const key=st.phase+":"+(mine?"me":"")+":"+(c?c.text:"");if(PH.lastKey!==key){PH.lastKey=key;if(mine&&st.phase==="game"){sfx.draw();try{if(TAPPED&&navigator.vibrate)navigator.vibrate(mine&&!c?[40,60,40]:40)}catch(e){}}else if(st.phase==="vote"){sfx.tick()}}}
+$("joinBtn").onclick=()=>joinRoom($("joinCode").value,$("joinName").value);
+$("joinCode").oninput=e=>{e.target.value=e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,4);if(e.target.value.length===4)$("joinName").focus()};
+$("joinName").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();$("joinBtn").click()}};
+$("joinBack").onclick=()=>{S.screen="home";save();render()};
+$("phLeave").onclick=()=>{if(confirm("Leave this game?"))phoneLeave()};
+$("phBody").onclick=e=>{const b=e.target.closest("[data-act]");if(!b||b.disabled)return;const act=b.dataset.act;
+  if(act==="draw")phoneAct("draw",{diff:+b.dataset.diff});else if(act==="done")phoneAct("done");
+  else if(act==="pass"){if(confirm("Pass this card? That costs points."))phoneAct("pass");else return}
+  else if(act==="vote")phoneVote(b.dataset.name);else if(act==="rejoin"){S.screen="join";save();render();$("joinCode").value=PH?PH.code:"";$("joinName").value=PH?PH.name:""}else if(act==="leave")phoneLeave();
+  if(act==="draw"||act==="done"||act==="pass"){b.disabled=true;setTimeout(()=>{b.disabled=false},2000)}};
+
+// ---- Navigation, settings, render extras ----
+let WL=null;
+async function wakeLock(on){try{if(on&&!WL&&navigator.wakeLock&&document.visibilityState==="visible"){WL=await navigator.wakeLock.request("screen");WL.addEventListener("release",()=>{WL=null})}else if(!on&&WL){const w=WL;WL=null;await w.release()}}catch(e){WL=null}}
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")wakeLock(["game","lobby","phone"].includes(S.screen))});
+function renderExtra(){
+  const canResume=(S.inGame&&S.players.length>=2)||(S.mode==="host"&&S.room&&!S.inGame);
+  $("homeResume").hidden=!canResume;$("homeResume").textContent=S.inGame?"↩ Resume game":"↩ Back to lobby";
+  $("homeHost").disabled=!NET_OK;$("homeJoin").disabled=!NET_OK;if(!NET_OK)$("homeHost").title=$("homeJoin").title="Not set up on this copy yet";
+  $("mvpBonus").value=S.mvpBonus;$("awardBonus").value=S.awardBonus;
+  if(S.screen==="lobby"&&S.room){$("lobbyCode").textContent=S.room.code;$("lobbyUrl").textContent=joinUrl(S.room.code).replace(/^https?:\/\//,"");renderQr();$("lobbyStatus").textContent=netStatusText();
+    $("lobbyPlayers").innerHTML=S.players.map((p,i)=>`<li><span class="rank">${i+1}</span><span class="dot${online(p)?' on':''}" style="${p.pid?'':'visibility:hidden'}"></span><span class="name">${esc(p.name)}</span><span class="hint">${p.pid?(online(p)?"phone":"phone offline"):"no phone"}</span><button class="x" data-kick="${i}" title="Remove">×</button></li>`).join("")||`<li style="color:var(--muted)">Nobody yet – scan the QR code or type the room code</li>`;
+    $("lobbyStart").disabled=S.players.length<2;$("lobbyStart").textContent=S.players.length<2?"Waiting for players…":`Start game (${S.players.length} players)`}
+  const hosting=S.mode==="host"&&!!S.room;$("roomChip").hidden=!hosting;if(hosting){$("roomCode").textContent=S.room.code;$("roomN").textContent=S.players.filter(online).length}
+  $("stage").classList.toggle("voting",!!S.vote);
+  if(S.vote){const v=S.vote,need=voters().filter(i=>S.players[i].pid),n=Object.keys(v.votes).length,pct=need.length?Math.round(100*n/need.length):0;
+    $("votebox").hidden=false;$("votebox").innerHTML=`<h3>Round ${v.round} done!</h3><div>Vote on your phones: who had the best performance?</div><div class="bar"><i style="width:${pct}%"></i></div><div class="hint" style="margin:0">${n} of ${need.length} voted · winner gets +${S.mvpBonus}</div><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:6px"><button class="btn btn-gold" id="voteClose" ${n?"":"disabled"}>Close vote now</button><button class="btn btn-ghost" id="voteSkip">Skip vote</button></div>`;
+    $("voteClose").onclick=closeVote;$("voteSkip").onclick=()=>{S.vote=null;if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});nextRound()}}
+  else{$("votebox").hidden=true}
+  if(S.screen==="final")renderFinal();
+  if(S.screen==="phone")renderPhone();
+  if(S.screen==="game")paintTimer();
+  wakeLock(["game","lobby","phone"].includes(S.screen))}
+$("mvpBonus").onchange=e=>{S.mvpBonus=Math.max(0,+e.target.value||0);save()};
+$("awardBonus").onchange=e=>{S.awardBonus=Math.max(0,+e.target.value||0);save()};
+$("homeStart").onclick=()=>{if(S.inGame&&!confirm("A game is in progress. Start a new one? Scores will be reset."))return;draft=null;S.screen="players";save();render();$("names").querySelector("input")?.focus()};
+$("homeHost").onclick=()=>{if(S.inGame&&!confirm("A game is in progress. Open a new room? Scores will be reset."))return;hostCreate()};
+$("homeJoin").onclick=()=>{S.screen="join";save();render();try{$("joinName").value=localStorage.getItem("kc-name")||""}catch(e){}$("joinCode").focus()};
+$("homeSettings").onclick=()=>{S.back="home";S.screen="settings";save();render()};
+$("homeResume").onclick=()=>{if(S.inGame){S.screen="game";save();render();resumeTimer()}else if(S.mode==="host"&&S.room){S.screen="lobby";save();render()}};
+$("settingsBack").onclick=$("settingsDone").onclick=()=>{S.screen=S.back||"home";S.back=null;save();render()};
+$("startBtn").onclick=()=>{if(draft)S.players=draft.map(n=>({name:n.trim(),score:0,stats:{}}));if(S.room)hostClose(true);S.mode="local";startGame()};
+$("againBtn").onclick=()=>startGame();
+$("endBtn").onclick=()=>{if(!confirm("End the game now and show the results?"))return;finish()};
+$("homeBtn").onclick=()=>{pauseTimer();S.screen="home";save();render()};
+$("setupBtn").onclick=()=>{S.screen="home";S.current=null;if(S.mode==="host"&&S.room)hostClose(true);save();render()};
+function boot(){
+  try{const j=new URLSearchParams(location.search).get("join");if(j&&/^[A-Z0-9]{4}$/i.test(j)){history.replaceState(null,"",location.pathname);S.screen="join";S.back=null;
+    setTimeout(()=>{$("joinCode").value=j.toUpperCase();try{$("joinName").value=localStorage.getItem("kc-name")||""}catch(e){}$("joinName").focus()},0)}}catch(e){}
+  if(S.screen==="phone"){let p=null;try{p=JSON.parse(localStorage.getItem("kc-phone"))}catch(e){}
+    if(p&&p.code&&p.pid&&NET_OK){PH={code:p.code,pid:p.pid,name:p.name,state:undefined};phoneConnect();db.patch(`rooms/${p.code}/members/${p.pid}`,{name:p.name,seen:TS}).catch(()=>{})}else S.screen="home"}
+  if(S.mode==="host"&&S.room){if(NET_OK)hostConnect();else{S.room=null;S.mode="local"}}
+  if(S.timer&&!S.current)S.timer=null;
+  render();
+  if(S.current&&S.screen==="game")resumeTimer();
+}
+
 // ---- PWA ----
 if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}))}
 let deferredInstall=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e;const b=document.getElementById("installBtn");if(b){b.hidden=false;b.onclick=()=>{deferredInstall.prompt();deferredInstall=null;b.hidden=true}}});
 
-render();
-if(S.current&&S.screen==="game")startTimer();
+boot();
 </script>
 
 </body>
