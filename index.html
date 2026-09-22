@@ -236,6 +236,17 @@ h1 span{color:var(--red-2)}
 .ytframe iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .ytframe .msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-weight:700;padding:20px;text-align:center}
 .ytfoot{padding:8px 12px;font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.ytsearch{display:flex;gap:8px;padding:0 12px 10px}
+.ytsearch input{flex:1;padding:10px 12px;border-radius:10px;border:2px solid transparent;background:var(--ground);color:var(--ink);font:inherit;font-size:16px;min-width:0}
+.ytsearch .btn{padding:10px 14px;font-size:14px}
+.ytlist{display:flex;flex-direction:column;gap:6px;padding:0 12px 12px;max-height:min(60vh,520px);overflow:auto}
+.ytlist .msg{color:var(--muted);font-weight:700;padding:20px;text-align:center;line-height:1.5}
+.ytitem{display:flex;gap:12px;align-items:center;text-align:left;background:var(--ground);border-radius:12px;padding:8px;color:var(--ink);width:100%}
+.ytitem:hover{box-shadow:inset 0 0 0 2px var(--gold)}
+.ytitem img{width:120px;height:68px;object-fit:cover;border-radius:8px;flex:0 0 auto;background:#000}
+.ytitem span{display:flex;flex-direction:column;gap:3px;min-width:0}
+.ytitem .tt{font-weight:800;font-size:14px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ytitem .ch{font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -604,7 +615,7 @@ h1 span{color:var(--red-2)}
 </div>
 </div>
 <div class="toast" id="toast"></div>
-<div class="ytwrap" id="ytOverlay" hidden><div class="ytbox"><div class="ythead"><span class="t" id="ytTitle">Searching…</span><button class="btn btn-ghost" id="ytNext" type="button">Next ▸</button><a class="btn btn-ghost" id="ytOpen" target="_blank" rel="noopener">YouTube ↗</a><button class="btn btn-ghost" id="ytClose" type="button">✕</button></div><div class="ytframe" id="ytFrame"></div><div class="ytfoot"><span id="ytHint"></span><span>Tap ✕ or outside to close</span></div></div></div>
+<div class="ytwrap" id="ytOverlay" hidden><div class="ytbox"><div class="ythead"><button class="btn btn-ghost" id="ytBack" type="button" hidden>◂ List</button><span class="t" id="ytTitle">Searching…</span><button class="btn btn-ghost" id="ytNext" type="button" hidden>Next ▸</button><a class="btn btn-ghost" id="ytOpen" target="_blank" rel="noopener">YouTube ↗</a><button class="btn btn-ghost" id="ytClose" type="button">✕</button></div><form class="ytsearch" id="ytForm"><input id="ytQ" placeholder="Search for a song or artist…" autocomplete="off"><button class="btn btn-gold" type="submit">Search</button></form><div class="ytlist" id="ytList"></div><div class="ytframe" id="ytFrame" hidden></div><div class="ytfoot"><span id="ytHint"></span><span>Tap ✕ or outside to close</span></div></div></div>
 <div class="modal" id="modal" hidden><div class="box"><p id="modalMsg"></p><div class="row"><button class="btn btn-ghost" id="modalNo" type="button">Cancel</button><button class="btn btn-red" id="modalYes" type="button">Yes</button></div></div></div>
 
 <script>
@@ -1686,14 +1697,25 @@ function ytDecode(t){const d=document.createElement("textarea");d.innerHTML=t;re
 async function ytSearch(q){if(ytCache[q])return ytCache[q];
   const u="https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&videoEmbeddable=true&maxResults=6&q="+encodeURIComponent(q)+"&key="+YT_KEY;
   const r=await fetch(u);if(!r.ok)throw new Error("yt "+r.status);const j=await r.json();
-  const list=(j.items||[]).filter(it=>it.id&&it.id.videoId).map(it=>({id:it.id.videoId,title:ytDecode(it.snippet.title),ch:ytDecode(it.snippet.channelTitle)}));ytCache[q]=list;return list}
-async function ytOpen(q){$("ytOverlay").hidden=false;$("ytTitle").textContent="Searching YouTube…";$("ytFrame").innerHTML="";$("ytHint").textContent=q;$("ytNext").disabled=true;
+  const list=(j.items||[]).filter(it=>it.id&&it.id.videoId).map(it=>({id:it.id.videoId,title:ytDecode(it.snippet.title),ch:ytDecode(it.snippet.channelTitle),th:(it.snippet.thumbnails&&(it.snippet.thumbnails.medium||it.snippet.thumbnails.default)||{}).url||""}));ytCache[q]=list;return list}
+let ytReq=0;
+function ytPicks(){try{return JSON.parse(localStorage.getItem("kc-ytpicks"))||{}}catch(e){return{}}}
+function ytRemember(id){try{const p=ytPicks();p[id]=(p[id]||0)+1;const keys=Object.keys(p);if(keys.length>300)delete p[keys[0]];localStorage.setItem("kc-ytpicks",JSON.stringify(p))}catch(e){}}
+function ytMode(m){$("ytList").hidden=m!=="list";$("ytFrame").hidden=m!=="play";$("ytBack").hidden=m!=="play";$("ytNext").hidden=m!=="play";$("ytForm").hidden=m==="play";if(m!=="play")$("ytFrame").innerHTML=""}
+async function ytOpen(q){$("ytOverlay").hidden=false;ytMode("list");$("ytTitle").textContent="Searching YouTube…";$("ytList").innerHTML="";$("ytHint").textContent="";$("ytQ").value=q.replace(/ karaoke$/,"");
   $("ytOpen").href="https://www.youtube.com/results?search_query="+encodeURIComponent(q);
-  try{const list=await ytSearch(q);if($("ytOverlay").hidden)return;if(!list.length)throw new Error("empty");YT={list,i:0,q};ytShow()}
-  catch(e){YT={list:[],i:0,q};$("ytTitle").textContent="Search not available right now";$("ytFrame").innerHTML='<div class="msg">The daily search limit may be used up, or there is no connection.<br>Use "YouTube ↗" to search in the YouTube app instead.</div>'}}
-function ytShow(){const v=YT.list[YT.i];if(!v)return;$("ytTitle").textContent=v.title;$("ytHint").textContent=v.ch+" · video "+(YT.i+1)+" of "+YT.list.length+" · not the right one? tap Next";
+  const my=++ytReq;
+  try{const list=await ytSearch(q);if(my!==ytReq||$("ytOverlay").hidden)return;if(!list.length)throw new Error("empty");
+    const picks=ytPicks();YT={list:[...list].sort((a,b)=>(picks[b.id]||0)-(picks[a.id]||0)),i:0,q};ytRenderList()}
+  catch(e){YT={list:[],i:0,q};$("ytTitle").textContent="Search not available right now";$("ytList").innerHTML='<div class="msg">The daily search limit may be used up, or there is no connection.<br>Use "YouTube ↗" to search in the YouTube app instead.</div>'}}
+function ytRenderList(){$("ytTitle").textContent="Pick a video";$("ytHint").textContent=YT.list.length+" suggestions for “"+YT.q+"”";
+  const picks=ytPicks();$("ytList").innerHTML=YT.list.map((v,i)=>`<button class="ytitem" type="button" data-yt="${i}"><img src="${esc(v.th)}" alt="" loading="lazy"><span><span class="tt">${esc(v.title)}</span><span class="ch">${esc(v.ch)}${picks[v.id]?" · ⭐ played before":""}</span></span></button>`).join("")}
+function ytShow(){const v=YT.list[YT.i];if(!v)return;ytMode("play");$("ytTitle").textContent=v.title;$("ytHint").textContent=v.ch+" · video "+(YT.i+1)+" of "+YT.list.length;
   $("ytFrame").innerHTML='<iframe src="https://www.youtube.com/embed/'+v.id+'?autoplay=1&rel=0&playsinline=1" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';$("ytNext").disabled=YT.list.length<2}
 function ytClose(){$("ytOverlay").hidden=true;$("ytFrame").innerHTML=""}
+$("ytList").onclick=e=>{const b=e.target.closest("[data-yt]");if(!b)return;YT.i=+b.dataset.yt;ytRemember(YT.list[YT.i].id);ytShow()};
+$("ytBack").onclick=()=>{ytMode("list");ytRenderList()};
+$("ytForm").onsubmit=e=>{e.preventDefault();const q=$("ytQ").value.trim();if(!q)return;ytOpen(/karaoke/i.test(q)?q:q+" karaoke")};
 $("ytNext").onclick=()=>{if(!YT.list.length)return;YT.i=(YT.i+1)%YT.list.length;ytShow()};
 $("ytClose").onclick=ytClose;$("ytOverlay").onclick=e=>{if(e.target.id==="ytOverlay")ytClose()};
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("ytOverlay").hidden)ytClose()});
