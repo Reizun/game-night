@@ -248,6 +248,14 @@ h1 span{color:var(--red-2)}
 .ytitem span{display:flex;flex-direction:column;gap:3px;min-width:0}
 .ytitem .tt{font-weight:800;font-size:14px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .ytitem .ch{font-size:12px;color:var(--muted)}
+.sobox{width:100%;max-width:560px;background:var(--ground);border-radius:14px;padding:14px 16px;text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center}
+.sobox h3{font-family:Anton,sans-serif;font-weight:400;letter-spacing:.05em;text-transform:uppercase;margin:0;color:var(--gold);font-size:20px}
+.sobox .vs{font-family:Anton,sans-serif;font-size:clamp(24px,5vw,34px);letter-spacing:.03em;text-transform:uppercase}
+.sobox .vs b{color:var(--gold);font-weight:400}
+.sobox .row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.sobox .bar{width:100%;height:10px;border-radius:999px;background:var(--ground-2);overflow:hidden}
+.sobox .bar i{display:block;height:100%;background:var(--gold);transition:width .3s}
+.phone .sobox{max-width:none}
 </style>
 </head>
 <body>
@@ -467,10 +475,11 @@ h1 span{color:var(--red-2)}
       <label>Bonus per hand-over <input type="number" id="bonus" value="10" min="0"></label>
       <label>Rounds (0 = endless) <input type="number" id="rounds" value="3" min="0"></label>
       <label>Decision timer seconds (0 = off) <input type="number" id="timerSec" value="15" min="0"></label>
+      <label>Microphones available <input type="number" id="mics" value="1" min="1" max="8"></label>
       <label>Best-performance bonus per round (phones, 0 = off) <input type="number" id="mvpBonus" value="20" min="0"></label>
       <label>Secret award bonus at the end (0 = off) <input type="number" id="awardBonus" value="15" min="0"></label>
     </div>
-    <p class="hint">Passing costs points. The card moves to the next player and is worth more. After drawing you have the decision timer to accept or pass – when it runs out you are in. The tier is a bet: failing a 10-point card costs nothing, a 20-point card −10, a 30-point card −15. A round is over when every player has started one card. With phones, everyone votes for the best performance after each round. At the end, three secret awards (most hard cards, most passes…) are revealed one by one.</p>
+    <p class="hint">Passing costs points. The card moves to the next player and is worth more. After drawing you have the decision timer to accept or pass – when it runs out you are in. Once accepted, anyone with a phone can challenge you to a sing-off: you pick a challenger (or sing solo), both sing the same task and the crowd votes. You did the challenge, so you score either way – the sing-off adds a stake of 5 / 10 / 15 points (10 / 20 / 30-point cards): win it and the stake comes on top, lose it and the stake is deducted. Challengers never get points, but their wins count for the secret "Duel champion" award. The tier is a bet: failing a 10-point card costs nothing, a 20-point card −10, a 30-point card −15. A round is over when every player has started one card. With phones, everyone votes for the best performance after each round. At the end, three secret awards (most hard cards, most passes…) are revealed one by one.</p>
   </section>
   <section class="panel">
     <h2>Sound</h2>
@@ -605,6 +614,7 @@ h1 span{color:var(--red-2)}
       <button class="btn btn-fail" id="fail" hidden>✗ Failed</button>
     </div>
 
+    <div class="sobox" id="sobox" hidden></div>
     <ul class="log" id="log"></ul>
   </section>
 
@@ -1161,9 +1171,9 @@ const BASE = {1:10,2:20,3:30};
 
 // ---- State ----
 const KEY="karaoke-challenge-en-v1";
-let S = {players:[], turn:0, cats:[...CATS], penalty:5, bonus:10, current:null, disabledArtists:[], hiddenArtists:[], log:[], used:[], customArtists:[], rounds:3, timerSec:15, round:1, started:0, screen:"home", volume:0.7, muted:false, mode:"local", room:null, inGame:false, mvpBonus:20, awardBonus:15, vote:null, awards:null, awardsDone:false, timer:null, timerBuzzed:false, catsV:0, back:null, lastVote:null};
+let S = {players:[], turn:0, cats:[...CATS], penalty:5, bonus:10, current:null, disabledArtists:[], hiddenArtists:[], log:[], used:[], customArtists:[], rounds:3, timerSec:15, mics:1, round:1, started:0, screen:"home", volume:0.7, muted:false, mode:"local", room:null, inGame:false, mvpBonus:20, awardBonus:15, vote:null, awards:null, awardsDone:false, timer:null, timerBuzzed:false, catsV:0, back:null, lastVote:null};
 let draft=null;
-try{const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.players){S={...S,...s};if(!S.catsV){for(const c of ["2000s","K-Pop","Disney","High School Musical","Word Hunt","Artists","Genres","Years","Mood"])if(!S.cats.includes(c))S.cats.push(c);}if(!Array.isArray(S.disabledArtists))S.disabledArtists=[];if(!Array.isArray(S.hiddenArtists))S.hiddenArtists=[];if(!S.customArtists)S.customArtists=[];if(S.rounds==null)S.rounds=3;if(S.volume==null)S.volume=.7;if(S.muted==null)S.muted=false;if(S.timerSec==null)S.timerSec=15;if(!S.round)S.round=1;if(!S.started)S.started=0;if(!["home","settings","players","game","final","lobby","join","phone"].includes(S.screen))S.screen="home";if(S.screen==="setup")S.screen="home";}}catch(e){}
+try{const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.players){S={...S,...s};if(!S.catsV){for(const c of ["2000s","K-Pop","Disney","High School Musical","Word Hunt","Artists","Genres","Years","Mood"])if(!S.cats.includes(c))S.cats.push(c);}if(!Array.isArray(S.disabledArtists))S.disabledArtists=[];if(!Array.isArray(S.hiddenArtists))S.hiddenArtists=[];if(!S.customArtists)S.customArtists=[];if(S.rounds==null)S.rounds=3;if(S.volume==null)S.volume=.7;if(S.muted==null)S.muted=false;if(S.timerSec==null)S.timerSec=15;if(!S.mics)S.mics=1;if(!S.round)S.round=1;if(!S.started)S.started=0;if(!["home","settings","players","game","final","lobby","join","phone"].includes(S.screen))S.screen="home";if(S.screen==="setup")S.screen="home";}}catch(e){}
 S.catsV=2;if(!S.decV){if(S.timerSec===90)S.timerSec=15;S.decV=1}S.players.forEach(p=>{p.stats=p.stats||{}});if(!S.mode)S.mode="local";if(S.mvpBonus==null)S.mvpBonus=20;if(S.awardBonus==null)S.awardBonus=15;
 if(S.inGame==null)S.inGame=!!(S.current||(S.players.length>=2&&(S.round>1||S.started>0||S.players.some(p=>p.score!==0))));
 if(S.screen==="lobby"&&!(S.mode==="host"&&S.room))S.screen="home";
@@ -1450,10 +1460,39 @@ function drawCard(want){if(S.current||S.vote||S.players.length<2)return false;
   const [cat,text,diff]=pool[Math.floor(Math.random()*pool.length)];S.used.push(text);
   S.current={cat,text,raw:text,pick:null,diff,worth:BASE[diff],holder:S.turn,starter:S.turn,chain:0,passedBy:[]};resolveText();
   startTimer();save();render();sfx.draw();if(navigator.onLine&&!NET_LOCAL)ytSearch(ytQuery(cat,text)).catch(()=>{});return true}
-function doAccept(auto){const c=S.current;if(!c||c.accepted)return;const p=S.players[c.holder];c.accepted=true;
+function doAccept(auto){const c=S.current;if(!c||c.accepted)return;const p=S.players[c.holder];c.accepted=true;c.so={challengers:[],opp:null,phase:"open",votes:{}};
   if(!auto&&S.timerSec&&tLeftNow()>S.timerSec*2/3)stat(p,"fast");stopTimer();
   toast(auto?`Time's up – ${p.name} is in!`:`${p.name} accepts – sing!`);if(!auto)sfx.draw();save();render()}
 $("accept").onclick=()=>doAccept(false);
+// ---- Sing-off: challenge the card holder, crowd votes ----
+const SO_STAKE={1:5,2:10,3:15};
+function soState(){const c=S.current;return c&&c.accepted&&c.so?c.so:null}
+function soChallenge(i){const c=S.current,so=soState();if(!so||so.opp!=null||so.phase!=="open"||i===c.holder||so.challengers.includes(i))return;so.challengers.push(i);sfx.tick();toast(`⚔️ ${S.players[i].name} challenges ${S.players[c.holder].name}!`);save();render()}
+function soPick(i){const c=S.current,so=soState();if(!so||so.phase!=="open"||i===c.holder||!S.players[i])return;so.opp=i;so.phase="sing";sfx.start();toast(`Sing-off: ${S.players[c.holder].name} vs ${S.players[i].name} – same task!`);save();render()}
+function soCancel(){const so=soState();if(!so)return;so.opp=null;so.phase="open";so.votes={};save();render()}
+function soVoters(){const c=S.current,so=soState();if(!so)return[];return S.players.map((p,i)=>i).filter(i=>i!==c.holder&&i!==so.opp&&S.players[i].pid&&online(S.players[i]))}
+function soStartVote(){const so=soState();if(!so||so.opp==null)return;so.phase="vote";so.votes={};if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});sfx.start();toast("Who won the sing-off? Vote on your phones!");save();render()}
+function soCheck(){const so=soState();if(!so||so.phase!=="vote")return;const need=soVoters();if(need.length&&need.every(i=>so.votes[S.players[i].pid]!=null))soClose()}
+function soClose(force){const c=S.current,so=soState();if(!so||so.opp==null)return;const a=S.players[c.holder],b=S.players[so.opp];
+  let va=0,vb=0;Object.values(so.votes).forEach(n=>{n=String(n).toLowerCase();if(n===a.name.toLowerCase())va++;else if(n===b.name.toLowerCase())vb++});
+  let win=force===undefined?(va>vb?"a":vb>va?"b":"tie"):force;
+  stat(a,"so");stat(b,"so");stat(a,"done");stat(a,"pts",c.worth);if(c.diff===3)stat(a,"hard");if(c.chain>0)stat(a,"rescue");const stake=SO_STAKE[c.diff]||10;
+  if(win==="b"){const pts=c.worth-stake;a.score+=pts;stat(b,"soWin");S.log.unshift(`⚔️ Sing-off: <b>${esc(b.name)}</b> beats ${esc(a.name)} – ${esc(a.name)} gets <span class="up">${fmt(pts)}</span> (${c.worth} − ${stake}) – ${esc(c.text)}`);toast(`⚔️ ${b.name} wins the sing-off – ${a.name} gets ${pts} instead of ${c.worth}`)}
+  else if(win==="a"){const pts=c.worth+stake;a.score+=pts;stat(a,"soWin");S.log.unshift(`⚔️ Sing-off: <b>${esc(a.name)}</b> beats ${esc(b.name)} <span class="up">+${pts}</span> (${c.worth} + ${stake}) – ${esc(c.text)}`);toast(`⚔️ ${a.name} wins the sing-off! +${pts}`)}
+  else{a.score+=c.worth;S.log.unshift(`⚔️ Sing-off tie: <b>${esc(a.name)}</b> & ${esc(b.name)} – ${esc(a.name)} gets <span class="up">+${c.worth}</span> – ${esc(c.text)}`);toast(`It's a tie – ${a.name} gets ${c.worth} points`)}
+  sfx.win();if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});endCard()}
+function renderSo(){const c=S.current,so=soState();const box=$("sobox");if(!so||S.screen!=="game"){box.hidden=true;return}box.hidden=false;
+  const H=S.players[c.holder],others=S.players.map((p,i)=>i).filter(i=>i!==c.holder);
+  if(so.opp==null){box.innerHTML=`<h3>⚔️ Sing-off?</h3><div class="hint" style="margin:0">Anyone can challenge ${esc(H.name)} on their phone. ${esc(H.name)} picks an opponent – or just sings solo. Stake: ±${SO_STAKE[c.diff]||10} points on top of the card.</div>
+    ${so.challengers.length?`<div class="hint" style="margin:0">Challengers:</div><div class="row">${so.challengers.map(i=>`<button class="btn btn-gold" data-sopick="${i}">⚔️ ${esc(S.players[i].name)}</button>`).join("")}</div>`:`<div class="hint" style="margin:0">No challengers yet.</div>`}
+    <details style="width:100%"><summary class="hint" style="cursor:pointer;margin:0">Pick anyone (host)</summary><div class="row" style="margin-top:8px">${others.map(i=>`<button class="chip" data-sopick="${i}">${esc(S.players[i].name)}</button>`).join("")}</div></details>`}
+  else if(so.phase==="sing"){const O=S.players[so.opp];box.innerHTML=`<h3>⚔️ Sing-off</h3><div class="vs"><b>${esc(H.name)}</b> vs <b>${esc(O.name)}</b></div><div class="hint" style="margin:0">Both sing the same task – ${S.mics>1?"at the same time, one mic each":"one after the other"}. Then let the crowd decide.</div><div class="row"><button class="btn btn-gold" id="soVote">🗳 Start the vote</button><button class="btn btn-ghost" id="soCancel">Cancel sing-off</button></div>`;
+    $("soVote").onclick=soStartVote;$("soCancel").onclick=soCancel}
+  else{const O=S.players[so.opp],need=soVoters(),n=Object.keys(so.votes).length,pct=need.length?Math.round(100*n/need.length):0;
+    box.innerHTML=`<h3>⚔️ Who won?</h3><div class="vs"><b>${esc(H.name)}</b> vs <b>${esc(O.name)}</b></div><div class="bar"><i style="width:${pct}%"></i></div><div class="hint" style="margin:0">${n} of ${need.length} voted · ${esc(H.name)} gets ${c.worth} − ${SO_STAKE[c.diff]||10} if beaten, ${c.worth} + ${SO_STAKE[c.diff]||10} if not</div><div class="row"><button class="btn btn-ghost" data-sowin="a">${esc(H.name)} wins</button><button class="btn btn-ghost" data-sowin="tie">Tie</button><button class="btn btn-ghost" data-sowin="b">${esc(O.name)} wins</button></div>${n?`<button class="btn btn-gold" id="soClose">Close vote (${n} votes)</button>`:""}`;
+    const cb=$("soClose");if(cb)cb.onclick=()=>soClose()}
+  $("done").hidden=$("fail").hidden=so.opp!=null}
+$("sobox").onclick=e=>{const p=e.target.closest("[data-sopick]");if(p){soPick(+p.dataset.sopick);return}const w=e.target.closest("[data-sowin]");if(w)ask(w.dataset.sowin==="tie"?"Call it a tie?":"Declare "+w.textContent.replace(" wins","")+" the winner?",()=>soClose(w.dataset.sowin),"Yes")};
 function doDone(){const c=S.current;if(!c)return;const p=S.players[c.holder];p.score+=c.worth;
   stat(p,"done");stat(p,"pts",c.worth);if(c.diff===3)stat(p,"hard");if(c.chain>0)stat(p,"rescue");
   if(c.pick!=null&&needsPartner(c.raw||c.text))stat(p,"duet");
@@ -1525,6 +1564,7 @@ const AWARDS=[
  {id:"done",em:"🎤",t:"Iron voice",d:"Most cards sung"},
  {id:"rescue",em:"🦸",t:"Rescue hero",d:"Most passed-on cards rescued"},
  {id:"pass",em:"🐔",t:"Chicken of the night",d:"Most passes – yes, that pays too"},
+ {id:"soWin",em:"⚔️",t:"Duel champion",d:"Most sing-offs won"},
  {id:"fail",em:"🎢",t:"High roller",d:"Most failed bets – respect for trying"},
  {id:"duet",em:"💞",t:"Duet darling",d:"Most partner cards"},
  {id:"fast",em:"⚡",t:"No hesitation",d:"Most challenges accepted right away"},
@@ -1553,8 +1593,8 @@ function netPush(){if(S.mode!=="host"||!S.room)return;clearTimeout(pushT);pushT=
 function snapshot(){const phase=S.screen==="final"?"final":S.vote?"vote":S.inGame?"game":"lobby";const c=S.current;
   return{phase,round:S.round,rounds:S.rounds,turn:S.turn,
     players:S.players.map(p=>({name:p.name,score:p.score,pid:p.pid||null,on:online(p)})),
-    current:c?{cat:c.cat,text:c.text,raw:c.raw||c.text,diff:c.diff,accepted:!!c.accepted,worth:c.worth,chain:c.chain,holder:c.holder,pick:c.pick==null?null:c.pick,partner:c.pick!=null&&needsPartner(c.raw||c.text)}:null,
-    timer:S.timer||null,timerSec:S.timerSec,penalty:S.penalty,bonus:S.bonus,mvpBonus:S.mvpBonus,awardBonus:S.awardBonus,tiers:tiersAvail(),
+    current:c?{cat:c.cat,text:c.text,raw:c.raw||c.text,diff:c.diff,accepted:!!c.accepted,so:c.accepted&&c.so?{phase:c.so.phase,opp:c.so.opp,challengers:c.so.challengers.map(i=>S.players[i]&&S.players[i].name).filter(Boolean),voted:Object.keys(c.so.votes||{}),total:soVoters().length}:null,worth:c.worth,chain:c.chain,holder:c.holder,pick:c.pick==null?null:c.pick,partner:c.pick!=null&&needsPartner(c.raw||c.text)}:null,
+    timer:S.timer||null,timerSec:S.timerSec,mics:S.mics||1,penalty:S.penalty,bonus:S.bonus,mvpBonus:S.mvpBonus,awardBonus:S.awardBonus,tiers:tiersAvail(),
     vote:S.vote?{round:S.vote.round,voted:Object.keys(S.vote.votes),total:voters().filter(i=>S.players[i].pid).length}:null,
     lastVote:S.lastVote?{round:S.lastVote.round,win:S.lastVote.win.map(i=>S.players[i]&&S.players[i].name).filter(Boolean)}:null,
     awards:(S.awards||[]).filter(a=>a.revealed).map(a=>({em:a.em,t:a.t,d:a.d,winners:a.winners.map(i=>S.players[i].name)})),
@@ -1590,8 +1630,15 @@ function handleActions(acts){for(const k of Object.keys(acts).sort()){if(doneAct
   else if(a.type==="done"){if(S.current&&S.current.holder===i)doDone()}
   else if(a.type==="pass"){if(S.current&&S.current.holder===i)doPass()}
   else if(a.type==="fail"){if(S.current&&S.current.holder===i)doFail()}
-  else if(a.type==="accept"){if(S.current&&S.current.holder===i)doAccept(false)}}}
-function syncVotes(v){if(!S.vote)return;const votes={};
+  else if(a.type==="accept"){if(S.current&&S.current.holder===i)doAccept(false)}
+  else if(a.type==="challenge"){soChallenge(i)}
+  else if(a.type==="pick"){if(S.current&&S.current.holder===i){const j=S.players.findIndex(p=>p.name===a.name);if(j>=0)soPick(j)}}
+  else if(a.type==="startvote"){if(S.current&&S.current.holder===i)soStartVote()}}}
+function syncVotes(v){const so=soState();
+  if(so&&so.phase==="vote"){const c=S.current,names=[S.players[c.holder].name.toLowerCase(),S.players[so.opp].name.toLowerCase()];const votes={};
+    for(const [pid,target] of Object.entries(v)){const vi=S.players.findIndex(p=>p.pid===pid);if(vi<0||vi===c.holder||vi===so.opp||typeof target!=="string")continue;if(!names.includes(target.toLowerCase()))continue;votes[pid]=target}
+    so.votes=votes;save();render();soCheck();return}
+  if(!S.vote)return;const votes={};
   for(const [pid,target] of Object.entries(v)){const voter=S.players.find(p=>p.pid===pid);if(!voter||typeof target!=="string")continue;
     if(voter.name.toLowerCase()===target.toLowerCase())continue;if(!S.players.some(p=>p.name.toLowerCase()===target.toLowerCase()))continue;votes[pid]=target}
   S.vote.votes=votes;save();render();checkVote()}
@@ -1607,6 +1654,7 @@ $("lobbyBack").onclick=()=>ask("Close this room? Phones will be disconnected.",(
 $("lobbySettings").onclick=()=>{S.back="lobby";S.screen="settings";save();render()};
 
 // ---- Phone: controller client ----
+const SO_STAKE_P={1:5,2:10,3:15};
 let PH=null,PHt=null,TAPPED=false;addEventListener("pointerdown",()=>{TAPPED=true},{once:true,passive:true});
 function phoneSave(){try{if(PH)localStorage.setItem("kc-phone",JSON.stringify({code:PH.code,pid:PH.pid,name:PH.name}));else localStorage.removeItem("kc-phone")}catch(e){}}
 async function joinRoom(code,name){code=(code||"").toUpperCase().replace(/[^A-Z0-9]/g,"");name=(name||"").trim().slice(0,18);
@@ -1627,7 +1675,7 @@ function phoneConnect(){if(!PH)return;if(PH.es)PH.es.close();clearInterval(PH.hb
   clearInterval(PHt);PHt=setInterval(()=>{if(S.screen==="phone"&&PH&&PH.state&&PH.state.timer)paintPhoneTimer()},500)}
 function phoneLeave(){if(PH){if(PH.es)PH.es.close();clearInterval(PH.hb);db.del(`rooms/${PH.code}/members/${PH.pid}`).catch(()=>{})}PH=null;phoneSave();clearInterval(PHt);S.screen="home";save();render()}
 function phoneAct(type,extra){if(!PH)return;db.post(`rooms/${PH.code}/actions`,Object.assign({pid:PH.pid,type,at:TS},extra||{})).catch(()=>toast("Not sent – check your connection"))}
-function phoneVote(name){if(!PH)return;PH.myVote={round:PH.state&&PH.state.vote?PH.state.vote.round:0,name};db.put(`rooms/${PH.code}/votes/${PH.pid}`,name).catch(()=>toast("Not sent – check your connection"));renderPhone()}
+function phoneVote(name){if(!PH)return;const st=PH.state||{};PH.myVote={round:st.current&&st.current.so&&st.current.so.phase==="vote"?"so:"+st.current.text:(st.vote?st.vote.round:0),name};db.put(`rooms/${PH.code}/votes/${PH.pid}`,name).catch(()=>toast("Not sent – check your connection"));renderPhone()}
 function phoneTimerLeft(st){const t=st&&st.timer;if(!t)return null;if(t.left!=null)return t.left;return Math.max(0,Math.ceil((t.end-Date.now())/1000))}
 function paintPhoneTimer(){const el=$("phTimer");if(!el||!PH||!PH.state)return;const l=phoneTimerLeft(PH.state);if(l==null||(PH.state.current&&PH.state.current.accepted)){el.hidden=true;return}el.hidden=false;el.textContent=fmtT(l);el.classList.toggle("warn",l<=10)}
 function renderPhone(){if(S.screen!=="phone"||!PH)return;const st=PH.state;const body=$("phBody");
@@ -1650,8 +1698,15 @@ function renderPhone(){if(S.screen!=="phone"||!PH)return;const st=PH.state;const
       html=`<div style="font-size:56px;line-height:1">🏆</div><div class="who"><b>${wins.map(esc).join(" & ")}</b></div><p class="hint">${top} points${wins.length>1?" – it's a tie!":""}${wins.includes(me.name)?" – that's you! 🎉":""}</p><div class="awards">${aw}</div>${board}`}}
   else{const timer=`<div class="timer phtimer" id="phTimer" hidden></div>`;
     if(c){const card=`<div class="minicard"><div class="frame"><div class="pic" id="phPic"></div><div class="cat">${esc(c.cat)}</div><div class="text">${esc(c.text)}</div><div class="worth">Worth <b>${c.worth}</b></div>${c.pick!=null&&players[c.pick]?`<div class="picked">🎲 ${c.partner?"Partner:":"Player:"} <b>${esc(players[c.pick].name)}</b></div>`:""}${c.chain>0?`<div class="chain">Passed on ${c.chain}× – bonus!</div>`:""}<a class="playbtn" href="${ytUrl(c.cat,c.raw||c.text)}" target="_blank" rel="noopener">▶ Find on YouTube</a></div></div>`;
-      if(mine)html=`<div class="who">Your turn, <b>${esc(me.name)}</b>!</div>${timer}${card}<div class="actions phact">${c.accepted?`<button class="btn btn-green" data-act="done">✓ Done it (+${c.worth})</button><button class="btn btn-fail" data-act="fail">✗ Failed (${FAIL[c.diff]?"−"+FAIL[c.diff]:"0"})</button>`:`<button class="btn btn-gold" data-act="accept">✓ Accept the challenge</button><button class="btn btn-ghost" data-act="pass">${c.chain>=players.length-1?"Pass (card is discarded)":"Pass ➜ hand over"}</button>`}</div>`;
-      else html=`<div class="who"><b>${esc(holder?holder.name:"?")}</b> is up</div>${timer}${card}<p class="hint">${c.pick===meI?"You're the partner – get ready!":"Cheer them on! 🎉"}</p>${board}`}
+      const so=c.accepted&&c.so?c.so:null;const oppName=so&&so.opp!=null&&players[so.opp]?players[so.opp].name:null;const amOpp=so&&so.opp===meI;const iVoted=so&&so.phase==="vote"&&((so.voted||[]).includes(PH.pid)||(PH.myVote&&PH.myVote.round==="so:"+c.text));
+      let sobox="";
+      if(so&&so.opp==null&&!mine)sobox=`<div class="sobox"><h3>⚔️ Sing-off?</h3><button class="btn ${(so.challengers||[]).includes(me.name)?"btn-ghost":"btn-gold"}" data-act="challenge" ${(so.challengers||[]).includes(me.name)?"disabled":""}>${(so.challengers||[]).includes(me.name)?"Challenge sent – waiting for "+esc(holder.name):"⚔️ Challenge "+esc(holder.name)+"!"}</button></div>`;
+      if(so&&so.opp==null&&mine)sobox=`<div class="sobox"><h3>⚔️ Challengers</h3>${(so.challengers||[]).length?`<div class="hint">Pick one for a sing-off (win: +${SO_STAKE_P[c.diff]||10} on top, lose: −${SO_STAKE_P[c.diff]||10}), or just sing solo.</div><div class="row">${so.challengers.map(n=>`<button class="btn btn-gold" data-act="pick" data-name="${esc(n)}">⚔️ ${esc(n)}</button>`).join("")}</div>`:`<div class="hint">Nobody has challenged you yet.</div>`}</div>`;
+      if(so&&so.opp!=null&&so.phase==="sing")sobox=`<div class="sobox"><h3>⚔️ Sing-off</h3><div class="vs"><b>${esc(holder.name)}</b> vs <b>${esc(oppName)}</b></div><div class="hint">${mine||amOpp?(st.mics>1?"Same task, at the same time – grab a mic!":"Same task, one after the other. Give it everything!"):"Both sing the same task – then you vote."}</div>${mine?`<button class="btn btn-gold" data-act="startvote">🗳 Start the vote</button>`:""}</div>`;
+      if(so&&so.phase==="vote")sobox=`<div class="sobox"><h3>⚔️ Who won?</h3><div class="vs"><b>${esc(holder.name)}</b> vs <b>${esc(oppName)}</b></div>${mine||amOpp?`<div class="hint">The crowd is voting… ${(so.voted||[]).length} of ${so.total}</div>`:iVoted?`<div class="hint">Vote received – ${(so.voted||[]).length} of ${so.total} voted</div>`:`<div class="ballot"><button class="btn btn-ghost" data-act="vote" data-name="${esc(holder.name)}">👑 ${esc(holder.name)}</button><button class="btn btn-ghost" data-act="vote" data-name="${esc(oppName)}">👑 ${esc(oppName)}</button></div>`}</div>`;
+      const duel=so&&so.opp!=null;
+      if(mine)html=`<div class="who">Your turn, <b>${esc(me.name)}</b>!</div>${timer}${card}${sobox}<div class="actions phact">${c.accepted?(duel?"":`<button class="btn btn-green" data-act="done">✓ Done it (+${c.worth})</button><button class="btn btn-fail" data-act="fail">✗ Failed (${FAIL[c.diff]?"−"+FAIL[c.diff]:"0"})</button>`):`<button class="btn btn-gold" data-act="accept">✓ Accept the challenge</button><button class="btn btn-ghost" data-act="pass">${c.chain>=players.length-1?"Pass (card is discarded)":"Pass ➜ hand over"}</button>`}</div>`;
+      else html=`<div class="who">${amOpp?"Sing-off, <b>"+esc(me.name)+"</b>!":"<b>"+esc(holder?holder.name:"?")+"</b> is up"}</div>${timer}${card}${sobox}<p class="hint">${c.pick===meI&&!duel?"You're the partner – get ready!":duel?"":"Cheer them on! 🎉"}</p>${board}`}
     else{if(mine)html=`<div class="who">Your turn, <b>${esc(me.name)}</b>!</div><p class="hint">Pick your points to draw a card.</p><div class="drawrow phdraw">${[[1,"10","easy"],[2,"20","medium"],[3,"30","hard"]].map(([d,n,l])=>`<button class="btn btn-red tier" data-act="draw" data-diff="${d}" ${(st.tiers||[]).includes(d)?"":"disabled"}><b>${n}</b><span>${l}</span></button>`).join("")}<button class="btn btn-ghost" data-act="draw" data-diff="0" ${(st.tiers||[]).includes(0)?"":"disabled"}>🎲 Random</button></div>${board}`;
       else html=`<div class="who">Up next: <b>${esc(holder?holder.name:"?")}</b></div><p class="hint">Waiting for them to draw a card…</p>${st.lastVote&&st.lastVote.win.length&&st.lastVote.round===st.round-1?`<p class="hint">🏅 Best performance in round ${st.lastVote.round}: <b>${st.lastVote.win.map(esc).join(" &amp; ")}</b></p>`:""}${board}`}}
   body.innerHTML=html;
@@ -1664,11 +1719,11 @@ $("joinName").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();$("joinBtn").
 $("joinBack").onclick=()=>{S.screen="home";save();render()};
 $("phLeave").onclick=()=>ask("Leave this game?",phoneLeave,"Leave");
 $("phBody").onclick=e=>{const b=e.target.closest("[data-act]");if(!b||b.disabled)return;const act=b.dataset.act;
-  if(act==="draw")phoneAct("draw",{diff:+b.dataset.diff});else if(act==="done")phoneAct("done");else if(act==="accept")phoneAct("accept");
+  if(act==="draw")phoneAct("draw",{diff:+b.dataset.diff});else if(act==="done")phoneAct("done");else if(act==="accept")phoneAct("accept");else if(act==="challenge")phoneAct("challenge");else if(act==="pick")phoneAct("pick",{name:b.dataset.name});else if(act==="startvote")phoneAct("startvote");
   else if(act==="pass"){ask("Pass this card? That costs points.",()=>{phoneAct("pass");b.disabled=true;setTimeout(()=>{b.disabled=false},2000)},"Pass");return}
   else if(act==="fail"){const d=PH.state&&PH.state.current?PH.state.current.diff:0;ask("Mark this card as failed? "+(FAIL[d]?"That costs "+FAIL[d]+" points.":"No penalty on a 10-point card."),()=>{phoneAct("fail");b.disabled=true;setTimeout(()=>{b.disabled=false},2000)},"Failed");return}
   else if(act==="vote")phoneVote(b.dataset.name);else if(act==="rejoin"){S.screen="join";save();render();$("joinCode").value=PH?PH.code:"";$("joinName").value=PH?PH.name:""}else if(act==="leave")phoneLeave();
-  if(act==="draw"||act==="done"||act==="pass"||act==="accept"){b.disabled=true;setTimeout(()=>{b.disabled=false},2000)}};
+  if(act==="draw"||act==="done"||act==="pass"||act==="accept"||act==="challenge"||act==="pick"||act==="startvote"){b.disabled=true;setTimeout(()=>{b.disabled=false},2000)}};
 
 // ---- Navigation, settings, render extras ----
 let WL=null;
@@ -1678,7 +1733,7 @@ function renderExtra(){
   const canResume=(S.inGame&&S.players.length>=2)||(S.mode==="host"&&S.room&&!S.inGame);
   $("homeResume").hidden=!canResume;$("homeResume").textContent=S.inGame?"↩ Resume game":"↩ Back to lobby";
   $("homeHost").disabled=!NET_OK;$("homeJoin").disabled=!NET_OK;if(!NET_OK)$("homeHost").title=$("homeJoin").title="Not set up on this copy yet";
-  $("mvpBonus").value=S.mvpBonus;$("awardBonus").value=S.awardBonus;
+  $("mvpBonus").value=S.mvpBonus;$("awardBonus").value=S.awardBonus;$("mics").value=S.mics||1;
   if(S.screen==="lobby"&&S.room){$("lobbyCode").textContent=S.room.code;$("lobbyUrl").textContent=joinUrl(S.room.code).replace(/^https?:\/\//,"");renderQr();$("lobbyStatus").textContent=netStatusText();
     $("lobbyPlayers").innerHTML=S.players.map((p,i)=>`<li><span class="rank">${i+1}</span><span class="dot${online(p)?' on':''}" style="${p.pid?'':'visibility:hidden'}"></span><span class="name">${esc(p.name)}</span><span class="hint">${p.pid?(online(p)?"phone":"phone offline"):"no phone"}</span><button class="x" data-kick="${i}" title="Remove">×</button></li>`).join("")||`<li style="color:var(--muted)">Nobody yet – scan the QR code or type the room code</li>`;
     $("lobbyStart").disabled=S.players.length<2;$("lobbyStart").textContent=S.players.length<2?"Waiting for players…":`Start game (${S.players.length} players)`}
@@ -1688,10 +1743,12 @@ function renderExtra(){
     $("votebox").hidden=false;$("votebox").innerHTML=`<h3>Round ${v.round} done!</h3><div>Vote on your phones: who had the best performance?</div><div class="bar"><i style="width:${pct}%"></i></div><div class="hint" style="margin:0">${n} of ${need.length} voted · winner gets +${S.mvpBonus}</div><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:6px"><button class="btn btn-gold" id="voteClose" ${n?"":"disabled"}>Close vote now</button><button class="btn btn-ghost" id="voteSkip">Skip vote</button></div>`;
     $("voteClose").onclick=closeVote;$("voteSkip").onclick=()=>{S.vote=null;if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});nextRound()}}
   else{$("votebox").hidden=true}
+  renderSo();
   if(S.screen==="final")renderFinal();
   if(S.screen==="phone")renderPhone();
   if(S.screen==="game")paintTimer();
   wakeLock(["game","lobby","phone"].includes(S.screen))}
+$("mics").onchange=e=>{S.mics=Math.max(1,Math.min(8,+e.target.value||1));save()};
 $("mvpBonus").onchange=e=>{S.mvpBonus=Math.max(0,+e.target.value||0);save()};
 $("awardBonus").onchange=e=>{S.awardBonus=Math.max(0,+e.target.value||0);save()};
 $("homeStart").onclick=()=>{const go=()=>{draft=null;S.screen="players";save();render();$("names").querySelector("input")?.focus()};if(S.inGame)ask("A game is in progress. Start a new one? Scores will be reset.",go,"New game");else go()};
