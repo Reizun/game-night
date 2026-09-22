@@ -1719,6 +1719,7 @@ function ytPlay(id){ytPending=id;
   ytApi().then(()=>{if(ytPending!==id)return;if(!ytP)ytEnsure(id)}).catch(()=>{ytP=null;$("ytFrame").innerHTML='<iframe src="https://www.youtube.com/embed/'+id+'?autoplay=1&rel=0&playsinline=1" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>'})}
 async function ytOpen(q){$("ytOverlay").hidden=false;ytMode("list");ytPrepare();$("ytTitle").textContent="Searching YouTube…";$("ytList").innerHTML="";$("ytHint").textContent="";$("ytQ").value="";
   $("ytOpen").href="https://www.youtube.com/results?search_query="+encodeURIComponent(q);
+  if(matchMedia("(pointer:fine)").matches)setTimeout(()=>{$("ytQ").focus()},50);
   const my=++ytReq;
   try{const list=await ytSearch(q);if(my!==ytReq||$("ytOverlay").hidden)return;if(!list.length)throw new Error("empty");
     const picks=ytPicks();YTS={list:[...list].sort((a,b)=>(picks[b.id]||0)-(picks[a.id]||0)),i:0,q};ytRenderList()}
