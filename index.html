@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Karaoke">
 <link rel="manifest" href="./manifest.webmanifest">
+<link rel="preconnect" href="https://www.youtube.com"><link rel="preconnect" href="https://i.ytimg.com"><link rel="preconnect" href="https://www.googleapis.com"><link rel="dns-prefetch" href="https://googlevideo.com">
 <link rel="icon" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
 <title>Karaoke Challenge</title>
@@ -1447,7 +1448,7 @@ function drawCard(want){if(S.current||S.vote||S.players.length<2)return false;
   if(!pool.length){S.used=S.used.filter(t=>!all.some(c=>c[1]===t));pool=all;toast(want?`${BASE[want]}-point cards reshuffled`:"Deck reshuffled")}
   const [cat,text,diff]=pool[Math.floor(Math.random()*pool.length)];S.used.push(text);
   S.current={cat,text,raw:text,pick:null,diff,worth:BASE[diff],holder:S.turn,starter:S.turn,chain:0,passedBy:[]};resolveText();
-  startTimer();save();render();sfx.draw();return true}
+  startTimer();save();render();sfx.draw();if(navigator.onLine&&!NET_LOCAL)ytSearch(ytQuery(cat,text)).catch(()=>{});return true}
 function doDone(){const c=S.current;if(!c)return;const p=S.players[c.holder];p.score+=c.worth;
   stat(p,"done");stat(p,"pts",c.worth);if(c.diff===3)stat(p,"hard");if(c.chain>0)stat(p,"rescue");
   if(c.pick!=null&&needsPartner(c.raw||c.text))stat(p,"duet");if(S.timer&&S.timerSec&&tLeftNow()>S.timerSec/2)stat(p,"fast");
@@ -1692,7 +1693,7 @@ function boot(){
 }
 
 // ---- In-app YouTube player ----
-const YT_KEY="AIzaSyDSXRg08h9ifPWx9-m8RT9DFuf1jj0UTlA";const ytCache={};let YT={list:[],i:0,q:""};
+const YT_KEY="AIzaSyDSXRg08h9ifPWx9-m8RT9DFuf1jj0UTlA";const ytCache={};let YTS={list:[],i:0,q:""};
 function ytDecode(t){const d=document.createElement("textarea");d.innerHTML=t;return d.value}
 async function ytSearch(q){if(ytCache[q])return ytCache[q];
   const u="https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&videoEmbeddable=true&maxResults=6&q="+encodeURIComponent(q)+"&key="+YT_KEY;
@@ -1701,22 +1702,29 @@ async function ytSearch(q){if(ytCache[q])return ytCache[q];
 let ytReq=0;
 function ytPicks(){try{return JSON.parse(localStorage.getItem("kc-ytpicks"))||{}}catch(e){return{}}}
 function ytRemember(id){try{const p=ytPicks();p[id]=(p[id]||0)+1;const keys=Object.keys(p);if(keys.length>300)delete p[keys[0]];localStorage.setItem("kc-ytpicks",JSON.stringify(p))}catch(e){}}
-function ytMode(m){$("ytList").hidden=m!=="list";$("ytFrame").hidden=m!=="play";$("ytBack").hidden=m!=="play";$("ytNext").hidden=m!=="play";$("ytForm").hidden=m==="play";if(m!=="play")$("ytFrame").innerHTML=""}
+function ytMode(m){$("ytList").hidden=m!=="list";$("ytFrame").hidden=m!=="play";$("ytBack").hidden=m!=="play";$("ytNext").hidden=m!=="play";$("ytForm").hidden=m==="play";if(m!=="play"&&ytP&&ytP.stopVideo)try{ytP.stopVideo()}catch(e){}}
+let ytP=null,ytApiP=null,ytPending=null;
+function ytApi(){if(ytApiP)return ytApiP;ytApiP=new Promise((res,rej)=>{window.onYouTubeIframeAPIReady=()=>res();const el=document.createElement("script");el.src="https://www.youtube.com/iframe_api";el.onerror=()=>{ytApiP=null;rej(new Error("api"))};document.head.appendChild(el);setTimeout(()=>rej(new Error("timeout")),8000)});return ytApiP}
+async function ytPlay(id){ytPending=id;
+  try{await ytApi();if(ytPending!==id)return;
+    if(!ytP){$("ytFrame").innerHTML="<div id=\"ytPlayer\"></div>";await new Promise(res=>{ytP=new YT.Player("ytPlayer",{videoId:id,playerVars:{autoplay:1,rel:0,playsinline:1},events:{onReady:e=>{try{e.target.playVideo()}catch(x){}res()},onError:()=>{$("ytHint").textContent+=" · this video cannot be played here – try Next"}}})})}
+    else ytP.loadVideoById(id)}
+  catch(e){ytP=null;$("ytFrame").innerHTML="<iframe src=\"https://www.youtube.com/embed/"+id+"?autoplay=1&rel=0&playsinline=1\" allow=\"autoplay; encrypted-media; picture-in-picture; fullscreen\" allowfullscreen></iframe>"}}
 async function ytOpen(q){$("ytOverlay").hidden=false;ytMode("list");$("ytTitle").textContent="Searching YouTube…";$("ytList").innerHTML="";$("ytHint").textContent="";$("ytQ").value=q.replace(/ karaoke$/,"");
   $("ytOpen").href="https://www.youtube.com/results?search_query="+encodeURIComponent(q);
   const my=++ytReq;
   try{const list=await ytSearch(q);if(my!==ytReq||$("ytOverlay").hidden)return;if(!list.length)throw new Error("empty");
-    const picks=ytPicks();YT={list:[...list].sort((a,b)=>(picks[b.id]||0)-(picks[a.id]||0)),i:0,q};ytRenderList()}
-  catch(e){YT={list:[],i:0,q};$("ytTitle").textContent="Search not available right now";$("ytList").innerHTML='<div class="msg">The daily search limit may be used up, or there is no connection.<br>Use "YouTube ↗" to search in the YouTube app instead.</div>'}}
-function ytRenderList(){$("ytTitle").textContent="Pick a video";$("ytHint").textContent=YT.list.length+" suggestions for “"+YT.q+"”";
-  const picks=ytPicks();YT.list=[...YT.list].sort((a,b)=>(picks[b.id]||0)-(picks[a.id]||0));YT.i=0;$("ytList").innerHTML=YT.list.map((v,i)=>`<button class="ytitem" type="button" data-yt="${i}"><img src="${esc(v.th)}" alt=""><span><span class="tt">${esc(v.title)}</span><span class="ch">${esc(v.ch)}${picks[v.id]?" · ⭐ played before":""}</span></span></button>`).join("")}
-function ytShow(){const v=YT.list[YT.i];if(!v)return;ytMode("play");$("ytTitle").textContent=v.title;$("ytHint").textContent=v.ch+" · video "+(YT.i+1)+" of "+YT.list.length;
-  $("ytFrame").innerHTML='<iframe src="https://www.youtube.com/embed/'+v.id+'?autoplay=1&rel=0&playsinline=1" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';$("ytNext").disabled=YT.list.length<2}
-function ytClose(){$("ytOverlay").hidden=true;$("ytFrame").innerHTML=""}
-$("ytList").onclick=e=>{const b=e.target.closest("[data-yt]");if(!b)return;YT.i=+b.dataset.yt;ytRemember(YT.list[YT.i].id);ytShow()};
+    const picks=ytPicks();YTS={list:[...list].sort((a,b)=>(picks[b.id]||0)-(picks[a.id]||0)),i:0,q};ytRenderList()}
+  catch(e){YTS={list:[],i:0,q};$("ytTitle").textContent="Search not available right now";$("ytList").innerHTML='<div class="msg">The daily search limit may be used up, or there is no connection.<br>Use "YouTube ↗" to search in the YouTube app instead.</div>'}}
+function ytRenderList(){$("ytTitle").textContent="Pick a video";$("ytHint").textContent=YTS.list.length+" suggestions for “"+YTS.q+"”";
+  const picks=ytPicks();YTS.list=[...YTS.list].sort((a,b)=>(picks[b.id]||0)-(picks[a.id]||0));YTS.i=0;$("ytList").innerHTML=YTS.list.map((v,i)=>`<button class="ytitem" type="button" data-yt="${i}"><img src="${esc(v.th)}" alt=""><span><span class="tt">${esc(v.title)}</span><span class="ch">${esc(v.ch)}${picks[v.id]?" · ⭐ played before":""}</span></span></button>`).join("")}
+function ytShow(){const v=YTS.list[YTS.i];if(!v)return;ytMode("play");$("ytTitle").textContent=v.title;$("ytHint").textContent=v.ch+" · video "+(YTS.i+1)+" of "+YTS.list.length;
+  ytPlay(v.id);$("ytNext").disabled=YTS.list.length<2}
+function ytClose(){$("ytOverlay").hidden=true;ytPending=null;if(ytP&&ytP.stopVideo)try{ytP.stopVideo()}catch(e){}}
+$("ytList").onclick=e=>{const b=e.target.closest("[data-yt]");if(!b)return;YTS.i=+b.dataset.yt;ytRemember(YTS.list[YTS.i].id);ytShow()};
 $("ytBack").onclick=()=>{ytMode("list");ytRenderList()};
 $("ytForm").onsubmit=e=>{e.preventDefault();const q=$("ytQ").value.trim();if(!q)return;ytOpen(/karaoke/i.test(q)?q:q+" karaoke")};
-$("ytNext").onclick=()=>{if(!YT.list.length)return;YT.i=(YT.i+1)%YT.list.length;ytShow()};
+$("ytNext").onclick=()=>{if(!YTS.list.length)return;YTS.i=(YTS.i+1)%YTS.list.length;ytShow()};
 $("ytClose").onclick=ytClose;$("ytOverlay").onclick=e=>{if(e.target.id==="ytOverlay")ytClose()};
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("ytOverlay").hidden)ytClose()});
 $("playBtn").onclick=e=>{if(!S.current)return;e.preventDefault();ytOpen(ytQuery(S.current.cat,S.current.raw||S.current.text))};
