@@ -256,6 +256,15 @@ h1 span{color:var(--red-2)}
 .sobox .bar{width:100%;height:10px;border-radius:999px;background:var(--ground-2);overflow:hidden}
 .sobox .bar i{display:block;height:100%;background:var(--gold);transition:width .3s}
 .phone .sobox{max-width:none}
+.owncard{display:flex;flex-direction:column;gap:8px}
+.owncard input{padding:12px 14px;border-radius:10px;border:2px solid transparent;background:var(--ground);color:var(--ink);font:inherit;font-size:16px}
+.owncard .row{display:flex;gap:8px;flex-wrap:wrap}
+.owncard select{flex:1;min-width:140px;padding:10px 12px;border-radius:10px;border:0;background:var(--ground);color:var(--ink);font:inherit;font-size:15px}
+.owncards{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.owncards .oc{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:var(--ground)}
+.owncards .oc .t{flex:1;font-weight:700;line-height:1.3}
+.owncards .oc .m{font-size:12px;color:var(--muted);white-space:nowrap}
+.owncards .oc .m b{font-family:Anton,sans-serif;font-weight:400;color:var(--gold);font-size:14px}
 </style>
 </head>
 <body>
@@ -469,6 +478,19 @@ h1 span{color:var(--red-2)}
     <p class="hint" id="artistsSummary"></p>
   </section>
   <section class="panel">
+    <h2>Build your own cards</h2>
+    <form class="owncard" id="cardForm">
+      <input id="cardText" placeholder="Your challenge, e.g. Sing a song with a fake French accent" maxlength="120" autocomplete="off">
+      <div class="row">
+        <select id="cardCat" aria-label="Category"></select>
+        <select id="cardDiff" aria-label="Points"><option value="1">10 points · easy</option><option value="2" selected>20 points · medium</option><option value="3">30 points · hard</option></select>
+        <button class="btn btn-gold" type="submit">+ Add card</button>
+      </div>
+    </form>
+    <div class="owncards" id="cardList"></div>
+    <p class="hint" id="cardHint">Your cards join the deck under the category you choose (or "Your cards"). They stay on this device. Tip: mention "the person on your left" or "a duet" and the app picks a partner automatically.</p>
+  </section>
+  <section class="panel">
     <h2>Rules</h2>
     <div class="rules">
       <label>Passing costs <input type="number" id="penalty" value="5" min="0"></label>
@@ -632,7 +654,7 @@ h1 span{color:var(--red-2)}
 
 <script>
 // ---- Challenges: [Kategorie, Text, Schwierigkeit 1-3] ----
-const CATS = ["Classics","2000s","K-Pop","Disney","High School Musical","Word Hunt","Artists","Genres","Years","Mood","Voice","Performance","Duet & Group","Chaos","Trivia","Truth"];
+const CATS = ["Classics","2000s","K-Pop","Disney","High School Musical","Word Hunt","Artists","Genres","Years","Mood","Voice","Performance","Duet & Group","Chaos","Trivia","Truth","Your cards"];
 const CHALLENGES = [
  // Classics
  ["Classics","Sing a song from the 80s",1],
@@ -1171,10 +1193,10 @@ const BASE = {1:10,2:20,3:30};
 
 // ---- State ----
 const KEY="karaoke-challenge-en-v1";
-let S = {players:[], turn:0, cats:[...CATS], penalty:5, bonus:10, current:null, disabledArtists:[], hiddenArtists:[], log:[], used:[], customArtists:[], rounds:3, timerSec:15, mics:1, round:1, started:0, screen:"home", volume:0.7, muted:false, mode:"local", room:null, inGame:false, mvpBonus:20, awardBonus:15, vote:null, awards:null, awardsDone:false, timer:null, timerBuzzed:false, catsV:0, back:null, lastVote:null};
+let S = {players:[], turn:0, cats:[...CATS], penalty:5, bonus:10, current:null, disabledArtists:[], hiddenArtists:[], log:[], used:[], customArtists:[], customCards:[], rounds:3, timerSec:15, mics:1, round:1, started:0, screen:"home", volume:0.7, muted:false, mode:"local", room:null, inGame:false, mvpBonus:20, awardBonus:15, vote:null, awards:null, awardsDone:false, timer:null, timerBuzzed:false, catsV:0, back:null, lastVote:null};
 let draft=null;
-try{const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.players){S={...S,...s};if(!S.catsV){for(const c of ["2000s","K-Pop","Disney","High School Musical","Word Hunt","Artists","Genres","Years","Mood"])if(!S.cats.includes(c))S.cats.push(c);}if(!Array.isArray(S.disabledArtists))S.disabledArtists=[];if(!Array.isArray(S.hiddenArtists))S.hiddenArtists=[];if(!S.customArtists)S.customArtists=[];if(S.rounds==null)S.rounds=3;if(S.volume==null)S.volume=.7;if(S.muted==null)S.muted=false;if(S.timerSec==null)S.timerSec=15;if(!S.mics)S.mics=1;if(!S.round)S.round=1;if(!S.started)S.started=0;if(!["home","settings","players","game","final","lobby","join","phone"].includes(S.screen))S.screen="home";if(S.screen==="setup")S.screen="home";}}catch(e){}
-S.catsV=2;if(!S.decV){if(S.timerSec===90)S.timerSec=15;S.decV=1}S.players.forEach(p=>{p.stats=p.stats||{}});if(!S.mode)S.mode="local";if(S.mvpBonus==null)S.mvpBonus=20;if(S.awardBonus==null)S.awardBonus=15;
+try{const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.players){S={...S,...s};if(!S.catsV){for(const c of ["2000s","K-Pop","Disney","High School Musical","Word Hunt","Artists","Genres","Years","Mood"])if(!S.cats.includes(c))S.cats.push(c);}if(!Array.isArray(S.disabledArtists))S.disabledArtists=[];if(!Array.isArray(S.hiddenArtists))S.hiddenArtists=[];if(!S.customArtists)S.customArtists=[];if(!Array.isArray(S.customCards))S.customCards=[];if(S.rounds==null)S.rounds=3;if(S.volume==null)S.volume=.7;if(S.muted==null)S.muted=false;if(S.timerSec==null)S.timerSec=15;if(!S.mics)S.mics=1;if(!S.round)S.round=1;if(!S.started)S.started=0;if(!["home","settings","players","game","final","lobby","join","phone"].includes(S.screen))S.screen="home";if(S.screen==="setup")S.screen="home";}}catch(e){}
+if(!(S.catsV>=3)&&!S.cats.includes("Your cards"))S.cats.push("Your cards");S.catsV=3;if(!S.decV){if(S.timerSec===90)S.timerSec=15;S.decV=1}S.players.forEach(p=>{p.stats=p.stats||{}});if(!S.mode)S.mode="local";if(S.mvpBonus==null)S.mvpBonus=20;if(S.awardBonus==null)S.awardBonus=15;
 if(S.inGame==null)S.inGame=!!(S.current||(S.players.length>=2&&(S.round>1||S.started>0||S.players.some(p=>p.score!==0))));
 if(S.screen==="lobby"&&!(S.mode==="host"&&S.room))S.screen="home";
 const $=id=>document.getElementById(id);
@@ -1255,7 +1277,7 @@ const RULES=[
   R("tempo|seconds|timer|clock|30 seconds","clock"),R("city|town|skyline","city"),R("number|count","hash"),R("colou?r","palette"),R("first letter|letter|alphabet","letter"),
   R("three|3 different|artist the group picks|artists","mic"),R("group|everyone|players|room|person|someone|opponent","group"),
 ];
-const CAT_PIC={"Classics":"disc","2000s":"disc","K-Pop":"lightstick","Disney":"castle","High School Musical":"basketball","Word Hunt":"quote","Artists":"mic","Genres":"notes","Years":"calendar","Mood":"masks","Voice":"mic","Performance":"dance","Duet & Group":"duet","Chaos":"dizzy","Trivia":"question","Truth":"shh"};
+const CAT_PIC={"Your cards":"star","Classics":"disc","2000s":"disc","K-Pop":"lightstick","Disney":"castle","High School Musical":"basketball","Word Hunt":"quote","Artists":"mic","Genres":"notes","Years":"calendar","Mood":"masks","Voice":"mic","Performance":"dance","Duet & Group":"duet","Chaos":"dizzy","Trivia":"question","Truth":"shh"};
 function artistType(text){const t=text.toLowerCase();for(const [k,list] of Object.entries(ARTIST_TYPE))if(list.some(a=>t.includes(a)))return k;return null}
 function pic(cat,text){
   if(cat==="Artists"){const m=/^sing an? (.+?) song$/i.exec(text);if(m){const k=artistType(m[1])||(/\b(the|s)\b|band|boys|girls/i.test(m[1])?"band":"crooner");return{sil:true,id:"s-"+k}}}
@@ -1394,7 +1416,7 @@ const ART_RE=/^Sing an? (.+?) song$/;
 function builtinArtists(){return CHALLENGES.filter(c=>c[0]==="Artists").map(c=>(c[1].match(ART_RE)||[])[1]).filter(Boolean).sort((a,b)=>a.localeCompare(b))}
 function artistOff(a){a=a.toLowerCase();return S.disabledArtists.some(x=>x.toLowerCase()===a)||artistHidden(a)}
 function artistHidden(a){a=a.toLowerCase();return S.hiddenArtists.some(x=>x.toLowerCase()===a)}
-function deck(){return CHALLENGES.filter(c=>{if(c[0]!=="Artists")return true;const m=c[1].match(ART_RE);return !m||!artistOff(m[1])}).concat(S.customArtists.map(a=>["Artists","Sing "+art(a)+" "+a+" song",2]))}
+function deck(){return CHALLENGES.filter(c=>{if(c[0]!=="Artists")return true;const m=c[1].match(ART_RE);return !m||!artistOff(m[1])}).concat(S.customArtists.map(a=>["Artists","Sing "+art(a)+" "+a+" song",2])).concat(S.customCards.map(c=>[CATS.includes(c.cat)?c.cat:"Your cards",c.text,[1,2,3].includes(c.diff)?c.diff:2]))}
 
 // ---- Sounds (Web Audio, no files needed) ----
 const sfx=(()=>{let ctx;const ac=()=>{try{ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();if(ctx.state==="suspended")ctx.resume();return ctx}catch(e){return null}};
@@ -1729,7 +1751,13 @@ $("phBody").onclick=e=>{const b=e.target.closest("[data-act]");if(!b||b.disabled
 let WL=null;
 async function wakeLock(on){try{if(on&&!WL&&navigator.wakeLock&&document.visibilityState==="visible"){WL=await navigator.wakeLock.request("screen");WL.addEventListener("release",()=>{WL=null})}else if(!on&&WL){const w=WL;WL=null;await w.release()}}catch(e){WL=null}}
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")wakeLock(["game","lobby","phone"].includes(S.screen))});
-function renderExtra(){
+function renderOwnCards(){const sel=$("cardCat");if(!sel.options.length)sel.innerHTML=CATS.map(c=>`<option value="${esc(c)}"${c==="Your cards"?" selected":""}>${esc(c)}</option>`).join("");
+  $("cardList").innerHTML=S.customCards.map((c,i)=>`<div class="oc"><span class="t">${esc(c.text)}</span><span class="m"><b>${BASE[c.diff]||20}</b> · ${esc(c.cat)}</span><button class="x" data-oc="${i}" title="Remove">×</button></div>`).join("")||'<div class="hint" style="margin:0">No own cards yet.</div>';}
+$("cardForm").onsubmit=e=>{e.preventDefault();const text=$("cardText").value.trim().replace(/\s+/g," ");if(text.length<5){toast("Write a bit more");return}
+  const all=deck();if(all.some(c=>c[1].toLowerCase()===text.toLowerCase())){toast("That card already exists");return}
+  const cat=$("cardCat").value||"Your cards",diff=+$("cardDiff").value||2;S.customCards.push({text,cat,diff});if(!S.cats.includes(cat))S.cats.push(cat);$("cardText").value="";save();render();toast(`Added: ${text} (${BASE[diff]} points)`);sfx.tick()};
+$("cardList").onclick=e=>{const b=e.target.closest("[data-oc]");if(!b)return;const c=S.customCards[+b.dataset.oc];if(!c)return;ask(`Remove "${c.text}"?`,()=>{S.customCards.splice(+b.dataset.oc,1);S.used=S.used.filter(t=>t!==c.text);save();render()},"Remove")};
+function renderExtra(){renderOwnCards();
   const canResume=(S.inGame&&S.players.length>=2)||(S.mode==="host"&&S.room&&!S.inGame);
   $("homeResume").hidden=!canResume;$("homeResume").textContent=S.inGame?"↩ Resume game":"↩ Back to lobby";
   $("homeHost").disabled=!NET_OK;$("homeJoin").disabled=!NET_OK;if(!NET_OK)$("homeHost").title=$("homeJoin").title="Not set up on this copy yet";
