@@ -1724,7 +1724,7 @@ async function ytOpen(q){$("ytOverlay").hidden=false;ytMode("list");ytPrepare();
   try{const list=await ytSearch(q);if(my!==ytReq||$("ytOverlay").hidden)return;if(!list.length)throw new Error("empty");
     const picks=ytPicks();YTS={list:[...list].sort((a,b)=>(picks[b.id]||0)-(picks[a.id]||0)),i:0,q};ytRenderList()}
   catch(e){YTS={list:[],i:0,q};$("ytTitle").textContent="Search not available right now";$("ytList").innerHTML='<div class="msg">The daily search limit may be used up, or there is no connection.<br>Use "YouTube ↗" to search in the YouTube app instead.</div>'}}
-function ytRenderList(){$("ytTitle").textContent="Pick a video";$("ytHint").textContent=YTS.list.length+" suggestions for “"+YTS.q+"”";
+function ytRenderList(){$("ytTitle").textContent=S.current?"🎤 "+S.current.text:"Pick a video";$("ytHint").textContent=YTS.list.length+" suggestions for “"+YTS.q+"”";
   const picks=ytPicks();YTS.list=[...YTS.list].sort((a,b)=>(picks[b.id]||0)-(picks[a.id]||0));YTS.i=0;$("ytList").innerHTML=YTS.list.map((v,i)=>`<button class="ytitem" type="button" data-yt="${i}"><img src="${esc(v.th)}" alt=""><span><span class="tt">${esc(v.title)}</span><span class="ch">${esc(v.ch)}${picks[v.id]?" · ⭐ played before":""}</span></span></button>`).join("")}
 function ytShow(){const v=YTS.list[YTS.i];if(!v)return;ytMode("play");$("ytTitle").textContent=v.title;$("ytHint").textContent=v.ch+" · video "+(YTS.i+1)+" of "+YTS.list.length;
   ytPlay(v.id);$("ytNext").disabled=YTS.list.length<2}
