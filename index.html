@@ -1708,9 +1708,11 @@ let ytP=null,ytApiP=null,ytPending=null;
 function ytApi(){if(ytApiP)return ytApiP;ytApiP=new Promise((res,rej)=>{window.onYouTubeIframeAPIReady=()=>res();const el=document.createElement("script");el.src="https://www.youtube.com/iframe_api";el.onerror=()=>{ytApiP=null;rej(new Error("api"))};document.head.appendChild(el);setTimeout(()=>rej(new Error("timeout")),8000)});return ytApiP}
 let ytReady=false;
 function ytEnsure(id){if(ytP)return;$("ytFrame").innerHTML='<div id="ytPlayer"></div>';ytReady=false;
-  ytP=new YT.Player("ytPlayer",{videoId:id||undefined,playerVars:{autoplay:1,rel:0,playsinline:1},events:{
+  const opts={playerVars:{autoplay:1,rel:0,playsinline:1},events:{
     onReady:e=>{ytReady=true;if(ytPending&&ytPending!==id)e.target.loadVideoById(ytPending);else if(id)try{e.target.playVideo()}catch(x){}},
-    onError:()=>{$("ytHint").textContent+=" · this video cannot be played here – try Next"}}})}
+    onError:()=>{$("ytHint").textContent+=" · this video cannot be played here – try Next"}}};
+  if(id)opts.videoId=id;
+  try{ytP=new YT.Player("ytPlayer",opts)}catch(e){ytP=null;$("ytFrame").innerHTML=""}}
 function ytPrepare(){ytApi().then(()=>{if(!ytP)ytEnsure(null)}).catch(()=>{})}
 function ytPlay(id){ytPending=id;
   if(ytP&&ytReady){try{ytP.loadVideoById(id);return}catch(e){}}
