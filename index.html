@@ -1464,11 +1464,29 @@ function doFail(){const c=S.current;if(!c)return;const p=S.players[c.holder];con
   S.log.unshift(`<b>${esc(p.name)}</b> failed: <span class="down">${pen?fmt(-pen):"0"}</span> – ${esc(c.text)}`);
   toast(pen?`${p.name} −${pen} – better luck next card`:`${p.name} – no points, no penalty`);sfx.buzz();endCard()}
 $("fail").onclick=()=>ask("Mark this card as failed? "+(FAIL[S.current&&S.current.diff]?"That costs "+FAIL[S.current.diff]+" points.":"No penalty on a 10-point card."),doFail,"Failed");
-function ytQuery(cat,text){if(/^Pick any song/i.test(text))return "karaoke hits";const w=/the word '([^']+)'/i.exec(text);if(w)return w[1]+" song karaoke";
-  const m=/(?:^|\s)'(.+?)'(?=\s|[,–—(]|$)(?: (?:by|from|as) (.+?))?(?= with | and | as | in | while | on | at | to | if |[–—,(]|$)/.exec(text);if(m)return m[1]+(m[2]?" "+m[2].trim():"")+" karaoke";
-  const ar=/^Sing an? (.+?) song/i.exec(text);if(ar&&cat==="Artists")return ar[1]+" karaoke";
+function ytQuery(cat,text){
+  const cut=t=>t.replace(/[–—].*$/,"").replace(/\s*\(.*?\)\s*/g," ").replace(/[,:;].*$/,"").replace(/\s+(while|with|and|as if|as |like |but |if |then |so |until|before|after|every|everyone|the group|the room|your partner|without|only|just|in front of|on your|to someone|for someone|that |who |where |when |\/ |or |standing )\b.*$/i,"").trim();
+  const clean=x=>x.replace(/^(?:a |an |the |any |some |being )+/i,"").replace(/\s+/g," ").trim();
+  const HITS="karaoke hits";
+  if(/^Pick any song/i.test(text))return HITS;
+  // quoted title (capitalised), optionally with artist / movie / character
+  const m=/(?:^|\s)'([A-Z0-9].*?)'(?=\s|[,–—(]|$)(?: (?:by|from|as) (.+?))?(?= with | and | as | in | while | on | at | to | if |[–—,(]|$)/.exec(text);
+  if(m){let extra=m[2]?clean(m[2]):"";if(/^(a |an )/i.test(m[2]||"")||extra.split(" ").length>3)extra="";return m[1]+(extra?" "+extra:"")+" karaoke"}
+  const w=/the word '([^']+)'/i.exec(text);if(w)return w[1]+" song karaoke";
   const y=/released in (\d{4})/.exec(text);if(y)return y[1]+" hits karaoke";
-  let t=text.replace(/^(Sing |Perform |Rap |Whisper )/i,"").replace(/[–—].*$/,"").replace(/^(a |an |the )/i,"").trim();return t+" karaoke"}
+  if(cat==="Truth")return HITS;
+  const t=cut(text);
+  if(!/^Sing\b/i.test(t))return HITS;
+  const by=/\b(?:song|hit|track|anthem|ballad|classic)s? (?:by|from|of) (.+)$/i.exec(t);if(by){const x=clean(by[1]);return /\b(you|your)\b/i.test(x)?HITS:x+" karaoke"}
+  const noun=x=>/^[A-Z0-9]/.test(x)?x+" karaoke":x+" song karaoke";
+  const ar=/^Sing an? (.+?) (?:song|hit|track|anthem|ballad|classic|standard|aria|opening|theme)s?\b/i.exec(t);if(ar)return noun(clean(ar[1]));
+  const about=/\bsong about (.+)$/i.exec(t);if(about)return clean(about[1])+" song karaoke";
+  const gen=/^Sing (?:the |a |an |any )?(.+?)(?: song)?$/i.exec(t);
+  if(!gen||/\b(you|your)\b/i.test(gen[1]))return HITS;
+  const STOP=new Set("sing a an the song songs your you that this it in of to and or with while on at for from by is are be do does if as like but so any pick perform whole entire full everyone group room person someone player players only just make makes get gets want would can could must should no not one all its their his her out up down off into over".split(" "));
+  const words=gen[1].split(/\s+/).filter(x=>x&&!STOP.has(x.toLowerCase().replace(/[^a-z0-9'-]/g,""))).slice(0,3);
+  return words.length?words.join(" ")+" karaoke":HITS;
+}
 function ytUrl(cat,text){return "https://www.youtube.com/results?search_query="+encodeURIComponent(ytQuery(cat,text))}
 $("draw").onclick=e=>{const b=e.target.closest("[data-diff]");if(!b||b.disabled)return;drawCard(+b.dataset.diff)};
 $("done").onclick=doDone;$("pass").onclick=doPass;
