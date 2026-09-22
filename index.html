@@ -222,6 +222,11 @@ h1 span{color:var(--red-2)}
 .modal p{margin:0 0 18px;font-size:17px;font-weight:700;line-height:1.4}
 .modal .row{display:flex;gap:10px;justify-content:center}
 .modal .row .btn{flex:1;font-size:16px;padding:14px}
+.btn-fail{background:transparent;color:#f08a8a;border:2px solid #7a3a4a}
+.btn-fail:hover{background:rgba(240,138,138,.12)}
+.playbtn{margin-top:10px;display:inline-flex;gap:6px;align-items:center;background:#e62117;color:#fff;border-radius:999px;padding:6px 13px;font-family:Nunito,sans-serif;font-size:12px;font-weight:800;letter-spacing:.04em;text-decoration:none;text-transform:uppercase}
+.playbtn:active{transform:scale(.97)}
+.phone .minicard .playbtn{margin-top:8px}
 </style>
 </head>
 <body>
@@ -444,7 +449,7 @@ h1 span{color:var(--red-2)}
       <label>Best-performance bonus per round (phones, 0 = off) <input type="number" id="mvpBonus" value="20" min="0"></label>
       <label>Secret award bonus at the end (0 = off) <input type="number" id="awardBonus" value="15" min="0"></label>
     </div>
-    <p class="hint">Passing costs points. The card moves to the next player and is worth more. A round is over when every player has started one card. With phones, everyone votes for the best performance after each round. At the end, three secret awards (most hard cards, most passes…) are revealed one by one.</p>
+    <p class="hint">Passing costs points. The card moves to the next player and is worth more. The tier is a bet: failing a 10-point card costs nothing, a 20-point card −10, a 30-point card −15. A round is over when every player has started one card. With phones, everyone votes for the best performance after each round. At the end, three secret awards (most hard cards, most passes…) are revealed one by one.</p>
   </section>
   <section class="panel">
     <h2>Sound</h2>
@@ -560,6 +565,7 @@ h1 span{color:var(--red-2)}
             <div class="worth">Worth <b id="worth">0</b></div>
             <div class="picked" id="picked" hidden>🎲 <span id="pickedLbl">Player:</span> <b id="pickedName"></b></div>
             <div class="chain" id="chain"></div>
+            <a class="playbtn" id="playBtn" href="#" target="_blank" rel="noopener">▶ Find on YouTube</a>
           </div>
         </div>
       </div>
@@ -574,6 +580,7 @@ h1 span{color:var(--red-2)}
       </div>
       <button class="btn btn-green" id="done" hidden>✓ Done it</button>
       <button class="btn btn-ghost" id="pass" hidden>Pass ➜ hand over</button>
+      <button class="btn btn-fail" id="fail" hidden>✗ Failed</button>
     </div>
 
     <ul class="log" id="log"></ul>
@@ -1298,7 +1305,7 @@ function render(){
     const holder=S.players[S.current.holder];
     $("who").innerHTML=`<b>${esc(holder.name)}</b>, you\'re up`;
     $("sub").textContent=S.current.chain>0?`Passed on by ${S.current.passedBy.map(i=>S.players[i].name).join(", ")} – now worth ${S.current.worth} points!`:`Accept the challenge or pass it on.`;
-    $("draw").hidden=true;$("done").hidden=false;$("pass").hidden=false;
+    $("draw").hidden=true;$("done").hidden=false;$("pass").hidden=false;$("fail").hidden=false;$("fail").textContent=`✗ Failed (${FAIL[S.current.diff]?"−"+FAIL[S.current.diff]:"0"})`;$("playBtn").href=ytUrl(S.current.cat,S.current.raw||S.current.text);
     $("pass").textContent=S.current.chain>=S.players.length-1?"Pass (card is discarded)":"Pass ➜ hand over";
     $("done").textContent=`✓ Done it (+${S.current.worth})`;
     resolveText();setPic(S.current.cat,S.current.raw||S.current.text);
@@ -1309,7 +1316,7 @@ function render(){
   }else{
     $("who").innerHTML=ok?`Up next: <b>${esc(cur.name)}</b>`:"Add players first";
     $("sub").textContent=ok?"Pick 10, 20 or 30 points to draw a card.":"At least 2 players, then draw a card.";
-    $("draw").hidden=false;{const av=deck().filter(c=>S.cats.includes(c[0]));[...$("draw").querySelectorAll("[data-diff]")].forEach(b=>{const d=+b.dataset.diff;b.disabled=!ok||!av.some(c=>d===0||c[2]===d)})}$("done").hidden=true;$("pass").hidden=true;$("picked").hidden=true;
+    $("draw").hidden=false;{const av=deck().filter(c=>S.cats.includes(c[0]));[...$("draw").querySelectorAll("[data-diff]")].forEach(b=>{const d=+b.dataset.diff;b.disabled=!ok||!av.some(c=>d===0||c[2]===d)})}$("done").hidden=true;$("pass").hidden=true;$("fail").hidden=true;$("picked").hidden=true;
     $("card").classList.remove("flipped");
   }
   $("log").innerHTML=S.log.slice(0,8).map(l=>`<li>${l}</li>`).join("");
@@ -1430,9 +1437,20 @@ function doPass(){const c=S.current;if(!c)return;const p=S.players[c.holder];p.s
   if(c.chain>=S.players.length){S.log.unshift(`Everyone passed – card discarded: ${esc(c.text)}`);toast("Everyone passed – card gone");endCard();return}
   c.holder=(c.holder+1)%S.players.length;c.pick=null;c.worth+=S.bonus;resolveText();startTimer();
   toast(`Over to ${S.players[c.holder].name} – now worth ${c.worth} points!`);save();render()}
+const FAIL={1:0,2:10,3:15};
+function doFail(){const c=S.current;if(!c)return;const p=S.players[c.holder];const pen=FAIL[c.diff]||0;p.score-=pen;stat(p,"fail");if(c.diff===3)stat(p,"failHard");
+  S.log.unshift(`<b>${esc(p.name)}</b> failed: <span class="down">${pen?fmt(-pen):"0"}</span> – ${esc(c.text)}`);
+  toast(pen?`${p.name} −${pen} – better luck next card`:`${p.name} – no points, no penalty`);sfx.buzz();endCard()}
+$("fail").onclick=()=>ask("Mark this card as failed? "+(FAIL[S.current&&S.current.diff]?"That costs "+FAIL[S.current.diff]+" points.":"No penalty on a 10-point card."),doFail,"Failed");
+function ytQuery(cat,text){if(/^Pick any song/i.test(text))return "karaoke hits";const w=/the word '([^']+)'/i.exec(text);if(w)return w[1]+" song karaoke";
+  const m=/(?:^|\s)'(.+?)'(?=\s|[,–—(]|$)(?: (?:by|from|as) (.+?))?(?= with | and | as | in | while | on | at | to | if |[–—,(]|$)/.exec(text);if(m)return m[1]+(m[2]?" "+m[2].trim():"")+" karaoke";
+  const ar=/^Sing an? (.+?) song/i.exec(text);if(ar&&cat==="Artists")return ar[1]+" karaoke";
+  const y=/released in (\d{4})/.exec(text);if(y)return y[1]+" hits karaoke";
+  let t=text.replace(/^(Sing |Perform |Rap |Whisper )/i,"").replace(/[–—].*$/,"").replace(/^(a |an |the )/i,"").trim();return t+" karaoke"}
+function ytUrl(cat,text){return "https://www.youtube.com/results?search_query="+encodeURIComponent(ytQuery(cat,text))}
 $("draw").onclick=e=>{const b=e.target.closest("[data-diff]");if(!b||b.disabled)return;drawCard(+b.dataset.diff)};
 $("done").onclick=doDone;$("pass").onclick=doPass;
-function endCard(){stopTimer();const c=S.current;S.current=null;$("done").hidden=$("pass").hidden=true;$("card").classList.remove("flipped");
+function endCard(){stopTimer();const c=S.current;S.current=null;$("done").hidden=$("pass").hidden=$("fail").hidden=true;$("card").classList.remove("flipped");
   S.turn=(c.starter+1)%S.players.length;S.started++;
   if(S.started>=S.players.length){S.started=0;
     if(S.mode==="host"&&S.mvpBonus>0&&voters().length>=2){openVote();return}
@@ -1462,6 +1480,7 @@ const AWARDS=[
  {id:"done",em:"🎤",t:"Iron voice",d:"Most cards sung"},
  {id:"rescue",em:"🦸",t:"Rescue hero",d:"Most passed-on cards rescued"},
  {id:"pass",em:"🐔",t:"Chicken of the night",d:"Most passes – yes, that pays too"},
+ {id:"fail",em:"🎢",t:"High roller",d:"Most failed bets – respect for trying"},
  {id:"duet",em:"💞",t:"Duet darling",d:"Most partner cards"},
  {id:"fast",em:"⚡",t:"Quick draw",d:"Most cards done with half the timer left"},
  {id:"mvp",em:"👏",t:"Crowd favourite",d:"Most best-performance votes"},
@@ -1489,7 +1508,7 @@ function netPush(){if(S.mode!=="host"||!S.room)return;clearTimeout(pushT);pushT=
 function snapshot(){const phase=S.screen==="final"?"final":S.vote?"vote":S.inGame?"game":"lobby";const c=S.current;
   return{phase,round:S.round,rounds:S.rounds,turn:S.turn,
     players:S.players.map(p=>({name:p.name,score:p.score,pid:p.pid||null,on:online(p)})),
-    current:c?{cat:c.cat,text:c.text,worth:c.worth,chain:c.chain,holder:c.holder,pick:c.pick==null?null:c.pick,partner:c.pick!=null&&needsPartner(c.raw||c.text)}:null,
+    current:c?{cat:c.cat,text:c.text,raw:c.raw||c.text,diff:c.diff,worth:c.worth,chain:c.chain,holder:c.holder,pick:c.pick==null?null:c.pick,partner:c.pick!=null&&needsPartner(c.raw||c.text)}:null,
     timer:S.timer||null,timerSec:S.timerSec,penalty:S.penalty,bonus:S.bonus,mvpBonus:S.mvpBonus,awardBonus:S.awardBonus,tiers:tiersAvail(),
     vote:S.vote?{round:S.vote.round,voted:Object.keys(S.vote.votes),total:voters().filter(i=>S.players[i].pid).length}:null,
     lastVote:S.lastVote?{round:S.lastVote.round,win:S.lastVote.win.map(i=>S.players[i]&&S.players[i].name).filter(Boolean)}:null,
@@ -1524,7 +1543,8 @@ function handleActions(acts){for(const k of Object.keys(acts).sort()){if(doneAct
   const i=S.players.findIndex(p=>p.pid===a.pid);if(i<0)continue;
   if(a.type==="draw"){if(S.inGame&&S.screen!=="final"&&!S.current&&!S.vote&&S.turn===i)drawCard(+a.diff||0)}
   else if(a.type==="done"){if(S.current&&S.current.holder===i)doDone()}
-  else if(a.type==="pass"){if(S.current&&S.current.holder===i)doPass()}}}
+  else if(a.type==="pass"){if(S.current&&S.current.holder===i)doPass()}
+  else if(a.type==="fail"){if(S.current&&S.current.holder===i)doFail()}}}
 function syncVotes(v){if(!S.vote)return;const votes={};
   for(const [pid,target] of Object.entries(v)){const voter=S.players.find(p=>p.pid===pid);if(!voter||typeof target!=="string")continue;
     if(voter.name.toLowerCase()===target.toLowerCase())continue;if(!S.players.some(p=>p.name.toLowerCase()===target.toLowerCase()))continue;votes[pid]=target}
@@ -1583,8 +1603,8 @@ function renderPhone(){if(S.screen!=="phone"||!PH)return;const st=PH.state;const
     else{const top=Math.max(...players.map(p=>p.score));const wins=players.filter(p=>p.score===top).map(p=>p.name);
       html=`<div style="font-size:56px;line-height:1">🏆</div><div class="who"><b>${wins.map(esc).join(" & ")}</b></div><p class="hint">${top} points${wins.length>1?" – it's a tie!":""}${wins.includes(me.name)?" – that's you! 🎉":""}</p><div class="awards">${aw}</div>${board}`}}
   else{const timer=`<div class="timer phtimer" id="phTimer" hidden></div>`;
-    if(c){const card=`<div class="minicard"><div class="frame"><div class="pic" id="phPic"></div><div class="cat">${esc(c.cat)}</div><div class="text">${esc(c.text)}</div><div class="worth">Worth <b>${c.worth}</b></div>${c.pick!=null&&players[c.pick]?`<div class="picked">🎲 ${c.partner?"Partner:":"Player:"} <b>${esc(players[c.pick].name)}</b></div>`:""}${c.chain>0?`<div class="chain">Passed on ${c.chain}× – bonus!</div>`:""}</div></div>`;
-      if(mine)html=`<div class="who">Your turn, <b>${esc(me.name)}</b>!</div>${timer}${card}<div class="actions phact"><button class="btn btn-green" data-act="done">✓ Done it (+${c.worth})</button><button class="btn btn-ghost" data-act="pass">${c.chain>=players.length-1?"Pass (card is discarded)":"Pass ➜ hand over"}</button></div>`;
+    if(c){const card=`<div class="minicard"><div class="frame"><div class="pic" id="phPic"></div><div class="cat">${esc(c.cat)}</div><div class="text">${esc(c.text)}</div><div class="worth">Worth <b>${c.worth}</b></div>${c.pick!=null&&players[c.pick]?`<div class="picked">🎲 ${c.partner?"Partner:":"Player:"} <b>${esc(players[c.pick].name)}</b></div>`:""}${c.chain>0?`<div class="chain">Passed on ${c.chain}× – bonus!</div>`:""}<a class="playbtn" href="${ytUrl(c.cat,c.raw||c.text)}" target="_blank" rel="noopener">▶ Find on YouTube</a></div></div>`;
+      if(mine)html=`<div class="who">Your turn, <b>${esc(me.name)}</b>!</div>${timer}${card}<div class="actions phact"><button class="btn btn-green" data-act="done">✓ Done it (+${c.worth})</button><button class="btn btn-ghost" data-act="pass">${c.chain>=players.length-1?"Pass (card is discarded)":"Pass ➜ hand over"}</button><button class="btn btn-fail" data-act="fail">✗ Failed (${FAIL[c.diff]?"−"+FAIL[c.diff]:"0"})</button></div>`;
       else html=`<div class="who"><b>${esc(holder?holder.name:"?")}</b> is up</div>${timer}${card}<p class="hint">${c.pick===meI?"You're the partner – get ready!":"Cheer them on! 🎉"}</p>${board}`}
     else{if(mine)html=`<div class="who">Your turn, <b>${esc(me.name)}</b>!</div><p class="hint">Pick your points to draw a card.</p><div class="drawrow phdraw">${[[1,"10","easy"],[2,"20","medium"],[3,"30","hard"]].map(([d,n,l])=>`<button class="btn btn-red tier" data-act="draw" data-diff="${d}" ${(st.tiers||[]).includes(d)?"":"disabled"}><b>${n}</b><span>${l}</span></button>`).join("")}<button class="btn btn-ghost" data-act="draw" data-diff="0" ${(st.tiers||[]).includes(0)?"":"disabled"}>🎲 Random</button></div>${board}`;
       else html=`<div class="who">Up next: <b>${esc(holder?holder.name:"?")}</b></div><p class="hint">Waiting for them to draw a card…</p>${st.lastVote&&st.lastVote.win.length&&st.lastVote.round===st.round-1?`<p class="hint">🏅 Best performance in round ${st.lastVote.round}: <b>${st.lastVote.win.map(esc).join(" &amp; ")}</b></p>`:""}${board}`}}
@@ -1600,6 +1620,7 @@ $("phLeave").onclick=()=>ask("Leave this game?",phoneLeave,"Leave");
 $("phBody").onclick=e=>{const b=e.target.closest("[data-act]");if(!b||b.disabled)return;const act=b.dataset.act;
   if(act==="draw")phoneAct("draw",{diff:+b.dataset.diff});else if(act==="done")phoneAct("done");
   else if(act==="pass"){ask("Pass this card? That costs points.",()=>{phoneAct("pass");b.disabled=true;setTimeout(()=>{b.disabled=false},2000)},"Pass");return}
+  else if(act==="fail"){const d=PH.state&&PH.state.current?PH.state.current.diff:0;ask("Mark this card as failed? "+(FAIL[d]?"That costs "+FAIL[d]+" points.":"No penalty on a 10-point card."),()=>{phoneAct("fail");b.disabled=true;setTimeout(()=>{b.disabled=false},2000)},"Failed");return}
   else if(act==="vote")phoneVote(b.dataset.name);else if(act==="rejoin"){S.screen="join";save();render();$("joinCode").value=PH?PH.code:"";$("joinName").value=PH?PH.name:""}else if(act==="leave")phoneLeave();
   if(act==="draw"||act==="done"||act==="pass"){b.disabled=true;setTimeout(()=>{b.disabled=false},2000)}};
 
