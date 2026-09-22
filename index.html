@@ -616,7 +616,7 @@ h1 span{color:var(--red-2)}
 </div>
 </div>
 <div class="toast" id="toast"></div>
-<div class="ytwrap" id="ytOverlay" hidden><div class="ytbox"><div class="ythead"><button class="btn btn-ghost" id="ytBack" type="button" hidden>◂ List</button><span class="t" id="ytTitle">Searching…</span><button class="btn btn-ghost" id="ytNext" type="button" hidden>Next ▸</button><a class="btn btn-ghost" id="ytOpen" target="_blank" rel="noopener">YouTube ↗</a><button class="btn btn-ghost" id="ytClose" type="button">✕</button></div><form class="ytsearch" id="ytForm"><input id="ytQ" placeholder="Search for a song or artist…" autocomplete="off"><button class="btn btn-gold" type="submit">Search</button></form><div class="ytlist" id="ytList"></div><div class="ytframe" id="ytFrame" hidden></div><div class="ytfoot"><span id="ytHint"></span><span>Tap ✕ or outside to close</span></div></div></div>
+<div class="ytwrap" id="ytOverlay" hidden><div class="ytbox"><div class="ythead"><button class="btn btn-ghost" id="ytBack" type="button" hidden>◂ List</button><span class="t" id="ytTitle">Searching…</span><button class="btn btn-ghost" id="ytNext" type="button" hidden>Next ▸</button><a class="btn btn-ghost" id="ytOpen" target="_blank" rel="noopener">YouTube ↗</a><button class="btn btn-ghost" id="ytClose" type="button">✕</button></div><form class="ytsearch" id="ytForm"><input id="ytQ" placeholder="Not the right one? Search for another song or artist…" autocomplete="off"><button class="btn btn-gold" type="submit">Search</button></form><div class="ytlist" id="ytList"></div><div class="ytframe" id="ytFrame" hidden></div><div class="ytfoot"><span id="ytHint"></span><span>Tap ✕ or outside to close</span></div></div></div>
 <div class="modal" id="modal" hidden><div class="box"><p id="modalMsg"></p><div class="row"><button class="btn btn-ghost" id="modalNo" type="button">Cancel</button><button class="btn btn-red" id="modalYes" type="button">Yes</button></div></div></div>
 
 <script>
@@ -1717,7 +1717,7 @@ function ytPrepare(){ytApi().then(()=>{if(!ytP)ytEnsure(null)}).catch(()=>{})}
 function ytPlay(id){ytPending=id;
   if(ytP&&ytReady){try{ytP.loadVideoById(id);return}catch(e){}}
   ytApi().then(()=>{if(ytPending!==id)return;if(!ytP)ytEnsure(id)}).catch(()=>{ytP=null;$("ytFrame").innerHTML='<iframe src="https://www.youtube.com/embed/'+id+'?autoplay=1&rel=0&playsinline=1" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>'})}
-async function ytOpen(q){$("ytOverlay").hidden=false;ytMode("list");ytPrepare();$("ytTitle").textContent="Searching YouTube…";$("ytList").innerHTML="";$("ytHint").textContent="";$("ytQ").value=q.replace(/ karaoke$/,"");
+async function ytOpen(q){$("ytOverlay").hidden=false;ytMode("list");ytPrepare();$("ytTitle").textContent="Searching YouTube…";$("ytList").innerHTML="";$("ytHint").textContent="";$("ytQ").value="";
   $("ytOpen").href="https://www.youtube.com/results?search_query="+encodeURIComponent(q);
   const my=++ytReq;
   try{const list=await ytSearch(q);if(my!==ytReq||$("ytOverlay").hidden)return;if(!list.length)throw new Error("empty");
