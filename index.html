@@ -1690,6 +1690,7 @@ function boot(){
   if(S.timer&&!S.current)S.timer=null;
   render();
   if(S.current&&S.screen==="game")resumeTimer();
+  if(navigator.onLine&&!NET_LOCAL&&S.screen!=="phone")setTimeout(()=>ytApi().catch(()=>{}),4000);
 }
 
 // ---- In-app YouTube player ----
@@ -1705,12 +1706,16 @@ function ytRemember(id){try{const p=ytPicks();p[id]=(p[id]||0)+1;const keys=Obje
 function ytMode(m){$("ytList").hidden=m!=="list";$("ytFrame").hidden=m!=="play";$("ytBack").hidden=m!=="play";$("ytNext").hidden=m!=="play";$("ytForm").hidden=m==="play";if(m!=="play"&&ytP&&ytP.stopVideo)try{ytP.stopVideo()}catch(e){}}
 let ytP=null,ytApiP=null,ytPending=null;
 function ytApi(){if(ytApiP)return ytApiP;ytApiP=new Promise((res,rej)=>{window.onYouTubeIframeAPIReady=()=>res();const el=document.createElement("script");el.src="https://www.youtube.com/iframe_api";el.onerror=()=>{ytApiP=null;rej(new Error("api"))};document.head.appendChild(el);setTimeout(()=>rej(new Error("timeout")),8000)});return ytApiP}
-async function ytPlay(id){ytPending=id;
-  try{await ytApi();if(ytPending!==id)return;
-    if(!ytP){$("ytFrame").innerHTML="<div id=\"ytPlayer\"></div>";await new Promise(res=>{ytP=new YT.Player("ytPlayer",{videoId:id,playerVars:{autoplay:1,rel:0,playsinline:1},events:{onReady:e=>{try{e.target.playVideo()}catch(x){}res()},onError:()=>{$("ytHint").textContent+=" · this video cannot be played here – try Next"}}})})}
-    else ytP.loadVideoById(id)}
-  catch(e){ytP=null;$("ytFrame").innerHTML="<iframe src=\"https://www.youtube.com/embed/"+id+"?autoplay=1&rel=0&playsinline=1\" allow=\"autoplay; encrypted-media; picture-in-picture; fullscreen\" allowfullscreen></iframe>"}}
-async function ytOpen(q){$("ytOverlay").hidden=false;ytMode("list");$("ytTitle").textContent="Searching YouTube…";$("ytList").innerHTML="";$("ytHint").textContent="";$("ytQ").value=q.replace(/ karaoke$/,"");
+let ytReady=false;
+function ytEnsure(id){if(ytP)return;$("ytFrame").innerHTML='<div id="ytPlayer"></div>';ytReady=false;
+  ytP=new YT.Player("ytPlayer",{videoId:id||undefined,playerVars:{autoplay:1,rel:0,playsinline:1},events:{
+    onReady:e=>{ytReady=true;if(ytPending&&ytPending!==id)e.target.loadVideoById(ytPending);else if(id)try{e.target.playVideo()}catch(x){}},
+    onError:()=>{$("ytHint").textContent+=" · this video cannot be played here – try Next"}}})}
+function ytPrepare(){ytApi().then(()=>{if(!ytP)ytEnsure(null)}).catch(()=>{})}
+function ytPlay(id){ytPending=id;
+  if(ytP&&ytReady){try{ytP.loadVideoById(id);return}catch(e){}}
+  ytApi().then(()=>{if(ytPending!==id)return;if(!ytP)ytEnsure(id)}).catch(()=>{ytP=null;$("ytFrame").innerHTML='<iframe src="https://www.youtube.com/embed/'+id+'?autoplay=1&rel=0&playsinline=1" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>'})}
+async function ytOpen(q){$("ytOverlay").hidden=false;ytMode("list");ytPrepare();$("ytTitle").textContent="Searching YouTube…";$("ytList").innerHTML="";$("ytHint").textContent="";$("ytQ").value=q.replace(/ karaoke$/,"");
   $("ytOpen").href="https://www.youtube.com/results?search_query="+encodeURIComponent(q);
   const my=++ytReq;
   try{const list=await ytSearch(q);if(my!==ytReq||$("ytOverlay").hidden)return;if(!list.length)throw new Error("empty");
