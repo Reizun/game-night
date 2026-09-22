@@ -480,7 +480,7 @@ h1 span{color:var(--red-2)}
   <section class="panel">
     <h2>Build your own cards</h2>
     <form class="owncard" id="cardForm">
-      <input id="cardText" placeholder="Your challenge, e.g. Sing a song with a fake French accent" maxlength="120" autocomplete="off">
+      <input id="cardText" placeholder="Your challenge, e.g. Sing a love song to {P}" maxlength="120" autocomplete="off">
       <div class="row">
         <select id="cardCat" aria-label="Category"></select>
         <select id="cardDiff" aria-label="Points"><option value="1">10 points · easy</option><option value="2" selected>20 points · medium</option><option value="3">30 points · hard</option></select>
@@ -488,7 +488,7 @@ h1 span{color:var(--red-2)}
       </div>
     </form>
     <div class="owncards" id="cardList"></div>
-    <p class="hint" id="cardHint">Your cards join the deck under the category you choose (or "Your cards"). They stay on this device. Tip: mention "the person on your left" or "a duet" and the app picks a partner automatically.</p>
+    <p class="hint" id="cardHint">Your cards join the deck under the category you choose (or "Your cards"). They stay on this device. Tip: write {P} where a random player's name should go, e.g. "Sing a duet with {P}".</p>
   </section>
   <section class="panel">
     <h2>Rules</h2>
@@ -697,7 +697,7 @@ const CHALLENGES = [
  ["K-Pop","Sing 'DDU-DU DDU-DU' and do the finger-gun move on every beat",2],
  ["K-Pop","Sing 'Super Shy' by NewJeans – as shy as possible",1],
  ["K-Pop","Sing 'Hype Boy' by NewJeans with the TikTok dance",2],
- ["K-Pop","Sing 'Cupid' by FIFTY FIFTY – twin version with a partner",1],
+ ["K-Pop","Sing 'Cupid' by FIFTY FIFTY – twin version with {P}",1],
  ["K-Pop","Sing 'APT.' by ROSÉ & Bruno Mars – the group plays the drinking game part",1],
  ["K-Pop","Sing 'Magnetic' by ILLIT",2],
  ["K-Pop","Sing 'Supernova' by aespa",2],
@@ -707,7 +707,7 @@ const CHALLENGES = [
  ["K-Pop","Sing 'Fancy' by TWICE",1],
  ["K-Pop","Sing 'TT' by TWICE and do the TT hands the whole time",1],
  ["K-Pop","Sing 'Kill This Love' by BLACKPINK with a fake trumpet intro",2],
- ["K-Pop","Sing 'Boy With Luv' by BTS as a duet – one sings Halsey's part",2],
+ ["K-Pop","Sing 'Boy With Luv' by BTS as a duet with {P} – one sings Halsey's part",2],
  ["K-Pop","Sing 'Fake Love' by BTS with maximum drama",2],
  ["K-Pop","Sing 'Pink Venom' by BLACKPINK and rap Lisa's verse",3],
  ["K-Pop","Sing 'Smart' by LE SSERAFIM with the lazy dance",2],
@@ -728,20 +728,20 @@ const CHALLENGES = [
  ["K-Pop","Sing 'Growl' by EXO",2],
  ["K-Pop","Sing 'Bboom Bboom' by MOMOLAND",1],
  ["K-Pop","Sing 'Rush Hour' by Crush ft. j-hope",2],
- ["K-Pop","Sing 'Ice Cream' by BLACKPINK & Selena Gomez as a duet",1],
+ ["K-Pop","Sing 'Ice Cream' by BLACKPINK & Selena Gomez as a duet with {P}",1],
  ["K-Pop","Sing a K-Pop B-side that nobody in the room knows – 30 points if you pull it off",3],
  ["K-Pop","Sing a K-Pop song and translate one line into your language on the spot",3],
  ["K-Pop","Sing a K-Pop song while the group holds up light sticks (phones count)",1],
  ["K-Pop","Sing the intro of a K-Pop song only – the group guesses the group",2],
  ["K-Pop","Sing a girl-group song if you are a guy, or a boy-group song if you are a girl",2],
- ["K-Pop","Sing a K-Pop song from the group the person on your left names",2],
+ ["K-Pop","Sing a K-Pop song from the group {P} names",2],
  ["K-Pop","Sing a song from KPop Demon Hunters",1],
  ["K-Pop","Sing 'Golden' from KPop Demon Hunters – and hit the high note",3],
  ["K-Pop","Sing 'Soda Pop' as the Saja Boys with two backup dancers",2],
  ["K-Pop","Sing 'How It's Done' as HUNTR/X with the fight choreo",2],
  ["K-Pop","Sing 'Your Idol' as a demon idol – full villain energy",2],
  ["K-Pop","Sing 'Takedown' at the person you would banish to the demon world",2],
- ["K-Pop","Sing 'Free' as a duet – Rumi and Jinu, the group picks who is who",2],
+ ["K-Pop","Sing 'Free' as a duet with {P} – Rumi and Jinu, you decide who is who",2],
  ["K-Pop","Sing 'What It Sounds Like' as the grand finale with the whole group as backup",2],
  ["K-Pop","Sing a BTS song – any member's part",1],
  ["K-Pop","Sing a BLACKPINK song and do the killing part choreo",2],
@@ -761,7 +761,7 @@ const CHALLENGES = [
  // Disney
  ["Disney","Sing 'Into the Unknown' from Frozen 2 – the call included",3],
  ["Disney","Sing 'Do You Want to Build a Snowman' knocking on an imaginary door",1],
- ["Disney","Sing 'Love Is an Open Door' as a duet with someone you just met",2],
+ ["Disney","Sing 'Love Is an Open Door' as a duet with {P}",2],
  ["Disney","Sing 'How Far I'll Go' from Moana",2],
  ["Disney","Sing 'You're Welcome' as Maui with maximum ego",2],
  ["Disney","Sing 'Shiny' as Tamatoa the crab, glittering and evil",2],
@@ -771,9 +771,9 @@ const CHALLENGES = [
  ["Disney","Sing 'Part of Your World' from The Little Mermaid",2],
  ["Disney","Sing 'Under the Sea' as Sebastian with a Caribbean accent",2],
  ["Disney","Sing 'Poor Unfortunate Souls' as Ursula – body language mandatory",2],
- ["Disney","Sing 'Kiss the Girl' to someone in the room",1],
+ ["Disney","Sing 'Kiss the Girl' to {P}",1],
  ["Disney","Sing 'Be Our Guest' as Lumière",2],
- ["Disney","Sing 'Beauty and the Beast' as a slow-dance duet",2],
+ ["Disney","Sing 'Beauty and the Beast' as a slow-dance duet with {P}",2],
  ["Disney","Sing 'Gaston' and let the group shout the name",1],
  ["Disney","Sing 'Circle of Life' with the intro chant",3],
  ["Disney","Sing 'Can You Feel the Love Tonight'",1],
@@ -791,7 +791,7 @@ const CHALLENGES = [
  ["Disney","Sing 'Bibbidi-Bobbidi-Boo' as the Fairy Godmother",1],
  ["Disney","Sing 'When You Wish Upon a Star'",1],
  ["Disney","Sing 'Once Upon a Dream' from Sleeping Beauty",2],
- ["Disney","Sing 'I See the Light' from Tangled as a duet",2],
+ ["Disney","Sing 'I See the Light' from Tangled as a duet with {P}",2],
  ["Disney","Sing 'When Will My Life Begin' from Tangled",2],
  ["Disney","Sing 'Mother Knows Best' as Mother Gothel",2],
  ["Disney","Sing 'Almost There' from The Princess and the Frog",2],
@@ -805,7 +805,7 @@ const CHALLENGES = [
  ["Disney","Sing 'A Spoonful of Sugar' from Mary Poppins",1],
  ["Disney","Sing 'Chim Chim Cher-ee' as a chimney sweep",2],
  ["Disney","Sing 'Hakuna Matata' but replace every Hakuna Matata with your own catchphrase",2],
- ["Disney","Sing 'Lava' from the Pixar short as a duet",2],
+ ["Disney","Sing 'Lava' from the Pixar short as a duet with {P}",2],
  ["Disney","Sing 'This Is Halloween' from The Nightmare Before Christmas",2],
  ["Disney","Sing 'What's This' as Jack Skellington",2],
  ["Disney","Sing 'Strangers Like Me' from Tarzan",2],
@@ -813,14 +813,14 @@ const CHALLENGES = [
  ["Disney","Sing 'Wish' from the movie Wish",2],
  ["Disney","Sing 'This Wish' – the group is the chorus",2],
  ["Disney","Sing a Disney song but as a Disney villain would sing it",2],
- ["Disney","Sing a Disney song as a duet with the person who knows it least",2],
+ ["Disney","Sing a Disney song as a duet with {P}",2],
  ["Disney","Sing the Disney song the group picks – no passing allowed",3],
  ["Disney","Sing a Disney Channel theme song (Hannah Montana, Phineas and Ferb, Kim Possible)",2],
  ["Disney","Sing 'The Best of Both Worlds' as Hannah Montana",1],
  ["Disney","Sing a song from a Disney movie",1],
  ["Disney","Sing 'Let It Go' with the full Elsa arm sweep",2],
  ["Disney","Sing a Disney villain song as evil as you can",2],
- ["Disney","Sing a Disney duet – the group picks your partner",2],
+ ["Disney","Sing a Disney duet with {P}",2],
  ["Disney","Sing 'A Whole New World' on an imaginary magic carpet",2],
  ["Disney","Sing a Disney song as if you're the sidekick, not the hero",2],
  ["Disney","Sing a Moana song like you're standing on a boat in a storm",2],
@@ -832,7 +832,7 @@ const CHALLENGES = [
  ["Disney","Sing a Disney song while acting out all the animals in it",2],
  ["Disney","Sing a Disney song in a language other than English",3],
  // High School Musical
- ["High School Musical","Sing 'Breaking Free' as a duet – the group picks your Troy or Gabriella",2],
+ ["High School Musical","Sing 'Breaking Free' as a duet with {P} – your Troy or Gabriella",2],
  ["High School Musical","Sing 'We're All in This Together' and get the whole room doing the clap choreo",1],
  ["High School Musical","Sing 'Bet On It' with Troy's angry golf course dance",3],
  ["High School Musical","Sing 'Bop to the Top' as Sharpay – full diva, full sparkle",2],
@@ -842,8 +842,8 @@ const CHALLENGES = [
  ["High School Musical","Sing 'What I've Been Looking For' – first the Sharpay version, then the slow Troy & Gabriella version",3],
  ["High School Musical","Sing 'Fabulous' lounging on a chair like it's a pool bed",2],
  ["High School Musical","Sing 'You Are the Music in Me' with the piano intro sung out loud",2],
- ["High School Musical","Sing 'Gotta Go My Own Way' as a dramatic breakup scene with someone in the room",2],
- ["High School Musical","Sing 'Can I Have This Dance' and actually waltz with a partner",2],
+ ["High School Musical","Sing 'Gotta Go My Own Way' as a dramatic breakup scene with {P}",2],
+ ["High School Musical","Sing 'Can I Have This Dance' and actually waltz with {P}",2],
  ["High School Musical","Sing 'I Don't Dance' as Chad vs. Ryan – baseball moves included",3],
  ["High School Musical","Sing 'Now or Never' with Wildcats chants from the group",2],
  ["High School Musical","Sing any HSM song as Ryan with a hat trick at the end",2],
@@ -931,7 +931,7 @@ const CHALLENGES = [
  ["Artists","Sing a Bob Marley song",1],
  ["Artists","Sing a Spice Girls song",1],
  ["Artists","Sing an One Direction song",1],
- ["Artists","Sing a song by the artist the person on your left names",2],
+ ["Artists","Sing a song by the artist {P} names",2],
  ["Artists","Sing a song by an artist who has the same first letter as your name",2],
  ["Artists","Sing a song by an artist who is no longer alive",2],
  ["Artists","Sing a song by an artist you have seen live",2],
@@ -1031,7 +1031,7 @@ const CHALLENGES = [
  ["Years","Sing a song released in 2023",1],
  ["Years","Sing a song released in 2024",1],
  ["Years","Sing a song released in 2025",1],
- ["Years","Sing a song from the year the person on your left was born",2],
+ ["Years","Sing a song from the year {P} was born",2],
  ["Years","Sing a song from the year you finished school",2],
  ["Years","Sing a song from the year of your first phone",2],
  ["Years","The group picks a year – sing a song from it",3],
@@ -1095,30 +1095,30 @@ const CHALLENGES = [
  ["Performance","Sing without moving – only your face is allowed to act",2],
  ["Performance","Sing while staring into someone's eyes the whole time",2],
  ["Performance","Sing as a boyband choreo with two backup dancers",2],
- ["Performance","Sing on your knees as a dramatic love confession to someone in the room",2],
+ ["Performance","Sing on your knees as a dramatic love confession to {P}",2],
  ["Performance","Sing like it's the finale of a talent show, tears included",2],
  ["Performance","Use an object (phone, cup) as a mic stand – you can't touch it",3],
  // Duet & Group
- ["Duet & Group","Sing a duet where one of you only sings the high notes and the other only the low ones",3],
- ["Duet & Group","Sing a duet with someone who has to sing while you both hold hands the entire time",1],
+ ["Duet & Group","Sing a duet with {P} – one of you only the high notes, the other only the low ones",3],
+ ["Duet & Group","Sing a duet with {P} – hold hands the entire time",1],
  ["Duet & Group","The group hums the melody, you sing the lyrics on top",2],
- ["Duet & Group","Sing a duet – but you switch roles halfway through the song",2],
+ ["Duet & Group","Sing a duet with {P} – switch roles halfway through the song",2],
  ["Duet & Group","Sing a song as a trio: you pick two backup singers who only sing 'ooh' and 'aah'",2],
- ["Duet & Group","Sing a duet where your partner is allowed to change the lyrics and you must follow",3],
- ["Duet & Group","Sing a duet with someone you just met",2],
+ ["Duet & Group","Sing a duet with {P} – they may change the lyrics and you must follow",3],
+ ["Duet & Group","Sing a duet with {P}",2],
  ["Duet & Group","Choose a song everyone can sing along to",1],
- ["Duet & Group","Sing a duet – but alternate word by word",3],
- ["Duet & Group","Sing a duet with the person on your left",1],
- ["Duet & Group","Sing a love duet with the person who fits it least",2],
+ ["Duet & Group","Sing a duet with {P} – alternate word by word",3],
+ ["Duet & Group","Sing a duet with {P}",1],
+ ["Duet & Group","Sing a love duet with {P}",2],
  ["Duet & Group","You sing, the group only gets the chorus – and you cue them",1],
- ["Duet & Group","Battle: you vs. an opponent, same song, the group picks the winner",2],
+ ["Duet & Group","Battle: you vs. {P}, same song, the group picks the winner",2],
  ["Duet & Group","Sing one verse, then pass the mic – everyone sings a line",1],
- ["Duet & Group","Sing a duet standing back to back",2],
+ ["Duet & Group","Sing a duet with {P} standing back to back",2],
  ["Duet & Group","Conduct the group like a choir on a song of your choice",2],
  // Chaos
  ["Chaos","The group picks your song – no refusing",2],
  ["Chaos","Sing without saying 'I', 'you' or 'love' – replace them with 'cheese'",3],
- ["Chaos","Make up new lyrics: the song must be about the person on your right",3],
+ ["Chaos","Make up new lyrics: the song must be about {P}",3],
  ["Chaos","Pick any song and sing it without looking at the lyrics",2],
  ["Chaos","Sing while the group tries to distract you with questions",2],
  ["Chaos","Sing whatever is on the radio right now – turn it on",2],
@@ -1171,11 +1171,11 @@ const CHALLENGES = [
  ["Truth","Sing your favorite song",1],
  ["Truth","Sing your favorite song from when you were a kid",1],
  ["Truth","Sing your favorite song of this year",1],
- ["Truth","Sing the favorite song of the person on your right – if you know it",2],
+ ["Truth","Sing {P}'s favorite song – if you know it",2],
  ["Truth","Sing the song you secretly sing in the shower",1],
  ["Truth","Sing the song you'd want playing when you walk into a room like a boss",1],
  ["Truth","Sing a song that reminds you of your first love",2],
- ["Truth","Sing a song you associate with the person on your right",2],
+ ["Truth","Sing a song you associate with {P}",2],
  ["Truth","Sing your go-to song when you're driving alone",1],
  ["Truth","Sing the song that was playing during the most embarrassing moment of your life",2],
  ["Truth","Sing the song you'd pick for your wedding first dance",2],
@@ -1305,10 +1305,11 @@ function setPic(cat,text,el,holderName){const p=pic(cat,text);el=el||$("pic");el
 const PLAYER_RE=/\b(the )?(person|player|someone|the one) (on|to) your (left|right)\b/gi;
 function otherPlayer(exclude){const pool=S.players.map((p,i)=>i).filter(i=>i!==exclude);if(!pool.length)return null;return pool[Math.floor(Math.random()*pool.length)]}
 const PARTNER_RE=/\b(duet|partner|opponent|someone (you just met|in the room|who has to sing)|the person who|hold hands|back to back|battle|vs\.|waltz|slow-dance|twin version|duo)\b/i;
-function needsPick(text){PLAYER_RE.lastIndex=0;return PLAYER_RE.test(text)}
+const SLOT_RE=/\{P\}/g;
+function needsPick(text){PLAYER_RE.lastIndex=0;return SLOT_RE.test(text)||PLAYER_RE.test(text)}
 function needsPartner(text){return PARTNER_RE.test(text)}
 function resolveText(){const c=S.current;if(!c)return;const raw=c.raw||c.text;c.raw=raw;
-  if(needsPick(raw)){if(c.pick==null||c.pick===c.holder)c.pick=otherPlayer(c.holder);const n=c.pick!=null?S.players[c.pick].name:"someone";c.text=raw.replace(PLAYER_RE,n)}
+  if(needsPick(raw)){if(c.pick==null||c.pick===c.holder)c.pick=otherPlayer(c.holder);const n=c.pick!=null?S.players[c.pick].name:"someone";c.text=raw.replace(SLOT_RE,n).replace(PLAYER_RE,n)}
   else if(needsPartner(raw)){if(c.pick==null||c.pick===c.holder)c.pick=otherPlayer(c.holder);c.text=raw}
   else{c.pick=null;c.text=raw}}
 function sfxDraw(){try{sfx.draw()}catch(e){}}
@@ -1364,7 +1365,7 @@ function render(){
     $("pass").textContent=S.current.chain>=S.players.length-1?"Pass (card is discarded)":"Pass ➜ hand over";
     $("done").textContent=`✓ Done it (+${S.current.worth})`;
     resolveText();setPic(S.current.cat,S.current.raw||S.current.text);
-    $("picked").hidden=S.current.pick==null;if(S.current.pick!=null){$("pickedName").textContent=S.players[S.current.pick].name;$("pickedLbl").textContent=needsPartner(S.current.raw||S.current.text)?"Partner:":"Player:"}
+    $("picked").hidden=S.current.pick==null||needsPick(S.current.raw||S.current.text);if(S.current.pick!=null){$("pickedName").textContent=S.players[S.current.pick].name;$("pickedLbl").textContent=needsPartner(S.current.raw||S.current.text)?"Partner:":"Player:"}
     $("cat").textContent=S.current.cat; $("text").textContent=S.current.text; $("worth").textContent=S.current.worth;
     $("chain").textContent=S.current.chain>0?`Passed on ${S.current.chain}× – bonus!`:"";
     $("card").classList.add("flipped");
@@ -1517,7 +1518,7 @@ function renderSo(){const c=S.current,so=soState();const box=$("sobox");if(!so||
 $("sobox").onclick=e=>{const p=e.target.closest("[data-sopick]");if(p){soPick(+p.dataset.sopick);return}const w=e.target.closest("[data-sowin]");if(w)ask(w.dataset.sowin==="tie"?"Call it a tie?":"Declare "+w.textContent.replace(" wins","")+" the winner?",()=>soClose(w.dataset.sowin),"Yes")};
 function doDone(){const c=S.current;if(!c)return;const p=S.players[c.holder];p.score+=c.worth;
   stat(p,"done");stat(p,"pts",c.worth);if(c.diff===3)stat(p,"hard");if(c.chain>0)stat(p,"rescue");
-  if(c.pick!=null&&needsPartner(c.raw||c.text))stat(p,"duet");
+  if(c.pick!=null&&(needsPartner(c.raw||c.text)||needsPick(c.raw||c.text)))stat(p,"duet");
   S.log.unshift(`<b>${esc(p.name)}</b> did it: <span class="up">${fmt(c.worth)}</span> – ${esc(c.text)}`);
   toast(`${p.name} +${c.worth} points!`);sfx.ok();endCard()}
 function doPass(){const c=S.current;if(!c||c.accepted)return;const p=S.players[c.holder];p.score-=S.penalty;stat(p,"pass");
@@ -1530,7 +1531,7 @@ function doFail(){const c=S.current;if(!c)return;const p=S.players[c.holder];con
   S.log.unshift(`<b>${esc(p.name)}</b> failed: <span class="down">${pen?fmt(-pen):"0"}</span> – ${esc(c.text)}`);
   toast(pen?`${p.name} −${pen} – better luck next card`:`${p.name} – no points, no penalty`);sfx.buzz();endCard()}
 $("fail").onclick=()=>ask("Mark this card as failed? "+(FAIL[S.current&&S.current.diff]?"That costs "+FAIL[S.current.diff]+" points.":"No penalty on a 10-point card."),doFail,"Failed");
-function ytQuery(cat,text){
+function ytQuery(cat,text){text=text.replace(/\{P\}/g,"a friend");
   const cut=t=>t.replace(/[–—].*$/,"").replace(/\s*\(.*?\)\s*/g," ").replace(/[,:;].*$/,"").replace(/\s+(while|with|and|as if|as |like |but |if |then |so |until|before|after|every|everyone|the group|the room|your partner|without|only|just|in front of|on your|to someone|for someone|that |who |where |when |\/ |or |standing )\b.*$/i,"").trim();
   const clean=x=>x.replace(/^(?:a |an |the |any |some |being )+/i,"").replace(/\s+/g," ").trim();
   const HITS="karaoke hits";
@@ -1615,7 +1616,7 @@ function netPush(){if(S.mode!=="host"||!S.room)return;clearTimeout(pushT);pushT=
 function snapshot(){const phase=S.screen==="final"?"final":S.vote?"vote":S.inGame?"game":"lobby";const c=S.current;
   return{phase,round:S.round,rounds:S.rounds,turn:S.turn,
     players:S.players.map(p=>({name:p.name,score:p.score,pid:p.pid||null,on:online(p)})),
-    current:c?{cat:c.cat,text:c.text,raw:c.raw||c.text,diff:c.diff,accepted:!!c.accepted,so:c.accepted&&c.so?{phase:c.so.phase,opp:c.so.opp,challengers:c.so.challengers.map(i=>S.players[i]&&S.players[i].name).filter(Boolean),voted:Object.keys(c.so.votes||{}),total:soVoters().length}:null,worth:c.worth,chain:c.chain,holder:c.holder,pick:c.pick==null?null:c.pick,partner:c.pick!=null&&needsPartner(c.raw||c.text)}:null,
+    current:c?{cat:c.cat,text:c.text,raw:c.raw||c.text,diff:c.diff,accepted:!!c.accepted,so:c.accepted&&c.so?{phase:c.so.phase,opp:c.so.opp,challengers:c.so.challengers.map(i=>S.players[i]&&S.players[i].name).filter(Boolean),voted:Object.keys(c.so.votes||{}),total:soVoters().length}:null,worth:c.worth,chain:c.chain,holder:c.holder,pick:c.pick==null?null:c.pick,partner:c.pick!=null&&needsPartner(c.raw||c.text),inText:needsPick(c.raw||c.text)}:null,
     timer:S.timer||null,timerSec:S.timerSec,mics:S.mics||1,penalty:S.penalty,bonus:S.bonus,mvpBonus:S.mvpBonus,awardBonus:S.awardBonus,tiers:tiersAvail(),
     vote:S.vote?{round:S.vote.round,voted:Object.keys(S.vote.votes),total:voters().filter(i=>S.players[i].pid).length}:null,
     lastVote:S.lastVote?{round:S.lastVote.round,win:S.lastVote.win.map(i=>S.players[i]&&S.players[i].name).filter(Boolean)}:null,
@@ -1719,7 +1720,7 @@ function renderPhone(){if(S.screen!=="phone"||!PH)return;const st=PH.state;const
     else{const top=Math.max(...players.map(p=>p.score));const wins=players.filter(p=>p.score===top).map(p=>p.name);
       html=`<div style="font-size:56px;line-height:1">🏆</div><div class="who"><b>${wins.map(esc).join(" & ")}</b></div><p class="hint">${top} points${wins.length>1?" – it's a tie!":""}${wins.includes(me.name)?" – that's you! 🎉":""}</p><div class="awards">${aw}</div>${board}`}}
   else{const timer=`<div class="timer phtimer" id="phTimer" hidden></div>`;
-    if(c){const card=`<div class="minicard"><div class="frame"><div class="pic" id="phPic"></div><div class="cat">${esc(c.cat)}</div><div class="text">${esc(c.text)}</div><div class="worth">Worth <b>${c.worth}</b></div>${c.pick!=null&&players[c.pick]?`<div class="picked">🎲 ${c.partner?"Partner:":"Player:"} <b>${esc(players[c.pick].name)}</b></div>`:""}${c.chain>0?`<div class="chain">Passed on ${c.chain}× – bonus!</div>`:""}<a class="playbtn" href="${ytUrl(c.cat,c.raw||c.text)}" target="_blank" rel="noopener">▶ Find on YouTube</a></div></div>`;
+    if(c){const card=`<div class="minicard"><div class="frame"><div class="pic" id="phPic"></div><div class="cat">${esc(c.cat)}</div><div class="text">${esc(c.text)}</div><div class="worth">Worth <b>${c.worth}</b></div>${c.pick!=null&&players[c.pick]&&!c.inText?`<div class="picked">🎲 ${c.partner?"Partner:":"Player:"} <b>${esc(players[c.pick].name)}</b></div>`:""}${c.chain>0?`<div class="chain">Passed on ${c.chain}× – bonus!</div>`:""}<a class="playbtn" href="${ytUrl(c.cat,c.raw||c.text)}" target="_blank" rel="noopener">▶ Find on YouTube</a></div></div>`;
       const so=c.accepted&&c.so?c.so:null;const oppName=so&&so.opp!=null&&players[so.opp]?players[so.opp].name:null;const amOpp=so&&so.opp===meI;const iVoted=so&&so.phase==="vote"&&((so.voted||[]).includes(PH.pid)||(PH.myVote&&PH.myVote.round==="so:"+c.text));
       let sobox="";
       if(so&&so.opp==null&&!mine)sobox=`<div class="sobox"><h3>⚔️ Sing-off?</h3><button class="btn ${(so.challengers||[]).includes(me.name)?"btn-ghost":"btn-gold"}" data-act="challenge" ${(so.challengers||[]).includes(me.name)?"disabled":""}>${(so.challengers||[]).includes(me.name)?"Challenge sent – waiting for "+esc(holder.name):"⚔️ Challenge "+esc(holder.name)+"!"}</button></div>`;
