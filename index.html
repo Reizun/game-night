@@ -1742,7 +1742,9 @@ function ask(msg,yes,yesLabel){$("modalMsg").textContent=msg;$("modalYes").textC
 $("modal").onclick=e=>{if(e.target.id==="modal")$("modal").hidden=true};
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("modal").hidden)$("modal").hidden=true});
 // ---- PWA ----
-if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}))}
+if("serviceWorker" in navigator){const hadSW=!!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener("controllerchange",()=>{if(hadSW&&!window.__swReloaded){window.__swReloaded=true;toast("Updating to the latest version…");setTimeout(()=>location.reload(),600)}});
+  window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").then(r=>{try{r.update()}catch(e){}}).catch(()=>{}))}
 let deferredInstall=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e;const b=document.getElementById("installBtn");if(b){b.hidden=false;b.onclick=()=>{deferredInstall.prompt();deferredInstall=null;b.hidden=true}}});
 
 boot();
