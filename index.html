@@ -1365,7 +1365,8 @@ const sfx=(()=>{let ctx;const ac=()=>{try{ctx=ctx||new (window.AudioContext||win
 
 // ===== Multiplayer rooms (phones as controllers), round votes, secret awards, deadline timer =====
 const NET_LOCAL=/^(localhost|127\.0\.0\.1)$/.test(location.hostname);
-const DB_URL=NET_LOCAL?"http://127.0.0.1:3130":"__DB_URL__";
+let DB_OVERRIDE=null;try{DB_OVERRIDE=localStorage.getItem("kc-db")}catch(e){}
+const DB_URL=DB_OVERRIDE||(NET_LOCAL?"http://127.0.0.1:3130":"https://karaoke-challenge-2d52e-default-rtdb.europe-west1.firebasedatabase.app");
 const NET_OK=!/__DB_URL__/.test(DB_URL);
 const TS={".sv":"timestamp"};
 const db={
