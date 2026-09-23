@@ -1750,8 +1750,8 @@ function netPush(){if(S.mode!=="host"||!S.room)return;clearTimeout(pushT);pushT=
 function snapshot(){const phase=S.screen==="final"?"final":S.vote?"vote":S.inGame?"game":"lobby";const c=S.current;const m=S.game==="imposter"?S.imp:null;
   const impSnap=m?{phase:m.phase,round:S.round,total:impPlayers().length,answered:impPlayers().filter(i=>m.answers[i]!=null).map(i=>S.players[i].pid),voted:impPlayers().filter(i=>m.votes[i]!=null).map(i=>S.players[i].pid),
     q:m.phase!=="answer"?IMP_Q[m.qi][0]:null,answers:["discuss","vote","result"].includes(m.phase)?impPlayers().map(i=>({name:S.players[i].name,text:m.answers[i]||"–"})):null,discussEnd:m.discussEnd||null,
-    result:m.result?{imposter:S.players[m.result.imposter].name,correct:m.result.correct.map(i=>S.players[i].name),missed:m.result.missed.length,impPts:m.result.impPts}:null}:null;
-  const wm=S.game==="whowould"?S.ww:null;const wwSnap=wm?{phase:wm.phase,round:S.round,q:WW_Q[wm.qi],total:impPlayers().length,voted:impPlayers().filter(i=>wm.votes[i]!=null).map(i=>S.players[i].pid),win:wm.result?wm.result.win.map(j=>S.players[j].name):null}:null;
+    result:m.result?{imposter:(S.players[m.result.imposter]||{}).name||"?",correct:m.result.correct.map(i=>(S.players[i]||{}).name||"?"),missed:m.result.missed.length,impPts:m.result.impPts}:null}:null;
+  const wm=S.game==="whowould"?S.ww:null;const wwSnap=wm?{phase:wm.phase,round:S.round,q:WW_Q[wm.qi],total:impPlayers().length,voted:impPlayers().filter(i=>wm.votes[i]!=null).map(i=>S.players[i].pid),win:wm.result?wm.result.win.map(j=>(S.players[j]||{}).name||"?"):null}:null;
   autoSync();const au=S.auto?{key:S.auto.key,ready:S.auto.ready,end:S.auto.end||null,mode:S.autoMode,total:impPlayers().length}:null;
   return{phase,game:S.game||"karaoke",imp:impSnap,ww:wwSnap,auto:au,wwQ:S.wwQ,cards:S.game==="whowould"?S.players.map(p=>({name:p.name,cards:p.cards||[]})):null,impQ:S.impQ,impPts:S.impPts,round:S.round,rounds:S.rounds,turn:S.turn,
     players:S.players.map(p=>({name:p.name,score:p.score,pid:p.pid||null,on:online(p)})),
@@ -1768,7 +1768,7 @@ async function hostCreate(){if(!NET_OK){toast("Phones aren't set up on this copy
   toast("Opening a room…");let code=genCode();
   try{for(let i=0;i<6;i++){const st=await db.get(`rooms/${code}/updatedAt`);if(!st||Date.now()-st>8*3600e3)break;code=genCode()}}catch(e){toast("Can't reach the server – check your internet");return}
   if(S.room)hostClose(true);
-  S.mode="host";S.room={code,key:Math.random().toString(36).slice(2)};S.players=[];S.inGame=false;S.current=null;S.vote=null;S.awards=null;S.awardsDone=false;S.log=[];S.timer=null;S.screen="lobby";
+  S.mode="host";S.room={code,key:Math.random().toString(36).slice(2)};S.players=[];S.imp=null;S.ww=null;S.pass=null;S.next=null;S.auto=null;if(!["karaoke","imposter","whowould"].includes(S.game))S.game="karaoke";S.inGame=false;S.current=null;S.vote=null;S.awards=null;S.awardsDone=false;S.log=[];S.timer=null;S.screen="lobby";
   try{await db.put(`rooms/${code}`,{hostKey:S.room.key,createdAt:TS,updatedAt:TS,state:snapshot()})}catch(e){toast("Couldn't create the room");S.room=null;S.mode="local";S.screen="home";save();render();return}
   cleanupRooms();rememberRoom(code);save();render();hostConnect();sfx.start()}
 function hostConnect(){if(HS){HS.close();HS=null}if(!S.room)return;const code=S.room.code;
