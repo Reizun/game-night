@@ -217,6 +217,10 @@ h1 span{color:var(--red-2)}
 .phone-msg{display:flex;flex-direction:column;gap:12px;align-items:center;padding:30px 0}
 .phone .hint{margin:0}
 .rules input{font-size:16px}
+.rules select{padding:8px 10px;border-radius:8px;border:0;background:var(--ground);color:var(--ink);font:inherit;font-size:15px}
+.autobox{width:100%;max-width:520px;background:var(--ground);border-radius:12px;padding:10px 14px;font-size:14px;color:var(--muted);display:flex;flex-direction:column;gap:6px;align-items:center}
+.autobox b{color:var(--gold);font-family:Anton,sans-serif;font-weight:400;font-size:20px}
+.autobox .bar{width:100%;height:8px;border-radius:999px;background:var(--ground-2);overflow:hidden}.autobox .bar i{display:block;height:100%;background:var(--gold)}
 @media(max-width:700px){header h1,header .script{display:none}header{margin-bottom:6px}.deck{width:min(250px,64vw)}.topbar .btn{min-height:40px}}
 .modal{position:fixed;inset:0;background:rgba(10,18,38,.72);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}
 .modal .box{background:var(--ground-2);border-radius:16px;padding:22px;max-width:380px;width:100%;box-shadow:var(--shadow);text-align:center;animation:pop .25s both}
@@ -534,6 +538,8 @@ h1 span{color:var(--red-2)}
       <label>Points for catching the imposter <input type="number" id="impPts" value="10" min="0"></label>
       <label>Imposter points per player fooled <input type="number" id="impImpPts" value="5" min="0"></label>
       <label>🤔 Who Would: questions per game <input type="number" id="wwQ" value="10" min="1" max="40"></label>
+      <label>Auto-pilot for the host screen <select id="autoMode"><option value="off">Off – host taps Next</option><option value="ready" selected>Players tap Next (half = countdown, all = go)</option><option value="timer">Timer per screen</option></select></label>
+      <label>Auto-pilot seconds <input type="number" id="autoSec" value="10" min="3" max="120"></label>
     </div>
     <p class="hint">Everyone answers a question on their phone – one player secretly gets a different question. The host reveals the real question and all answers, the group discusses, then everyone votes.</p>
   </section>
@@ -1267,9 +1273,9 @@ const BASE = {1:10,2:20,3:30};
 
 // ---- State ----
 const KEY="karaoke-challenge-en-v1";
-let S = {players:[], turn:0, cats:[...CATS], penalty:5, bonus:10, current:null, disabledArtists:[], hiddenArtists:[], log:[], used:[], customArtists:[], customCards:[], game:"karaoke", imp:null, impUsed:[], impQ:6, impDiscuss:90, impPts:10, impImpPts:5, ww:null, wwUsed:[], wwQ:10, rounds:3, timerSec:15, mics:1, round:1, started:0, screen:"home", volume:0.7, muted:false, mode:"local", room:null, inGame:false, mvpBonus:20, awardBonus:15, vote:null, awards:null, awardsDone:false, timer:null, timerBuzzed:false, catsV:0, back:null, lastVote:null};
+let S = {players:[], turn:0, cats:[...CATS], penalty:5, bonus:10, current:null, disabledArtists:[], hiddenArtists:[], log:[], used:[], customArtists:[], customCards:[], game:"karaoke", imp:null, impUsed:[], impQ:6, impDiscuss:90, impPts:10, impImpPts:5, ww:null, wwUsed:[], wwQ:10, autoMode:"ready", autoSec:10, auto:null, rounds:3, timerSec:15, mics:1, round:1, started:0, screen:"home", volume:0.7, muted:false, mode:"local", room:null, inGame:false, mvpBonus:20, awardBonus:15, vote:null, awards:null, awardsDone:false, timer:null, timerBuzzed:false, catsV:0, back:null, lastVote:null};
 let draft=null;
-try{const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.players){S={...S,...s};if(!S.catsV){for(const c of ["2000s","K-Pop","Disney","High School Musical","Word Hunt","Artists","Genres","Years","Mood"])if(!S.cats.includes(c))S.cats.push(c);}if(!Array.isArray(S.disabledArtists))S.disabledArtists=[];if(!Array.isArray(S.hiddenArtists))S.hiddenArtists=[];if(!S.customArtists)S.customArtists=[];if(!Array.isArray(S.customCards))S.customCards=[];if(!S.game)S.game="karaoke";if(!S.impQ)S.impQ=6;if(S.impDiscuss==null)S.impDiscuss=90;if(S.impPts==null)S.impPts=10;if(S.impImpPts==null)S.impImpPts=5;if(!Array.isArray(S.impUsed))S.impUsed=[];if(!S.wwQ)S.wwQ=10;if(!Array.isArray(S.wwUsed))S.wwUsed=[];if(S.rounds==null)S.rounds=3;if(S.volume==null)S.volume=.7;if(S.muted==null)S.muted=false;if(S.timerSec==null)S.timerSec=15;if(!S.mics)S.mics=1;if(!S.round)S.round=1;if(!S.started)S.started=0;if(!["home","settings","players","game","final","lobby","join","phone","imp","ww"].includes(S.screen))S.screen="home";if(S.screen==="setup")S.screen="home";}}catch(e){}
+try{const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.players){S={...S,...s};if(!S.catsV){for(const c of ["2000s","K-Pop","Disney","High School Musical","Word Hunt","Artists","Genres","Years","Mood"])if(!S.cats.includes(c))S.cats.push(c);}if(!Array.isArray(S.disabledArtists))S.disabledArtists=[];if(!Array.isArray(S.hiddenArtists))S.hiddenArtists=[];if(!S.customArtists)S.customArtists=[];if(!Array.isArray(S.customCards))S.customCards=[];if(!S.game)S.game="karaoke";if(!S.impQ)S.impQ=6;if(S.impDiscuss==null)S.impDiscuss=90;if(S.impPts==null)S.impPts=10;if(S.impImpPts==null)S.impImpPts=5;if(!Array.isArray(S.impUsed))S.impUsed=[];if(!S.wwQ)S.wwQ=10;if(!S.autoMode)S.autoMode="ready";if(!S.autoSec)S.autoSec=10;if(!Array.isArray(S.wwUsed))S.wwUsed=[];if(S.rounds==null)S.rounds=3;if(S.volume==null)S.volume=.7;if(S.muted==null)S.muted=false;if(S.timerSec==null)S.timerSec=15;if(!S.mics)S.mics=1;if(!S.round)S.round=1;if(!S.started)S.started=0;if(!["home","settings","players","game","final","lobby","join","phone","imp","ww"].includes(S.screen))S.screen="home";if(S.screen==="setup")S.screen="home";}}catch(e){}
 if(!(S.catsV>=3)&&!S.cats.includes("Your cards"))S.cats.push("Your cards");S.catsV=3;if(!S.decV){if(S.timerSec===90)S.timerSec=15;S.decV=1}S.players.forEach(p=>{p.stats=p.stats||{}});if(!S.mode)S.mode="local";if(S.mvpBonus==null)S.mvpBonus=20;if(S.awardBonus==null)S.awardBonus=15;
 if(S.inGame==null)S.inGame=!!(S.current||(S.players.length>=2&&(S.round>1||S.started>0||S.players.some(p=>p.score!==0))));
 if(S.screen==="lobby"&&!(S.mode==="host"&&S.room))S.screen="home";
@@ -1693,7 +1699,8 @@ function snapshot(){const phase=S.screen==="final"?"final":S.vote?"vote":S.inGam
     q:m.phase!=="answer"?IMP_Q[m.qi][0]:null,answers:["discuss","vote","result"].includes(m.phase)?impPlayers().map(i=>({name:S.players[i].name,text:m.answers[i]||"–"})):null,discussEnd:m.discussEnd||null,
     result:m.result?{imposter:S.players[m.result.imposter].name,correct:m.result.correct.map(i=>S.players[i].name),missed:m.result.missed.length,impPts:m.result.impPts}:null}:null;
   const wm=S.game==="whowould"?S.ww:null;const wwSnap=wm?{phase:wm.phase,round:S.round,q:WW_Q[wm.qi],total:impPlayers().length,voted:impPlayers().filter(i=>wm.votes[i]!=null).map(i=>S.players[i].pid),win:wm.result?wm.result.win.map(j=>S.players[j].name):null}:null;
-  return{phase,game:S.game||"karaoke",imp:impSnap,ww:wwSnap,wwQ:S.wwQ,cards:S.game==="whowould"?S.players.map(p=>({name:p.name,cards:p.cards||[]})):null,impQ:S.impQ,impPts:S.impPts,round:S.round,rounds:S.rounds,turn:S.turn,
+  autoSync();const au=S.auto?{key:S.auto.key,ready:S.auto.ready,end:S.auto.end||null,mode:S.autoMode,total:impPlayers().length}:null;
+  return{phase,game:S.game||"karaoke",imp:impSnap,ww:wwSnap,auto:au,wwQ:S.wwQ,cards:S.game==="whowould"?S.players.map(p=>({name:p.name,cards:p.cards||[]})):null,impQ:S.impQ,impPts:S.impPts,round:S.round,rounds:S.rounds,turn:S.turn,
     players:S.players.map(p=>({name:p.name,score:p.score,pid:p.pid||null,on:online(p)})),
     current:c?{cat:c.cat,text:c.text,raw:c.raw||c.text,diff:c.diff,accepted:!!c.accepted,so:c.accepted&&c.so?{phase:c.so.phase,opp:c.so.opp,challengers:c.so.challengers.map(i=>S.players[i]&&S.players[i].name).filter(Boolean),voted:Object.keys(c.so.votes||{}),total:soVoters().length}:null,worth:c.worth,chain:c.chain,holder:c.holder,pick:c.pick==null?null:c.pick,partner:c.pick!=null&&needsPartner(c.raw||c.text),inText:needsPick(c.raw||c.text)}:null,
     timer:S.timer||null,timerSec:S.timerSec,mics:S.mics||1,penalty:S.penalty,bonus:S.bonus,mvpBonus:S.mvpBonus,awardBonus:S.awardBonus,tiers:tiersAvail(),
@@ -1734,6 +1741,7 @@ function handleActions(acts){for(const k of Object.keys(acts).sort()){if(doneAct
   else if(a.type==="fail"){if(S.current&&S.current.holder===i)doFail()}
   else if(a.type==="accept"){if(S.current&&S.current.holder===i)doAccept(false)}
   else if(a.type==="answer"){if(S.game==="imposter")impAnswer(i,a.text)}
+  else if(a.type==="ready"){autoReady(i,String(a.key||""))}
   else if(a.type==="challenge"){soChallenge(i)}
   else if(a.type==="pick"){if(S.current&&S.current.holder===i){const j=S.players.findIndex(p=>p.name===a.name);if(j>=0)soPick(j)}}
   else if(a.type==="startvote"){if(S.current&&S.current.holder===i)soStartVote()}}}
@@ -1828,11 +1836,11 @@ $("joinName").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();$("joinBtn").
 $("joinBack").onclick=()=>{S.screen="home";save();render()};
 $("phLeave").onclick=()=>ask("Leave this game?",phoneLeave,"Leave");
 $("phBody").onclick=e=>{const b=e.target.closest("[data-act]");if(!b||b.disabled)return;const act=b.dataset.act;
-  if(act==="draw")phoneAct("draw",{diff:+b.dataset.diff});else if(act==="done")phoneAct("done");else if(act==="accept")phoneAct("accept");else if(act==="challenge")phoneAct("challenge");else if(act==="pick")phoneAct("pick",{name:b.dataset.name});else if(act==="startvote")phoneAct("startvote");
+  if(act==="draw")phoneAct("draw",{diff:+b.dataset.diff});else if(act==="done")phoneAct("done");else if(act==="accept")phoneAct("accept");else if(act==="challenge")phoneAct("challenge");else if(act==="pick")phoneAct("pick",{name:b.dataset.name});else if(act==="startvote")phoneAct("startvote");else if(act==="ready")phoneAct("ready",{key:b.dataset.key});
   else if(act==="pass"){ask("Pass this card? That costs points.",()=>{phoneAct("pass");b.disabled=true;setTimeout(()=>{b.disabled=false},2000)},"Pass");return}
   else if(act==="fail"){const d=PH.state&&PH.state.current?PH.state.current.diff:0;ask("Mark this card as failed? "+(FAIL[d]?"That costs "+FAIL[d]+" points.":"No penalty on a 10-point card."),()=>{phoneAct("fail");b.disabled=true;setTimeout(()=>{b.disabled=false},2000)},"Failed");return}
   else if(act==="vote")phoneVote(b.dataset.name);else if(act==="rejoin"){S.screen="join";save();render();$("joinCode").value=PH?PH.code:"";$("joinName").value=PH?PH.name:""}else if(act==="leave")phoneLeave();
-  if(act==="draw"||act==="done"||act==="pass"||act==="accept"||act==="challenge"||act==="pick"||act==="startvote"){b.disabled=true;setTimeout(()=>{b.disabled=false},2000)}};
+  if(act==="draw"||act==="done"||act==="pass"||act==="accept"||act==="challenge"||act==="pick"||act==="startvote"||act==="ready"){b.disabled=true;setTimeout(()=>{b.disabled=false},2000)}};
 
 // ---- Navigation, settings, render extras ----
 let WL=null;
@@ -1848,7 +1856,7 @@ function renderExtra(){renderOwnCards();
   const canResume=(S.inGame&&S.players.length>=2)||(S.mode==="host"&&S.room&&!S.inGame);
   $("homeResume").hidden=!canResume;$("homeResume").textContent=S.inGame?"↩ Resume game":"↩ Back to lobby";
   $("homeHost").disabled=!NET_OK;$("homeJoin").disabled=!NET_OK;if(!NET_OK)$("homeHost").title=$("homeJoin").title="Not set up on this copy yet";
-  $("mvpBonus").value=S.mvpBonus;$("awardBonus").value=S.awardBonus;$("mics").value=S.mics||1;$("impQ").value=S.impQ;$("wwQ").value=S.wwQ;$("impDiscuss").value=S.impDiscuss;$("impPts").value=S.impPts;$("impImpPts").value=S.impImpPts;
+  $("mvpBonus").value=S.mvpBonus;$("awardBonus").value=S.awardBonus;$("mics").value=S.mics||1;$("impQ").value=S.impQ;$("wwQ").value=S.wwQ;$("autoMode").value=S.autoMode;$("autoSec").value=S.autoSec;$("impDiscuss").value=S.impDiscuss;$("impPts").value=S.impPts;$("impImpPts").value=S.impImpPts;
   if(S.screen==="lobby"&&S.room){$("lobbyCode").textContent=S.room.code;$("lobbyUrl").textContent=joinUrl(S.room.code).replace(/^https?:\/\//,"");renderQr();$("lobbyStatus").textContent=netStatusText();
     $("lobbyPlayers").innerHTML=S.players.map((p,i)=>`<li><span class="rank">${i+1}</span><span class="dot${online(p)?' on':''}" style="${p.pid?'':'visibility:hidden'}"></span><span class="name">${esc(p.name)}</span><span class="hint">${p.pid?(online(p)?"phone":"phone offline"):"no phone"}</span><button class="x" data-kick="${i}" title="Remove">×</button></li>`).join("")||`<li style="color:var(--muted)">Nobody yet – scan the QR code or type the room code</li>`;
     [...$("gameSel").querySelectorAll("[data-game]")].forEach(b=>b.classList.toggle("on",b.dataset.game===(S.game||"karaoke")));$("gameHint").textContent=S.game==="imposter"?"Imposter: needs at least 3 players, all with phones.":S.game==="whowould"?"Who Would: a question, everyone votes for a player – no points, just the review at the end.":"Karaoke Challenge: draw cards, sing, pass, sing-offs.";
@@ -1995,6 +2003,7 @@ function renderImp(){if(S.screen!=="imp"||S.game!=="imposter"){clearInterval(imp
   else if(m.phase==="vote")st.innerHTML=`<div class="lbl">Question</div><div class="q">${esc(q[0])}</div>${answersHtml(false)}<div class="bar"><i style="width:${pl.length?Math.round(100*nV/pl.length):0}%"></i></div><div class="hint" style="margin:0">${nV} of ${pl.length} voted</div><div class="row">${nV?`<button class="btn btn-ghost" id="impClose">Close vote (${nV} votes)</button>`:""}</div>`;
   else{const r=m.result,I=S.players[r.imposter];st.innerHTML=`<div class="lbl">The imposter was</div><div class="big">🕵️ ${esc(I.name)}</div><div class="hint" style="margin:0">Their question: “${esc(q[1])}” · real question: “${esc(q[0])}”</div>${answersHtml(true)}<div class="hint" style="margin:0">${r.correct.length?r.correct.map(v=>esc(S.players[v].name)).join(", ")+` caught the imposter: +${S.impPts} each.`:"Nobody caught the imposter!"} ${r.impPts?`${esc(I.name)} fooled ${r.missed.length}: +${r.impPts}.`:""}</div><button class="btn btn-gold" id="impNextBtn" style="font-size:18px;padding:16px 24px">${S.round>=S.impQ?"🏆 Show results":"Next question ▸"}</button>`}
   const bind=(id,fn)=>{const b=$(id);if(b)b.onclick=fn};
+  if(m.phase==="reveal"||m.phase==="result")st.insertAdjacentHTML("beforeend",autoHtml());
   bind("impShow",impShowAnswers);bind("impVoteBtn",impStartVote);bind("impNextBtn",()=>impNext());bind("impClose",impResult);
   bind("impSkip",()=>ask("Skip this question?",()=>{S.round--;impNext()},"Skip"));bind("impForce",()=>{m.phase="reveal";save();render()})}
 $("impHome").onclick=()=>{S.screen="home";save();render()};
@@ -2014,12 +2023,12 @@ function phoneImpHtml(st,me,meI,players,board){const m=st.imp;if(m&&m.phase==="a
   if(m.phase==="answer"){if(answered)return `<div class="who">Answer sent ✓</div><p class="hint">${(m.answered||[]).length} of ${m.total} answered – waiting for the rest…</p>${board}`;
     if(!priv)return `<div class="who">Question ${m.round}</div><p class="hint">Loading your question…</p>`;
     return `<div class="who">Question ${m.round} of ${st.impQ}</div><div class="impq"><small>Only you can see this</small>${esc(priv.q)}</div><form class="impans" id="impForm"><input id="impIn" maxlength="80" placeholder="Your answer" autocomplete="off"><button class="btn btn-gold" type="submit">Send answer</button></form><p class="hint">Keep it short. If you're the imposter, your question is different – blend in!</p>`}
-  if(m.phase==="reveal")return `<div class="who">All answers are in</div><p class="hint">Look at the host screen – the answers are about to be revealed.</p>${board}`;
+  if(m.phase==="reveal")return `<div class="who">All answers are in</div><p class="hint">Look at the host screen – the answers are about to be revealed.</p>${autoPhoneHtml(st)}${board}`;
   if(m.phase==="discuss")return `<div class="who">Discuss!</div>${timer}<div class="impq"><small>The real question</small>${esc(m.q)}</div>${answers}<p class="hint">Who answered a different question?</p>`;
   if(m.phase==="vote"){if(voted)return `<div class="who">Vote received 🗳️</div><p class="hint">${(m.voted||[]).length} of ${m.total} voted…</p>${answers}`;
     return `<div class="who">Who is the imposter?</div><div class="ballot">${players.filter(p=>p.pid&&p.pid!==PH.pid).map(p=>`<button class="btn btn-ghost" data-act="vote" data-name="${esc(p.name)}">🕵️ ${esc(p.name)}</button>`).join("")}</div>${answers}`}
   const r=m.result;const meImp=r&&r.imposter===me.name;const gotIt=r&&(r.correct||[]).includes(me.name);
-  return `<div class="who">${meImp?"You were the imposter 🕵️":"The imposter was <b>"+esc(r.imposter)+"</b>"}</div><p class="hint">${meImp?(r.impPts?"You fooled "+r.missed+" players: +"+r.impPts:"Everyone saw through you – no points"):(gotIt?"You caught them: +"+st.impPts:"Wrong guess – no points")}</p>${answers}${board}`}
+  return `<div class="who">${meImp?"You were the imposter 🕵️":"The imposter was <b>"+esc(r.imposter)+"</b>"}</div><p class="hint">${meImp?(r.impPts?"You fooled "+r.missed+" players: +"+r.impPts:"Everyone saw through you – no points"):(gotIt?"You caught them: +"+st.impPts:"Wrong guess – no points")}</p>${autoPhoneHtml(st)}${answers}${board}`}
 
 // Who Would: "Who would most likely …"
 const WW_Q=[
@@ -2048,6 +2057,24 @@ function wwVote(i,name){const m=S.ww;if(!m||m.phase!=="vote")return;const j=S.pl
 function wwResult(){const m=S.ww;if(!m||m.phase!=="vote")return;const cnt={};Object.values(m.votes).forEach(j=>{cnt[j]=(cnt[j]||0)+1});let max=0;Object.values(cnt).forEach(n=>max=Math.max(max,n));
   const win=Object.keys(cnt).filter(k=>cnt[k]===max).map(Number);win.forEach(j=>{const p=S.players[j];p.cards=p.cards||[];p.cards.push(WW_Q[m.qi]);stat(p,"ww")});
   m.result={cnt,win};m.phase="result";S.log.unshift(`🤔 Who would ${esc(WW_Q[m.qi])} → <b>${win.map(j=>esc(S.players[j].name)).join(" & ")}</b>`);sfx.win();save();render()}
+// ---- Auto-pilot ----
+function autoKey(){if(S.autoMode==="off"||!S.inGame)return null;
+  if(S.game==="imposter"&&S.imp){if(S.imp.phase==="reveal")return"imp:"+S.round+":reveal";if(S.imp.phase==="result")return"imp:"+S.round+":result"}
+  if(S.game==="whowould"&&S.ww&&S.ww.phase==="result")return"ww:"+S.round+":result";return null}
+function autoAdvance(){const k=autoKey();if(!k)return;S.auto=null;
+  if(k.endsWith(":reveal"))impShowAnswers();else if(k.startsWith("imp:"))impNext();else if(k.startsWith("ww:"))wwNext()}
+function autoSync(){const k=autoKey();if(!k){if(S.auto){S.auto=null}return}
+  if(!S.auto||S.auto.key!==k){S.auto={key:k,ready:[],end:S.autoMode==="timer"?Date.now()+S.autoSec*1000:null};save()}}
+function autoReady(i,key){autoSync();const a=S.auto;if(!a||a.key!==key||S.autoMode!=="ready")return;const p=S.players[i];if(!p||!p.pid||a.ready.includes(p.pid))return;a.ready.push(p.pid);
+  const n=impPlayers().length;if(a.ready.length>=n){autoAdvance();return}if(!a.end&&a.ready.length*2>n)a.end=Date.now()+S.autoSec*1000;save();render()}
+let autoT=null;
+function autoHtml(){autoSync();const a=S.auto;if(!a)return"";const n=impPlayers().length,left=a.end?Math.max(0,Math.ceil((a.end-Date.now())/1000)):null;
+  if(!autoT)autoT=setInterval(()=>{const k=autoKey();if(!k||!S.auto){clearInterval(autoT);autoT=null;return}if(S.auto.end){const l=Math.max(0,Math.ceil((S.auto.end-Date.now())/1000));const el=$("autoLeft");if(el)el.textContent=l;const bar=$("autoBar");if(bar)bar.style.width=Math.round(100*(1-l/S.autoSec))+"%";if(l<=0){clearInterval(autoT);autoT=null;autoAdvance()}}},250);
+  if(S.autoMode==="timer")return `<div class="autobox">Auto-pilot · continuing in <b id="autoLeft">${left}</b> s<div class="bar"><i id="autoBar" style="width:${Math.round(100*(1-left/S.autoSec))}%"></i></div></div>`;
+  return `<div class="autobox">${a.ready.length} of ${n} tapped Next on their phones${a.end?` · continuing in <b id="autoLeft">${left}</b> s`:" · more than half starts the countdown"}${a.end?`<div class="bar"><i id="autoBar" style="width:${Math.round(100*(1-left/S.autoSec))}%"></i></div>`:""}</div>`}
+function autoPhoneHtml(st){const a=st.auto;if(!a||a.mode==="off")return"";const me=(a.ready||[]).includes(PH.pid);
+  if(a.mode==="timer")return `<p class="hint">Auto-pilot: the host screen continues by itself.</p>`;
+  return `<div class="phact" style="display:flex;flex-direction:column;gap:6px"><button class="btn ${me?"btn-ghost":"btn-gold"}" data-act="ready" data-key="${esc(a.key)}" ${me?"disabled":""}>${me?"Waiting for the others… "+(a.ready||[]).length+" of "+a.total:"▸ Next"}</button></div>`}
 function renderWw(){if(S.screen!=="ww"||S.game!=="whowould")return;const m=S.ww,st=$("wwStage");
   $("wwRound").textContent=`Question ${Math.min(S.round,S.wwQ)} of ${S.wwQ}`;$("wwCode").textContent=S.room?S.room.code:"";$("wwN").textContent=S.players.filter(online).length;
   if(!m){st.innerHTML=`<div class="lbl">Get ready</div>`;return}
@@ -2055,16 +2082,19 @@ function renderWw(){if(S.screen!=="ww"||S.game!=="whowould")return;const m=S.ww,
   if(m.phase==="vote")st.innerHTML=`<div class="lbl">Who would most likely</div><div class="q">${esc(q)}</div><div class="bar"><i style="width:${pl.length?Math.round(100*nV/pl.length):0}%"></i></div><div class="hint" style="margin:0">${nV} of ${pl.length} voted on their phones</div><div class="row">${nV?`<button class="btn btn-gold" id="wwClose">Close vote (${nV} votes)</button>`:""}<button class="btn btn-ghost" id="wwSkip">Skip question</button></div>`;
   else{const r=m.result,tot=Object.values(r.cnt).reduce((a,b)=>a+b,0)||1;const rows=S.players.map((p,i)=>({p,i,n:r.cnt[i]||0})).filter(x=>x.n>0).sort((a,b)=>b.n-a.n);
     st.innerHTML=`<div class="lbl">Who would most likely ${esc(q)}</div><div class="big">${r.win.map(j=>esc(S.players[j].name)).join(" & ")}</div><div class="wwbars">${rows.map(x=>`<div class="wwrow${r.win.includes(x.i)?" win":""}"><span class="n">${esc(x.p.name)}</span><span class="b"><i style="width:${Math.round(100*x.n/tot)}%"></i></span><span class="c">${x.n}</span></div>`).join("")}</div><button class="btn btn-gold" id="wwNextBtn" style="font-size:18px;padding:16px 24px">${S.round>=S.wwQ?"🎁 Show the review":"Next question ▸"}</button>`}
+  if(m.phase==="result")st.insertAdjacentHTML("beforeend",autoHtml());
   const bind=(id,fn)=>{const b=$(id);if(b)b.onclick=fn};bind("wwClose",wwResult);bind("wwNextBtn",()=>wwNext());bind("wwSkip",()=>ask("Skip this question?",()=>{S.round--;wwNext()},"Skip"))}
 $("wwHome").onclick=()=>{S.screen="home";save();render()};
 $("wwEnd").onclick=()=>ask("End the game now and show the review?",finish,"End game");
+$("autoMode").onchange=e=>{S.autoMode=e.target.value;S.auto=null;save();render()};
+$("autoSec").onchange=e=>{S.autoSec=Math.max(3,Math.min(120,+e.target.value||10));save()};
 $("wwQ").onchange=e=>{S.wwQ=Math.max(1,Math.min(40,+e.target.value||10));save()};
 function wwReviewHtml(players){return `<div class="wwreview">${players.map(p=>`<div class="wwcard"><div class="n">${esc(p.name)}</div>${(p.cards||[]).length?`<ul>${p.cards.map(c=>`<li>${esc(c)}</li>`).join("")}</ul>`:'<div class="hint" style="margin:0">no cards</div>'}</div>`).join("")}</div>`}
 function phoneWwHtml(st,me,meI,players,board){const m=st.ww;if(!m)return `<div class="who">Who would…</div><p class="hint">Waiting for the host…</p>`;
   const voted=(m.voted||[]).includes(PH.pid)||(PH.myVote&&PH.myVote.round==="ww:"+m.round);
   if(m.phase==="vote"){if(voted)return `<div class="who">Vote received 🗳️</div><div class="impq"><small>Who would most likely</small>${esc(m.q)}</div><p class="hint">${(m.voted||[]).length} of ${m.total} voted…</p>`;
     return `<div class="impq"><small>Who would most likely</small>${esc(m.q)}</div><div class="ballot">${players.filter(p=>p.pid&&p.pid!==PH.pid).map(p=>`<button class="btn btn-ghost" data-act="vote" data-name="${esc(p.name)}">${esc(p.name)}</button>`).join("")}</div>`}
-  return `<div class="who">${(m.win||[]).includes(me.name)?"That's you! 😅":(m.win||[]).map(esc).join(" & ")}</div><div class="impq"><small>Who would most likely</small>${esc(m.q)}</div><p class="hint">${(m.win||[]).length>1?"A tie – both got the card.":"got the card."} Look at the host screen for the votes.</p>`}
+  return `<div class="who">${(m.win||[]).includes(me.name)?"That's you! 😅":(m.win||[]).map(esc).join(" & ")}</div><div class="impq"><small>Who would most likely</small>${esc(m.q)}</div><p class="hint">${(m.win||[]).length>1?"A tie – both got the card.":"got the card."} Look at the host screen for the votes.</p>${autoPhoneHtml(st)}`}
 
 // ---- In-app YouTube player ----
 const YT_KEY="AIzaSyDSXRg08h9ifPWx9-m8RT9DFuf1jj0UTlA";const ytCache={};let YTS={list:[],i:0,q:""};
