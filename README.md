@@ -8,9 +8,9 @@ Static web app – no build step, no server logic. Karaoke Challenge runs on one
 - **Imposter** – everyone answers a question on their phone, one player secretly got a different one; discuss and vote (150 question pairs).
 - **Who Would** – "Who would most likely …": everyone votes for a player, no points, review at the end (150 questions).
 - **Liar's Cards** – Liar's Bar rules: play 1–3 cards face down as the table card or call the previous player a liar; a caught lie or a wrong call means pulling the trigger on your revolver. The deck grows with the player count (2–8).
-- **Undercover** – everyone gets the same secret topic except the spy; talk, vote, then the spy guesses the topic from six options (150 topics).
+- **Undercover** – everyone gets the same secret topic except the spy; talk, vote, then the spy guesses the topic from six options (140 topics).
 - **Ballpark** – percent questions, everyone guesses 0–100, closest wins (100 questions).
-- **Emoji Pictionary** – describe an anime series or movie with emojis only, the others guess on their phones (125 titles).
+- **Emoji Pictionary** – describe an anime series or movie with emojis only, the others guess on their phones (120 titles).
 
 ## Run locally
 Any static server works, e.g.:
