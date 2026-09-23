@@ -117,7 +117,11 @@ h1 span{color:var(--red-2)}
 /* setup screen */
 .screen:not(.on){display:none!important}
 .home{min-height:calc(100vh - 120px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;text-align:center}
-.home .deckart{position:relative;width:180px;height:250px}
+.home .deckart{position:relative;width:260px;height:250px}
+.home .deckart .fan{position:absolute;top:0;bottom:0;left:40px;right:40px;border-radius:14px;background:var(--card);box-shadow:var(--shadow);padding:10px;transform-origin:50% 92%}
+.home .deckart .f1{transform:rotate(-17deg) translateX(-26px)}.home .deckart .f3{transform:rotate(17deg) translateX(26px)}.home .deckart .f2{transform:translateY(-8px)}
+.home .deckart .fan .frame{height:100%;border:2px solid var(--blue);outline:1px solid var(--blue);outline-offset:3px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--blue)}
+.home .deckart .fan .frame svg{width:60%;height:60%}
 .home .deckart .ghost{position:absolute;inset:0;border-radius:14px;background:var(--card);box-shadow:var(--shadow)}
 .home .deckart .g1{transform:rotate(-9deg) translate(-14px,6px);opacity:.6}.home .deckart .g2{transform:rotate(7deg) translate(14px,2px);opacity:.8}
 .home .deckart .top{position:absolute;inset:0;border-radius:14px;background:var(--card);box-shadow:var(--shadow);padding:10px}
@@ -480,7 +484,7 @@ h1 span{color:var(--red-2)}
 <!-- HOME SCREEN -->
 <div class="screen" id="scrHome">
   <div class="home">
-    <div class="deckart"><div class="ghost g1"></div><div class="ghost g2"></div><div class="top"><div class="frame"><svg viewBox="0 0 64 64"><use href="#i-mic"/></svg></div></div></div>
+    <div class="deckart"><div class="fan f1"><div class="frame"><svg viewBox="0 0 64 64"><use href="#i-mic"/></svg></div></div><div class="fan f3"><div class="frame"><svg viewBox="0 0 64 64"><use href="#i-question"/></svg></div></div><div class="fan f2"><div class="frame"><svg viewBox="0 0 64 64"><use href="#i-masks"/></svg></div></div></div>
     <div class="title">Game <span>Night</span></div>
     <div class="menu">
       <button class="btn btn-ghost" id="homeResume" hidden>↩ Resume game</button>
