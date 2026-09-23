@@ -10,7 +10,7 @@ Static web app – no build step, no server logic. Karaoke Challenge runs on one
 - **Liar's Cards** – Liar's Bar rules: play 1–3 cards face down as the table card or call the previous player a liar; a caught lie or a wrong call means pulling the trigger on your revolver. The deck grows with the player count (2–8).
 - **Undercover** – everyone gets the same secret topic except the spy; talk, vote, then the spy guesses the topic from six options (140 topics).
 - **Ballpark** – percent questions, everyone guesses 0–100, closest wins (100 questions).
-- **Emoji Pictionary** – describe an anime series or movie with emojis only, the others guess on their phones (120 titles).
+- **Emoji Pictionary** – the host shows an emoji card (124 built-in movies and anime, plus your own), everyone guesses the title on their phone; or switch to draw mode, where a player describes a title with emojis live.
 
 ## Run locally
 Any static server works, e.g.:
