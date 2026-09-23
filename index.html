@@ -13,7 +13,11 @@
 <link rel="icon" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
 <title>Game Night</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@500;700&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+@font-face{font-family:'Anton';font-style:normal;font-weight:400;font-display:swap;src:url(./fonts/anton.woff2) format('woff2')}
+@font-face{font-family:'Caveat';font-style:normal;font-weight:500 700;font-display:swap;src:url(./fonts/caveat.woff2) format('woff2')}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:400 800;font-display:swap;src:url(./fonts/nunito.woff2) format('woff2')}
+</style>
 <style>
 [hidden]{display:none!important}
 :root{ --blue:#2f6fd6; --navy:#14223f;
@@ -1715,20 +1719,22 @@ function snapshot(){const phase=S.screen==="final"?"final":S.vote?"vote":S.inGam
     awards:(S.awards||[]).filter(a=>a.revealed).map(a=>({em:a.em,t:a.t,d:a.d,winners:a.winners.map(i=>S.players[i].name)})),
     awardsLeft:(S.awards||[]).filter(a=>!a.revealed).length,awardsDone:!!S.awardsDone,log:S.log.slice(0,4),at:Date.now()}}
 function netStatusText(){if(!S.room)return"";const n=S.players.filter(online).length;return `${n} phone${n===1?"":"s"} connected`}
+function rememberRoom(code){S.myRooms=(S.myRooms||[]).filter(r=>r.code!==code);S.myRooms.push({code,at:Date.now()});S.myRooms=S.myRooms.slice(-10)}
+function cleanupRooms(){const keep=S.room&&S.room.code;const old=(S.myRooms||[]).filter(r=>r.code!==keep);old.forEach(r=>{db.del(`rooms/${r.code}`).catch(()=>{})});S.myRooms=(S.myRooms||[]).filter(r=>r.code===keep)}
 async function hostCreate(){if(!NET_OK){toast("Phones aren't set up on this copy yet");return}
   toast("Opening a room…");let code=genCode();
   try{for(let i=0;i<6;i++){const st=await db.get(`rooms/${code}/updatedAt`);if(!st||Date.now()-st>8*3600e3)break;code=genCode()}}catch(e){toast("Can't reach the server – check your internet");return}
   if(S.room)hostClose(true);
   S.mode="host";S.room={code,key:Math.random().toString(36).slice(2)};S.players=[];S.inGame=false;S.current=null;S.vote=null;S.awards=null;S.awardsDone=false;S.log=[];S.timer=null;S.screen="lobby";
   try{await db.put(`rooms/${code}`,{hostKey:S.room.key,createdAt:TS,updatedAt:TS,state:snapshot()})}catch(e){toast("Couldn't create the room");S.room=null;S.mode="local";S.screen="home";save();render();return}
-  save();render();hostConnect();sfx.start()}
+  cleanupRooms();rememberRoom(code);save();render();hostConnect();sfx.start()}
 function hostConnect(){if(HS){HS.close();HS=null}if(!S.room)return;const code=S.room.code;
   HS=db.stream(`rooms/${code}`,(room,path)=>{if(!S.room||S.room.code!==code)return;room=room||{};
     if(path==="/"||path.startsWith("/members"))syncMembers(room.members||{});
     if(path==="/"||path.startsWith("/actions"))handleActions(room.actions||{});
     if(path==="/"||path.startsWith("/votes"))syncVotes(room.votes||{});
     $("lobbyStatus").textContent=netStatusText()},()=>{$("lobbyStatus").textContent="Reconnecting…"})}
-function hostClose(del){if(HS){HS.close();HS=null}const r=S.room;S.room=null;S.mode="local";S.vote=null;S.players.forEach(p=>{delete p.pid;delete p.seen});if(del&&r)db.del(`rooms/${r.code}`).catch(()=>{});save()}
+function hostClose(del){if(HS){HS.close();HS=null}const r=S.room;S.room=null;S.mode="local";S.vote=null;S.players.forEach(p=>{delete p.pid;delete p.seen});if(del&&r){db.del(`rooms/${r.code}`).catch(()=>{});S.myRooms=(S.myRooms||[]).filter(x=>x.code!==r.code)}save()}
 function uniqueName(n){let x=n,i=2;while(S.players.some(p=>p.name.toLowerCase()===x.toLowerCase()))x=n+" "+(i++);return x}
 function syncMembers(m){let changed=false,seenChanged=false;const seen=new Set();
   for(const [pid,mem] of Object.entries(m)){if(!mem||!mem.name)continue;const name=String(mem.name).trim().slice(0,18);if(!name)continue;seen.add(pid);
@@ -1767,7 +1773,7 @@ let qrLib=null;
 function renderQr(){const el=$("lobbyQr");if(!S.room)return;const url=joinUrl(S.room.code);if(el.dataset.url===url)return;
   const draw=()=>{try{const q=qrcode(0,"M");q.addData(url);q.make();el.innerHTML=q.createSvgTag({cellSize:4,margin:0,scalable:true});el.dataset.url=url}catch(e){el.innerHTML=""}};
   if(window.qrcode){draw();return}if(qrLib)return;
-  qrLib=document.createElement("script");qrLib.src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js";qrLib.onload=draw;qrLib.onerror=()=>{el.innerHTML="";qrLib=null};document.head.appendChild(qrLib)}
+  qrLib=document.createElement("script");qrLib.src="./qrcode.min.js";qrLib.onload=draw;qrLib.onerror=()=>{el.innerHTML="";qrLib=null};document.head.appendChild(qrLib)}
 $("lobbyAdd").onsubmit=e=>{e.preventDefault();const n=$("lobbyName").value.trim().slice(0,18);if(!n)return;if(S.players.length>=12){toast("Max 12 players");return}S.players.push({name:uniqueName(n),score:0,stats:{},rs:0});$("lobbyName").value="";save();render()};
 $("lobbyPlayers").onclick=e=>{const b=e.target.closest("[data-kick]");if(!b)return;const i=+b.dataset.kick,p=S.players[i];if(!p)return;if(p.pid&&S.room)db.del(`rooms/${S.room.code}/members/${p.pid}`).catch(()=>{});S.players.splice(i,1);save();render()};
 $("lobbyStart").onclick=()=>{if(S.game==="whowould"){if(impPlayers().length<3){toast("Who Would needs at least 3 players with phones");return}wwStart();return}if(S.game==="imposter"){if(impPlayers().length<3){toast("Imposter needs at least 3 players with phones");return}impStart();return}if(S.players.length<2)return;startGame()};
@@ -1902,6 +1908,7 @@ function boot(){
   if(S.screen==="phone"){let p=null;try{p=JSON.parse(localStorage.getItem("kc-phone"))}catch(e){}
     if(p&&p.code&&p.pid&&NET_OK){PH={code:p.code,pid:p.pid,name:p.name,state:undefined};phoneConnect();db.patch(`rooms/${p.code}/members/${p.pid}`,{name:p.name,seen:TS}).catch(()=>{})}else S.screen="home"}
   if(S.mode==="host"&&S.room){if(NET_OK)hostConnect();else{S.room=null;S.mode="local"}}
+  if(NET_OK&&S.mode!=="host"&&(S.myRooms||[]).length)cleanupRooms();
   if(S.timer&&!S.current)S.timer=null;
   render();
   if(S.current&&!S.current.accepted&&S.screen==="game")resumeTimer();
