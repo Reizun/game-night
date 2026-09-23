@@ -1,8 +1,13 @@
 # Game Night (PWA)
 
-Three party games in one app: **Karaoke Challenge**, **Imposter** and **Who Would**. Live at https://reizun.github.io/game-night/
+Four party games in one app: **Karaoke Challenge**, **Imposter**, **Who Would** and **Liar's Cards**. Live at https://reizun.github.io/game-night/
 
-Static web app – no build step, no server logic. Play on one device (pass it around) or host with phones: every player joins with a 4-letter room code and uses their own phone as a controller (draw, done, pass, vote for the best performance of each round). Three secret awards are revealed at the end.
+Static web app – no build step, no server logic. Karaoke Challenge runs on one device; every game runs with phones: players join with a 4-letter room code and use their own phone as a controller (draw, done, pass, sing-off votes, Imposter answers, Who Would ballots, Liar's Cards hands). Every card is worth 10 points, sing-offs add ±5, three secret awards are revealed at the end, and after each game the phones vote what to play next.
+
+- **Karaoke Challenge** – draw a card, accept or pass before the timer runs out, sing, get challenged to a sing-off.
+- **Imposter** – everyone answers a question on their phone, one player secretly got a different one; discuss and vote (150 question pairs).
+- **Who Would** – "Who would most likely …": everyone votes for a player, no points, review at the end (150 questions).
+- **Liar's Cards** – Liar's Bar rules: play 1–3 cards face down as the table card or call the previous player a liar; a caught lie or a wrong call means pulling the trigger on your revolver. The deck grows with the player count (2–8).
 
 ## Run locally
 Any static server works, e.g.:

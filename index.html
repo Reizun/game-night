@@ -306,6 +306,12 @@ h1 span{color:var(--red-2)}
 .impstage .ballot{width:100%;max-width:420px}.impstage .impans{display:flex;flex-direction:column;gap:8px;width:100%;max-width:420px}
 .impstage .impans input{padding:14px;border-radius:10px;border:2px solid transparent;background:var(--ground);color:var(--ink);font:inherit;font-size:18px;text-align:center}
 .impstage .q.priv{background:var(--card);color:var(--card-ink);border-radius:14px;padding:18px 16px;width:100%;max-width:520px}
+.lcring{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;width:100%}.lcp{background:var(--ground);border-radius:12px;padding:10px 14px;min-width:110px;text-align:center;display:flex;flex-direction:column;gap:2px}
+.lcp.turn{box-shadow:inset 0 0 0 2px var(--gold)}.lcp.dead{opacity:.45}.lcp .n{font-weight:800}.lcp .c{font-size:14px;color:var(--ink)}.lcp .g{font-size:12px;color:var(--muted)}
+.lccard{font-family:Anton,Impact,sans-serif;font-size:56px;background:var(--card);color:var(--card-ink);border-radius:14px;padding:8px 28px;line-height:1;display:flex;flex-direction:column;align-items:center}.lccard small{font-size:13px;font-family:Nunito,sans-serif;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.lchand{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.lcc{background:var(--card);color:var(--card-ink);border-radius:10px;padding:10px 10px 8px;font-family:Anton,Impact,sans-serif;font-size:28px;border:3px solid transparent;display:flex;flex-direction:column;align-items:center;min-width:58px;line-height:1;transition:transform .15s}
+.lcc small{font-size:10px;font-family:Nunito,sans-serif;font-weight:800;text-transform:uppercase;margin-top:4px}.lcc.sel{border-color:var(--gold);transform:translateY(-6px)}.lcc.ok{border-color:#3cb371}.lcc.bad{border-color:var(--red)}
+.lcshot{font-family:Anton,Impact,sans-serif;font-size:30px;color:var(--gold);letter-spacing:.03em}
 .nextbox{width:100%;background:var(--ground-2);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;align-items:center}
 .nextbox h3{margin:0;font-family:Anton,sans-serif;font-weight:400;letter-spacing:.04em;font-size:22px}
 .nextopts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.nextopts .c{display:inline-block;min-width:22px;padding:1px 7px;border-radius:999px;background:var(--ground);margin-left:6px;font-size:13px}
@@ -350,6 +356,7 @@ h1 span{color:var(--red-2)}
 <symbol id="i-money" viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="17" width="52" height="30" rx="4"/><circle cx="32" cy="32" r="9" fill="currentColor" fill-opacity=".16"/><path d="M35 28.5A3 3 0 1 0 32 32A3 3 0 1 1 29 35.5M32 26v12M15 28v8M49 28v8" stroke-width="2"/></g></symbol>
 <symbol id="i-umbrella" viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 34A26 26 0 0 1 58 34a6.5 6.5 0 0 0-13 0a6.5 6.5 0 0 0-13 0a6.5 6.5 0 0 0-13 0a6.5 6.5 0 0 0-13 0z" fill="currentColor" fill-opacity=".16"/><path d="M32 5v3M32 34v16a5 5 0 0 1-10 0"/><path d="M32 8v26M44 42l-2 5M52 40l-2 5" stroke-width="2"/></g></symbol>
 <symbol id="i-quote" viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M14 8h36a8 8 0 0 1 8 8v20a8 8 0 0 1-8 8H26l-10 10V44h-2a8 8 0 0 1-8-8V16a8 8 0 0 1 8-8z" fill="currentColor" fill-opacity=".16"/><circle cx="23" cy="23" r="3.5"/><circle cx="37" cy="23" r="3.5"/><path d="M26.5 23c0 5-2 8-5 10M40.5 23c0 5-2 8-5 10"/></g></symbol>
+<symbol id="i-cards" viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"><rect x="9" y="14" width="26" height="36" rx="4" transform="rotate(-14 22 32)" fill="currentColor" opacity=".35"/><rect x="26" y="12" width="26" height="38" rx="4" transform="rotate(10 39 31)"/></g><text x="39" y="39" font-size="20" font-family="Anton,Impact,sans-serif" text-anchor="middle" fill="currentColor" transform="rotate(10 39 31)">A</text></symbol>
 <symbol id="i-question" viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="26" fill="currentColor" fill-opacity=".16"/><path d="M22 24a10 10 0 0 1 20 0c0 7-10 7-10 14"/><circle cx="32" cy="47" r="1.5" fill="currentColor"/></g></symbol>
 <symbol id="i-crown" viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18L21 30L32 14L43 30L55 18L52 44H12Z" fill="currentColor" fill-opacity=".16"/><rect x="12" y="44" width="40" height="10" rx="2"/><circle cx="32" cy="34" r="3" stroke-width="2"/></g></symbol>
 <symbol id="i-globe" viewBox="0 0 64 64"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="26"/><ellipse cx="32" cy="32" rx="11" ry="26" fill="currentColor" fill-opacity=".16"/><path d="M6 32h52"/><path d="M10 20h44M10 44h44" stroke-width="2"/></g></symbol>
@@ -504,6 +511,7 @@ h1 span{color:var(--red-2)}
       <button class="btn btn-ghost" id="homeResume" hidden>↩ Resume game</button>
       <button class="btn btn-red" id="homeStart">▶ Start game</button>
       <button class="btn btn-gold" id="homeHost">📱 Host with phones</button>
+      <p class="hint" style="text-align:center;margin:8px 0 0">Start game = Karaoke Challenge on this device. Imposter and Who Would need phones – tap "Host with phones".</p>
       <button class="btn btn-ghost" id="homeJoin">📲 Join with your phone</button>
       <button class="btn btn-ghost" id="homeSettings">⚙ Settings</button>
     </div>
@@ -514,7 +522,7 @@ h1 span{color:var(--red-2)}
 <!-- SETTINGS SCREEN -->
 <div class="screen setup" id="scrSettings">
   <div class="topbar"><button class="btn btn-ghost" id="settingsBack">← Back</button><span class="round">Settings</span></div>
-  <div class="gamesel settabs" id="setTabs"><button class="chip" data-tab="karaoke" type="button">🎤 Karaoke</button><button class="chip" data-tab="imposter" type="button">🕵️ Imposter</button><button class="chip" data-tab="whowould" type="button">🤔 Who Would</button><button class="chip" data-tab="general" type="button">⚙ General</button></div>
+  <div class="gamesel settabs" id="setTabs"><button class="chip" data-tab="karaoke" type="button">🎤 Karaoke</button><button class="chip" data-tab="imposter" type="button">🕵️ Imposter</button><button class="chip" data-tab="whowould" type="button">🤔 Who Would</button><button class="chip" data-tab="liars" type="button">🃏 Liar's Cards</button><button class="chip" data-tab="general" type="button">⚙ General</button></div>
   <section class="panel" data-tab="karaoke">
     <h2 style="display:flex;justify-content:space-between;align-items:center">Categories <button class="chip" id="catsAll" type="button">All / none</button></h2>
     <div class="catgrid" id="filters"></div>
@@ -542,7 +550,7 @@ h1 span{color:var(--red-2)}
       <input id="cardText" placeholder="Your challenge, e.g. Sing a love song to {P}" maxlength="120" autocomplete="off">
       <div class="row">
         <select id="cardCat" aria-label="Category"></select>
-        <select id="cardDiff" aria-label="Points"><option value="1">10 points · easy</option><option value="2" selected>20 points · medium</option><option value="3">30 points · hard</option></select>
+        <select id="cardDiff" aria-label="Points" hidden><option value="1">10 points · easy</option><option value="2" selected>20 points · medium</option><option value="3">30 points · hard</option></select>
         <button class="btn btn-gold" type="submit">+ Add card</button>
       </div>
     </form>
@@ -557,14 +565,22 @@ h1 span{color:var(--red-2)}
       <label>Points for catching the imposter <input type="number" id="impPts" value="10" min="0"></label>
       <label>Imposter points per player fooled <input type="number" id="impImpPts" value="5" min="0"></label>
     </div>
-    <p class="hint">Everyone answers a question on their phone – or you pass one phone around – while one player secretly gets a different question. The real question and all answers are revealed, the group discusses, then everyone votes. 150 question pairs.</p>
+    <p class="hint">Everyone answers a question on their phone while one player secretly gets a different question. The real question and all answers are revealed, the group discusses, then everyone votes. 150 question pairs.</p>
   </section>
   <section class="panel" data-tab="whowould">
     <h2>🤔 Who Would</h2>
     <div class="rules">
       <label>Questions per game <input type="number" id="wwQ" value="10" min="1" max="150"></label>
     </div>
-    <p class="hint">"Who would most likely …" – everyone votes for a player, on their phones or by passing one phone around. No points: whoever gets the most votes collects the card, and the review at the end shows who got what. 150 questions.</p>
+    <p class="hint">"Who would most likely …" – everyone votes for a player on their phone. No points: whoever gets the most votes collects the card, and the review at the end shows who got what. 150 questions.</p>
+  </section>
+  <section class="panel" data-tab="liars">
+    <h2>🃏 Liar's Cards</h2>
+    <div class="rules">
+      <label>Cards per player <input type="number" id="lcHand" value="5" min="3" max="8"></label>
+      <label>Revolver chambers <input type="number" id="lcChambers" value="6" min="2" max="8"></label>
+    </div>
+    <p class="hint">Like Liar's Bar: a table card (Queen, King or Ace) is announced and everyone gets cards. On your turn play 1–3 cards face down and claim they are the table card – Jokers count as anything – or call the previous player a liar. A caught lie or a wrong call means pulling the trigger on your own revolver: one chamber is loaded, and every pull gets riskier. Last one standing wins. The deck grows with the player count (2–8 players, one phone each). Points: +5 for catching a liar or for an honest play that gets called, +20 for the last one standing.</p>
   </section>
   <section class="panel" data-tab="general">
     <h2>Auto-pilot</h2>
@@ -572,7 +588,7 @@ h1 span{color:var(--red-2)}
       <label>Host screen in Imposter &amp; Who Would <select id="autoMode"><option value="off">Off – host taps Next</option><option value="ready" selected>Players tap Next (half = countdown, all = go)</option><option value="timer">Timer per screen</option></select></label>
       <label>Auto-pilot seconds <input type="number" id="autoSec" value="10" min="3" max="120"></label>
     </div>
-    <p class="hint">With phones, players can move the host screen on themselves. On a single device only the timer option applies.</p>
+    <p class="hint">With phones, players can move the host screen on themselves.</p>
   </section>
   <section class="panel" data-tab="karaoke">
     <h2>Rules</h2>
@@ -585,7 +601,7 @@ h1 span{color:var(--red-2)}
       <label>Best-performance bonus per round (phones, 0 = off) <input type="number" id="mvpBonus" value="20" min="0"></label>
       <label>Secret award bonus at the end (0 = off) <input type="number" id="awardBonus" value="15" min="0"></label>
     </div>
-    <p class="hint">Passing costs points. The card moves to the next player and is worth more. After drawing you have the decision timer to accept or pass – when it runs out you are in. Once accepted, anyone with a phone can challenge you to a sing-off: you pick a challenger (or sing solo), both sing the same task and the crowd votes. You did the challenge, so you score either way – the sing-off adds a stake of 5 / 10 / 15 points (10 / 20 / 30-point cards): win it and the stake comes on top, lose it and the stake is deducted. Challengers never get points, but their wins count for the secret "Duel champion" award. The tier is a bet: failing a 10-point card costs nothing, a 20-point card −10, a 30-point card −15. A round is over when every player has started one card. With phones, everyone votes for the best performance after each round. At the end, three secret awards (most hard cards, most passes…) are revealed one by one.</p>
+    <p class="hint">Every card is worth 10 points. After drawing you have the decision timer to accept or pass – when it runs out, the card is passed on automatically. Passing costs points; the card moves to the next player and is worth more. Once accepted, anyone with a phone can challenge you to a sing-off: you pick a challenger (or sing solo), both sing the same task and the crowd votes. Win the sing-off and you get 15, lose it and you get 5, a tie is 10. Challengers never get points, but their wins count for the secret "Duel champion" award. Failing a card costs nothing – you just get no points. A round is over when every player has started one card. With phones, everyone votes for the best performance after each round. At the end, three secret awards (most cards sung, most passes…) are revealed one by one.</p>
   </section>
   <section class="panel" data-tab="general">
     <h2>Sound</h2>
@@ -602,11 +618,6 @@ h1 span{color:var(--red-2)}
 <!-- PLAYERS SCREEN -->
 <div class="screen setup" id="scrPlayers">
   <div class="topbar"><button class="btn btn-ghost" id="playersBack">← Back</button><span class="round">Players</span></div>
-  <section class="panel">
-    <h2>Which game?</h2>
-    <div class="gamesel" id="gameSel2"><button class="chip" data-game="karaoke" type="button">🎤 Karaoke Challenge</button><button class="chip" data-game="imposter" type="button">🕵️ Imposter</button><button class="chip" data-game="whowould" type="button">🤔 Who Would</button></div>
-    <p class="hint" id="gameHint2"></p>
-  </section>
   <section class="panel">
     <h2>How many players?</h2>
     <div class="count"><button class="btn btn-ghost" id="cntMinus">−</button><span class="n" id="cntVal">2</span><button class="btn btn-ghost" id="cntPlus">+</button></div>
@@ -647,7 +658,7 @@ h1 span{color:var(--red-2)}
     <div class="qr" id="lobbyQr"></div>
     <div class="hint">Scan the code, or open <b id="lobbyUrl" style="color:var(--ink);word-break:break-all"></b> and type the code.</div>
     <div class="hint" id="lobbyStatus">Connecting…</div>
-    <div class="gamesel" id="gameSel"><button class="chip" data-game="karaoke" type="button">🎤 Karaoke Challenge</button><button class="chip" data-game="imposter" type="button">🕵️ Imposter</button><button class="chip" data-game="whowould" type="button">🤔 Who Would</button></div>
+    <div class="gamesel" id="gameSel"><button class="chip" data-game="karaoke" type="button">🎤 Karaoke Challenge</button><button class="chip" data-game="imposter" type="button">🕵️ Imposter</button><button class="chip" data-game="whowould" type="button">🤔 Who Would</button><button class="chip" data-game="liars" type="button">🃏 Liar's Cards</button></div>
     <div class="hint" id="gameHint"></div>
   </section>
   <section class="panel">
@@ -691,6 +702,18 @@ h1 span{color:var(--red-2)}
     </div>
     <div class="impstage" id="impStage"></div>
     <section class="panel" style="width:100%"><h2>Scoreboard</h2><ul class="players" id="impBoard"></ul></section>
+  </div>
+</div>
+
+<!-- LIAR'S CARDS SCREEN (host) -->
+<div class="screen" id="scrLc">
+  <div class="imp">
+    <div class="topbar" style="width:100%;justify-content:space-between">
+      <span style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="round" id="lcRound"></span><span class="roomchip" id="lcChip"><span class="dot on"></span>Room <b id="lcCode"></b> · <span id="lcN">0</span> 📱</span></span>
+      <span style="display:flex;gap:6px"><button class="btn btn-ghost" id="lcHome">⌂</button><button class="btn btn-ghost" id="lcEnd">End game</button></span>
+    </div>
+    <div class="impstage" id="lcStage"></div>
+    <section class="panel" style="width:100%"><h2>Scoreboard</h2><ul class="players" id="lcBoard"></ul></section>
   </div>
 </div>
 
@@ -742,10 +765,7 @@ h1 span{color:var(--red-2)}
 
     <div class="actions" id="actions">
       <div class="drawrow" id="draw">
-        <button class="btn btn-red tier" data-diff="1"><b>10</b><span>easy</span></button>
-        <button class="btn btn-red tier" data-diff="2"><b>20</b><span>medium</span></button>
-        <button class="btn btn-red tier" data-diff="3"><b>30</b><span>hard</span></button>
-        <button class="btn btn-ghost" data-diff="0">🎲 Random</button>
+        <button class="btn btn-red" data-diff="0" style="font-size:18px;padding:16px 28px">🎴 Draw a card</button>
       </div>
       <button class="btn btn-gold" id="accept" hidden>✓ Accept</button>
       <button class="btn btn-green" id="done" hidden>✓ Done it</button>
@@ -783,7 +803,7 @@ const CHALLENGES = [
  ["Classics","Sing a song in a language you don't speak",3],
  ["Classics","Sing the song that played at your last birthday",2],
  ["Classics","Sing a song your parents love",2],
- ["Classics","Sing an Eurovision song",2],
+ ["Classics","Sing a Eurovision song",2],
  ["Classics","Sing a boyband anthem",1],
  ["Classics","Sing a song that makes you cry",2],
  ["Classics","Sing a song you'd never admit to liking",2],
@@ -850,7 +870,7 @@ const CHALLENGES = [
  ["K-Pop","Sing a K-Pop song and translate one line into your language on the spot",3],
  ["K-Pop","Sing a K-Pop song while the group holds up light sticks (phones count)",1],
  ["K-Pop","Sing the intro of a K-Pop song only – the group guesses the group",2],
- ["K-Pop","Sing a girl-group song if you are a guy, or a boy-group song if you are a girl",2],
+ ["K-Pop","Sing a K-Pop song by a group you'd never get cast in",2],
  ["K-Pop","Sing a K-Pop song from the group {P} names",2],
  ["K-Pop","Sing a song from KPop Demon Hunters",1],
  ["K-Pop","Sing 'Golden' from KPop Demon Hunters – and hit the high note",3],
@@ -1008,7 +1028,7 @@ const CHALLENGES = [
  ["Artists","Sing an Ed Sheeran song",1],
  ["Artists","Sing an Adele song",2],
  ["Artists","Sing a Billie Eilish song",1],
- ["Artists","Sing a The Weeknd song",2],
+ ["Artists","Sing a song by The Weeknd",2],
  ["Artists","Sing a Dua Lipa song",1],
  ["Artists","Sing a Harry Styles song",1],
  ["Artists","Sing an Olivia Rodrigo song",1],
@@ -1047,7 +1067,7 @@ const CHALLENGES = [
  ["Artists","Sing a The Beatles song",1],
  ["Artists","Sing a Bob Marley song",1],
  ["Artists","Sing a Spice Girls song",1],
- ["Artists","Sing an One Direction song",1],
+ ["Artists","Sing a One Direction song",1],
  ["Artists","Sing a song by the artist {P} names",2],
  ["Artists","Sing a song by an artist who has the same first letter as your name",2],
  ["Artists","Sing a song by an artist who is no longer alive",2],
@@ -1092,26 +1112,6 @@ const CHALLENGES = [
  ["Genres","Sing a song from a video game",2],
  ["Genres","Sing a movie theme with no lyrics – you make them up",3],
  // Years
- ["Years","Sing a song released in 1970",3],
- ["Years","Sing a song released in 1971",3],
- ["Years","Sing a song released in 1972",3],
- ["Years","Sing a song released in 1973",3],
- ["Years","Sing a song released in 1974",3],
- ["Years","Sing a song released in 1975",3],
- ["Years","Sing a song released in 1976",3],
- ["Years","Sing a song released in 1977",3],
- ["Years","Sing a song released in 1978",3],
- ["Years","Sing a song released in 1979",3],
- ["Years","Sing a song released in 1980",3],
- ["Years","Sing a song released in 1981",3],
- ["Years","Sing a song released in 1982",3],
- ["Years","Sing a song released in 1983",3],
- ["Years","Sing a song released in 1984",3],
- ["Years","Sing a song released in 1985",3],
- ["Years","Sing a song released in 1986",3],
- ["Years","Sing a song released in 1987",3],
- ["Years","Sing a song released in 1988",3],
- ["Years","Sing a song released in 1989",3],
  ["Years","Sing a song released in 1990",2],
  ["Years","Sing a song released in 1991",2],
  ["Years","Sing a song released in 1992",2],
@@ -1152,6 +1152,9 @@ const CHALLENGES = [
  ["Years","Sing a song from the year you finished school",2],
  ["Years","Sing a song from the year of your first phone",2],
  ["Years","The group picks a year – sing a song from it",3],
+ ["Years","Sing a song older than everyone in the room",3],
+ ["Years","Sing a song from the 70s",2],
+ ["Years","Sing a song from the year your parents met (a guess is fine)",3],
  // Mood
  ["Mood","Sing a love song",1],
  ["Mood","Sing a sad song",1],
@@ -1194,7 +1197,6 @@ const CHALLENGES = [
  ["Voice","Pick any song and sing it as if you're absolutely furious",2],
  ["Voice","Whisper the entire song",1],
  ["Voice","Sing like a news anchor reading the lyrics",2],
- ["Voice","Sing with your mouth full (water, chips, whatever)",3],
  ["Voice","Pick any song and sing it in a baby voice",2],
  ["Voice","Pick any song and sing it in an accent of your choice",2],
  ["Voice","Sing a rap song as a slow ballad",3],
@@ -1204,7 +1206,6 @@ const CHALLENGES = [
  ["Performance","Sing with your eyes closed while dancing",1],
  ["Performance","Pick any song and sing it standing on one leg until it ends",2],
  ["Performance","Sing while walking backwards around the room",2],
- ["Performance","Sing while doing push-ups",3],
  ["Performance","Impersonate the original artist as closely as you can",2],
  ["Performance","Pick any song and perform it as a musical number with huge gestures",2],
  ["Performance","Rock concert mode – air guitar is mandatory",1],
@@ -1225,7 +1226,6 @@ const CHALLENGES = [
  ["Duet & Group","Sing a duet with {P}",2],
  ["Duet & Group","Choose a song everyone can sing along to",1],
  ["Duet & Group","Sing a duet with {P} – alternate word by word",3],
- ["Duet & Group","Sing a duet with {P}",1],
  ["Duet & Group","Sing a love duet with {P}",2],
  ["Duet & Group","You sing, the group only gets the chorus – and you cue them",1],
  ["Duet & Group","Battle: you vs. {P}, same song, the group picks the winner",2],
@@ -1306,13 +1306,13 @@ const CHALLENGES = [
  ["Truth","Sing a song that describes your life right now",2],
  ["Truth","Sing a song you cried through after a breakup",2],
 ];
-const BASE = {1:10,2:20,3:30};
+const BASE = {1:10,2:10,3:10};
 
 // ---- State ----
 const KEY="karaoke-challenge-en-v1";
-let S = {players:[], turn:0, cats:[...CATS], penalty:5, bonus:10, current:null, disabledArtists:[], hiddenArtists:[], log:[], used:[], customArtists:[], customCards:[], game:"karaoke", imp:null, impUsed:[], impQ:6, impDiscuss:90, impPts:10, impImpPts:5, ww:null, wwUsed:[], wwQ:10, autoMode:"ready", autoSec:10, auto:null, plays:{}, rounds:3, timerSec:15, mics:1, round:1, started:0, screen:"home", volume:0.7, muted:false, mode:"local", room:null, inGame:false, mvpBonus:20, awardBonus:15, vote:null, awards:null, awardsDone:false, timer:null, timerBuzzed:false, catsV:0, back:null, lastVote:null};
+let S = {players:[], turn:0, cats:[...CATS], penalty:5, bonus:10, current:null, disabledArtists:[], hiddenArtists:[], log:[], used:[], customArtists:[], customCards:[], game:"karaoke", imp:null, impUsed:[], impQ:6, impDiscuss:90, impPts:10, impImpPts:5, ww:null, wwUsed:[], wwQ:10, autoMode:"ready", autoSec:10, auto:null, plays:{}, lcHand:5, lcChambers:6, rounds:3, timerSec:15, mics:1, round:1, started:0, screen:"home", volume:0.7, muted:false, mode:"local", room:null, inGame:false, mvpBonus:20, awardBonus:15, vote:null, awards:null, awardsDone:false, timer:null, timerBuzzed:false, catsV:0, back:null, lastVote:null};
 let draft=null;
-try{const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.players){S={...S,...s};if(!S.catsV){for(const c of ["2000s","K-Pop","Disney","High School Musical","Word Hunt","Artists","Genres","Years","Mood"])if(!S.cats.includes(c))S.cats.push(c);}if(!Array.isArray(S.disabledArtists))S.disabledArtists=[];if(!Array.isArray(S.hiddenArtists))S.hiddenArtists=[];if(!S.customArtists)S.customArtists=[];if(!Array.isArray(S.customCards))S.customCards=[];if(!S.game)S.game="karaoke";if(!S.impQ)S.impQ=6;if(S.impDiscuss==null)S.impDiscuss=90;if(S.impPts==null)S.impPts=10;if(S.impImpPts==null)S.impImpPts=5;if(!Array.isArray(S.impUsed))S.impUsed=[];if(!S.wwQ)S.wwQ=10;if(!S.autoMode)S.autoMode="ready";if(!S.plays||typeof S.plays!=="object")S.plays={};if(!S.autoSec)S.autoSec=10;if(!Array.isArray(S.wwUsed))S.wwUsed=[];if(S.rounds==null)S.rounds=3;if(S.volume==null)S.volume=.7;if(S.muted==null)S.muted=false;if(S.timerSec==null)S.timerSec=15;if(!S.mics)S.mics=1;if(!S.round)S.round=1;if(!S.started)S.started=0;if(!["home","settings","players","game","final","lobby","join","phone","imp","ww"].includes(S.screen))S.screen="home";if(S.screen==="setup")S.screen="home";}}catch(e){}
+try{const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.players){S={...S,...s};if(!S.catsV){for(const c of ["2000s","K-Pop","Disney","High School Musical","Word Hunt","Artists","Genres","Years","Mood"])if(!S.cats.includes(c))S.cats.push(c);}if(!Array.isArray(S.disabledArtists))S.disabledArtists=[];if(!Array.isArray(S.hiddenArtists))S.hiddenArtists=[];if(!S.customArtists)S.customArtists=[];if(!Array.isArray(S.customCards))S.customCards=[];if(!S.game)S.game="karaoke";if(!S.impQ)S.impQ=6;if(S.impDiscuss==null)S.impDiscuss=90;if(S.impPts==null)S.impPts=10;if(S.impImpPts==null)S.impImpPts=5;if(!Array.isArray(S.impUsed))S.impUsed=[];if(!S.wwQ)S.wwQ=10;if(!S.autoMode)S.autoMode="ready";if(!S.plays||typeof S.plays!=="object")S.plays={};if(!S.lcHand)S.lcHand=5;if(!S.lcChambers)S.lcChambers=6;if(!S.autoSec)S.autoSec=10;if(!Array.isArray(S.wwUsed))S.wwUsed=[];if(S.rounds==null)S.rounds=3;if(S.volume==null)S.volume=.7;if(S.muted==null)S.muted=false;if(S.timerSec==null)S.timerSec=15;if(!S.mics)S.mics=1;if(!S.round)S.round=1;if(!S.started)S.started=0;if(!["home","settings","players","game","final","lobby","join","phone","imp","ww"].includes(S.screen))S.screen="home";if(S.screen==="setup")S.screen="home";}}catch(e){}
 if(!(S.catsV>=3)&&!S.cats.includes("Your cards"))S.cats.push("Your cards");S.catsV=3;if(!S.decV){if(S.timerSec===90)S.timerSec=15;S.decV=1}S.players.forEach(p=>{p.stats=p.stats||{}});if(!S.mode)S.mode="local";if(S.mvpBonus==null)S.mvpBonus=20;if(S.awardBonus==null)S.awardBonus=15;
 if(S.inGame==null)S.inGame=!!(S.current||(S.players.length>=2&&(S.round>1||S.started>0||S.players.some(p=>p.score!==0))));
 if(S.screen==="lobby"&&!(S.mode==="host"&&S.room))S.screen="home";
@@ -1435,10 +1435,10 @@ function sfxDraw(){try{sfx.draw()}catch(e){}}
 function render(){
   $("penalty").value=S.penalty; $("bonus").value=S.bonus; $("rounds").value=S.rounds; $("timerSec").value=S.timerSec;
   document.querySelector("header").style.display=["home","phone"].includes(S.screen)?"none":"";
-  document.querySelectorAll(".screen").forEach(el=>el.classList.toggle("on",el.id==={home:"scrHome",settings:"scrSettings",players:"scrPlayers",game:"scrGame",final:"scrFinal",lobby:"scrLobby",join:"scrJoin",phone:"scrPhone",imp:"scrImp",ww:"scrWw"}[S.screen]));
+  document.querySelectorAll(".screen").forEach(el=>el.classList.toggle("on",el.id==={home:"scrHome",settings:"scrSettings",players:"scrPlayers",game:"scrGame",final:"scrFinal",lobby:"scrLobby",join:"scrJoin",phone:"scrPhone",imp:"scrImp",ww:"scrWw",lc:"scrLc"}[S.screen]));
   const allD=deck(), nD=allD.filter(c=>S.cats.includes(c[0])).length;
   $("homeStat").textContent=`${nD} cards · ${S.cats.length} categories`;
-  $("homeStart").disabled=S.cats.length===0;
+  $("homeStart").disabled=false;
   if(S.screen==="players"){
     if(!draft)draft=S.players.length>=2?S.players.map(p=>p.name):["",""];
     $("cntVal").textContent=draft.length;$("cntMinus").disabled=draft.length<=2;$("cntPlus").disabled=draft.length>=12;
@@ -1446,9 +1446,7 @@ function render(){
     const names=draft.map(n=>n.trim()),lower=names.map(n=>n.toLowerCase());
     [...$("names").querySelectorAll("input")].forEach((inp,i)=>inp.classList.toggle("bad",!!names[i]&&lower.indexOf(lower[i])!==i));
     $("startBtn").disabled=names.some(n=>!n)||new Set(lower).size!==lower.length;
-    const g=["imposter","whowould"].includes(S.game)?S.game:"karaoke";[...$("gameSel2").querySelectorAll("[data-game]")].forEach(b=>b.classList.toggle("on",b.dataset.game===g));
-    $("gameHint2").textContent=g==="imposter"?"One phone for everyone: it gets passed around – each player secretly reads their question and answers, then you discuss and vote together. Needs 3+ players.":g==="whowould"?"One phone for everyone: it gets passed around and each player votes for someone. No points, just the review at the end. Needs 3+ players.":"Draw cards, sing, pass or fail – the tier is your bet. Turn order = this order.";
-    const need3=g!=="karaoke"&&draft.length<3;if(need3)$("startBtn").disabled=true;$("startBtn").textContent=need3?"Needs 3 players":"Start "+GAME_LBL[g].replace(/^\S+ /,"");
+    $("startBtn").textContent=S.cats.length?"Start Karaoke Challenge":"Pick categories in Settings first";if(!S.cats.length)$("startBtn").disabled=true;
   }
   {const rl=S.rounds?Math.min(S.round,S.rounds):S.round;$("roundLbl").textContent=S.rounds?`Round ${rl} of ${S.rounds}`:`Round ${rl}`;}
   $("timer").hidden=!S.timerSec||!S.current||!!S.current.accepted;
@@ -1461,7 +1459,7 @@ function render(){
     <span class="pts ${p.score<0?'neg':''}">${p.score}</span>
     <button class="x" data-del="${p.i}" title="Remove player">×</button></li>`).join("")
     || `<li style="color:var(--muted)">No players yet</li>`;
-  $("scoreboard").innerHTML=sorted.map((p,r)=>`<li class="${p.i===(S.current?S.current.holder:S.turn)?'active':''}"><span class="rank">${r+1}</span>${p.pid?`<span class="dot${online(p)?' on':''}" title="phone"></span>`:''}<span class="name">${esc(p.name)}</span><span class="pts ${p.score<0?'neg':''}">${p.score}</span></li>`).join("");
+  $("scoreboard").innerHTML=sorted.map((p,r)=>`<li class="${p.i===(S.current?S.current.holder:S.turn)?'active':''}"><span class="rank">${r+1}</span>${p.pid?`<span class="dot${online(p)?' on':''}" title="phone"></span>`:''}<span class="name">${esc(p.name)}</span><span class="pts ${p.score<0?'neg':''}">${p.score}</span><button class="x" data-rm="${p.i}" title="Remove player">×</button></li>`).join("");
   // filters
   const all=deck(), cnt={};all.forEach(c=>cnt[c[0]]=(cnt[c[0]]||0)+1);
   $("filters").innerHTML=CATS.map(c=>`<button class="chip ${S.cats.includes(c)?'on':''}" data-cat="${c}">${c}<b>${cnt[c]||0}</b></button>`).join("");
@@ -1523,7 +1521,7 @@ $("muteBtn").onclick=toggleMute;$("muteBtn2").onclick=toggleMute;
 $("volume").oninput=e=>{S.volume=Math.max(0,Math.min(1,(+e.target.value||0)/100));$("volVal").textContent=Math.round(S.volume*100)+"%";if(S.volume>0&&S.muted){S.muted=false;$("muteBtn").textContent="🔊 Sound on";$("muteBtn2").textContent="🔊"}};
 $("volume").onchange=e=>{save();render();sfx.tick()};
 $("rounds").onchange=e=>{S.rounds=Math.max(0,+e.target.value||0);save();render()};
-$("timerSec").onchange=e=>{S.timerSec=Math.max(0,+e.target.value||0);save();render()};
+$("timerSec").onchange=e=>{S.timerSec=Math.max(0,+e.target.value||0);if(!S.timerSec)stopTimer();save();render()};
 $("catsAll").onclick=()=>{S.cats=S.cats.length===CATS.length?[]:[...CATS];save();render()};
 $("playersBack").onclick=()=>{S.screen="home";save();render()};
 $("cntMinus").onclick=()=>{if(draft.length>2){draft.pop();render()}};
@@ -1533,11 +1531,11 @@ $("names").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();const inputs=[..
 $("penalty").onchange=e=>{S.penalty=Math.max(0,+e.target.value||0);save()};
 $("bonus").onchange=e=>{S.bonus=Math.max(0,+e.target.value||0);save()};
 
-const ART_RE=/^Sing an? (.+?) song$/;
-function builtinArtists(){return CHALLENGES.filter(c=>c[0]==="Artists").map(c=>(c[1].match(ART_RE)||[])[1]).filter(Boolean).sort((a,b)=>a.localeCompare(b))}
+const ART_RE=/^Sing (?:an? (.+?) song|a song by (.+))$/;
+function builtinArtists(){return CHALLENGES.filter(c=>c[0]==="Artists").map(c=>{const m=c[1].match(ART_RE);return m&&(m[1]||m[2])}).filter(Boolean).sort((a,b)=>a.localeCompare(b))}
 function artistOff(a){a=a.toLowerCase();return S.disabledArtists.some(x=>x.toLowerCase()===a)||artistHidden(a)}
 function artistHidden(a){a=a.toLowerCase();return S.hiddenArtists.some(x=>x.toLowerCase()===a)}
-function deck(){return CHALLENGES.filter(c=>{if(c[0]!=="Artists")return true;const m=c[1].match(ART_RE);return !m||!artistOff(m[1])}).concat(S.customArtists.map(a=>["Artists","Sing "+art(a)+" "+a+" song",2])).concat(S.customCards.map(c=>[CATS.includes(c.cat)?c.cat:"Your cards",c.text,[1,2,3].includes(c.diff)?c.diff:2]))}
+function deck(){return CHALLENGES.filter(c=>{if(c[0]!=="Artists")return true;const m=c[1].match(ART_RE);return !m||!artistOff(m[1]||m[2])}).concat(S.customArtists.map(a=>["Artists",/^the /i.test(a)?"Sing a song by "+a:"Sing "+art(a)+" "+a+" song",2])).concat(S.customCards.map(c=>[CATS.includes(c.cat)?c.cat:"Your cards",c.text,[1,2,3].includes(c.diff)?c.diff:2]))}
 
 // ---- Sounds (Web Audio, no files needed) ----
 const sfx=(()=>{let ctx;const ac=()=>{try{ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();if(ctx.state==="suspended")ctx.resume();return ctx}catch(e){return null}};
@@ -1577,7 +1575,7 @@ const CODE_CHARS="ABCDEFGHJKMNPQRSTUVWXYZ23456789";
 function genCode(){let c="";for(let i=0;i<4;i++)c+=CODE_CHARS[Math.floor(Math.random()*CODE_CHARS.length)];return c}
 function online(p){return !!p.pid&&!!p.seen&&Date.now()-p.seen<120e3}
 function stat(p,k,n=1){p.stats=p.stats||{};p.stats[k]=(p.stats[k]||0)+n}
-function art(a){return /^[aeiou]/i.test(a)?"an":"a"}
+function art(a){return /^[aeiou]/i.test(a)&&!/^(one|uni|eu|use|ub)/i.test(a)?"an":"a"}
 function joinUrl(code){return location.origin+location.pathname.replace(/index\.html$/,"")+"?join="+code}
 function fmtT(n){return Math.floor(n/60)+":"+String(n%60).padStart(2,"0")}
 
@@ -1587,10 +1585,10 @@ function tLeftNow(){const t=S.timer;if(!t)return 0;if(t.left!=null)return t.left
 function paintTimer(){const l=tLeftNow();$("timerVal").textContent=fmtT(l);$("timer").classList.toggle("warn",!!S.timer&&l<=10);$("timerBtn").textContent=S.timer&&S.timer.end?"⏸":"▶"}
 function stopTick(){if(tId)clearInterval(tId);tId=null}
 function runTick(){stopTick();tLast=-1;paintTimer();tId=setInterval(()=>{const l=tLeftNow();if(l===tLast)return;tLast=l;paintTimer();if(l===10)sfx.tick();
-  if(l<=0){stopTick();if(!S.timerBuzzed){S.timerBuzzed=true;if(S.current&&!S.current.accepted){sfx.buzz();doAccept(true)}else save()}}},250)}
+  if(l<=0){stopTick();if(!S.timerBuzzed){S.timerBuzzed=true;if(S.current&&!S.current.accepted){sfx.buzz();doPass(true)}else save()}}},250)}
 function startTimer(){stopTick();S.timerBuzzed=false;if(!S.timerSec){S.timer=null;paintTimer();return}S.timer={end:Date.now()+S.timerSec*1000};runTick()}
 function pauseTimer(){if(S.timer&&S.timer.end)S.timer={left:tLeftNow()};stopTick();paintTimer()}
-function resumeTimer(){stopTick();if(!S.timer){paintTimer();return}if(S.timer.left!=null)S.timer={end:Date.now()+S.timer.left*1000};runTick()}
+function resumeTimer(){stopTick();if(!S.timerSec)S.timer=null;if(!S.timer){paintTimer();return}if(S.timer.left!=null)S.timer={end:Date.now()+S.timer.left*1000};runTick()}
 function stopTimer(){stopTick();S.timer=null;paintTimer()}
 $("timerBtn").onclick=()=>{if(!S.timer)startTimer();else if(S.timer.end)pauseTimer();else resumeTimer();save()};
 
@@ -1602,13 +1600,13 @@ function drawCard(want){if(S.current||S.vote||S.players.length<2)return false;
   if(!pool.length){S.used=S.used.filter(t=>!all.some(c=>c[1]===t));pool=all;toast(want?`${BASE[want]}-point cards reshuffled`:"Deck reshuffled")}
   const [cat,text,diff]=pool[Math.floor(Math.random()*pool.length)];S.used.push(text);
   S.current={cat,text,raw:text,pick:null,diff,worth:BASE[diff],holder:S.turn,starter:S.turn,chain:0,passedBy:[]};resolveText();
-  startTimer();save();render();sfx.draw();if(navigator.onLine&&!NET_LOCAL)ytSearch(ytQuery(cat,text)).catch(()=>{});return true}
+  startTimer();save();render();sfx.draw();return true}
 function doAccept(auto){const c=S.current;if(!c||c.accepted)return;const p=S.players[c.holder];c.accepted=true;c.so={challengers:[],opp:null,phase:"open",votes:{}};
   if(!auto&&S.timerSec&&tLeftNow()>S.timerSec*2/3)stat(p,"fast");stopTimer();
   toast(auto?`Time's up – ${p.name} is in!`:`${p.name} accepts – sing!`);if(!auto)sfx.draw();save();render()}
 $("accept").onclick=()=>doAccept(false);
 // ---- Sing-off: challenge the card holder, crowd votes ----
-const SO_STAKE={1:5,2:10,3:15};
+const SO_STAKE={1:5,2:5,3:5};
 function soState(){const c=S.current;return c&&c.accepted&&c.so?c.so:null}
 function soChallenge(i){const c=S.current,so=soState();if(!so||so.opp!=null||so.phase!=="open"||i===c.holder||so.challengers.includes(i))return;so.challengers.push(i);sfx.tick();toast(`⚔️ ${S.players[i].name} challenges ${S.players[c.holder].name}!`);save();render()}
 function soPick(i){const c=S.current,so=soState();if(!so||so.phase!=="open"||i===c.holder||!S.players[i])return;so.opp=i;so.phase="sing";sfx.start();toast(`Sing-off: ${S.players[c.holder].name} vs ${S.players[i].name} – same task!`);save();render()}
@@ -1641,16 +1639,16 @@ function doDone(){const c=S.current;if(!c)return;const p=S.players[c.holder];p.s
   if(c.pick!=null&&(needsPartner(c.raw||c.text)||needsPick(c.raw||c.text)))stat(p,"duet");
   S.log.unshift(`<b>${esc(p.name)}</b> did it: <span class="up">${fmt(c.worth)}</span> – ${esc(c.text)}`);
   toast(`${p.name} +${c.worth} points!`);sfx.ok();endCard()}
-function doPass(){const c=S.current;if(!c||c.accepted)return;const p=S.players[c.holder];p.score-=S.penalty;stat(p,"pass");
-  S.log.unshift(`<b>${esc(p.name)}</b> passed: <span class="down">${fmt(-S.penalty)}</span>`);sfx.pass();c.passedBy.push(c.holder);c.chain++;
+function doPass(auto){const c=S.current;if(!c||c.accepted)return;const p=S.players[c.holder];p.score-=S.penalty;stat(p,"pass");
+  S.log.unshift(`<b>${esc(p.name)}</b> ${auto?"ran out of time":"passed"}: <span class="down">${fmt(-S.penalty)}</span>`);sfx.pass();c.passedBy.push(c.holder);c.chain++;
   if(c.chain>=S.players.length){S.log.unshift(`Everyone passed – card discarded: ${esc(c.text)}`);toast("Everyone passed – card gone");endCard();return}
   c.holder=(c.holder+1)%S.players.length;c.pick=null;c.worth+=S.bonus;resolveText();startTimer();
-  toast(`Over to ${S.players[c.holder].name} – now worth ${c.worth} points!`);save();render()}
-const FAIL={1:0,2:10,3:15};
+  toast(`${auto?"Time's up! ":""}Over to ${S.players[c.holder].name} – now worth ${c.worth} points!`);save();render()}
+const FAIL={1:0,2:0,3:0};
 function doFail(){const c=S.current;if(!c)return;const p=S.players[c.holder];const pen=FAIL[c.diff]||0;p.score-=pen;stat(p,"fail");if(c.diff===3)stat(p,"failHard");
   S.log.unshift(`<b>${esc(p.name)}</b> failed: <span class="down">${pen?fmt(-pen):"0"}</span> – ${esc(c.text)}`);
   toast(pen?`${p.name} −${pen} – better luck next card`:`${p.name} – no points, no penalty`);sfx.buzz();endCard()}
-$("fail").onclick=()=>ask("Mark this card as failed? "+(FAIL[S.current&&S.current.diff]?"That costs "+FAIL[S.current.diff]+" points.":"No penalty on a 10-point card."),doFail,"Failed");
+$("fail").onclick=()=>ask("Mark this card as failed? No points for this card, no penalty.",doFail,"Failed");
 function ytQuery(cat,text){text=text.replace(/\{P\}/g,"a friend");
   const cut=t=>t.replace(/[–—].*$/,"").replace(/\s*\(.*?\)\s*/g," ").replace(/[,:;].*$/,"").replace(/\s+(while|with|and|as if|as |like |but |if |then |so |until|before|after|every|everyone|the group|the room|your partner|without|only|just|in front of|on your|to someone|for someone|that |who |where |when |\/ |or |standing )\b.*$/i,"").trim();
   const clean=x=>x.replace(/^(?:a |an |the |any |some |being )+/i,"").replace(/\s+/g," ").trim();
@@ -1677,6 +1675,29 @@ function ytQuery(cat,text){text=text.replace(/\{P\}/g,"a friend");
 function ytUrl(cat,text){return "https://www.youtube.com/results?search_query="+encodeURIComponent(ytQuery(cat,text))}
 $("draw").onclick=e=>{const b=e.target.closest("[data-diff]");if(!b||b.disabled)return;drawCard(+b.dataset.diff)};
 $("done").onclick=doDone;$("pass").onclick=doPass;
+function removePlayer(i){const p=S.players[i];if(!p)return;const kar=S.game==="karaoke";
+  if(S.inGame&&kar&&S.players.length<=2){toast("Karaoke needs at least 2 players");return}
+  const need=S.game==="liars"?2:3;if(S.inGame&&!kar&&impPlayers().filter(x=>x!==i).length<need){toast(S.game==="liars"?"Liar's Cards needs at least 2 players with phones":"Imposter and Who Would need at least 3 players with phones");return}
+  if(p.pid&&S.room)db.del(`rooms/${S.room.code}/members/${p.pid}`).catch(()=>{});
+  const sh=x=>x==null?x:(x>i?x-1:x);const c=S.current;
+  if(c){const so=c.accepted&&c.so;if(c.holder===i||(so&&so.opp===i)){stopTimer();ytClose();S.current=null;$("card").classList.remove("flipped");S.log.unshift(`${esc(p.name)} left – card discarded: ${esc(c.text)}`)}
+    else{c.holder=sh(c.holder);c.starter=sh(c.starter);c.pick=c.pick===i?null:sh(c.pick);c.passedBy=c.passedBy.filter(x=>x!==i).map(sh);if(so){so.challengers=so.challengers.filter(x=>x!==i).map(sh);so.opp=sh(so.opp)}}}
+  const remap=o=>{const r={};for(const [k,v] of Object.entries(o||{})){const kk=+k;if(kk===i||v===i)continue;r[sh(kk)]=sh(v)}return r};
+  const remapKeys=o=>{const r={};for(const [k,v] of Object.entries(o||{})){const kk=+k;if(kk===i)continue;r[sh(kk)]=v}return r};
+  if(S.vote&&p.pid)delete S.vote.votes[p.pid];
+  if(S.imp&&S.imp.imposter===i){S.imp=null;S.round--;S.players.splice(i,1);if(S.turn>i)S.turn--;if(S.turn>=S.players.length)S.turn=0;toast(`${p.name} was the imposter – new question`);impNext();return}
+  if(S.imp){S.imp.imposter=sh(S.imp.imposter);S.imp.answers=remapKeys(S.imp.answers);S.imp.votes=remap(S.imp.votes)}
+  if(S.ww)S.ww.votes=remap(S.ww.votes);
+  if(S.lc){const m=S.lc;m.hands=remapKeys(m.hands);m.alive=remapKeys(m.alive);m.pulls=remapKeys(m.pulls);m.bullet=remapKeys(m.bullet);m.pile=m.pile.filter(x=>x.by!==i).map(x=>({...x,by:sh(x.by)}));
+    if(m.last&&m.last.by===i)m.last=null;else if(m.last)m.last.by=sh(m.last.by);m.turn=m.turn===i?null:sh(m.turn);
+    if(m.reveal){const r=m.reveal;if([r.caller,r.by,r.target].includes(i))m.reveal=null;else{r.caller=sh(r.caller);r.by=sh(r.by);r.target=sh(r.target)}}}
+  S.players.splice(i,1);if(S.turn>i)S.turn--;if(S.turn>=S.players.length)S.turn=0;S.auto=null;toast(`${p.name} removed`);
+  if(S.imp&&S.imp.phase==="answer"&&impPlayers().every(j=>S.imp.answers[j]!=null))S.imp.phase="reveal";
+  if(S.lc){const m=S.lc;if(m.phase==="reveal"&&!m.reveal)m.phase="play";if(m.phase==="play"&&(m.turn==null||!m.alive[m.turn]))m.turn=lcAlive()[0];if(lcAlive().length<=1){save();lcFinish(lcAlive()[0]);return}}
+  save();render();
+  if(S.imp&&S.imp.phase==="vote"&&impPlayers().every(j=>S.imp.votes[j]!=null))impResult();
+  if(S.ww&&S.ww.phase==="vote"&&impPlayers().every(j=>S.ww.votes[j]!=null))wwResult()}
+$("scoreboard").onclick=$("impBoard").onclick=e=>{const b=e.target.closest("[data-rm]");if(!b)return;const p=S.players[+b.dataset.rm];if(!p)return;ask(`Remove ${p.name} from the game?`,()=>removePlayer(+b.dataset.rm),"Remove")};
 function endCard(){stopTimer();ytClose();const c=S.current;S.current=null;$("done").hidden=$("pass").hidden=$("fail").hidden=$("accept").hidden=true;$("card").classList.remove("flipped");
   S.turn=(c.starter+1)%S.players.length;S.started++;
   if(S.started>=S.players.length){S.started=0;
@@ -1687,7 +1708,7 @@ function nextRound(){S.round++;
   if(S.rounds&&S.round>S.rounds){S.round=S.rounds;save();setTimeout(finish,400);return}
   toast(`Round ${S.round}`);S.players.forEach(p=>p.rs=p.score);save();setTimeout(render,350)}
 function countPlay(g){S.plays=S.plays||{};S.plays[g]=(S.plays[g]||0)+1}
-const GAME_LBL={karaoke:"🎤 Karaoke Challenge",imposter:"🕵️ Imposter",whowould:"🤔 Who Would"};
+const GAME_LBL={karaoke:"🎤 Karaoke Challenge",imposter:"🕵️ Imposter",whowould:"🤔 Who Would",liars:"🃏 Liar's Cards"};
 function startGame(){countPlay("karaoke");S.game="karaoke";S.next=null;S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0});S.screen="game";S.round=1;S.started=0;S.turn=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=false;S.lastVote=null;S.log=[];S.used=[];S.inGame=true;S.timer=null;S.timerBuzzed=false;save();render();sfx.start()}
 
 // ---- Round vote: best performance (phones) ----
@@ -1705,12 +1726,11 @@ function checkVote(){const v=S.vote;if(!v)return;const need=voters().filter(i=>S
 
 // ---- Secret end-of-game awards (Mario Party style) ----
 const AWARDS=[
- {id:"hard",em:"🎯",t:"Daredevil",d:"Most 30-point cards done"},
  {id:"done",em:"🎤",t:"Iron voice",d:"Most cards sung"},
  {id:"rescue",em:"🦸",t:"Rescue hero",d:"Most passed-on cards rescued"},
  {id:"pass",em:"🐔",t:"Chicken of the night",d:"Most passes – yes, that pays too"},
  {id:"soWin",em:"⚔️",t:"Duel champion",d:"Most sing-offs won"},
- {id:"fail",em:"🎢",t:"High roller",d:"Most failed bets – respect for trying"},
+ {id:"fail",em:"🎢",t:"Crash test dummy",d:"Most failed cards – respect for trying"},
  {id:"duet",em:"💞",t:"Duet darling",d:"Most partner cards"},
  {id:"fast",em:"⚡",t:"No hesitation",d:"Most challenges accepted right away"},
  {id:"mvp",em:"👏",t:"Crowd favourite",d:"Most best-performance votes"},
@@ -1719,26 +1739,26 @@ function awardVal(p,id){if(id==="comeback")return p.rs==null?0:p.score-p.rs;retu
 function pickAwards(){const cand=AWARDS.map(a=>{const vals=S.players.map(p=>awardVal(p,a.id));const max=Math.max(...vals);if(!(max>0))return null;
     const winners=vals.map((v,i)=>v===max?i:-1).filter(i=>i>=0);if(winners.length>=S.players.length)return null;return{id:a.id,em:a.em,t:a.t,d:a.d,winners,val:max,revealed:false}}).filter(Boolean);
   for(let i=cand.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cand[i],cand[j]]=[cand[j],cand[i]]}return cand.slice(0,3)}
-function finish(){stopTimer();S.current=null;S.vote=null;S.inGame=false;S.imp=null;S.ww=null;S.pass=null;S.next=S.mode==="host"&&S.room?{votes:{},end:null}:null;S.screen="final";$("card").classList.remove("flipped");
+function finish(){stopTimer();S.current=null;S.vote=null;S.inGame=false;S.imp=null;S.ww=null;S.lc=null;S.next=S.mode==="host"&&S.room?{votes:{},end:null}:null;S.screen="final";$("card").classList.remove("flipped");
   S.awards=S.awardBonus>0&&S.players.length>=2&&S.game==="karaoke"?pickAwards():[];S.awardsDone=!S.awards.length;save();render();if(S.awardsDone)sfx.win();else sfx.start()}
 function revealAward(){const a=(S.awards||[]).find(x=>!x.revealed);if(!a)return;a.revealed=true;a.winners.forEach(i=>{S.players[i].score+=S.awardBonus});sfx.ok();
   if(!S.awards.some(x=>!x.revealed)){S.awardsDone=true;setTimeout(()=>sfx.win(),700)}save();render()}
 $("revealBtn").onclick=revealAward;
-const NEXT_OPTS=["karaoke","imposter","whowould"];
-function nextAvail(g){return g==="karaoke"?S.players.length>=2:impPlayers().length>=3}
+const NEXT_OPTS=["karaoke","imposter","whowould","liars"];
+function nextAvail(g){return g==="karaoke"?S.players.length>=2:g==="liars"?impPlayers().length>=2:impPlayers().length>=3}
 function nextTally(){const v=S.next?S.next.votes:{};const cnt={};Object.values(v).forEach(c=>{cnt[c]=(cnt[c]||0)+1});let max=0;NEXT_OPTS.forEach(o=>max=Math.max(max,cnt[o]||0));const top=NEXT_OPTS.filter(o=>(cnt[o]||0)===max&&max>0);
   return{cnt,nV:Object.keys(v).length,total:impPlayers().length,lead:top.length===1?top[0]:null,tie:top.length>1}}
 function nextVote(i,choice){if(!S.next||!NEXT_OPTS.includes(choice)||!nextAvail(choice))return;const p=S.players[i];if(!p||!p.pid)return;S.next.votes[p.pid]=choice;const t=nextTally();S.next.end=t.nV>=t.total&&t.lead?Date.now()+6000:null;save();render()}
-function nextStart(g){if(!NEXT_OPTS.includes(g))return;if(g!=="karaoke"&&impPlayers().length<3){toast(GAME_LBL[g].replace(/^\S+ /,"")+" needs at least 3 players with phones");if(S.next){S.next.end=null;save();render()}return}if(g==="karaoke"&&S.players.length<2)return;clearInterval(nextT);nextT=null;S.next=null;S.game=g;if(g==="imposter")impStart();else if(g==="whowould")wwStart();else startGame()}
+function nextStart(g){if(!NEXT_OPTS.includes(g))return;if(!nextAvail(g)){toast(GAME_LBL[g].replace(/^\S+ /,"")+(g==="karaoke"?" needs 2 players":g==="liars"?" needs at least 2 players with phones":" needs at least 3 players with phones"));if(S.next){S.next.end=null;save();render()}return}clearInterval(nextT);nextT=null;S.next=null;S.game=g;if(g==="imposter")impStart();else if(g==="whowould")wwStart();else if(g==="liars")lcStart();else startGame()}
 let nextT=null;
 function renderNext(done){const box=$("nextBox");const show=done&&S.next&&S.mode==="host"&&!!S.room;box.hidden=!show;if(!show){clearInterval(nextT);nextT=null;return}const t=nextTally();const left=S.next.end?Math.max(0,Math.ceil((S.next.end-Date.now())/1000)):null;
-  box.innerHTML=`<h3>What's next?</h3><div class="hint" style="margin:0">Vote on your phones – or the host picks.</div><div class="nextopts">${NEXT_OPTS.map(o=>`<button class="btn ${t.lead===o?"btn-gold":"btn-ghost"}" data-next="${o}" ${nextAvail(o)?"":"disabled title=\"Needs 3 players with phones\""}>${GAME_LBL[o]}${o===S.game?" again":""}<span class="c">${t.cnt[o]||0}</span></button>`).join("")}</div>${NEXT_OPTS.some(o=>!nextAvail(o))?`<div class="hint" style="margin:0">Imposter and Who Would need at least 3 players with phones.</div>`:""}<div class="hint" style="margin:0">${t.nV} of ${t.total} voted${left!=null&&t.lead?` · everyone's in – starting ${GAME_LBL[t.lead]} in <b id="nextLeft">${left}</b> s`:t.tie&&t.nV>=t.total?" · it's a tie – host decides":""}</div>`;
+  box.innerHTML=`<h3>What's next?</h3><div class="hint" style="margin:0">Vote on your phones – or the host picks.</div><div class="nextopts">${NEXT_OPTS.map(o=>`<button class="btn ${t.lead===o?"btn-gold":"btn-ghost"}" data-next="${o}" ${nextAvail(o)?"":"disabled title=\"Needs 3 players with phones\""}>${GAME_LBL[o]}${o===S.game?" again":""}<span class="c">${t.cnt[o]||0}</span></button>`).join("")}</div>${NEXT_OPTS.some(o=>!nextAvail(o))?`<div class="hint" style="margin:0">Imposter and Who Would need 3 players with phones, Liar's Cards 2.</div>`:""}<div class="hint" style="margin:0">${t.nV} of ${t.total} voted${left!=null&&t.lead?` · everyone's in – starting ${GAME_LBL[t.lead]} in <b id="nextLeft">${left}</b> s`:t.tie&&t.nV>=t.total?" · it's a tie – host decides":""}</div>`;
   box.querySelectorAll("[data-next]").forEach(b=>b.onclick=()=>nextStart(b.dataset.next));
   if(S.next.end&&!nextT)nextT=setInterval(()=>{if(!S.next||!S.next.end||S.screen!=="final"){clearInterval(nextT);nextT=null;return}const l=Math.max(0,Math.ceil((S.next.end-Date.now())/1000));const el=$("nextLeft");if(el)el.textContent=l;if(l<=0){clearInterval(nextT);nextT=null;const tt=nextTally();if(tt.lead)nextStart(tt.lead)}},250)}
 function renderFinal(){const done=!!S.awardsDone;renderNext(done);const sorted=[...S.players].sort((a,b)=>b.score-a.score);const top=sorted.length?sorted[0].score:0;const wins=sorted.filter(p=>p.score===top);
   $("awards").innerHTML=(S.awards||[]).filter(a=>a.revealed).map(a=>`<div class="award"><span class="em">${a.em}</span><span><div class="t">${a.t}</div><div class="d">${a.d}</div></span><span class="w">${a.winners.map(i=>esc(S.players[i].name)).join(" &amp; ")}<small>+${S.awardBonus}</small></span></div>`).join("");
   const left=(S.awards||[]).filter(a=>!a.revealed).length;$("revealBtn").hidden=!left;$("revealBtn").textContent=`🎁 Reveal secret award (${left} left)`;
-  $("finalWin").hidden=!done;$("finalTitle").textContent=done?(S.game==="imposter"?"Imposter – game over":S.game==="whowould"?"Who Would – the review":"Game over"):"Secret awards";
+  $("finalWin").hidden=!done;$("finalTitle").textContent=done?(S.game==="imposter"?"Imposter – game over":S.game==="whowould"?"Who Would – the review":S.game==="liars"?"Liar's Cards – last one standing":"Game over"):"Secret awards";
   const ww=S.game==="whowould";$("finalWin").hidden=!done||ww;$("wwReviewHost").hidden=!ww;if(ww)$("wwReviewHost").innerHTML=wwReviewHtml(S.players);$("finalTrophy").textContent=done?"🏆":"🎁";$("finalPre").hidden=done;
   $("finalPre").innerHTML=`<div class="hint" style="margin:0">Standings so far: ${sorted.map(p=>`${esc(p.name)} ${p.score}`).join(" · ")}</div>`;
   $("winnerName").textContent=wins.map(p=>p.name).join(" & ");$("winnerPts").textContent=`${top} points${wins.length>1?" – it's a tie!":""}`;
@@ -1752,8 +1772,13 @@ function snapshot(){const phase=S.screen==="final"?"final":S.vote?"vote":S.inGam
     q:m.phase!=="answer"?IMP_Q[m.qi][0]:null,answers:["discuss","vote","result"].includes(m.phase)?impPlayers().map(i=>({name:S.players[i].name,text:m.answers[i]||"–"})):null,discussEnd:m.discussEnd||null,
     result:m.result?{imposter:(S.players[m.result.imposter]||{}).name||"?",correct:m.result.correct.map(i=>(S.players[i]||{}).name||"?"),missed:m.result.missed.length,impPts:m.result.impPts}:null}:null;
   const wm=S.game==="whowould"?S.ww:null;const wwSnap=wm?{phase:wm.phase,round:S.round,q:WW_Q[wm.qi],total:impPlayers().length,voted:impPlayers().filter(i=>wm.votes[i]!=null).map(i=>S.players[i].pid),win:wm.result?wm.result.win.map(j=>(S.players[j]||{}).name||"?"):null}:null;
+  const lm=S.game==="liars"?S.lc:null;const pidOf=i=>i==null?null:(S.players[i]||{}).pid||null,nameOf=i=>i==null?"":(S.players[i]||{}).name||"";
+  const lcSnap=lm?{n:lm.n,phase:lm.phase,table:lm.table,turn:pidOf(lm.turn),turnName:nameOf(lm.turn),aliveN:lcAlive().length,hv:lm.hv||{},chambers:S.lcChambers,
+    last:lm.last?{name:nameOf(lm.last.by),n:lm.last.cards.length}:null,pile:lm.pile.length,
+    reveal:lm.reveal?{caller:nameOf(lm.reveal.caller),by:nameOf(lm.reveal.by),cards:lm.reveal.cards,target:nameOf(lm.reveal.target),dead:lm.reveal.dead,liar:lm.reveal.liar,pull:lm.reveal.pull}:null,
+    players:lcPlayers().map(i=>({name:S.players[i].name,pid:S.players[i].pid,alive:!!lm.alive[i],cards:(lm.hands[i]||[]).length,pulls:lm.pulls[i]||0}))}:null;
   autoSync();const au=S.auto?{key:S.auto.key,ready:S.auto.ready,end:S.auto.end||null,mode:S.autoMode,total:impPlayers().length}:null;
-  return{phase,game:S.game||"karaoke",imp:impSnap,ww:wwSnap,auto:au,wwQ:S.wwQ,cards:S.game==="whowould"?S.players.map(p=>({name:p.name,cards:p.cards||[]})):null,impQ:S.impQ,impPts:S.impPts,round:S.round,rounds:S.rounds,turn:S.turn,
+  return{phase,game:S.game||"karaoke",imp:impSnap,ww:wwSnap,lc:lcSnap,auto:au,wwQ:S.wwQ,cards:S.game==="whowould"?S.players.map(p=>({name:p.name,cards:p.cards||[]})):null,impQ:S.impQ,impPts:S.impPts,round:S.round,rounds:S.rounds,turn:S.turn,
     players:S.players.map(p=>({name:p.name,score:p.score,pid:p.pid||null,on:online(p)})),
     current:c?{cat:c.cat,text:c.text,raw:c.raw||c.text,diff:c.diff,accepted:!!c.accepted,so:c.accepted&&c.so?{phase:c.so.phase,opp:c.so.opp,challengers:c.so.challengers.map(i=>S.players[i]&&S.players[i].name).filter(Boolean),voted:Object.keys(c.so.votes||{}),total:soVoters().length}:null,worth:c.worth,chain:c.chain,holder:c.holder,pick:c.pick==null?null:c.pick,partner:c.pick!=null&&needsPartner(c.raw||c.text),inText:needsPick(c.raw||c.text)}:null,
     timer:S.timer||null,timerSec:S.timerSec,mics:S.mics||1,penalty:S.penalty,bonus:S.bonus,mvpBonus:S.mvpBonus,awardBonus:S.awardBonus,tiers:tiersAvail(),
@@ -1768,7 +1793,7 @@ async function hostCreate(){if(!NET_OK){toast("Phones aren't set up on this copy
   toast("Opening a room…");let code=genCode();
   try{for(let i=0;i<6;i++){const st=await db.get(`rooms/${code}/updatedAt`);if(!st||Date.now()-st>8*3600e3)break;code=genCode()}}catch(e){toast("Can't reach the server – check your internet");return}
   if(S.room)hostClose(true);
-  S.mode="host";S.room={code,key:Math.random().toString(36).slice(2)};S.players=[];S.imp=null;S.ww=null;S.pass=null;S.next=null;S.auto=null;if(!["karaoke","imposter","whowould"].includes(S.game))S.game="karaoke";S.inGame=false;S.current=null;S.vote=null;S.awards=null;S.awardsDone=false;S.log=[];S.timer=null;S.screen="lobby";
+  S.mode="host";S.room={code,key:Math.random().toString(36).slice(2)};S.players=[];S.imp=null;S.ww=null;S.next=null;S.auto=null;if(!["karaoke","imposter","whowould","liars"].includes(S.game))S.game="karaoke";S.inGame=false;S.current=null;S.vote=null;S.awards=null;S.awardsDone=false;S.log=[];S.timer=null;S.screen="lobby";
   try{await db.put(`rooms/${code}`,{hostKey:S.room.key,createdAt:TS,updatedAt:TS,state:snapshot()})}catch(e){toast("Couldn't create the room");S.room=null;S.mode="local";S.screen="home";save();render();return}
   cleanupRooms();rememberRoom(code);save();render();hostConnect();sfx.start()}
 function hostConnect(){if(HS){HS.close();HS=null}if(!S.room)return;const code=S.room.code;
@@ -1783,7 +1808,7 @@ function syncMembers(m){let changed=false,seenChanged=false;const seen=new Set()
   for(const [pid,mem] of Object.entries(m)){if(!mem||!mem.name)continue;const name=String(mem.name).trim().slice(0,18);if(!name)continue;seen.add(pid);
     let p=S.players.find(p=>p.pid===pid);
     if(!p){p=S.players.find(p=>!p.pid&&p.name.toLowerCase()===name.toLowerCase())||S.players.find(p=>p.name.toLowerCase()===name.toLowerCase()&&!seen.has(p.pid)&&!m[p.pid]);if(p){p.pid=pid;changed=true}}
-    if(!p){if(S.players.length>=12)continue;p={name:uniqueName(name),score:0,stats:{},pid,rs:0};S.players.push(p);changed=true;if(S.inGame)toast(`${p.name} joined the game`);else sfx.tick()}
+    if(!p){if(S.players.length>=12)continue;p={name:uniqueName(name),score:0,stats:{},pid,rs:0};if(S.inGame&&(S.game==="imposter"||S.game==="whowould"||S.game==="liars"))p.late=true;S.players.push(p);changed=true;if(S.inGame)toast(`${p.name} joined the game${p.late?(S.game==="liars"?" – in from the next deal":" – in from the next question"):""}`);else sfx.tick()}
     if(p.seen!==mem.seen){p.seen=mem.seen||Date.now();seenChanged=true}}
   if(!S.inGame&&S.screen!=="final"){const n=S.players.length;S.players=S.players.filter(p=>!p.pid||seen.has(p.pid));if(S.players.length!==n)changed=true}
   if(changed){save();render()}else if(seenChanged)render()}
@@ -1797,6 +1822,8 @@ function handleActions(acts){for(const k of Object.keys(acts).sort()){if(doneAct
   else if(a.type==="accept"){if(S.current&&S.current.holder===i)doAccept(false)}
   else if(a.type==="answer"){if(S.game==="imposter")impAnswer(i,a.text)}
   else if(a.type==="ready"){autoReady(i,String(a.key||""))}
+  else if(a.type==="play"){if(S.game==="liars")lcPlay(i,Object.values(a.cards||{}))}
+  else if(a.type==="liar"){if(S.game==="liars")lcLiar(i)}
   else if(a.type==="next"){if(S.screen==="final"&&S.next&&S.awardsDone)nextVote(i,String(a.choice||""))}
   else if(a.type==="challenge"){soChallenge(i)}
   else if(a.type==="pick"){if(S.current&&S.current.holder===i){const j=S.players.findIndex(p=>p.name===a.name);if(j>=0)soPick(j)}}
@@ -1820,12 +1847,12 @@ function renderQr(){const el=$("lobbyQr");if(!S.room)return;const url=joinUrl(S.
   qrLib=document.createElement("script");qrLib.src="./qrcode.min.js";qrLib.onload=draw;qrLib.onerror=()=>{el.innerHTML="";qrLib=null};document.head.appendChild(qrLib)}
 $("lobbyAdd").onsubmit=e=>{e.preventDefault();const n=$("lobbyName").value.trim().slice(0,18);if(!n)return;if(S.players.length>=12){toast("Max 12 players");return}S.players.push({name:uniqueName(n),score:0,stats:{},rs:0});$("lobbyName").value="";save();render()};
 $("lobbyPlayers").onclick=e=>{const b=e.target.closest("[data-kick]");if(!b)return;const i=+b.dataset.kick,p=S.players[i];if(!p)return;if(p.pid&&S.room)db.del(`rooms/${S.room.code}/members/${p.pid}`).catch(()=>{});S.players.splice(i,1);save();render()};
-$("lobbyStart").onclick=()=>{if(S.game==="whowould"){if(impPlayers().length<3){toast("Who Would needs at least 3 players with phones");return}wwStart();return}if(S.game==="imposter"){if(impPlayers().length<3){toast("Imposter needs at least 3 players with phones");return}impStart();return}if(S.players.length<2)return;startGame()};
+$("lobbyStart").onclick=()=>{if(S.game==="liars"){if(impPlayers().length<2){toast("Liar's Cards needs at least 2 players with phones");return}lcStart();return}if(S.game==="whowould"){if(impPlayers().length<3){toast("Who Would needs at least 3 players with phones");return}wwStart();return}if(S.game==="imposter"){if(impPlayers().length<3){toast("Imposter needs at least 3 players with phones");return}impStart();return}if(S.players.length<2)return;startGame()};
 $("lobbyBack").onclick=()=>ask("Close this room? Phones will be disconnected.",()=>{hostClose(true);S.screen="home";save();render()},"Close room");
-$("lobbySettings").onclick=()=>{S.back="lobby";S.screen="settings";S.setTab=["karaoke","imposter","whowould"].includes(S.game)?S.game:"karaoke";save();render()};
+$("lobbySettings").onclick=()=>{S.back="lobby";S.screen="settings";S.setTab=["karaoke","imposter","whowould","liars"].includes(S.game)?S.game:"karaoke";save();render()};
 
 // ---- Phone: controller client ----
-const SO_STAKE_P={1:5,2:10,3:15};
+const SO_STAKE_P={1:5,2:5,3:5};
 let PH=null,PHt=null,TAPPED=false;addEventListener("pointerdown",()=>{TAPPED=true},{once:true,passive:true});
 function phoneSave(){try{if(PH)localStorage.setItem("kc-phone",JSON.stringify({code:PH.code,pid:PH.pid,name:PH.name}));else localStorage.removeItem("kc-phone")}catch(e){}}
 async function joinRoom(code,name){code=(code||"").toUpperCase().replace(/[^A-Z0-9]/g,"");name=(name||"").trim().slice(0,18);
@@ -1858,6 +1885,7 @@ function renderPhone(){if(S.screen!=="phone"||!PH)return;const st=PH.state;const
   const c=st.current;const holder=c?players[c.holder]:players[st.turn];const mine=meI>=0&&(c?c.holder===meI:st.turn===meI);
   const board=`<ul class="players phboard">${players.map((p,i)=>({...p,i})).sort((a,b)=>b.score-a.score).map((p,r)=>`<li class="${st.phase==="game"&&p.i===(c?c.holder:st.turn)?'active':''}${p.pid===PH.pid?' me':''}"><span class="rank">${r+1}</span>${p.pid?`<span class="dot${p.on?' on':''}"></span>`:''}<span class="name">${esc(p.name)}</span><span class="pts ${p.score<0?'neg':''}">${p.score}</span></li>`).join("")}</ul>`;
   if(st.game==="whowould"&&meI>=0&&st.phase!=="lobby"){if(st.phase==="final"){body.innerHTML=`<div class="who">The review</div>${nextPhoneHtml(st)}${wwReviewHtml(st.cards||[])}`;return}$("phRound").textContent=st.ww?`Question ${st.ww.round} of ${st.wwQ}`:"";body.innerHTML=phoneWwHtml(st,me,meI,players,board);return}
+  if(st.game==="liars"&&meI>=0&&st.phase!=="final"&&st.phase!=="lobby"){$("phRound").textContent=st.lc?`Deal ${st.lc.n}`:"";body.innerHTML=phoneLcHtml(st,me,meI,players,board);return}
   if(st.game==="imposter"&&meI>=0&&st.phase!=="final"&&st.phase!=="lobby"){$("phRound").textContent=st.imp?`Question ${st.imp.round} of ${st.impQ}`:"";body.innerHTML=phoneImpHtml(st,me,meI,players,board);const f=$("impForm");if(f){f.onsubmit=e=>{e.preventDefault();const t=$("impIn").value.trim();if(!t)return;PH.answeredRound=st.imp.round;phoneAct("answer",{text:t.slice(0,80)});renderPhone()};if(matchMedia("(pointer:fine)").matches)setTimeout(()=>{const i=$("impIn");if(i)i.focus()},50)}return}
   if(meI<0){body.innerHTML=`<div class="phone-msg"><div class="who">You're not in this game</div><p class="hint">The host may have removed you. Join again with your name.</p><button class="btn btn-gold" data-act="rejoin">Join again</button></div>${board}`;return}
   let html="";
@@ -1880,7 +1908,7 @@ function renderPhone(){if(S.screen!=="phone"||!PH)return;const st=PH.state;const
       const duel=so&&so.opp!=null;
       if(mine)html=`<div class="who">Your turn, <b>${esc(me.name)}</b>!</div>${timer}${card}${sobox}<div class="actions phact">${c.accepted?(duel?"":`<button class="btn btn-green" data-act="done">✓ Done it (+${c.worth})</button><button class="btn btn-fail" data-act="fail">✗ Failed (${FAIL[c.diff]?"−"+FAIL[c.diff]:"0"})</button>`):`<button class="btn btn-gold" data-act="accept">✓ Accept the challenge</button><button class="btn btn-ghost" data-act="pass">${c.chain>=players.length-1?"Pass (card is discarded)":"Pass ➜ hand over"}</button>`}</div>`;
       else html=`<div class="who">${amOpp?"Sing-off, <b>"+esc(me.name)+"</b>!":"<b>"+esc(holder?holder.name:"?")+"</b> is up"}</div>${timer}${card}${sobox}<p class="hint">${c.pick===meI&&!duel?"You're the partner – get ready!":duel?"":"Cheer them on! 🎉"}</p>${board}`}
-    else{if(mine)html=`<div class="who">Your turn, <b>${esc(me.name)}</b>!</div><p class="hint">Pick your points to draw a card.</p><div class="drawrow phdraw">${[[1,"10","easy"],[2,"20","medium"],[3,"30","hard"]].map(([d,n,l])=>`<button class="btn btn-red tier" data-act="draw" data-diff="${d}" ${(st.tiers||[]).includes(d)?"":"disabled"}><b>${n}</b><span>${l}</span></button>`).join("")}<button class="btn btn-ghost" data-act="draw" data-diff="0" ${(st.tiers||[]).includes(0)?"":"disabled"}>🎲 Random</button></div>${board}`;
+    else{if(mine)html=`<div class="who">Your turn, <b>${esc(me.name)}</b>!</div><p class="hint">Draw a card – then accept or pass before the timer runs out.</p><div class="drawrow phdraw"><button class="btn btn-red" data-act="draw" data-diff="0" style="font-size:20px;padding:18px 28px" ${(st.tiers||[]).includes(0)?"":"disabled"}>🎴 Draw a card</button></div>${board}`;
       else html=`<div class="who">Up next: <b>${esc(holder?holder.name:"?")}</b></div><p class="hint">Waiting for them to draw a card…</p>${st.lastVote&&st.lastVote.win.length&&st.lastVote.round===st.round-1?`<p class="hint">🏅 Best performance in round ${st.lastVote.round}: <b>${st.lastVote.win.map(esc).join(" &amp; ")}</b></p>`:""}${board}`}}
   body.innerHTML=html;
   if(c&&$("phPic"))setPic(c.cat,c.text,$("phPic"),holder&&holder.name);
@@ -1894,40 +1922,40 @@ $("phLeave").onclick=()=>ask("Leave this game?",phoneLeave,"Leave");
 $("phBody").onclick=e=>{const b=e.target.closest("[data-act]");if(!b||b.disabled)return;const act=b.dataset.act;
   if(act==="draw")phoneAct("draw",{diff:+b.dataset.diff});else if(act==="done")phoneAct("done");else if(act==="accept")phoneAct("accept");else if(act==="challenge")phoneAct("challenge");else if(act==="pick")phoneAct("pick",{name:b.dataset.name});else if(act==="startvote")phoneAct("startvote");else if(act==="ready")phoneAct("ready",{key:b.dataset.key});
   else if(act==="pass"){ask("Pass this card? That costs points.",()=>{phoneAct("pass");b.disabled=true;setTimeout(()=>{b.disabled=false},2000)},"Pass");return}
-  else if(act==="fail"){const d=PH.state&&PH.state.current?PH.state.current.diff:0;ask("Mark this card as failed? "+(FAIL[d]?"That costs "+FAIL[d]+" points.":"No penalty on a 10-point card."),()=>{phoneAct("fail");b.disabled=true;setTimeout(()=>{b.disabled=false},2000)},"Failed");return}
-  else if(act==="vote")phoneVote(b.dataset.name);else if(act==="next")phoneAct("next",{choice:b.dataset.choice});else if(act==="rejoin"){S.screen="join";save();render();$("joinCode").value=PH?PH.code:"";$("joinName").value=PH?PH.name:""}else if(act==="leave")phoneLeave();
-  if(act==="draw"||act==="done"||act==="pass"||act==="accept"||act==="challenge"||act==="pick"||act==="startvote"||act==="ready"){b.disabled=true;setTimeout(()=>{b.disabled=false},2000)}};
+  else if(act==="fail"){const d=PH.state&&PH.state.current?PH.state.current.diff:0;ask("Mark this card as failed? No points for this card, no penalty.",()=>{phoneAct("fail");b.disabled=true;setTimeout(()=>{b.disabled=false},2000)},"Failed");return}
+  else if(act==="lcsel"){const i=+b.dataset.i;PH.lcSel=PH.lcSel||[];const k=PH.lcSel.indexOf(i);if(k>=0)PH.lcSel.splice(k,1);else if(PH.lcSel.length<3)PH.lcSel.push(i);renderPhone();return}else if(act==="lcplay"){const hand=PH.priv?Object.values(PH.priv.hand||{}):[];const cards=(PH.lcSel||[]).map(i=>hand[i]).filter(Boolean);if(!cards.length)return;phoneAct("play",{cards});PH.lcSel=[]}else if(act==="lcliar")phoneAct("liar");else if(act==="vote")phoneVote(b.dataset.name);else if(act==="next")phoneAct("next",{choice:b.dataset.choice});else if(act==="rejoin"){S.screen="join";save();render();$("joinCode").value=PH?PH.code:"";$("joinName").value=PH?PH.name:""}else if(act==="leave")phoneLeave();
+  if(act==="draw"||act==="done"||act==="pass"||act==="accept"||act==="challenge"||act==="pick"||act==="startvote"||act==="ready"||act==="lcplay"||act==="lcliar"){b.disabled=true;setTimeout(()=>{b.disabled=false},2000)}};
 
 // ---- Navigation, settings, render extras ----
 let WL=null;
 async function wakeLock(on){try{if(on&&!WL&&navigator.wakeLock&&document.visibilityState==="visible"){WL=await navigator.wakeLock.request("screen");WL.addEventListener("release",()=>{WL=null})}else if(!on&&WL){const w=WL;WL=null;await w.release()}}catch(e){WL=null}}
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")wakeLock(["game","lobby","phone","imp","ww"].includes(S.screen))});
 function renderOwnCards(){const sel=$("cardCat");if(!sel.options.length)sel.innerHTML=CATS.map(c=>`<option value="${esc(c)}"${c==="Your cards"?" selected":""}>${esc(c)}</option>`).join("");
-  $("cardList").innerHTML=S.customCards.map((c,i)=>`<div class="oc"><span class="t">${esc(c.text)}</span><span class="m"><b>${BASE[c.diff]||20}</b> · ${esc(c.cat)}</span><button class="x" data-oc="${i}" title="Remove">×</button></div>`).join("")||'<div class="hint" style="margin:0">No own cards yet.</div>';}
+  $("cardList").innerHTML=S.customCards.map((c,i)=>`<div class="oc"><span class="t">${esc(c.text)}</span><span class="m"><b>10</b> · ${esc(c.cat)}</span><button class="x" data-oc="${i}" title="Remove">×</button></div>`).join("")||'<div class="hint" style="margin:0">No own cards yet.</div>';}
 $("cardForm").onsubmit=e=>{e.preventDefault();const text=$("cardText").value.trim().replace(/\s+/g," ");if(text.length<5){toast("Write a bit more");return}
   const all=deck();if(all.some(c=>c[1].toLowerCase()===text.toLowerCase())){toast("That card already exists");return}
-  const cat=$("cardCat").value||"Your cards",diff=+$("cardDiff").value||2;S.customCards.push({text,cat,diff});if(!S.cats.includes(cat))S.cats.push(cat);$("cardText").value="";save();render();toast(`Added: ${text} (${BASE[diff]} points)`);sfx.tick()};
+  const cat=$("cardCat").value||"Your cards",diff=+$("cardDiff").value||2;S.customCards.push({text,cat,diff});if(!S.cats.includes(cat))S.cats.push(cat);$("cardText").value="";save();render();toast(`Added: ${text}`);sfx.tick()};
 $("cardList").onclick=e=>{const b=e.target.closest("[data-oc]");if(!b)return;const c=S.customCards[+b.dataset.oc];if(!c)return;ask(`Remove "${c.text}"?`,()=>{S.customCards.splice(+b.dataset.oc,1);S.used=S.used.filter(t=>t!==c.text);save();render()},"Remove")};
-function renderFan(){const icon={karaoke:"#i-mic",imposter:"#i-mask2",whowould:"#i-question"};const p=S.plays||{};
-  const order=["imposter","karaoke","whowould"].sort((a,b)=>(p[b]||0)-(p[a]||0));
+function renderFan(){const icon={karaoke:"#i-mic",imposter:"#i-mask2",whowould:"#i-question",liars:"#i-cards"};const p=S.plays||{};
+  const order=["imposter","karaoke","whowould","liars"].sort((a,b)=>(p[b]||0)-(p[a]||0));
   $("fanF").setAttribute("href",icon[order[0]]);$("fanL").setAttribute("href",icon[order[1]]);$("fanR").setAttribute("href",icon[order[2]])}
 function renderExtra(){renderOwnCards();if(S.screen==="home")renderFan();
   if(S.screen==="settings"){const t=S.setTab||"karaoke";[...$("setTabs").querySelectorAll("[data-tab]")].forEach(b=>b.classList.toggle("on",b.dataset.tab===t));document.querySelectorAll("#scrSettings section[data-tab]").forEach(el=>{el.hidden=el.dataset.tab!==t})}
   const canResume=(S.inGame&&S.players.length>=2)||(S.mode==="host"&&S.room&&!S.inGame);
   $("homeResume").hidden=!canResume;$("homeResume").textContent=S.inGame?"↩ Resume game":"↩ Back to lobby";
   $("homeHost").disabled=!NET_OK;$("homeJoin").disabled=!NET_OK;if(!NET_OK)$("homeHost").title=$("homeJoin").title="Not set up on this copy yet";
-  $("mvpBonus").value=S.mvpBonus;$("awardBonus").value=S.awardBonus;$("mics").value=S.mics||1;$("impQ").value=S.impQ;$("wwQ").value=S.wwQ;$("autoMode").value=S.autoMode;$("autoSec").value=S.autoSec;$("impDiscuss").value=S.impDiscuss;$("impPts").value=S.impPts;$("impImpPts").value=S.impImpPts;
+  $("mvpBonus").value=S.mvpBonus;$("awardBonus").value=S.awardBonus;$("mics").value=S.mics||1;$("impQ").value=S.impQ;$("lcHand").value=S.lcHand;$("lcChambers").value=S.lcChambers;$("wwQ").value=S.wwQ;$("autoMode").value=S.autoMode;$("autoSec").value=S.autoSec;$("impDiscuss").value=S.impDiscuss;$("impPts").value=S.impPts;$("impImpPts").value=S.impImpPts;
   if(S.screen==="lobby"&&S.room){$("lobbyCode").textContent=S.room.code;$("lobbyUrl").textContent=joinUrl(S.room.code).replace(/^https?:\/\//,"");renderQr();$("lobbyStatus").textContent=netStatusText();
     $("lobbyPlayers").innerHTML=S.players.map((p,i)=>`<li><span class="rank">${i+1}</span><span class="dot${online(p)?' on':''}" style="${p.pid?'':'visibility:hidden'}"></span><span class="name">${esc(p.name)}</span><span class="hint">${p.pid?(online(p)?"phone":"phone offline"):"no phone"}</span><button class="x" data-kick="${i}" title="Remove">×</button></li>`).join("")||`<li style="color:var(--muted)">Nobody yet – scan the QR code or type the room code</li>`;
-    [...$("gameSel").querySelectorAll("[data-game]")].forEach(b=>b.classList.toggle("on",b.dataset.game===(S.game||"karaoke")));$("gameHint").textContent=S.game==="imposter"?"Imposter: needs at least 3 players, all with phones.":S.game==="whowould"?"Who Would: a question, everyone votes for a player – no points, just the review at the end.":"Karaoke Challenge: draw cards, sing, pass, sing-offs.";
-    const impOk=S.game==="imposter"||S.game==="whowould"?impPlayers().length>=3:S.players.length>=2;$("lobbyStart").disabled=!impOk;$("lobbyStart").textContent=!impOk?(S.game==="karaoke"?"Waiting for players…":"Waiting for 3 phones…"):`Start ${S.game==="imposter"?"Imposter":S.game==="whowould"?"Who Would":"game"} (${S.players.length} players)`}
+    [...$("gameSel").querySelectorAll("[data-game]")].forEach(b=>b.classList.toggle("on",b.dataset.game===(S.game||"karaoke")));$("gameHint").textContent=S.game==="liars"?"Liar's Cards: bluff with cards, call liars, survive the revolver. 2–8 players, all with phones.":S.game==="imposter"?"Imposter: needs at least 3 players, all with phones.":S.game==="whowould"?"Who Would: a question, everyone votes for a player – no points, just the review at the end.":"Karaoke Challenge: draw cards, sing, pass, sing-offs.";
+    const impOk=S.game==="imposter"||S.game==="whowould"?impPlayers().length>=3:S.game==="liars"?impPlayers().length>=2:S.players.length>=2;$("lobbyStart").disabled=!impOk;$("lobbyStart").textContent=!impOk?(S.game==="karaoke"?"Waiting for players…":S.game==="liars"?"Waiting for 2 phones…":"Waiting for 3 phones…"):`Start ${S.game==="imposter"?"Imposter":S.game==="whowould"?"Who Would":S.game==="liars"?"Liar's Cards":"game"} (${S.game==="karaoke"?S.players.length:impPlayers().length} players)`}
   const hosting=S.mode==="host"&&!!S.room;$("roomChip").hidden=!hosting;if(hosting){$("roomCode").textContent=S.room.code;$("roomN").textContent=S.players.filter(online).length}
   $("stage").classList.toggle("voting",!!S.vote);
   if(S.vote){const v=S.vote,need=voters().filter(i=>S.players[i].pid),n=Object.keys(v.votes).length,pct=need.length?Math.round(100*n/need.length):0;
     $("votebox").hidden=false;$("votebox").innerHTML=`<h3>Round ${v.round} done!</h3><div>Vote on your phones: who had the best performance?</div><div class="bar"><i style="width:${pct}%"></i></div><div class="hint" style="margin:0">${n} of ${need.length} voted · winner gets +${S.mvpBonus}</div><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:6px"><button class="btn btn-gold" id="voteClose" ${n?"":"disabled"}>Close vote now</button><button class="btn btn-ghost" id="voteSkip">Skip vote</button></div>`;
     $("voteClose").onclick=closeVote;$("voteSkip").onclick=()=>{S.vote=null;if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});nextRound()}}
   else{$("votebox").hidden=true}
-  renderSo();renderImp();renderWw();
+  renderSo();renderImp();renderWw();renderLc();
   if(S.screen==="final")renderFinal();
   if(S.screen==="phone")renderPhone();
   if(S.screen==="game")paintTimer();
@@ -1939,11 +1967,11 @@ $("homeStart").onclick=()=>{const go=()=>{draft=null;S.screen="players";save();r
 $("homeHost").onclick=()=>{const go=()=>{hostCreate()};if(S.inGame)ask("A game is in progress. Open a new room? Scores will be reset.",go,"New room");else go()};
 
 $("homeJoin").onclick=()=>{S.screen="join";save();render();try{$("joinName").value=localStorage.getItem("kc-name")||""}catch(e){}$("joinCode").focus()};
-$("homeSettings").onclick=()=>{S.back="home";S.screen="settings";S.setTab=["karaoke","imposter","whowould"].includes(S.game)?S.game:"karaoke";save();render()};
-$("homeResume").onclick=()=>{if(S.inGame&&S.game==="whowould"){S.screen="ww";save();render()}else if(S.inGame&&S.game==="imposter"){S.screen="imp";save();render()}else if(S.inGame){S.screen="game";save();render();resumeTimer()}else if(S.mode==="host"&&S.room){S.screen="lobby";save();render()}};
+$("homeSettings").onclick=()=>{S.back="home";S.screen="settings";S.setTab=["karaoke","imposter","whowould","liars"].includes(S.game)?S.game:"karaoke";save();render()};
+$("homeResume").onclick=()=>{if(S.inGame&&S.game==="liars"){S.screen="lc";save();render()}else if(S.inGame&&S.game==="whowould"){S.screen="ww";save();render()}else if(S.inGame&&S.game==="imposter"){S.screen="imp";save();render()}else if(S.inGame){S.screen="game";save();render();resumeTimer()}else if(S.mode==="host"&&S.room){S.screen="lobby";save();render()}};
 $("settingsBack").onclick=$("settingsDone").onclick=()=>{S.screen=S.back||"home";S.back=null;save();render()};
-$("startBtn").onclick=()=>{if(draft)S.players=draft.map(n=>({name:n.trim(),score:0,stats:{}}));if(S.room)hostClose(true);S.mode="local";S.pass=null;if(S.game==="imposter")impStart();else if(S.game==="whowould")wwStart();else startGame()};
-$("againBtn").onclick=()=>{if(S.game==="whowould")wwStart();else if(S.game==="imposter")impStart();else startGame()};
+$("startBtn").onclick=()=>{if(draft)S.players=draft.map(n=>({name:n.trim(),score:0,stats:{}}));if(S.room)hostClose(true);S.mode="local";S.game="karaoke";startGame()};
+$("againBtn").onclick=()=>{if(S.game==="liars")lcStart();else if(S.game==="whowould")wwStart();else if(S.game==="imposter")impStart();else startGame()};
 $("endBtn").onclick=()=>ask("End the game now and show the results?",finish,"End game");
 $("homeBtn").onclick=()=>{pauseTimer();S.screen="home";save();render()};
 $("setupBtn").onclick=()=>{S.screen="home";S.current=null;if(S.mode==="host"&&S.room)hostClose(true);save();render()};
@@ -1962,139 +1990,139 @@ function boot(){
 
 // Imposter question pairs: [question for everyone, question for the imposter]
 const IMP_Q=[
- ["What's your favorite pizza topping?","What's your favorite ice cream flavor?"],
- ["How many hours do you sleep on a normal night?","How many cups of coffee or tea do you drink a day?"],
+ ["What's your favorite pizza topping?","Which pizza topping should be banned?"],
+ ["How many hours do you sleep on a normal night?","How many hours do you sleep on a weekend night?"],
  ["Name a country you'd love to visit","Name a country you'd never want to live in"],
- ["What's the first thing you do in the morning?","What's the last thing you do before bed?"],
+ ["What's the first thing you do in the morning?","What's the first thing you do when you get home?"],
  ["What's your go-to karaoke song?","What song do you secretly hate?"],
  ["Which animal would you be?","Which animal are you afraid of?"],
  ["What's your favorite movie?","What movie made you cry?"],
- ["What's the best age to be?","At what age did you have your first kiss?"],
+ ["What's the best age to be?","At what age should people move out?"],
  ["Name a food you could eat every day","Name a food you refuse to eat"],
- ["What's your dream car?","What was your first car (or bike)?"],
+ ["What's your dream car?","What car would you never drive?"],
  ["What superpower would you pick?","What superpower would be the most annoying to have?"],
  ["What's your favorite season?","Which season do you dislike the most?"],
- ["How many countries have you visited?","How many languages do you speak (badly counts)?"],
+ ["How many countries have you visited?","How many countries could you name in one minute?"],
  ["Name a celebrity you'd have dinner with","Name a celebrity you find overrated"],
- ["What's your favorite drink on a night out?","What's your hangover cure?"],
- ["Beach or mountains?","Summer or winter?"],
+ ["What's your favorite drink on a night out?","What drink do you order when you don't want to drink?"],
+ ["Beach or mountains?","Beach or pool?"],
  ["What's your most used app?","What app do you keep deleting and reinstalling?"],
  ["Name a hobby you'd love to start","Name a hobby you gave up on"],
- ["What's your favorite board game?","What's your favorite card game?"],
+ ["What's your favorite board game?","What board game ends friendships?"],
  ["Name a city you'd move to tomorrow","Name a city you found disappointing"],
  ["What's your comfort food?","What's the weirdest thing you've eaten?"],
  ["What time do you usually go to bed?","What time do you usually get up on weekends?"],
- ["What's your favorite Disney movie?","What's your favorite animated series?"],
+ ["What's your favorite Disney movie?","Which Disney movie is overrated?"],
  ["Name a job you'd never do","Name a job you'd do for free"],
  ["What's one thing you can't live without?","What's one thing you should throw away?"],
- ["Dogs or cats?","Coffee or tea?"],
+ ["Dogs or cats?","Dogs or cats – which are smarter?"],
  ["What's your favorite emoji?","What emoji do you never use?"],
  ["Name a song everyone knows the lyrics to","Name a song with the worst lyrics"],
- ["What's your favorite pasta dish?","What's your favorite soup?"],
- ["How many pillows do you sleep with?","How many alarms do you set in the morning?"],
+ ["What's your favorite pasta dish?","What pasta dish is overrated?"],
+ ["How many pillows do you sleep with?","How many blankets do you sleep with?"],
  ["What was your favorite school subject?","What school subject did you hate?"],
  ["Name a place in your city you love","Name a place in your city you avoid"],
  ["What's the best gift you ever received?","What's the worst gift you ever received?"],
  ["Which decade had the best music?","Which decade had the worst fashion?"],
- ["What's your favorite fast-food chain?","What's your favorite thing to cook?"],
+ ["What's your favorite fast-food chain?","Which fast-food chain is overrated?"],
  ["Name a TV show you've watched twice","Name a TV show you quit after one episode"],
- ["What would you buy first with a million?","What would you never spend money on?"],
- ["What's your favorite fruit?","What's your favorite vegetable?"],
+ ["What would you buy first with a million?","What's the most expensive thing you'd never buy?"],
+ ["What's your favorite fruit?","What fruit do you never buy?"],
  ["What's your favorite way to spend a Sunday?","What's your favorite way to spend a Friday night?"],
  ["Name a sport you enjoy watching","Name a sport you'd never try"],
  ["What's your favorite holiday?","What's the most overrated holiday?"],
  ["How long is your average shower?","How long does it take you to get ready?"],
  ["What's your favorite snack at the cinema?","What's your favorite snack while gaming?"],
- ["Name a famous person you share a birthday with (or would like to)","Name a famous person you look a bit like"],
+ ["Name a famous person you'd want as a sibling","Name a famous person you look a bit like"],
  ["What's your favorite kind of weather?","What's the worst weather for your mood?"],
- ["What's your favorite number?","How many siblings do you have?"],
- ["What's the best concert you've been to?","What's the best party you've been to?"],
- ["What's your favorite dessert?","What's your favorite breakfast?"],
+ ["What's your favorite number?","What number do you consider unlucky?"],
+ ["What's the best concert you've been to?","What concert would you love to go to?"],
+ ["What's your favorite dessert?","What dessert do you find overrated?"],
  ["Name a book everyone should read","Name a book you never finished"],
- ["What's your favorite thing about this group?","What's your favorite thing about yourself?"],
+ ["What's your favorite thing about this group?","What's the most annoying thing about this group?"],
  ["What's your biggest fear?","What's your biggest pet peeve?"],
- ["Which social network could you delete forever?","Which website do you visit every day?"],
- ["What's your favorite ice cream flavor?","What's your favorite cake?"],
+ ["Which social network could you delete forever?","Which social network do you check first?"],
+ ["What's your favorite ice cream flavor?","What ice cream flavor should not exist?"],
  ["Name a place you'd go for a honeymoon","Name a place you'd go for a bachelor party"],
  ["What's your favorite color?","What color do you never wear?"],
- ["What's your favorite candy?","What's your favorite chewing gum flavor?"],
- ["What's the longest you've gone without your phone?","What's the longest you've slept?"],
+ ["What's your favorite candy?","What candy did you love as a kid?"],
+ ["What's the longest you've gone without your phone?","What's the longest you've gone without sleep?"],
  ["Name a musician you'd love to see live","Name a musician you think is overrated"],
- ["What's your favorite video game?","What's your favorite childhood toy?"],
+ ["What's your favorite video game?","What video game are you terrible at?"],
  ["Name a dish you'd order at a fancy restaurant","Name a dish you'd order at 3 am"],
- ["What's your favorite pizza place in town?","What's your favorite burger place in town?"],
+ ["What's your favorite pizza place in town?","Which restaurant in town is overrated?"],
  ["How many hours a day are you on your phone?","How many hours a day do you spend watching videos?"],
- ["Name a country with the best food","Name a country with the worst weather"],
+ ["Name a country with the best food","Name a country with the worst food"],
  ["What's the first app you open in the morning?","What's the last app you use before sleeping?"],
- ["What's a song that always gets you dancing?","What's a song that always makes you sad?"],
+ ["What's a song that always gets you dancing?","What's a song that always gets stuck in your head?"],
  ["Which animal describes your best friend?","Which animal describes your boss?"],
  ["What's your favorite series right now?","What's a series everyone loves but you don't get?"],
  ["What's the best age for a first job?","What's the best age to get married?"],
  ["Name a food you'd bring to a picnic","Name a food you'd bring to a hangover brunch"],
  ["What's your dream holiday destination?","What's your dream place to retire?"],
  ["If you had a superpower, what would you use it for first?","If you were invisible for a day, what would you do first?"],
- ["What's your favorite month?","In which month is your birthday?"],
+ ["What's your favorite month?","What's the most boring month?"],
  ["How many times have you been on a plane?","How many times have you been to a concert?"],
  ["Name a celebrity you'd trust with a secret","Name a celebrity you'd never trust"],
  ["What's your go-to drink at a café?","What's your go-to drink at a bar?"],
- ["City or countryside?","Hotel or camping?"],
+ ["City or countryside?","City or countryside – where would you retire?"],
  ["What's the most useful app on your phone?","What's the most useless app on your phone?"],
  ["Name a skill you wish you had","Name a skill you're secretly proud of"],
  ["What's your favorite thing to do on a rainy day?","What's your favorite thing to do on a sunny day?"],
  ["Name a city with the best nightlife","Name a city with the most beautiful buildings"],
  ["What do you cook when you have no time?","What do you cook when you want to impress someone?"],
- ["What time do you usually have dinner?","What time do you usually have lunch?"],
+ ["What time do you usually have dinner?","What time do you usually get home from work?"],
  ["What's the best animated movie?","What's the best superhero movie?"],
  ["Name a job that looks fun but probably isn't","Name a job that looks boring but is probably great"],
  ["What's one thing you always carry with you?","What's one thing you always forget at home?"],
- ["Pancakes or waffles?","Sweet or savory breakfast?"],
+ ["Pancakes or waffles?","Pancakes or waffles – which is harder to make?"],
  ["What emoji describes you today?","What emoji describes your weekend?"],
  ["Name a song you know every word of","Name a song you always get the lyrics wrong"],
  ["What's your favorite thing to grill?","What's your favorite thing to bake?"],
- ["How many hours did you sleep last night?","How many hours do you work on a normal day?"],
+ ["How many hours did you sleep last night?","How many hours do you sleep on average?"],
  ["What was your best school trip?","What was your best holiday as a kid?"],
  ["Name a place in the world you'd love to see once","Name a place you'd never go back to"],
  ["What's the best present you've ever given?","What's the most expensive thing you've ever bought?"],
  ["Which decade would you travel to?","Which decade had the best movies?"],
- ["What's your favorite fast-food order?","What's your favorite thing from the bakery?"],
+ ["What's your favorite fast-food order?","What's your favorite guilty-pleasure food?"],
  ["Name a movie you'd watch again right now","Name a movie you'd never watch again"],
  ["What would you do with a free day tomorrow?","What would you do with a free week?"],
- ["What's your favorite berry?","What's your favorite nut?"],
+ ["What's your favorite berry?","What's your favorite fruit in a smoothie?"],
  ["What's your favorite way to spend a Saturday morning?","What's your favorite way to spend a Sunday evening?"],
  ["Name a sport you'd love to be great at","Name a sport you find boring to watch"],
- ["What's your favorite thing about Christmas?","What's your favorite thing about summer?"],
+ ["What's your favorite thing about Christmas?","What's your favorite thing about birthdays?"],
  ["How many minutes does your morning routine take?","How many minutes does it take you to fall asleep?"],
  ["What's your favorite snack at a party?","What's your favorite snack on a road trip?"],
- ["Name a famous person you'd want as a sibling","Name a famous person you'd want as a neighbor"],
- ["What's the perfect temperature outside?","What's the perfect temperature for a shower?"],
- ["What's your lucky number?","How many close friends do you have?"],
+ ["Name a famous person you'd want as a neighbor","Name a famous person you'd want as a roommate"],
+ ["What's the perfect temperature outside?","What temperature outside is too hot?"],
+ ["What's your lucky number?","What number would you pick for a jersey?"],
  ["What's the best festival you've been to?","What's the best wedding you've been to?"],
- ["What's your favorite chocolate?","What's your favorite cookie?"],
+ ["What's your favorite chocolate?","What chocolate do you never buy?"],
  ["Name a book that changed how you think","Name a book you pretend to have read"],
  ["What's the best thing that happened to you this year?","What's the best thing that happened to you this week?"],
  ["What's the scariest thing you've ever done?","What's the most embarrassing thing you've ever done?"],
  ["Which app do you spend too much money in?","Which app do you spend too much time in?"],
- ["What's your favorite ice cream topping?","What's your favorite pizza crust?"],
+ ["What's your favorite ice cream topping?","What topping ruins an ice cream?"],
  ["Name a place for a perfect first date","Name a place for a perfect friends' trip"],
  ["What color is your bedroom?","What color is your favorite jacket?"],
- ["What's your favorite gummy candy?","What's your favorite crisps flavor?"],
+ ["What's your favorite gummy candy?","What's your favorite chewing gum flavor?"],
  ["How long could you survive in the wild?","How long could you survive without music?"],
  ["Name a band you'd join as a singer","Name a band you'd join as a drummer"],
  ["What's your favorite mobile game?","What's your favorite party game?"],
- ["What do you always order at a Chinese restaurant?","What do you always order at an Italian restaurant?"],
- ["What's your favorite sandwich?","What's your favorite salad?"],
- ["What was your first pet (or dream pet)?","What was your first concert (or dream concert)?"],
+ ["What do you always order at a Chinese restaurant?","What do you always order at an Asian takeaway?"],
+ ["What's your favorite sandwich?","What's your favorite burger?"],
+ ["What was your first pet (or dream pet)?","What pet would you get tomorrow?"],
  ["Name a place you feel most relaxed","Name a place you feel most nervous"],
- ["What's your favorite thing to buy at the supermarket?","What's your favorite thing to buy at a market?"],
+ ["What's your favorite thing to buy at the supermarket?","What do you always forget at the supermarket?"],
  ["Name a fictional character you'd date","Name a fictional character you'd hire"],
- ["What's the best pizza topping combo?","What's the best sandwich combo?"],
- ["How many unread messages do you have right now?","How many photos are on your phone?"],
- ["What's your favorite planet?","What's your favorite element of nature?"],
+ ["What's the best pizza topping combo?","What pizza combo would you never order?"],
+ ["How many unread messages do you have right now?","How many unread emails do you have right now?"],
+ ["What's your favorite planet?","Which planet would you send your boss to?"],
  ["Name a dish your parents cook best","Name a dish you cook better than your parents"],
- ["What's your favorite outdoor activity?","What's your favorite indoor activity?"],
+ ["What's your favorite outdoor activity?","What outdoor activity would you never do?"],
  ["What's your favorite thing about your hometown?","What's your favorite thing about the place you live now?"],
  ["Which animal would you keep as a pet if anything was allowed?","Which animal would you ride if anything was allowed?"],
- ["What's your favorite type of noodle?","What's your favorite type of rice dish?"],
+ ["What's your favorite type of noodle?","What's your favorite noodle dish?"],
  ["Name a song for a road trip","Name a song for a workout"],
  ["What would you do with a helicopter for a day?","What would you do with a boat for a day?"],
  ["What's your favorite museum or exhibition?","What's your favorite theme park or fair?"],
@@ -2115,13 +2143,9 @@ const IMP_Q=[
 ];
 
 // ===== Imposter mode: everyone answers a question on their phone, one player secretly got a different question =====
-function impPlayers(){const all=S.mode!=="host";return S.players.map((p,i)=>i).filter(i=>all||S.players[i].pid)}
-function localMode(){return S.mode!=="host"}
-function passState(key,pending){if(!pending.length){S.pass=null;return null}if(!S.pass||S.pass.key!==key||!pending.includes(S.pass.i))S.pass={key,i:pending[0],shown:false};return S.pass}
-function passHandHtml(p,what){return `<div class="lbl">Pass the phone</div><div class="big">📱 ${esc(p.name)}</div><div class="hint" style="margin:0">${what}</div><button class="btn btn-gold" id="passOk" style="font-size:18px;padding:16px 24px">I'm ${esc(p.name)} – show me</button>`}
-function bindPass(st,after){const b=$("passOk");if(b)b.onclick=()=>{S.pass.shown=true;save();render();if(after)after()}}
-function impStart(){countPlay("imposter");S.game="imposter";S.next=null;S.pass=null;S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0});S.inGame=true;S.round=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=false;S.log=[];S.impUsed=S.impUsed||[];S.imp=null;S.screen="imp";impNext();sfx.start()}
-function impNext(){S.round++;S.pass=null;
+function impPlayers(){return S.players.map((p,i)=>i).filter(i=>S.players[i].pid&&!S.players[i].late)}
+function impStart(){countPlay("imposter");S.game="imposter";S.next=null;S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0});S.inGame=true;S.round=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=false;S.log=[];S.impUsed=S.impUsed||[];S.imp=null;S.screen="imp";impNext();sfx.start()}
+function impNext(){S.round++;S.players.forEach(p=>{delete p.late});
   if(S.round>S.impQ){finish();return}
   let pool=IMP_Q.map((q,i)=>i).filter(i=>!S.impUsed.includes(i));if(!pool.length){S.impUsed=[];pool=IMP_Q.map((q,i)=>i)}
   const qi=pool[Math.floor(Math.random()*pool.length)];S.impUsed.push(qi);
@@ -2133,10 +2157,10 @@ function impNext(){S.round++;S.pass=null;
 function impAnswer(i,text){const m=S.imp;if(!m||m.phase!=="answer")return;text=String(text||"").trim().slice(0,80);if(!text)return;m.answers[i]=text;
   if(impPlayers().every(j=>m.answers[j]!=null)){m.phase="reveal";sfx.draw();toast("Everyone answered!")}save();render()}
 function impShowAnswers(){const m=S.imp;if(!m||m.phase!=="reveal")return;m.phase="discuss";m.discussEnd=S.impDiscuss?Date.now()+S.impDiscuss*1000:null;sfx.start();save();render()}
-function impStartVote(){const m=S.imp;if(!m||m.phase!=="discuss")return;m.phase="vote";m.votes={};S.pass=null;if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});sfx.tick();if(!localMode())toast("Vote on your phones: who is the imposter?");save();render()}
+function impStartVote(){const m=S.imp;if(!m||m.phase!=="discuss")return;m.phase="vote";m.votes={};if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});sfx.tick();toast("Vote on your phones: who is the imposter?");save();render()}
 function impVote(i,name){const m=S.imp;if(!m||m.phase!=="vote")return;const j=S.players.findIndex(p=>p.name.toLowerCase()===String(name).toLowerCase());if(j<0||j===i)return;m.votes[i]=j;
   const voters=impPlayers();if(voters.every(v=>m.votes[v]!=null))impResult();else{save();render()}}
-function impResult(){const m=S.imp;if(!m||m.phase!=="vote")return;const imp=m.imposter,voters=impPlayers();const correct=voters.filter(v=>m.votes[v]===imp);const missed=voters.filter(v=>v!==imp&&m.votes[v]!==imp);
+function impResult(){const m=S.imp;if(!m||m.phase!=="vote")return;const imp=m.imposter,voters=impPlayers();const correct=voters.filter(v=>m.votes[v]===imp);const missed=voters.filter(v=>v!==imp&&m.votes[v]!=null&&m.votes[v]!==imp);
   correct.forEach(v=>{S.players[v].score+=S.impPts;stat(S.players[v],"caught")});const impPts=missed.length*S.impImpPts;S.players[imp].score+=impPts;stat(S.players[imp],"imp");if(!correct.length)stat(S.players[imp],"impClean");
   m.result={imposter:imp,correct,missed,impPts};m.phase="result";
   S.log.unshift(`🕵️ Q${S.round}: imposter was <b>${esc(S.players[imp].name)}</b> – caught by ${correct.length?correct.map(v=>esc(S.players[v].name)).join(", "):"nobody"}${impPts?` · imposter <span class="up">+${impPts}</span>`:""}`);
@@ -2146,23 +2170,13 @@ let impT=null;
 function renderImp(){if(S.screen!=="imp"||S.game!=="imposter"){clearInterval(impT);impT=null;return}const m=S.imp;const st=$("impStage");
   $("impRound").textContent=`Question ${Math.min(S.round,S.impQ)} of ${S.impQ}`;$("impChip").hidden=!S.room;$("impCode").textContent=S.room?S.room.code:"";$("impN").textContent=S.players.filter(online).length;
   const sorted=[...S.players].map((p,i)=>({...p,i})).sort((a,b)=>b.score-a.score);
-  $("impBoard").innerHTML=sorted.map((p,r)=>`<li><span class="rank">${r+1}</span>${p.pid?`<span class="dot${online(p)?' on':''}"></span>`:''}<span class="name">${esc(p.name)}</span><span class="pts ${p.score<0?'neg':''}">${p.score}</span></li>`).join("");
+  $("impBoard").innerHTML=sorted.map((p,r)=>`<li><span class="rank">${r+1}</span>${p.pid?`<span class="dot${online(p)?' on':''}"></span>`:''}<span class="name">${esc(p.name)}</span><span class="pts ${p.score<0?'neg':''}">${p.score}</span><button class="x" data-rm="${p.i}" title="Remove player">×</button></li>`).join("");
   const left=impLeft();$("impTimer").hidden=!(m&&m.phase==="discuss"&&left!=null);if(!$("impTimer").hidden){$("impTimerVal").textContent=fmtT(left);$("impTimer").classList.toggle("warn",left<=10)}
   if(!impT&&m&&m.phase==="discuss"&&m.discussEnd)impT=setInterval(()=>{const l=impLeft();if(S.screen!=="imp"||!S.imp||S.imp.phase!=="discuss"){clearInterval(impT);impT=null;return}$("impTimerVal").textContent=fmtT(l);$("impTimer").classList.toggle("warn",l<=10);if(l===10)sfx.tick();if(l<=0){clearInterval(impT);impT=null;sfx.buzz();impStartVote()}},250);
   if(!m){st.innerHTML=`<div class="lbl">Get ready</div>`;return}
   const q=IMP_Q[m.qi],pl=impPlayers(),nA=pl.filter(i=>m.answers[i]!=null).length,nV=pl.filter(i=>m.votes[i]!=null).length;
   const answersHtml=(show)=>`<div class="answers">${pl.map(i=>`<div class="a${show&&i===m.imposter?" imp":""}"><span class="n">${esc(S.players[i].name)}${show&&i===m.imposter?" · 🕵️ imposter":""}</span><span class="t">${esc(m.answers[i]||"–")}</span>${show&&m.result?`<span class="v">voted: ${m.votes[i]!=null?esc(S.players[m.votes[i]].name):"–"}${m.result.correct.includes(i)?" ✓":""}</span>`:""}</div>`).join("")}</div>`;
-  const loc=localMode();
-  if(m.phase==="answer"&&loc){const pend=pl.filter(i=>m.answers[i]==null);const ps=passState("imp:a:"+S.round,pend);const P=ps?S.players[ps.i]:null;
-    const head=`<div class="lbl">Question ${S.round} of ${S.impQ}</div><div class="bar"><i style="width:${pl.length?Math.round(100*nA/pl.length):0}%"></i></div><div class="hint" style="margin:0">${nA} of ${pl.length} answered</div>`;
-    const body=!ps?"":!ps.shown?passHandHtml(P,"Give the phone to "+esc(P.name)+" – nobody else should look at the next screen."):`<div class="lbl">Only ${esc(P.name)} may read this</div><div class="q priv">${esc(ps.i===m.imposter?q[1]:q[0])}</div><form class="impans" id="impLocalForm"><input id="impLocalIn" maxlength="80" placeholder="Your answer" autocomplete="off"><button class="btn btn-gold" type="submit">Send &amp; pass the phone on</button></form><div class="hint" style="margin:0">Keep it short. If you're the imposter, your question is different – blend in!</div>`;
-    st.innerHTML=head+body+`<div class="row"><button class="btn btn-ghost" id="impSkip">Skip question</button>${nA>=2&&pend.length?`<button class="btn btn-ghost" id="impForce">Continue without the rest</button>`:""}</div>`;
-    bindPass(st,()=>{const i=$("impLocalIn");if(i)i.focus()});const f=$("impLocalForm");if(f)f.onsubmit=e=>{e.preventDefault();const t=$("impLocalIn").value.trim();if(!t)return;impAnswer(ps.i,t)}}
-  else if(m.phase==="vote"&&loc){const pend=pl.filter(i=>m.votes[i]==null);const ps=passState("imp:v:"+S.round,pend);const P=ps?S.players[ps.i]:null;
-    const body=!ps?"":!ps.shown?passHandHtml(P,"Give the phone to "+esc(P.name)+" to vote."):`<div class="lbl">${esc(P.name)}, who is the imposter?</div><div class="ballot">${pl.filter(j=>j!==ps.i).map(j=>`<button class="btn btn-ghost" data-lv="${j}">🕵️ ${esc(S.players[j].name)}</button>`).join("")}</div>`;
-    st.innerHTML=`<div class="lbl">Question</div><div class="q">${esc(q[0])}</div>${answersHtml(false)}<div class="bar"><i style="width:${pl.length?Math.round(100*nV/pl.length):0}%"></i></div><div class="hint" style="margin:0">${nV} of ${pl.length} voted</div>`+body+`<div class="row">${nV?`<button class="btn btn-ghost" id="impClose">Close vote (${nV} votes)</button>`:""}</div>`;
-    bindPass(st);st.querySelectorAll("[data-lv]").forEach(b=>b.onclick=()=>impVote(ps.i,S.players[+b.dataset.lv].name))}
-  else if(m.phase==="answer")st.innerHTML=`<div class="lbl">Everyone is answering on their phones</div><div class="q secret">Question hidden until everyone has answered</div><div class="bar"><i style="width:${pl.length?Math.round(100*nA/pl.length):0}%"></i></div><div class="hint" style="margin:0">${nA} of ${pl.length} answered · ${pl.filter(i=>m.answers[i]==null).map(i=>esc(S.players[i].name)).join(", ")||"all in!"}</div><div class="row"><button class="btn btn-ghost" id="impSkip">Skip question</button>${nA>=2?`<button class="btn btn-ghost" id="impForce">Continue without the rest</button>`:""}</div>`;
+  if(m.phase==="answer")st.innerHTML=`<div class="lbl">Everyone is answering on their phones</div><div class="q secret">Question hidden until everyone has answered</div><div class="bar"><i style="width:${pl.length?Math.round(100*nA/pl.length):0}%"></i></div><div class="hint" style="margin:0">${nA} of ${pl.length} answered · ${pl.filter(i=>m.answers[i]==null).map(i=>esc(S.players[i].name)).join(", ")||"all in!"}</div><div class="row"><button class="btn btn-ghost" id="impSkip">Skip question</button>${nA>=2?`<button class="btn btn-ghost" id="impForce">Continue without the rest</button>`:""}</div>`;
   else if(m.phase==="reveal")st.innerHTML=`<div class="lbl">The real question was</div><div class="q">${esc(q[0])}</div><div class="hint" style="margin:0">One of you got a different question. Ready to see the answers?</div><button class="btn btn-gold" id="impShow" style="font-size:18px;padding:16px 24px">👀 Reveal the answers</button>`;
   else if(m.phase==="discuss")st.innerHTML=`<div class="lbl">Question</div><div class="q">${esc(q[0])}</div>${answersHtml(false)}<div class="hint" style="margin:0">Discuss: who answered a different question? ${left!=null?"The vote starts when the timer ends.":""}</div><div class="row"><button class="btn btn-gold" id="impVoteBtn">🗳 Start the vote</button></div>`;
   else if(m.phase==="vote")st.innerHTML=`<div class="lbl">Question</div><div class="q">${esc(q[0])}</div>${answersHtml(false)}<div class="bar"><i style="width:${pl.length?Math.round(100*nV/pl.length):0}%"></i></div><div class="hint" style="margin:0">${nV} of ${pl.length} voted</div><div class="row">${nV?`<button class="btn btn-ghost" id="impClose">Close vote (${nV} votes)</button>`:""}</div>`;
@@ -2173,11 +2187,13 @@ function renderImp(){if(S.screen!=="imp"||S.game!=="imposter"){clearInterval(imp
   bind("impSkip",()=>ask("Skip this question?",()=>{S.round--;impNext()},"Skip"));bind("impForce",()=>{m.phase="reveal";save();render()})}
 $("impHome").onclick=()=>{S.screen="home";save();render()};
 $("impEnd").onclick=()=>ask("End the game now and show the results?",finish,"End game");
+$("lcHand").onchange=e=>{S.lcHand=Math.max(3,Math.min(8,+e.target.value||5));save()};
+$("lcChambers").onchange=e=>{S.lcChambers=Math.max(2,Math.min(8,+e.target.value||6));save()};
 $("impQ").onchange=e=>{S.impQ=Math.max(1,Math.min(150,+e.target.value||6));save()};
 $("impDiscuss").onchange=e=>{S.impDiscuss=Math.max(0,+e.target.value||0);save()};
 $("impPts").onchange=e=>{S.impPts=Math.max(0,+e.target.value||0);save()};
 $("impImpPts").onchange=e=>{S.impImpPts=Math.max(0,+e.target.value||0);save()};
-$("gameSel").onclick=$("gameSel2").onclick=e=>{const b=e.target.closest("[data-game]");if(!b)return;S.game=b.dataset.game;save();render()};
+$("gameSel").onclick=e=>{const b=e.target.closest("[data-game]");if(!b)return;S.game=b.dataset.game;save();render()};
 $("setTabs").onclick=e=>{const b=e.target.closest("[data-tab]");if(!b)return;S.setTab=b.dataset.tab;save();render()};
 // ---- phone side ----
 function impFetchPriv(round){if(!PH||PH.privBusy)return;PH.privBusy=true;PH.privTries=(PH.privTries||0)+1;
@@ -2188,13 +2204,67 @@ function phoneImpHtml(st,me,meI,players,board){const m=st.imp;if(m&&m.phase==="a
   const timer=m.phase==="discuss"&&m.discussEnd?`<div class="timer phtimer" id="impPhTimer">${fmtT(Math.max(0,Math.ceil((m.discussEnd-Date.now())/1000)))}</div>`:"";
   if(m.phase==="answer"){if(answered)return `<div class="who">Answer sent ✓</div><p class="hint">${(m.answered||[]).length} of ${m.total} answered – waiting for the rest…</p>${board}`;
     if(!priv)return `<div class="who">Question ${m.round}</div><p class="hint">Loading your question…</p>`;
-    return `<div class="who">Question ${m.round} of ${st.impQ}</div><div class="impq"><small>Only you can see this</small>${esc(priv.q)}</div><form class="impans" id="impForm"><input id="impIn" maxlength="80" placeholder="Your answer" autocomplete="off"><button class="btn btn-gold" type="submit">Send answer</button></form><p class="hint">Keep it short. If you're the imposter, your question is different – blend in!</p>`}
+    return `<div class="who">Question ${m.round} of ${st.impQ}</div><div class="impq"><small>Only you can see this</small>${esc(priv.q)}</div><form class="impans" id="impForm"><input id="impIn" maxlength="80" placeholder="Your answer" autocomplete="off"><button class="btn btn-gold" type="submit">Send answer</button></form><p class="hint">Keep it short. Psst: one of you got a different question – and doesn't know it.</p>`}
   if(m.phase==="reveal")return `<div class="who">All answers are in</div><p class="hint">Look at the host screen – the answers are about to be revealed.</p>${autoPhoneHtml(st)}${board}`;
   if(m.phase==="discuss")return `<div class="who">Discuss!</div>${timer}<div class="impq"><small>The real question</small>${esc(m.q)}</div>${answers}<p class="hint">Who answered a different question?</p>`;
   if(m.phase==="vote"){if(voted)return `<div class="who">Vote received 🗳️</div><p class="hint">${(m.voted||[]).length} of ${m.total} voted…</p>${answers}`;
     return `<div class="who">Who is the imposter?</div><div class="ballot">${players.filter(p=>p.pid&&p.pid!==PH.pid).map(p=>`<button class="btn btn-ghost" data-act="vote" data-name="${esc(p.name)}">🕵️ ${esc(p.name)}</button>`).join("")}</div>${answers}`}
   const r=m.result;const meImp=r&&r.imposter===me.name;const gotIt=r&&(r.correct||[]).includes(me.name);
   return `<div class="who">${meImp?"You were the imposter 🕵️":"The imposter was <b>"+esc(r.imposter)+"</b>"}</div><p class="hint">${meImp?(r.impPts?"You fooled "+r.missed+" players: +"+r.impPts:"Everyone saw through you – no points"):(gotIt?"You caught them: +"+st.impPts:"Wrong guess – no points")}</p>${autoPhoneHtml(st)}${answers}${board}`}
+
+// ===== Liar's Cards (Liar's Bar rules) =====
+const LC_RANK={Q:"Queen",K:"King",A:"Ace",J:"Joker"},LC_SYM={Q:"♛",K:"♚",A:"A",J:"★"};
+function lcPlayers(){return impPlayers()}
+function lcAlive(){return S.lc?lcPlayers().filter(i=>S.lc.alive[i]):[]}
+function lcDeck(n){const total=n*S.lcHand,jokers=Math.max(1,Math.round(n/2)),per=Math.ceil((total-jokers)/3),d=[];for(const r of ["Q","K","A"])for(let k=0;k<per;k++)d.push(r);for(let k=0;k<jokers;k++)d.push("J");
+  for(let i=d.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[d[i],d[j]]=[d[j],d[i]]}return d}
+function lcStart(){countPlay("liars");S.game="liars";S.next=null;S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0;delete p.late});S.inGame=true;S.round=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=true;S.log=[];
+  S.lc={n:0,phase:"play",table:"Q",hands:{},alive:{},pulls:{},bullet:{},pile:[],last:null,turn:null,reveal:null,hv:{}};S.screen="lc";lcDeal(null);sfx.start()}
+function lcDeal(startAt){const m=S.lc;S.players.forEach(p=>{delete p.late});lcPlayers().forEach(i=>{if(m.alive[i]==null){m.alive[i]=true;m.pulls[i]=0;m.bullet[i]=1+Math.floor(Math.random()*S.lcChambers)}});
+  m.n++;S.round=m.n;const al=lcAlive();m.table=["Q","K","A"][Math.floor(Math.random()*3)];const d=lcDeck(al.length);m.hands={};al.forEach((i,k)=>{m.hands[i]=d.slice(k*S.lcHand,(k+1)*S.lcHand)});
+  m.pile=[];m.last=null;m.reveal=null;m.phase="play";m.turn=startAt!=null&&m.alive[startAt]?startAt:al[0];S.auto=null;al.forEach(i=>lcPushHand(i));save();render();sfx.draw()}
+function lcPushHand(i){const m=S.lc,p=S.players[i];if(!S.room||!p||!p.pid)return;m.hv[p.pid]=(m.hv[p.pid]||0)+1;db.put(`rooms/${S.room.code}/private/${p.pid}`,{hand:m.hands[i]||[],v:m.hv[p.pid],n:m.n}).catch(()=>{})}
+function lcNextActor(from){const m=S.lc,al=lcAlive();const k=al.indexOf(from);for(let s=1;s<al.length;s++){const j=al[(k+s)%al.length];if((m.hands[j]||[]).length>0)return j}return null}
+function lcPlay(i,cards){const m=S.lc;if(!m||m.phase!=="play"||m.turn!==i)return;cards=(cards||[]).map(String).filter(c=>LC_RANK[c]).slice(0,3);if(!cards.length)return;
+  const hand=(m.hands[i]||[]).slice();for(const c of cards){const k=hand.indexOf(c);if(k<0)return;hand.splice(k,1)}m.hands[i]=hand;m.pile.push({by:i,cards});m.last={by:i,cards};lcPushHand(i);
+  const p=S.players[i];S.log.unshift(`🃏 <b>${esc(p.name)}</b> plays ${cards.length} card${cards.length>1?"s":""} as ${LC_RANK[m.table]}s`);
+  const nx=lcNextActor(i);if(nx==null){m.turn=null;toast("Nobody left to call – new deal");save();render();setTimeout(()=>{if(S.lc===m&&m.phase==="play")lcDeal(i)},2000);return}
+  m.turn=nx;save();render();sfx.tick()}
+function lcLiar(i){const m=S.lc;if(!m||m.phase!=="play"||m.turn!==i||!m.last)return;const L=m.last;const liar=L.cards.some(c=>c!==m.table&&c!=="J");const target=liar?L.by:i;
+  m.pulls[target]=(m.pulls[target]||0)+1;const dead=m.pulls[target]>=m.bullet[target];if(dead)m.alive[target]=false;
+  const caller=S.players[i],by=S.players[L.by],T=S.players[target];if(liar){caller.score+=5;stat(caller,"lcCatch")}else{by.score+=5;stat(by,"lcHonest")}
+  m.reveal={caller:i,by:L.by,cards:L.cards,liar,target,dead,pull:m.pulls[target]};m.phase="reveal";m.turn=null;
+  S.log.unshift(`${liar?"🎯":"😬"} <b>${esc(caller.name)}</b> calls liar on ${esc(by.name)}: ${L.cards.map(c=>LC_SYM[c]).join(" ")} – ${liar?"a lie! "+esc(by.name):"honest! "+esc(caller.name)} pulls the trigger… ${dead?"💥 BANG":"click"}`);
+  if(dead){sfx.buzz();toast(`💥 ${T.name} is out!`)}else{sfx.pass();toast(`*click* – ${T.name} survives (${m.pulls[target]} of ${S.lcChambers})`)}save();render()}
+function lcNext(){const m=S.lc;if(!m||m.phase!=="reveal")return;const al=lcAlive();if(al.length<=1){lcFinish(al[0]);return}const r=m.reveal;S.auto=null;lcDeal(m.alive[r.target]?r.target:(al.find(j=>j>r.target)??al[0]))}
+function lcFinish(winner){if(winner!=null&&S.players[winner]){S.players[winner].score+=20;stat(S.players[winner],"lcWin");S.log.unshift(`🏆 <b>${esc(S.players[winner].name)}</b> is the last one standing!`)}finish()}
+function renderLc(){if(S.screen!=="lc"||S.game!=="liars")return;const m=S.lc,st=$("lcStage");$("lcRound").textContent=`Deal ${m?m.n:0}`;$("lcChip").hidden=!S.room;$("lcCode").textContent=S.room?S.room.code:"";$("lcN").textContent=S.players.filter(online).length;
+  const sorted=[...S.players].map((p,i)=>({...p,i})).sort((a,b)=>b.score-a.score);
+  $("lcBoard").innerHTML=sorted.map((p,r)=>`<li><span class="rank">${r+1}</span>${p.pid?`<span class="dot${online(p)?' on':''}"></span>`:''}<span class="name">${esc(p.name)}</span><span class="pts ${p.score<0?'neg':''}">${p.score}</span><button class="x" data-rm="${p.i}" title="Remove player">×</button></li>`).join("");
+  if(!m){st.innerHTML=`<div class="lbl">Get ready</div>`;return}
+  const pl=lcPlayers();const ring=`<div class="lcring">${pl.map(i=>{const p=S.players[i],a=m.alive[i],n=(m.hands[i]||[]).length;return `<div class="lcp${m.turn===i&&m.phase==="play"?" turn":""}${a?"":" dead"}"><div class="n">${a?"":"💀 "}${esc(p.name)}</div><div class="c">${a?n+" card"+(n===1?"":"s"):"out"}</div><div class="g">🔫 ${m.pulls[i]||0} of ${S.lcChambers}</div></div>`}).join("")}</div>`;
+  const tableHtml=`<div class="lbl">Table card</div><div class="lccard">${LC_SYM[m.table]}<small>${LC_RANK[m.table]}s</small></div>`;
+  if(m.phase==="play"){const T=m.turn!=null?S.players[m.turn]:null;const last=m.last?`<div class="hint" style="margin:0"><b>${esc(S.players[m.last.by].name)}</b> played <b>${m.last.cards.length}</b> card${m.last.cards.length>1?"s":""} as ${LC_RANK[m.table]}s · ${m.pile.length} play${m.pile.length>1?"s":""} on the table</div>`:`<div class="hint" style="margin:0">Nothing on the table yet</div>`;
+    st.innerHTML=tableHtml+ring+last+(T?`<div class="big">${esc(T.name)}</div><div class="hint" style="margin:0">${m.last?"plays cards or calls <b>Liar!</b>":"opens the round"} – on their phone</div>`:`<div class="hint" style="margin:0">Dealing…</div>`)+`<div class="row"><button class="btn btn-ghost" id="lcRedeal">New deal</button></div>`}
+  else{const r=m.reveal;const T=S.players[r.target];st.innerHTML=tableHtml+`<div class="lbl">${esc(S.players[r.caller].name)} called liar on ${esc(S.players[r.by].name)}</div><div class="lchand">${r.cards.map(c=>`<span class="lcc${c===m.table||c==="J"?" ok":" bad"}">${LC_SYM[c]}<small>${LC_RANK[c]}</small></span>`).join("")}</div><div class="big">${r.liar?"LIAR! 🎯":"HONEST 😬"}</div><div class="hint" style="margin:0">${esc(T.name)} pulls the trigger… chamber ${r.pull} of ${S.lcChambers}</div><div class="lcshot">${r.dead?"💥 BANG – "+esc(T.name)+" is out":"*click* – "+esc(T.name)+" survives"}</div>`+ring+`<button class="btn btn-gold" id="lcNextBtn" style="font-size:18px;padding:16px 24px">${lcAlive().length<=1?"🏆 Show results":"Next deal ▸"}</button>`;st.insertAdjacentHTML("beforeend",autoHtml())}
+  const bind=(id,fn)=>{const b=$(id);if(b)b.onclick=fn};bind("lcNextBtn",lcNext);bind("lcRedeal",()=>ask("Deal new cards? The table is cleared, nobody gets shot.",()=>lcDeal(m.turn),"New deal"))}
+$("lcHome").onclick=()=>{S.screen="home";save();render()};
+$("lcEnd").onclick=()=>ask("End the game now and show the results?",finish,"End game");
+$("lcBoard").onclick=e=>{const b=e.target.closest("[data-rm]");if(!b)return;const p=S.players[+b.dataset.rm];if(!p)return;ask(`Remove ${p.name} from the game?`,()=>removePlayer(+b.dataset.rm),"Remove")};
+// ---- phone side ----
+function lcFetchPriv(v){if(!PH||PH.privBusy)return;PH.privBusy=true;PH.privTries=(PH.privTries||0)+1;
+  db.get(`rooms/${PH.code}/private/${PH.pid}`).then(d=>{PH.privBusy=false;if(d&&d.v===v){PH.priv=d;PH.privTries=0;PH.lcSel=[];renderPhone()}else if(PH.privTries<8)setTimeout(()=>lcFetchPriv(v),1000)}).catch(()=>{PH.privBusy=false;if(PH.privTries<8)setTimeout(()=>lcFetchPriv(v),1500)})}
+function phoneLcHtml(st,me,meI,players,board){const m=st.lc;if(!m)return `<div class="who">Liar's Cards</div><p class="hint">Waiting for the host…</p>${board}`;
+  const mine=(m.players||[]).find(p=>p.pid===PH.pid)||{};const v=(m.hv||{})[PH.pid];if(mine.alive&&v&&!(PH.priv&&PH.priv.v===v))lcFetchPriv(v);
+  const hand=PH.priv&&PH.priv.v===v?Object.values(PH.priv.hand||{}):null;const sel=(PH.lcSel||[]).filter(i=>hand&&hand[i]);
+  const table=`<div class="impq"><small>Table card</small>${LC_SYM[m.table]} ${LC_RANK[m.table]}s</div>`;
+  const others=`<p class="hint">${(m.players||[]).map(p=>`${p.alive?"":"💀 "}${esc(p.name)} ${p.alive?p.cards+" 🂠 · 🔫 "+p.pulls+"/"+m.chambers:"out"}`).join(" · ")}</p>`;
+  if(!mine.alive)return `<div class="who">💀 You're out</div>${table}<p class="hint">Watch the host screen – ${m.aliveN} still in.</p>${others}`;
+  if(m.phase==="reveal"){const r=m.reveal||{};return `<div class="who">${r.liar?"Liar! 🎯":"Honest 😬"}</div>${table}<p class="hint">${esc(r.caller)} called liar on ${esc(r.by)}: ${(r.cards||[]).map(c=>LC_SYM[c]+" "+LC_RANK[c]).join(", ")}. ${esc(r.target)} pulled the trigger – ${r.dead?"💥 BANG! "+esc(r.target)+" is out.":"click. Chamber "+r.pull+" of "+m.chambers+"."}</p>${autoPhoneHtml(st)}${others}`}
+  const handHtml=hand?`<div class="lchand">${hand.map((c,i)=>`<button class="lcc${sel.includes(i)?" sel":""}" data-act="lcsel" data-i="${i}">${LC_SYM[c]}<small>${LC_RANK[c]}</small></button>`).join("")||"<span class='hint'>No cards left – sit tight</span>"}</div>`:`<p class="hint">Loading your cards…</p>`;
+  const myTurn=m.turn===PH.pid;
+  if(!myTurn)return `<div class="who">${m.turnName?esc(m.turnName)+"'s turn":"Dealing…"}</div>${table}${m.last?`<p class="hint">${esc(m.last.name)} played ${m.last.n} card${m.last.n>1?"s":""} as ${LC_RANK[m.table]}s.</p>`:""}${handHtml}<p class="hint">Tap cards to pre-select. Jokers count as anything.</p>${others}`;
+  return `<div class="who">Your turn!</div>${table}${m.last?`<p class="hint">${esc(m.last.name)} played ${m.last.n} card${m.last.n>1?"s":""} as ${LC_RANK[m.table]}s. Believe it?</p>`:`<p class="hint">You open the round.</p>`}${handHtml}<div class="phact" style="display:flex;flex-direction:column;gap:8px"><button class="btn btn-gold" data-act="lcplay" ${sel.length?"":"disabled"}>Play ${sel.length||"…"} as ${LC_RANK[m.table]}${sel.length===1?"":"s"}</button>${m.last?`<button class="btn btn-red" data-act="lcliar">🗣 Liar!</button>`:""}</div><p class="hint">Select 1–3 cards, then play them as ${LC_RANK[m.table]}s – true or not. Jokers count as anything.</p>${others}`}
 
 // Who Would: "Who would most likely …"
 const WW_Q=[
@@ -2211,28 +2281,28 @@ const WW_Q=[
  "…forget a friend's name?","…start a band?","…win the lottery and lose the ticket?","…make friends with the waiter?","…secretly love a boy band?",
  "…take a nap in a museum?","…dance on a table?","…be a secret agent?","…cry at a wedding?","…end up on the news?",
  "…forget their passport at the airport?","…win a pub quiz single-handedly?","…become a monk for a year?","…fall in love on a bus ride?","…lose a bet and shave their head?",
- "…get a pet without telling anyone?","…start a food truck?","…win an argument with a toddler?","…forget their own phone number?","…sleep through an earthquake?",
+ "…get a pet without telling anyone?","…start a food truck?","…win an argument with a toddler?","…start a conga line?","…sleep through an earthquake?",
  "…become a famous chef?","…spend a whole day in bed?","…get stuck in an elevator and make a friend?","…win a lip-sync battle?","…book a flight for the wrong day?",
  "…become mayor of their town?","…cry over a cute dog video?","…eat a whole cake alone?","…lock themselves out of their flat?","…win a poker night?",
  "…move into a van and travel?","…keep a plant alive for ten years?","…forget an anniversary?","…get a job at a circus?","…win a rap battle?",
  "…take a selfie with a celebrity by accident?","…hike a mountain in flip-flops?","…start crying at karaoke?","…own a boat one day?","…get a parking ticket twice in one day?",
- "…write a bestseller?","…adopt a kid from every continent?","…be caught sleeping at work?","…win a hot-dog eating contest?","…survive on a desert island?",
+ "…write a bestseller?","…keep a secret for exactly one day?","…be caught sleeping at work?","…buy a round for the whole bar?","…survive on a desert island?",
  "…miss their stop because of a podcast?","…become a fitness influencer?","…organize the best birthday party ever?","…fake an illness to skip a meeting?","…dance in the rain?",
  "…become a pro gamer?","…forget to pay at the restaurant?","…own 100 pairs of shoes?","…talk to their plants?","…get a face tattoo?",
  "…live to 100?","…spend a night in a haunted house?","…win a chess tournament?","…show up to a costume party without a costume?","…become a wedding DJ?",
  "…run away from a spider?","…get on the wrong train abroad?","…become a millionaire and still take the bus?","…cook a meal for 50 people?","…sing the national anthem at a stadium?",
- "…forget where they live after a party?","…invent something useful?","…win a beauty contest?","…leave a bad review for a friend's restaurant?","…live in a treehouse?",
+ "…get emotional over a sunset?","…invent something useful?","…win a game show?","…leave a bad review for a friend's restaurant?","…live in a treehouse?",
  "…be a great detective?","…spend a fortune on a concert ticket?","…get caught singing in the car?","…open a bar?","…become a meme?",
  "…fall asleep at the cinema?","…marry someone they met on holiday?","…become an astronaut?","…forget their wallet on a date?","…win a limbo contest?",
  "…complain to the manager?","…own a farm?","…be a secret millionaire?","…ghost someone by accident?","…become a sports commentator?",
  "…survive a week without coffee?","…start a podcast?","…learn ten languages?","…get lost in IKEA?","…become a game show host?",
- "…adopt a stray cat abroad?","…cry at the end of a video game?","…win a bake-off?","…host a house party that gets out of hand?","…join a circus?",
- "…become a professional dancer?","…forget a name right after being introduced?","…get free drinks by charming the bartender?","…live on a cruise ship?","…be the first to leave the group chat?",
+ "…adopt a stray cat abroad?","…cry at the end of a video game?","…win a bake-off?","…host a house party that gets out of hand?","…become a cat café owner?",
+ "…become a professional dancer?","…negotiate a discount at the supermarket?","…get free drinks by charming the bartender?","…live on a cruise ship?","…be the first to leave the group chat?",
 ];
 
 // ===== Who Would: one question, everyone votes for a player on their phone, no points, review at the end =====
-function wwStart(){countPlay("whowould");S.game="whowould";S.next=null;S.pass=null;S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0;p.cards=[]});S.inGame=true;S.round=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=true;S.log=[];S.wwUsed=S.wwUsed||[];S.ww=null;S.screen="ww";wwNext();sfx.start()}
-function wwNext(){S.round++;S.pass=null;if(S.round>S.wwQ){finish();return}
+function wwStart(){countPlay("whowould");S.game="whowould";S.next=null;S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0;p.cards=[]});S.inGame=true;S.round=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=true;S.log=[];S.wwUsed=S.wwUsed||[];S.ww=null;S.screen="ww";wwNext();sfx.start()}
+function wwNext(){S.round++;S.players.forEach(p=>{delete p.late});if(S.round>S.wwQ){finish();return}
   let pool=WW_Q.map((q,i)=>i).filter(i=>!S.wwUsed.includes(i));if(!pool.length){S.wwUsed=[];pool=WW_Q.map((q,i)=>i)}
   const qi=pool[Math.floor(Math.random()*pool.length)];S.wwUsed.push(qi);S.ww={phase:"vote",qi,votes:{},result:null};
   if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});save();render()}
@@ -2242,11 +2312,12 @@ function wwResult(){const m=S.ww;if(!m||m.phase!=="vote")return;const cnt={};Obj
   const win=Object.keys(cnt).filter(k=>cnt[k]===max).map(Number);win.forEach(j=>{const p=S.players[j];p.cards=p.cards||[];p.cards.push(WW_Q[m.qi]);stat(p,"ww")});
   m.result={cnt,win};m.phase="result";S.log.unshift(`🤔 Who would ${esc(WW_Q[m.qi])} → <b>${win.map(j=>esc(S.players[j].name)).join(" & ")}</b>`);sfx.win();save();render()}
 // ---- Auto-pilot ----
-function autoKey(){if(S.autoMode==="off"||!S.inGame||(S.autoMode==="ready"&&localMode()))return null;
+function autoKey(){if(S.autoMode==="off"||!S.inGame)return null;
   if(S.game==="imposter"&&S.imp){if(S.imp.phase==="reveal")return"imp:"+S.round+":reveal";if(S.imp.phase==="result")return"imp:"+S.round+":result"}
-  if(S.game==="whowould"&&S.ww&&S.ww.phase==="result")return"ww:"+S.round+":result";return null}
+  if(S.game==="whowould"&&S.ww&&S.ww.phase==="result")return"ww:"+S.round+":result";
+  if(S.game==="liars"&&S.lc&&S.lc.phase==="reveal")return"lc:"+S.lc.n+":reveal";return null}
 function autoAdvance(){const k=autoKey();if(!k)return;S.auto=null;
-  if(k.endsWith(":reveal"))impShowAnswers();else if(k.startsWith("imp:"))impNext();else if(k.startsWith("ww:"))wwNext()}
+  if(k.startsWith("lc:"))lcNext();else if(k.endsWith(":reveal"))impShowAnswers();else if(k.startsWith("imp:"))impNext();else if(k.startsWith("ww:"))wwNext()}
 function autoSync(){const k=autoKey();if(!k){if(S.auto){S.auto=null}return}
   if(!S.auto||S.auto.key!==k){S.auto={key:k,ready:[],end:S.autoMode==="timer"?Date.now()+S.autoSec*1000:null};save()}}
 function autoReady(i,key){autoSync();const a=S.auto;if(!a||a.key!==key||S.autoMode!=="ready")return;const p=S.players[i];if(!p||!p.pid||a.ready.includes(p.pid))return;a.ready.push(p.pid);
@@ -2263,13 +2334,9 @@ function renderWw(){if(S.screen!=="ww"||S.game!=="whowould")return;const m=S.ww,
   $("wwRound").textContent=`Question ${Math.min(S.round,S.wwQ)} of ${S.wwQ}`;$("wwChip").hidden=!S.room;$("wwCode").textContent=S.room?S.room.code:"";$("wwN").textContent=S.players.filter(online).length;
   if(!m){st.innerHTML=`<div class="lbl">Get ready</div>`;return}
   const pl=impPlayers(),nV=pl.filter(i=>m.votes[i]!=null).length,q=WW_Q[m.qi];
-  if(m.phase==="vote"&&localMode()){const pend=pl.filter(i=>m.votes[i]==null);const ps=passState("ww:v:"+S.round,pend);const P=ps?S.players[ps.i]:null;
-    const body=!ps?"":!ps.shown?passHandHtml(P,"Give the phone to "+esc(P.name)+" to vote."):`<div class="lbl">${esc(P.name)}, pick someone</div><div class="ballot">${pl.filter(j=>j!==ps.i).map(j=>`<button class="btn btn-ghost" data-lv="${j}">${esc(S.players[j].name)}</button>`).join("")}</div>`;
-    st.innerHTML=`<div class="lbl">Who would most likely</div><div class="q">${esc(q)}</div><div class="bar"><i style="width:${pl.length?Math.round(100*nV/pl.length):0}%"></i></div><div class="hint" style="margin:0">${nV} of ${pl.length} voted</div>`+body+`<div class="row">${nV?`<button class="btn btn-ghost" id="wwClose">Close vote (${nV} votes)</button>`:""}<button class="btn btn-ghost" id="wwSkip">Skip question</button></div>`;
-    bindPass(st);st.querySelectorAll("[data-lv]").forEach(b=>b.onclick=()=>wwVote(ps.i,S.players[+b.dataset.lv].name))}
-  else if(m.phase==="vote")st.innerHTML=`<div class="lbl">Who would most likely</div><div class="q">${esc(q)}</div><div class="bar"><i style="width:${pl.length?Math.round(100*nV/pl.length):0}%"></i></div><div class="hint" style="margin:0">${nV} of ${pl.length} voted on their phones</div><div class="row">${nV?`<button class="btn btn-gold" id="wwClose">Close vote (${nV} votes)</button>`:""}<button class="btn btn-ghost" id="wwSkip">Skip question</button></div>`;
+  if(m.phase==="vote")st.innerHTML=`<div class="lbl">Who would most likely</div><div class="q">${esc(q)}</div><div class="bar"><i style="width:${pl.length?Math.round(100*nV/pl.length):0}%"></i></div><div class="hint" style="margin:0">${nV} of ${pl.length} voted on their phones</div><div class="row">${nV?`<button class="btn btn-gold" id="wwClose">Close vote (${nV} votes)</button>`:""}<button class="btn btn-ghost" id="wwSkip">Skip question</button></div>`;
   else{const r=m.result,tot=Object.values(r.cnt).reduce((a,b)=>a+b,0)||1;const rows=S.players.map((p,i)=>({p,i,n:r.cnt[i]||0})).filter(x=>x.n>0).sort((a,b)=>b.n-a.n);
-    st.innerHTML=`<div class="lbl">Who would most likely ${esc(q)}</div><div class="big">${r.win.map(j=>esc(S.players[j].name)).join(" & ")}</div><div class="wwbars">${rows.map(x=>`<div class="wwrow${r.win.includes(x.i)?" win":""}"><span class="n">${esc(x.p.name)}</span><span class="b"><i style="width:${Math.round(100*x.n/tot)}%"></i></span><span class="c">${x.n}</span></div>`).join("")}</div><button class="btn btn-gold" id="wwNextBtn" style="font-size:18px;padding:16px 24px">${S.round>=S.wwQ?"🎁 Show the review":"Next question ▸"}</button>`}
+    st.innerHTML=`<div class="lbl">Who would most likely ${esc(q)}</div><div class="big">${r.win.map(j=>esc(S.players[j].name)).join(" & ")}</div><div class="hint" style="margin:0">Now ask ${r.win.map(j=>esc(S.players[j].name)).join(" & ")}: why you? 😄</div><div class="wwbars">${rows.map(x=>`<div class="wwrow${r.win.includes(x.i)?" win":""}"><span class="n">${esc(x.p.name)}</span><span class="b"><i style="width:${Math.round(100*x.n/tot)}%"></i></span><span class="c">${x.n}</span></div>`).join("")}</div><button class="btn btn-gold" id="wwNextBtn" style="font-size:18px;padding:16px 24px">${S.round>=S.wwQ?"🎁 Show the review":"Next question ▸"}</button>`}
   if(m.phase==="result")st.insertAdjacentHTML("beforeend",autoHtml());
   const bind=(id,fn)=>{const b=$(id);if(b)b.onclick=fn};bind("wwClose",wwResult);bind("wwNextBtn",()=>wwNext());bind("wwSkip",()=>ask("Skip this question?",()=>{S.round--;wwNext()},"Skip"))}
 $("wwHome").onclick=()=>{S.screen="home";save();render()};
@@ -2279,12 +2346,12 @@ $("autoSec").onchange=e=>{S.autoSec=Math.max(3,Math.min(120,+e.target.value||10)
 $("wwQ").onchange=e=>{S.wwQ=Math.max(1,Math.min(150,+e.target.value||10));save()};
 function wwReviewHtml(players){return `<div class="wwreview">${players.map(p=>`<div class="wwcard"><div class="n">${esc(p.name)}</div>${(p.cards||[]).length?`<ul>${p.cards.map(c=>`<li>${esc(c)}</li>`).join("")}</ul>`:'<div class="hint" style="margin:0">no cards</div>'}</div>`).join("")}</div>`}
 function nextPhoneHtml(st){const n=st.next;if(!n||!st.awardsDone)return"";const my=(n.votes||{})[PH.pid];const nV=Object.keys(n.votes||{}).length;
-  return `<div class="nextbox"><h3>What's next?</h3><div class="ballot">${NEXT_OPTS.map(o=>`<button class="btn ${my===o?"btn-gold":"btn-ghost"}" data-act="next" data-choice="${o}" ${(n.off||[]).includes(o)?"disabled":""}>${GAME_LBL[o]}${o===st.game?" again":""}${my===o?" ✓":""}${(n.off||[]).includes(o)?" · needs 3 phones":""}</button>`).join("")}</div><p class="hint">${nV} of ${n.total} voted${n.end?" · starting soon…":""}</p></div>`}
+  return `<div class="nextbox"><h3>What's next?</h3><div class="ballot">${NEXT_OPTS.map(o=>`<button class="btn ${my===o?"btn-gold":"btn-ghost"}" data-act="next" data-choice="${o}" ${(n.off||[]).includes(o)?"disabled":""}>${GAME_LBL[o]}${o===st.game?" again":""}${my===o?" ✓":""}${(n.off||[]).includes(o)?(o==="liars"?" · needs 2 phones":" · needs 3 phones"):""}</button>`).join("")}</div><p class="hint">${nV} of ${n.total} voted${n.end?" · starting soon…":""}</p></div>`}
 function phoneWwHtml(st,me,meI,players,board){const m=st.ww;if(!m)return `<div class="who">Who would…</div><p class="hint">Waiting for the host…</p>`;
   const voted=(m.voted||[]).includes(PH.pid)||(PH.myVote&&PH.myVote.round==="ww:"+m.round);
   if(m.phase==="vote"){if(voted)return `<div class="who">Vote received 🗳️</div><div class="impq"><small>Who would most likely</small>${esc(m.q)}</div><p class="hint">${(m.voted||[]).length} of ${m.total} voted…</p>`;
     return `<div class="impq"><small>Who would most likely</small>${esc(m.q)}</div><div class="ballot">${players.filter(p=>p.pid&&p.pid!==PH.pid).map(p=>`<button class="btn btn-ghost" data-act="vote" data-name="${esc(p.name)}">${esc(p.name)}</button>`).join("")}</div>`}
-  return `<div class="who">${(m.win||[]).includes(me.name)?"That's you! 😅":(m.win||[]).map(esc).join(" & ")}</div><div class="impq"><small>Who would most likely</small>${esc(m.q)}</div><p class="hint">${(m.win||[]).length>1?"A tie – both got the card.":"got the card."} Look at the host screen for the votes.</p>${autoPhoneHtml(st)}`}
+  return `<div class="who">${(m.win||[]).includes(me.name)?"That's you! 😅":(m.win||[]).map(esc).join(" & ")}</div><div class="impq"><small>Who would most likely</small>${esc(m.q)}</div><p class="hint">${(m.win||[]).length>1?"A tie – both got the card.":"got the card."} ${(m.win||[]).includes(me.name)?"Now defend yourself: why you? 😄":"Ask them why! 😄"} Look at the host screen for the votes.</p>${autoPhoneHtml(st)}`}
 
 // ---- In-app YouTube player ----
 const YT_KEY="AIzaSyDSXRg08h9ifPWx9-m8RT9DFuf1jj0UTlA";const ytCache={};let YTS={list:[],i:0,q:""};
