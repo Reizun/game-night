@@ -1,6 +1,6 @@
 # Game Night (PWA)
 
-Four party games in one app: **Karaoke Challenge**, **Imposter**, **Who Would** and **Liar's Cards**. Live at https://reizun.github.io/game-night/
+Seven party games in one app: **Karaoke Challenge**, **Imposter**, **Who Would**, **Liar's Cards**, **Undercover**, **Ballpark** and **Emoji Pictionary**. Live at https://reizun.github.io/game-night/
 
 Static web app – no build step, no server logic. Karaoke Challenge runs on one device; every game runs with phones: players join with a 4-letter room code and use their own phone as a controller (draw, done, pass, sing-off votes, Imposter answers, Who Would ballots, Liar's Cards hands). Every card is worth 10 points, sing-offs add ±5, three secret awards are revealed at the end, and after each game the phones vote what to play next.
 
@@ -8,6 +8,9 @@ Static web app – no build step, no server logic. Karaoke Challenge runs on one
 - **Imposter** – everyone answers a question on their phone, one player secretly got a different one; discuss and vote (150 question pairs).
 - **Who Would** – "Who would most likely …": everyone votes for a player, no points, review at the end (150 questions).
 - **Liar's Cards** – Liar's Bar rules: play 1–3 cards face down as the table card or call the previous player a liar; a caught lie or a wrong call means pulling the trigger on your revolver. The deck grows with the player count (2–8).
+- **Undercover** – everyone gets the same secret topic except the spy; talk, vote, then the spy guesses the topic from six options (150 topics).
+- **Ballpark** – percent questions, everyone guesses 0–100, closest wins (100 questions).
+- **Emoji Pictionary** – describe an anime series or movie with emojis only, the others guess on their phones (125 titles).
 
 ## Run locally
 Any static server works, e.g.:

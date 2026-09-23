@@ -335,6 +335,13 @@ h1 span{color:var(--red-2)}
 .lclegend{font-size:11px;color:var(--muted);text-align:center;letter-spacing:.02em}
 .lclog{width:100%;background:var(--ground);border-radius:10px;padding:10px 14px;font-size:14px;color:var(--muted);text-align:center}.lclog b{color:var(--ink)}
 @media(max-width:600px){.lcseat .score{font-size:12px;padding:1px 8px}.lcseat{width:76px}.lcseat .oval{padding:5px 6px;min-width:60px}.lcseat .oval .n{font-size:11px}.lcseat .oval .c{font-size:10px}.lcseat .hearts{font-size:11px;letter-spacing:0}.lccenter{width:54%}.lccenter .lccard{padding:6px 16px 4px}.lccenter .lccard .g{font-size:30px}.lccenter .lccard .g.gi{width:30px;height:30px}.lcpile{padding:5px 10px;font-size:12px}.lcclaim{font-size:11px}.lctable{min-height:320px}}
+.bpline{position:relative;width:100%;max-width:600px;height:96px;margin:6px 0 0}.bpline .axis{position:absolute;left:0;right:0;top:56px;height:6px;border-radius:3px;background:var(--ground)}
+.bpmark{position:absolute;top:0;transform:translateX(-50%);text-align:center;font-size:11px;line-height:1.15;color:var(--muted);width:64px}.bpmark i{display:block;width:12px;height:12px;border-radius:50%;background:var(--muted);margin:0 auto 3px;border:2px solid var(--ground-2)}
+.bpmark.best{color:var(--gold)}.bpmark.best i{background:var(--gold)}.bpmark.second{color:#5b93ec}.bpmark.second i{background:#5b93ec}
+.bptruth{position:absolute;top:50px;transform:translateX(-50%);text-align:center;font-family:Anton,Impact,sans-serif;font-size:15px;color:#ff6b6b}.bptruth i{display:block;width:4px;height:20px;background:currentColor;margin:0 auto 2px;border-radius:2px}
+.emwall{font-size:clamp(40px,9vw,72px);line-height:1.25;text-align:center;background:var(--ground);border-radius:16px;padding:14px 18px;width:100%;box-sizing:border-box;word-break:break-word;min-height:1.5em}.emwall.small{font-size:34px;padding:10px;min-height:1.4em}
+.emfeed{width:100%;max-width:520px;display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--muted);text-align:left}.emfeed .g.ok{color:#3cb371}
+.phone .bpval{font-family:Anton,Impact,sans-serif;font-size:44px;text-align:center;color:var(--gold);line-height:1}.phone input[type=range]{width:100%;accent-color:var(--gold)}
 .nextbox{width:100%;background:var(--ground-2);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;align-items:center}
 .nextbox h3{margin:0;font-family:Anton,sans-serif;font-weight:400;letter-spacing:.04em;font-size:22px}
 .nextopts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.nextopts .c{display:inline-block;min-width:22px;padding:1px 7px;border-radius:999px;background:var(--ground);margin-left:6px;font-size:13px}
@@ -549,7 +556,7 @@ h1 span{color:var(--red-2)}
 <!-- SETTINGS SCREEN -->
 <div class="screen setup" id="scrSettings">
   <div class="topbar"><button class="btn btn-ghost" id="settingsBack">← Back</button><span class="round">Settings</span></div>
-  <div class="gamesel settabs" id="setTabs"><button class="chip" data-tab="karaoke" type="button">🎤 Karaoke</button><button class="chip" data-tab="imposter" type="button">🕵️ Imposter</button><button class="chip" data-tab="whowould" type="button">🤔 Who Would</button><button class="chip" data-tab="liars" type="button">🃏 Liar's Cards</button><button class="chip" data-tab="general" type="button">⚙ General</button></div>
+  <div class="gamesel settabs" id="setTabs"><button class="chip" data-tab="karaoke" type="button">🎤 Karaoke</button><button class="chip" data-tab="imposter" type="button">🕵️ Imposter</button><button class="chip" data-tab="whowould" type="button">🤔 Who Would</button><button class="chip" data-tab="liars" type="button">🃏 Liar's Cards</button><button class="chip" data-tab="undercover" type="button">🕶️ Undercover</button><button class="chip" data-tab="ballpark" type="button">📊 Ballpark</button><button class="chip" data-tab="emoji" type="button">🎌 Emoji</button><button class="chip" data-tab="general" type="button">⚙ General</button></div>
   <section class="panel" data-tab="karaoke">
     <h2 style="display:flex;justify-content:space-between;align-items:center">Categories <button class="chip" id="catsAll" type="button">All / none</button></h2>
     <div class="catgrid" id="filters"></div>
@@ -609,6 +616,33 @@ h1 span{color:var(--red-2)}
       <label>Turn timer seconds (0 = off) <input type="number" id="lcTurnSec" value="30" min="0" max="180"></label>
     </div>
     <p class="hint">Like Liar's Bar: a table card (Queen, King or Ace) is announced and everyone gets cards. On your turn play 1–3 cards face down and claim they are the table card – Jokers count as anything – or call the previous player a liar. A caught lie or a wrong call means pulling the trigger on your own revolver: one chamber is loaded, and every pull gets riskier. If everyone else has emptied their hand, the last player holding cards may still play once (or call liar) – and pulls the trigger if cards remain in their hand. Last one standing wins – or set a maximum number of deals and let the points decide. The deck grows with the player count (2–8 players, one phone each). Points: +5 for catching a liar or for an honest play that gets called, +10 for going out last, +20 for the last one standing. When the turn timer runs out, a card is played for you (an honest one if you have it) – the host can also tap "Play for X".</p>
+  </section>
+  <section class="panel" data-tab="undercover">
+    <h2>🕶️ Undercover</h2>
+    <div class="rules">
+      <label>Rounds <input type="number" id="ucRounds" value="5" min="1" max="30"></label>
+      <label>Talk time seconds (0 = no timer) <input type="number" id="ucTime" value="180" min="0" max="900"></label>
+      <label>Points for catching the spy <input type="number" id="ucPts" value="10" min="0"></label>
+      <label>Spy bonus when not caught <input type="number" id="ucSpyPts" value="10" min="0"></label>
+    </div>
+    <p class="hint">Everyone gets the same secret topic on their phone – except the spy, who gets nothing. Ask each other questions about the topic: vague enough to keep the spy lost, clear enough not to look like the spy. Then vote. Whoever voted for the spy scores; if the spy isn't caught, the spy scores. Finally the spy picks the topic from six options: right guess +10. 150 topics.</p>
+  </section>
+  <section class="panel" data-tab="ballpark">
+    <h2>📊 Ballpark</h2>
+    <div class="rules">
+      <label>Questions per game <input type="number" id="bpQ" value="8" min="1" max="100"></label>
+      <label>Seconds to answer (0 = wait for all) <input type="number" id="bpTime" value="30" min="0" max="300"></label>
+    </div>
+    <p class="hint">A question with a percentage as the answer. Everyone guesses 0–100 on their phone. All guesses appear on a number line, then the truth: closest +10, second closest +5. 100 questions.</p>
+  </section>
+  <section class="panel" data-tab="emoji">
+    <h2>🎌 Emoji Pictionary</h2>
+    <div class="rules">
+      <label>Rounds (everyone draws once per round) <input type="number" id="emRounds" value="1" min="1" max="10"></label>
+      <label>Seconds per title <input type="number" id="emTime" value="60" min="10" max="300"></label>
+      <label>Points for artist and guesser <input type="number" id="emPts" value="10" min="0"></label>
+    </div>
+    <p class="hint">One player secretly gets an anime series or movie and describes it with emojis only. The host screen shows the emojis, everyone else types guesses on their phone. First correct guess: points for the guesser and the artist. Halfway through the time a hint appears (word count and first letter). 130 titles.</p>
   </section>
   <section class="panel" data-tab="general">
     <h2>Auto-pilot</h2>
@@ -686,7 +720,7 @@ h1 span{color:var(--red-2)}
     <div class="qr" id="lobbyQr"></div>
     <div class="hint">Scan the code, or open <b id="lobbyUrl" style="color:var(--ink);word-break:break-all"></b> and type the code.</div>
     <div class="hint" id="lobbyStatus">Connecting…</div>
-    <div class="gamesel" id="gameSel"><button class="chip" data-game="karaoke" type="button">🎤 Karaoke Challenge</button><button class="chip" data-game="imposter" type="button">🕵️ Imposter</button><button class="chip" data-game="whowould" type="button">🤔 Who Would</button><button class="chip" data-game="liars" type="button">🃏 Liar's Cards</button></div>
+    <div class="gamesel" id="gameSel"><button class="chip" data-game="karaoke" type="button">🎤 Karaoke Challenge</button><button class="chip" data-game="imposter" type="button">🕵️ Imposter</button><button class="chip" data-game="whowould" type="button">🤔 Who Would</button><button class="chip" data-game="liars" type="button">🃏 Liar's Cards</button><button class="chip" data-game="undercover" type="button">🕶️ Undercover</button><button class="chip" data-game="ballpark" type="button">📊 Ballpark</button><button class="chip" data-game="emoji" type="button">🎌 Emoji</button></div>
     <div class="hint" id="gameHint"></div>
   </section>
   <section class="panel">
@@ -730,6 +764,42 @@ h1 span{color:var(--red-2)}
     </div>
     <div class="impstage" id="impStage"></div>
     <section class="panel" style="width:100%"><h2>Scoreboard</h2><ul class="players" id="impBoard"></ul></section>
+  </div>
+</div>
+
+<!-- UNDERCOVER SCREEN (host) -->
+<div class="screen" id="scrUc">
+  <div class="imp">
+    <div class="topbar" style="width:100%;justify-content:space-between">
+      <span style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="round" id="ucRound"></span><span class="roomchip" id="ucChip"><span class="dot on"></span>Room <b id="ucCode"></b> · <span id="ucN">0</span> 📱</span></span>
+      <span style="display:flex;gap:6px"><button class="btn btn-ghost" id="ucHome">⌂</button><button class="btn btn-ghost" id="ucEnd">End game</button></span>
+    </div>
+    <div class="impstage" id="ucStage"></div>
+    <section class="panel" style="width:100%"><h2>Scoreboard</h2><ul class="players" id="ucBoard"></ul></section>
+  </div>
+</div>
+
+<!-- BALLPARK SCREEN (host) -->
+<div class="screen" id="scrBp">
+  <div class="imp">
+    <div class="topbar" style="width:100%;justify-content:space-between">
+      <span style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="round" id="bpRound"></span><span class="roomchip" id="bpChip"><span class="dot on"></span>Room <b id="bpCode"></b> · <span id="bpN">0</span> 📱</span></span>
+      <span style="display:flex;gap:6px"><button class="btn btn-ghost" id="bpHome">⌂</button><button class="btn btn-ghost" id="bpEnd">End game</button></span>
+    </div>
+    <div class="impstage" id="bpStage"></div>
+    <section class="panel" style="width:100%"><h2>Scoreboard</h2><ul class="players" id="bpBoard"></ul></section>
+  </div>
+</div>
+
+<!-- EMOJI PICTIONARY SCREEN (host) -->
+<div class="screen" id="scrEm">
+  <div class="imp">
+    <div class="topbar" style="width:100%;justify-content:space-between">
+      <span style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="round" id="emRound"></span><span class="roomchip" id="emChip"><span class="dot on"></span>Room <b id="emCode"></b> · <span id="emN">0</span> 📱</span></span>
+      <span style="display:flex;gap:6px"><button class="btn btn-ghost" id="emHome">⌂</button><button class="btn btn-ghost" id="emEnd">End game</button></span>
+    </div>
+    <div class="impstage" id="emStage"></div>
+    <section class="panel" style="width:100%"><h2>Scoreboard</h2><ul class="players" id="emBoard"></ul></section>
   </div>
 </div>
 
@@ -1305,9 +1375,9 @@ const BASE = {1:10,2:10,3:10};
 
 // ---- State ----
 const KEY="karaoke-challenge-en-v1";
-let S = {players:[], turn:0, cats:[...CATS], penalty:3, bonus:10, current:null, disabledArtists:[], hiddenArtists:[], log:[], used:[], customArtists:[], customCards:[], game:"karaoke", imp:null, impUsed:[], impQ:6, impDiscuss:90, impPts:10, impImpPts:5, ww:null, wwUsed:[], wwQ:10, autoMode:"ready", autoSec:10, auto:null, plays:{}, lcHand:5, lcChambers:6, lcDeals:0, lcTurnSec:30, rounds:3, timerSec:15, mics:1, round:1, started:0, screen:"home", volume:0.7, muted:false, mode:"local", room:null, inGame:false, mvpBonus:10, awardBonus:10, vote:null, awards:null, awardsDone:false, timer:null, timerBuzzed:false, catsV:0, back:null, lastVote:null};
+let S = {players:[], turn:0, cats:[...CATS], penalty:3, bonus:10, current:null, disabledArtists:[], hiddenArtists:[], log:[], used:[], customArtists:[], customCards:[], game:"karaoke", imp:null, impUsed:[], impQ:6, impDiscuss:90, impPts:10, impImpPts:5, ww:null, wwUsed:[], wwQ:10, autoMode:"ready", autoSec:10, auto:null, plays:{}, lcHand:5, lcChambers:6, lcDeals:0, lcTurnSec:30, ucRounds:5, ucTime:180, ucPts:10, ucSpyPts:10, bpQ:8, bpTime:30, emRounds:1, emTime:60, emPts:10, rounds:3, timerSec:15, mics:1, round:1, started:0, screen:"home", volume:0.7, muted:false, mode:"local", room:null, inGame:false, mvpBonus:10, awardBonus:10, vote:null, awards:null, awardsDone:false, timer:null, timerBuzzed:false, catsV:0, back:null, lastVote:null};
 let draft=null;
-try{const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.players){S={...S,...s};if(!S.catsV){for(const c of ["2000s","K-Pop","Disney","High School Musical","Word Hunt","Artists","Genres","Years","Mood"])if(!S.cats.includes(c))S.cats.push(c);}if(!Array.isArray(S.disabledArtists))S.disabledArtists=[];if(!Array.isArray(S.hiddenArtists))S.hiddenArtists=[];if(!S.customArtists)S.customArtists=[];if(!Array.isArray(S.customCards))S.customCards=[];if(!S.game)S.game="karaoke";if(!S.impQ)S.impQ=6;if(S.impDiscuss==null)S.impDiscuss=90;if(S.impPts==null)S.impPts=10;if(S.impImpPts==null)S.impImpPts=5;if(!Array.isArray(S.impUsed))S.impUsed=[];if(!S.wwQ)S.wwQ=10;if(!S.autoMode)S.autoMode="ready";if(!S.plays||typeof S.plays!=="object")S.plays={};if(!S.lcHand)S.lcHand=5;if(!S.lcChambers)S.lcChambers=6;if(S.lcDeals==null)S.lcDeals=0;if(!S.mvpV){if(S.mvpBonus===20)S.mvpBonus=10;S.mvpV=1}if(!S.penV){if(S.penalty===5)S.penalty=3;S.penV=1}if(!S.awV){if(S.awardBonus===15)S.awardBonus=10;S.awV=1}if(S.lcTurnSec==null)S.lcTurnSec=30;if(!S.autoSec)S.autoSec=10;if(!Array.isArray(S.wwUsed))S.wwUsed=[];if(S.rounds==null)S.rounds=3;if(S.volume==null)S.volume=.7;if(S.muted==null)S.muted=false;if(S.timerSec==null)S.timerSec=15;if(!S.mics)S.mics=1;if(!S.round)S.round=1;if(!S.started)S.started=0;if(!["home","settings","players","game","final","lobby","join","phone","imp","ww","lc"].includes(S.screen))S.screen="home";if(S.screen==="setup")S.screen="home";}}catch(e){}
+try{const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.players){S={...S,...s};if(!S.catsV){for(const c of ["2000s","K-Pop","Disney","High School Musical","Word Hunt","Artists","Genres","Years","Mood"])if(!S.cats.includes(c))S.cats.push(c);}if(!Array.isArray(S.disabledArtists))S.disabledArtists=[];if(!Array.isArray(S.hiddenArtists))S.hiddenArtists=[];if(!S.customArtists)S.customArtists=[];if(!Array.isArray(S.customCards))S.customCards=[];if(!S.game)S.game="karaoke";if(!S.impQ)S.impQ=6;if(S.impDiscuss==null)S.impDiscuss=90;if(S.impPts==null)S.impPts=10;if(S.impImpPts==null)S.impImpPts=5;if(!Array.isArray(S.impUsed))S.impUsed=[];if(!S.wwQ)S.wwQ=10;if(!S.autoMode)S.autoMode="ready";if(!S.plays||typeof S.plays!=="object")S.plays={};if(!S.lcHand)S.lcHand=5;if(!S.lcChambers)S.lcChambers=6;if(S.lcDeals==null)S.lcDeals=0;if(S.ucRounds==null){S.ucRounds=5;S.ucTime=180;S.ucPts=10;S.ucSpyPts=10}if(S.bpQ==null){S.bpQ=8;S.bpTime=30}if(S.emRounds==null){S.emRounds=1;S.emTime=60;S.emPts=10}if(!S.mvpV){if(S.mvpBonus===20)S.mvpBonus=10;S.mvpV=1}if(!S.penV){if(S.penalty===5)S.penalty=3;S.penV=1}if(!S.awV){if(S.awardBonus===15)S.awardBonus=10;S.awV=1}if(S.lcTurnSec==null)S.lcTurnSec=30;if(!S.autoSec)S.autoSec=10;if(!Array.isArray(S.wwUsed))S.wwUsed=[];if(S.rounds==null)S.rounds=3;if(S.volume==null)S.volume=.7;if(S.muted==null)S.muted=false;if(S.timerSec==null)S.timerSec=15;if(!S.mics)S.mics=1;if(!S.round)S.round=1;if(!S.started)S.started=0;if(!["home","settings","players","game","final","lobby","join","phone","imp","ww","lc"].includes(S.screen))S.screen="home";if(S.screen==="setup")S.screen="home";}}catch(e){}
 if(!(S.catsV>=3)&&!S.cats.includes("Your cards"))S.cats.push("Your cards");S.catsV=3;if(!S.decV){if(S.timerSec===90)S.timerSec=15;S.decV=1}S.players.forEach(p=>{p.stats=p.stats||{}});if(!S.mode)S.mode="local";if(S.mvpBonus==null)S.mvpBonus=20;if(S.awardBonus==null)S.awardBonus=15;
 if(S.inGame==null)S.inGame=!!(S.current||(S.players.length>=2&&(S.round>1||S.started>0||S.players.some(p=>p.score!==0))));
 if(S.screen==="lobby"&&!(S.mode==="host"&&S.room))S.screen="home";
@@ -1430,7 +1500,7 @@ function sfxDraw(){try{sfx.draw()}catch(e){}}
 function render(){
   $("penalty").value=S.penalty; $("bonus").value=S.bonus; $("rounds").value=S.rounds; $("timerSec").value=S.timerSec;
   document.querySelector("header").style.display=["home","phone"].includes(S.screen)?"none":"";
-  document.querySelectorAll(".screen").forEach(el=>el.classList.toggle("on",el.id==={home:"scrHome",settings:"scrSettings",players:"scrPlayers",game:"scrGame",final:"scrFinal",lobby:"scrLobby",join:"scrJoin",phone:"scrPhone",imp:"scrImp",ww:"scrWw",lc:"scrLc"}[S.screen]));
+  document.querySelectorAll(".screen").forEach(el=>el.classList.toggle("on",el.id==={home:"scrHome",settings:"scrSettings",players:"scrPlayers",game:"scrGame",final:"scrFinal",lobby:"scrLobby",join:"scrJoin",phone:"scrPhone",imp:"scrImp",ww:"scrWw",lc:"scrLc",uc:"scrUc",bp:"scrBp",em:"scrEm"}[S.screen]));
   const allD=deck(), nD=allD.filter(c=>S.cats.includes(c[0])).length;
   $("homeStat").textContent=`${nD} cards · ${S.cats.length} categories`;
   $("homeStart").disabled=false;
@@ -1672,7 +1742,7 @@ $("draw").onclick=e=>{const b=e.target.closest("[data-diff]");if(!b||b.disabled)
 $("done").onclick=doDone;$("pass").onclick=doPass;
 function removePlayer(i){const p=S.players[i];if(!p)return;const kar=S.game==="karaoke";
   if(S.inGame&&kar&&S.players.length<=2){toast("Karaoke needs at least 2 players");return}
-  const need=S.game==="liars"?2:3;if(S.inGame&&!kar&&impPlayers().filter(x=>x!==i).length<need){toast(S.game==="liars"?"Liar's Cards needs at least 2 players with phones":"Imposter and Who Would need at least 3 players with phones");return}
+  const need=NEED[S.game]||3;if(S.inGame&&!kar&&impPlayers().filter(x=>x!==i).length<need){toast(GAME_LBL[S.game].replace(/^\S+ /,"")+" needs at least "+need+" players with phones");return}
   if(p.pid&&S.room)db.del(`rooms/${S.room.code}/members/${p.pid}`).catch(()=>{});
   const sh=x=>x==null?x:(x>i?x-1:x);const c=S.current;
   if(c){const so=c.accepted&&c.so;if(c.holder===i||(so&&so.opp===i)){stopTimer();ytClose();S.current=null;$("card").classList.remove("flipped");S.log.unshift(`${esc(p.name)} left – card discarded: ${esc(c.text)}`)}
@@ -1683,6 +1753,11 @@ function removePlayer(i){const p=S.players[i];if(!p)return;const kar=S.game==="k
   if(S.imp&&S.imp.imposter===i){S.imp=null;S.round--;S.players.splice(i,1);if(S.turn>i)S.turn--;if(S.turn>=S.players.length)S.turn=0;toast(`${p.name} was the imposter – new question`);impNext();return}
   if(S.imp){S.imp.imposter=sh(S.imp.imposter);S.imp.answers=remapKeys(S.imp.answers);S.imp.votes=remap(S.imp.votes)}
   if(S.ww)S.ww.votes=remap(S.ww.votes);
+  const fixTurn=()=>{if(S.turn>i)S.turn--;if(S.turn>=S.players.length)S.turn=0};
+  if(S.uc){if(S.uc.spy===i){S.uc=null;S.round--;S.players.splice(i,1);fixTurn();toast(`${p.name} was the spy – new round`);ucNext();return}S.uc.spy=sh(S.uc.spy);S.uc.votes=remap(S.uc.votes);if(S.uc.result)S.uc.result.correct=S.uc.result.correct.filter(x=>x!==i).map(sh)}
+  if(S.bp){S.bp.answers=remapKeys(S.bp.answers);if(S.bp.result)S.bp.result.rows=S.bp.result.rows.filter(r=>r.i!==i).map(r=>({...r,i:sh(r.i)}))}
+  if(S.em){const m=S.em;const pos=m.order.indexOf(i);if(pos>=0&&pos<m.k)m.k--;m.order=m.order.filter(x=>x!==i).map(sh);m.guesses=(m.guesses||[]).filter(g=>g.i!==i).map(g=>({...g,i:sh(g.i)}));
+    if(m.artist===i){m.artist=null;S.players.splice(i,1);fixTurn();toast(`${p.name} removed – next artist`);if(m.phase==="draw")emNext();else{save();render()}return}m.artist=sh(m.artist);if(m.result&&m.result.winner!=null)m.result.winner=m.result.winner===i?null:sh(m.result.winner)}
   if(S.awards){S.awards.forEach(a=>{a.winners=a.winners.filter(x=>x!==i).map(sh)});S.awards=S.awards.filter(a=>a.winners.length)}if(S.lastVote)S.lastVote.win=(S.lastVote.win||[]).filter(x=>x!==i).map(sh);
   if(S.lc){const m=S.lc;const nxTurn=m.turn===i?lcNextActor(i):null;m.hands=remapKeys(m.hands);m.alive=remapKeys(m.alive);m.pulls=remapKeys(m.pulls);m.bullet=remapKeys(m.bullet);m.pile=m.pile.filter(x=>x.by!==i).map(x=>({...x,by:sh(x.by)}));
     if(m.last&&m.last.by===i)m.last=null;else if(m.last)m.last.by=sh(m.last.by);m.turn=m.turn===i?(nxTurn==null?null:sh(nxTurn)):sh(m.turn);if(nxTurn!=null)m.turnEnd=null;
@@ -1692,7 +1767,9 @@ function removePlayer(i){const p=S.players[i];if(!p)return;const kar=S.game==="k
   if(S.lc){const m=S.lc;if(m.phase==="reveal"&&!m.reveal)m.phase="play";if(m.phase==="play"&&m.turn!=null&&!m.turnEnd)lcArm();if(lcAlive().length<=1){save();lcFinish(lcAlive()[0]);return}if(m.phase==="play"&&(m.turn==null||!m.alive[m.turn])){const c=lcAlive().find(j=>(m.hands[j]||[]).length>0&&!(m.last&&m.last.by===j));if(c!=null)m.turn=c;else{save();lcRedeal(lcAlive()[0]);return}}}
   save();render();
   if(S.imp&&S.imp.phase==="vote"&&impPlayers().every(j=>S.imp.votes[j]!=null))impResult();
-  if(S.ww&&S.ww.phase==="vote"&&impPlayers().every(j=>S.ww.votes[j]!=null))wwResult()}
+  if(S.ww&&S.ww.phase==="vote"&&impPlayers().every(j=>S.ww.votes[j]!=null))wwResult();
+  if(S.uc&&S.uc.phase==="vote"&&impPlayers().every(j=>S.uc.votes[j]!=null))ucCloseVote();
+  if(S.bp&&S.bp.phase==="answer"&&impPlayers().length&&impPlayers().every(j=>S.bp.answers[j]!=null))bpReveal()}
 $("scoreboard").onclick=$("impBoard").onclick=e=>{const b=e.target.closest("[data-rm]");if(!b)return;const p=S.players[+b.dataset.rm];if(!p)return;ask(`Remove ${p.name} from the game?`,()=>removePlayer(+b.dataset.rm),"Remove")};
 function endCard(){stopTimer();ytClose();const c=S.current;S.current=null;$("done").hidden=$("pass").hidden=$("fail").hidden=$("accept").hidden=true;$("card").classList.remove("flipped");
   S.turn=(c.starter+1)%S.players.length;S.started++;
@@ -1704,7 +1781,7 @@ function nextRound(){S.round++;
   if(S.rounds&&S.round>S.rounds){S.round=S.rounds;save();setTimeout(finish,400);return}
   toast(`Round ${S.round}`);S.players.forEach(p=>p.rs=p.score);save();setTimeout(render,350)}
 function countPlay(g){S.plays=S.plays||{};S.plays[g]=(S.plays[g]||0)+1}
-const GAME_LBL={karaoke:"🎤 Karaoke Challenge",imposter:"🕵️ Imposter",whowould:"🤔 Who Would",liars:"🃏 Liar's Cards"};
+const GAME_LBL={karaoke:"🎤 Karaoke Challenge",imposter:"🕵️ Imposter",whowould:"🤔 Who Would",liars:"🃏 Liar's Cards",undercover:"🕶️ Undercover",ballpark:"📊 Ballpark",emoji:"🎌 Emoji Pictionary"};const NEED={imposter:3,whowould:3,liars:2,undercover:3,ballpark:2,emoji:2};
 function startGame(){countPlay("karaoke");S.game="karaoke";S.next=null;S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0});S.screen="game";S.round=1;S.started=0;S.turn=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=false;S.lastVote=null;S.log=[];S.used=[];S.inGame=true;S.timer=null;S.timerBuzzed=false;save();render();sfx.start()}
 
 // ---- Round vote: best performance (phones) ----
@@ -1735,26 +1812,26 @@ function awardVal(p,id){if(id==="comeback")return p.rs==null?0:p.score-p.rs;retu
 function pickAwards(){const cand=AWARDS.map(a=>{const vals=S.players.map(p=>awardVal(p,a.id));const max=Math.max(...vals);if(!(max>0))return null;
     const winners=vals.map((v,i)=>v===max?i:-1).filter(i=>i>=0);if(winners.length>=S.players.length)return null;return{id:a.id,em:a.em,t:a.t,d:a.d,winners,val:max,revealed:false}}).filter(Boolean);
   for(let i=cand.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cand[i],cand[j]]=[cand[j],cand[i]]}return cand.slice(0,3)}
-function finish(){stopTimer();S.current=null;S.vote=null;S.inGame=false;S.imp=null;S.ww=null;S.lc=null;S.next=S.mode==="host"&&S.room?{votes:{},end:null}:null;S.screen="final";$("card").classList.remove("flipped");
+function finish(){stopTimer();S.current=null;S.vote=null;S.inGame=false;S.imp=null;S.ww=null;S.lc=null;S.uc=null;S.bp=null;S.em=null;S.players.forEach(p=>{delete p.late});S.next=S.mode==="host"&&S.room?{votes:{},end:null}:null;S.screen="final";$("card").classList.remove("flipped");
   S.awards=S.awardBonus>0&&S.players.length>=2&&S.game==="karaoke"?pickAwards():[];S.awardsDone=!S.awards.length;save();render();if(S.awardsDone)sfx.win();else sfx.start()}
 function revealAward(){const a=(S.awards||[]).find(x=>!x.revealed);if(!a)return;a.revealed=true;a.winners.forEach(i=>{S.players[i].score+=S.awardBonus});sfx.ok();
   if(!S.awards.some(x=>!x.revealed)){S.awardsDone=true;setTimeout(()=>sfx.win(),700)}save();render()}
 $("revealBtn").onclick=revealAward;
-const NEXT_OPTS=["karaoke","imposter","whowould","liars"];
-function nextAvail(g){return g==="karaoke"?S.players.length>=2:g==="liars"?impPlayers().length>=2:impPlayers().length>=3}
+const NEXT_OPTS=["karaoke","imposter","whowould","liars","undercover","ballpark","emoji"];
+function nextAvail(g){return g==="karaoke"?S.players.length>=2:impPlayers().length>=(NEED[g]||3)}
 function nextTally(){const v=S.next?S.next.votes:{};const cnt={};Object.values(v).forEach(c=>{cnt[c]=(cnt[c]||0)+1});let max=0;NEXT_OPTS.forEach(o=>max=Math.max(max,cnt[o]||0));const top=NEXT_OPTS.filter(o=>(cnt[o]||0)===max&&max>0);
   return{cnt,nV:Object.keys(v).length,total:impPlayers().length,lead:top.length===1?top[0]:null,tie:top.length>1}}
 function nextVote(i,choice){if(!S.next||!NEXT_OPTS.includes(choice)||!nextAvail(choice))return;const p=S.players[i];if(!p||!p.pid)return;S.next.votes[p.pid]=choice;const t=nextTally();S.next.end=t.nV>=t.total&&t.lead?Date.now()+6000:null;save();render()}
-function nextStart(g){if(!NEXT_OPTS.includes(g))return;if(!nextAvail(g)){toast(GAME_LBL[g].replace(/^\S+ /,"")+(g==="karaoke"?" needs 2 players":g==="liars"?" needs at least 2 players with phones":" needs at least 3 players with phones"));if(S.next){S.next.end=null;save();render()}return}clearInterval(nextT);nextT=null;S.next=null;S.game=g;if(g==="imposter")impStart();else if(g==="whowould")wwStart();else if(g==="liars")lcStart();else startGame()}
+function nextStart(g){if(!NEXT_OPTS.includes(g))return;if(!nextAvail(g)){toast(GAME_LBL[g].replace(/^\S+ /,"")+(g==="karaoke"?" needs 2 players":" needs at least "+(NEED[g]||3)+" players with phones"));if(S.next){S.next.end=null;save();render()}return}clearInterval(nextT);nextT=null;S.next=null;S.game=g;if(g==="imposter")impStart();else if(g==="whowould")wwStart();else if(g==="liars")lcStart();else if(g==="undercover")ucStart();else if(g==="ballpark")bpStart();else if(g==="emoji")emStart();else startGame()}
 let nextT=null;
 function renderNext(done){const box=$("nextBox");const show=done&&S.next&&S.mode==="host"&&!!S.room;box.hidden=!show;if(!show){clearInterval(nextT);nextT=null;return}const t=nextTally();const left=S.next.end?Math.max(0,Math.ceil((S.next.end-Date.now())/1000)):null;
-  box.innerHTML=`<h3>What's next?</h3><div class="hint" style="margin:0">Vote on your phones – or the host picks.</div><div class="nextopts">${NEXT_OPTS.map(o=>`<button class="btn ${t.lead===o?"btn-gold":"btn-ghost"}" data-next="${o}" ${nextAvail(o)?"":"disabled title=\""+(o==="liars"?"Needs 2":"Needs 3")+" players with phones\""}>${GAME_LBL[o]}${o===S.game?" again":""}<span class="c">${t.cnt[o]||0}</span></button>`).join("")}</div>${NEXT_OPTS.some(o=>!nextAvail(o))?`<div class="hint" style="margin:0">Imposter and Who Would need 3 players with phones, Liar's Cards 2.</div>`:""}<div class="hint" style="margin:0">${t.nV} of ${t.total} voted${left!=null&&t.lead?` · everyone's in – starting ${GAME_LBL[t.lead]} in <b id="nextLeft">${left}</b> s`:t.tie&&t.nV>=t.total?" · it's a tie – host decides":""}</div>`;
+  box.innerHTML=`<h3>What's next?</h3><div class="hint" style="margin:0">Vote on your phones – or the host picks.</div><div class="nextopts">${NEXT_OPTS.map(o=>`<button class="btn ${t.lead===o?"btn-gold":"btn-ghost"}" data-next="${o}" ${nextAvail(o)?"":"disabled title=\"Needs "+(NEED[o]||3)+" players with phones\""}>${GAME_LBL[o]}${o===S.game?" again":""}<span class="c">${t.cnt[o]||0}</span></button>`).join("")}</div>${NEXT_OPTS.some(o=>!nextAvail(o))?`<div class="hint" style="margin:0">Greyed-out games need more players with phones.</div>`:""}<div class="hint" style="margin:0">${t.nV} of ${t.total} voted${left!=null&&t.lead?` · everyone's in – starting ${GAME_LBL[t.lead]} in <b id="nextLeft">${left}</b> s`:t.tie&&t.nV>=t.total?" · it's a tie – host decides":""}</div>`;
   box.querySelectorAll("[data-next]").forEach(b=>b.onclick=()=>nextStart(b.dataset.next));
   if(S.next.end&&!nextT)nextT=setInterval(()=>{if(!S.next||!S.next.end||S.screen!=="final"){clearInterval(nextT);nextT=null;return}const l=Math.max(0,Math.ceil((S.next.end-Date.now())/1000));const el=$("nextLeft");if(el)el.textContent=l;if(l<=0){clearInterval(nextT);nextT=null;const tt=nextTally();if(tt.lead)nextStart(tt.lead)}},250)}
 function renderFinal(){const done=!!S.awardsDone;renderNext(done);const sorted=[...S.players].sort((a,b)=>b.score-a.score);const top=sorted.length?sorted[0].score:0;const wins=sorted.filter(p=>p.score===top);
   $("awards").innerHTML=(S.awards||[]).filter(a=>a.revealed).map(a=>`<div class="award"><span class="em">${a.em}</span><span><div class="t">${a.t}</div><div class="d">${a.d}</div></span><span class="w">${a.winners.map(i=>esc(S.players[i].name)).join(" &amp; ")}<small>+${S.awardBonus}</small></span></div>`).join("");
   const left=(S.awards||[]).filter(a=>!a.revealed).length;$("revealBtn").hidden=!left;$("revealBtn").textContent=`🎁 Reveal secret award (${left} left)`;
-  $("finalWin").hidden=!done;$("finalTitle").textContent=done?(S.game==="imposter"?"Imposter – game over":S.game==="whowould"?"Who Would – the review":S.game==="liars"?"Liar's Cards – last one standing":"Game over"):"Secret awards";
+  $("finalWin").hidden=!done;$("finalTitle").textContent=done?(S.game==="imposter"?"Imposter – game over":S.game==="whowould"?"Who Would – the review":S.game==="liars"?"Liar's Cards – last one standing":S.game==="undercover"?"Undercover – game over":S.game==="ballpark"?"Ballpark – game over":S.game==="emoji"?"Emoji Pictionary – game over":"Game over"):"Secret awards";
   const ww=S.game==="whowould";$("finalWin").hidden=!done||ww;$("wwReviewHost").hidden=!ww;if(ww)$("wwReviewHost").innerHTML=wwReviewHtml(S.players);$("finalTrophy").textContent=done?"🏆":"🎁";$("finalPre").hidden=done;
   $("finalPre").innerHTML=`<div class="hint" style="margin:0">Standings so far: ${sorted.map(p=>`${esc(p.name)} ${p.score}`).join(" · ")}</div>`;
   $("winnerName").textContent=wins.map(p=>p.name).join(" & ");$("winnerPts").textContent=`${top} points${wins.length>1?" – it's a tie!":""}`;
@@ -1773,8 +1850,15 @@ function snapshot(){const phase=S.screen==="final"?"final":S.vote?"vote":S.inGam
     last:lm.last?{name:nameOf(lm.last.by),n:lm.last.cards.length}:null,pile:lm.pile.length,turnEnd:lm.turnEnd||null,
     reveal:lm.reveal?{caller:nameOf(lm.reveal.caller),by:nameOf(lm.reveal.by),cards:lm.reveal.cards,target:nameOf(lm.reveal.target),dead:lm.reveal.dead,liar:lm.reveal.liar,pull:lm.reveal.pull,forced:!!lm.reveal.forced}:null,
     players:lcPlayers().map(i=>({name:S.players[i].name,pid:S.players[i].pid,alive:!!lm.alive[i],cards:(lm.hands[i]||[]).length,pulls:lm.pulls[i]||0}))}:null;
+  const um=S.game==="undercover"?S.uc:null;const ucSnap=um?{phase:um.phase,round:S.round,total:impPlayers().length,voted:impPlayers().filter(i=>um.votes[i]!=null).map(i=>S.players[i].pid),end:um.end||null,
+    spyName:um.phase==="guess"||um.phase==="result"?nameOf(um.spy):null,caught:um.result?um.result.caught:null,options:um.phase==="guess"?um.options:null,topic:um.phase==="result"?um.topic:null,guess:um.guess,guessOk:um.result?um.result.guessOk:null}:null;
+  const bm=S.game==="ballpark"?S.bp:null;const bpSnap=bm?{phase:bm.phase,round:S.round,q:BP_Q[bm.qi][0],total:impPlayers().length,answered:impPlayers().filter(i=>bm.answers[i]!=null).map(i=>S.players[i].pid),end:bm.end||null,
+    truth:bm.result?bm.result.truth:null,rows:bm.result?bm.result.rows.map(r=>({pid:S.players[r.i].pid,name:S.players[r.i].name,v:r.v,d:r.d,pts:r.pts})):null}:null;
+  const em=S.game==="emoji"&&S.em&&S.em.artist!=null?S.em:null;const emT_=em?EM_TITLES[em.title]:null;const emHalf=em&&em.end&&S.emTime&&(em.end-Date.now())<=S.emTime*500;
+  const emSnap=em?{phase:em.phase,round:S.round,artist:pidOf(em.artist),artistName:nameOf(em.artist),emojis:em.emojis,type:emT_[1],end:em.end||null,hint:emHalf&&em.phase==="draw"?emT_[0].split(" ").length+" words, starts with "+emT_[0][0]:null,
+    guesses:(em.guesses||[]).slice(-10).map(g=>({pid:pidOf(g.i),text:g.text,ok:g.ok})),title:em.phase==="result"?emT_[0]:null,winnerName:em.result&&em.result.winner!=null?nameOf(em.result.winner):null}:null;
   autoSync();const au=S.auto?{key:S.auto.key,ready:S.auto.ready,end:S.auto.end||null,mode:S.autoMode,total:impPlayers().length}:null;
-  return{phase,game:S.game||"karaoke",imp:impSnap,ww:wwSnap,lc:lcSnap,auto:au,wwQ:S.wwQ,cards:S.game==="whowould"?S.players.map(p=>({name:p.name,cards:p.cards||[]})):null,impQ:S.impQ,impPts:S.impPts,round:S.round,rounds:S.rounds,turn:S.turn,
+  return{phase,game:S.game||"karaoke",imp:impSnap,ww:wwSnap,lc:lcSnap,uc:ucSnap,bp:bpSnap,em:emSnap,ucRounds:S.ucRounds,bpQ:S.bpQ,emPts:S.emPts,auto:au,wwQ:S.wwQ,cards:S.game==="whowould"?S.players.map(p=>({name:p.name,cards:p.cards||[]})):null,impQ:S.impQ,impPts:S.impPts,round:S.round,rounds:S.rounds,turn:S.turn,
     players:S.players.map(p=>({name:p.name,score:p.score,pid:p.pid||null,on:online(p)})),
     current:c?{cat:c.cat,text:c.text,raw:c.raw||c.text,diff:c.diff,accepted:!!c.accepted,so:c.accepted&&c.so?{phase:c.so.phase,opp:c.so.opp,challengers:c.so.challengers.map(i=>S.players[i]&&S.players[i].name).filter(Boolean),voted:Object.keys(c.so.votes||{}),total:soVoters().length}:null,worth:c.worth,chain:c.chain,holder:c.holder,pick:c.pick==null?null:c.pick,partner:c.pick!=null&&needsPartner(c.raw||c.text),inText:needsPick(c.raw||c.text)}:null,
     timer:S.timer||null,timerSec:S.timerSec,mics:S.mics||1,penalty:S.penalty,bonus:S.bonus,mvpBonus:S.mvpBonus,awardBonus:S.awardBonus,tiers:tiersAvail(),
@@ -1789,7 +1873,7 @@ async function hostCreate(){if(!NET_OK){toast("Phones aren't set up on this copy
   toast("Opening a room…");let code=genCode();
   try{for(let i=0;i<6;i++){const st=await db.get(`rooms/${code}/updatedAt`);if(!st||Date.now()-st>8*3600e3)break;code=genCode()}}catch(e){toast("Can't reach the server – check your internet");return}
   if(S.room)hostClose(true);
-  S.mode="host";S.room={code,key:Math.random().toString(36).slice(2)};S.players=[];S.imp=null;S.ww=null;S.next=null;S.auto=null;if(!["karaoke","imposter","whowould","liars"].includes(S.game))S.game="karaoke";S.inGame=false;S.current=null;S.vote=null;S.awards=null;S.awardsDone=false;S.log=[];S.timer=null;S.screen="lobby";
+  S.mode="host";S.room={code,key:Math.random().toString(36).slice(2)};S.players=[];S.imp=null;S.ww=null;S.next=null;S.auto=null;if(!Object.keys(GAME_LBL).includes(S.game))S.game="karaoke";S.inGame=false;S.current=null;S.vote=null;S.awards=null;S.awardsDone=false;S.log=[];S.timer=null;S.screen="lobby";
   try{await db.put(`rooms/${code}`,{hostKey:S.room.key,createdAt:TS,updatedAt:TS,state:snapshot()})}catch(e){toast("Couldn't create the room");S.room=null;S.mode="local";S.screen="home";save();render();return}
   cleanupRooms();rememberRoom(code);save();render();hostConnect();sfx.start()}
 function hostConnect(){if(HS){HS.close();HS=null}if(!S.room)return;const code=S.room.code;
@@ -1806,7 +1890,7 @@ function syncMembers(m){let changed=false,seenChanged=false;const seen=new Set()
   for(const [pid,mem] of Object.entries(m)){if(!mem||!mem.name)continue;const name=String(mem.name).trim().slice(0,18);if(!name)continue;seen.add(pid);
     let p=S.players.find(p=>p.pid===pid);
     if(!p){p=S.players.find(p=>!p.pid&&p.name.toLowerCase()===name.toLowerCase())||S.players.find(p=>p.name.toLowerCase()===name.toLowerCase()&&!seen.has(p.pid)&&!m[p.pid]);if(p){p.pid=pid;changed=true;pidChanged(p)}}
-    if(!p){if(S.players.length>=12)continue;p={name:uniqueName(name),score:0,stats:{},pid,rs:0};if(S.inGame&&(S.game==="imposter"||S.game==="whowould"||S.game==="liars"))p.late=true;S.players.push(p);changed=true;if(S.inGame)toast(`${p.name} joined the game${p.late?(S.game==="liars"?" – in from the next deal":" – in from the next question"):""}`);else sfx.tick()}
+    if(!p){if(S.players.length>=12)continue;p={name:uniqueName(name),score:0,stats:{},pid,rs:0};if(S.inGame&&S.game!=="karaoke")p.late=true;S.players.push(p);changed=true;if(S.inGame)toast(`${p.name} joined the game${p.late?" – in from the next round":""}`);else sfx.tick()}
     if(p.seen!==mem.seen){p.seen=mem.seen||Date.now();seenChanged=true}}
   if(!S.inGame&&S.screen!=="final"){const n=S.players.length;S.players=S.players.filter(p=>!p.pid||seen.has(p.pid));if(S.players.length!==n)changed=true}
   if(changed){save();render()}else if(seenChanged)render()}
@@ -1818,7 +1902,10 @@ function handleActions(acts){for(const k of Object.keys(acts).sort()){if(doneAct
   else if(a.type==="pass"){if(S.current&&S.current.holder===i)doPass()}
   else if(a.type==="fail"){if(S.current&&S.current.holder===i)doFail()}
   else if(a.type==="accept"){if(S.current&&S.current.holder===i)doAccept(false)}
-  else if(a.type==="answer"){if(S.game==="imposter")impAnswer(i,a.text)}
+  else if(a.type==="answer"){if(S.game==="imposter")impAnswer(i,a.text);else if(S.game==="ballpark")bpAnswer(i,a.text)}
+  else if(a.type==="ucguess"){if(S.game==="undercover")ucGuess(i,a.topic)}
+  else if(a.type==="emoji"){if(S.game==="emoji")emEmoji(i,a.text)}
+  else if(a.type==="emguess"){if(S.game==="emoji")emGuess(i,a.text)}
   else if(a.type==="ready"){autoReady(i,String(a.key||""))}
   else if(a.type==="play"){if(S.game==="liars")lcPlay(i,Object.values(a.cards||{}))}
   else if(a.type==="liar"){if(S.game==="liars")lcLiar(i)}
@@ -1826,7 +1913,9 @@ function handleActions(acts){for(const k of Object.keys(acts).sort()){if(doneAct
   else if(a.type==="challenge"){soChallenge(i)}
   else if(a.type==="pick"){if(S.current&&S.current.holder===i){const j=S.players.findIndex(p=>p.name===a.name);if(j>=0)soPick(j)}}
   else if(a.type==="startvote"){if(S.current&&S.current.holder===i)soStartVote()}}}
-function syncVotes(v){if(S.game==="whowould"&&S.ww&&S.ww.phase==="vote"){let changed=false;for(const [pid,target] of Object.entries(v)){const vi=S.players.findIndex(p=>p.pid===pid);if(vi<0||S.ww.votes[vi]!=null||typeof target!=="string")continue;const j=S.players.findIndex(p=>p.name.toLowerCase()===target.toLowerCase());if(j<0||j===vi)continue;S.ww.votes[vi]=j;changed=true}
+function syncVotes(v){if(S.game==="undercover"&&S.uc&&S.uc.phase==="vote"){let changed=false;for(const [pid,target] of Object.entries(v)){const vi=S.players.findIndex(p=>p.pid===pid);if(vi<0||S.uc.votes[vi]!=null||typeof target!=="string")continue;const j=S.players.findIndex(p=>p.name.toLowerCase()===target.toLowerCase());if(j<0||j===vi)continue;S.uc.votes[vi]=j;changed=true}
+    if(changed){if(impPlayers().every(x=>S.uc.votes[x]!=null))ucCloseVote();else{save();render()}}return}
+  if(S.game==="whowould"&&S.ww&&S.ww.phase==="vote"){let changed=false;for(const [pid,target] of Object.entries(v)){const vi=S.players.findIndex(p=>p.pid===pid);if(vi<0||S.ww.votes[vi]!=null||typeof target!=="string")continue;const j=S.players.findIndex(p=>p.name.toLowerCase()===target.toLowerCase());if(j<0||j===vi)continue;S.ww.votes[vi]=j;changed=true}
     if(changed){if(impPlayers().every(x=>S.ww.votes[x]!=null))wwResult();else{save();render()}}return}
   if(S.game==="imposter"&&S.imp&&S.imp.phase==="vote"){let changed=false;for(const [pid,target] of Object.entries(v)){const vi=S.players.findIndex(p=>p.pid===pid);if(vi<0||S.imp.votes[vi]!=null||typeof target!=="string")continue;const j=S.players.findIndex(p=>p.name.toLowerCase()===target.toLowerCase());if(j<0||j===vi)continue;S.imp.votes[vi]=j;changed=true}
     if(changed){if(impPlayers().every(x=>S.imp.votes[x]!=null))impResult();else{save();render()}}return}
@@ -1845,9 +1934,9 @@ function renderQr(){const el=$("lobbyQr");if(!S.room)return;const url=joinUrl(S.
   qrLib=document.createElement("script");qrLib.src="./qrcode.min.js";qrLib.onload=draw;qrLib.onerror=()=>{el.innerHTML="";qrLib=null};document.head.appendChild(qrLib)}
 $("lobbyAdd").onsubmit=e=>{e.preventDefault();const n=$("lobbyName").value.trim().slice(0,18);if(!n)return;if(S.players.length>=12){toast("Max 12 players");return}S.players.push({name:uniqueName(n),score:0,stats:{},rs:0});$("lobbyName").value="";save();render()};
 $("lobbyPlayers").onclick=e=>{const b=e.target.closest("[data-kick]");if(!b)return;const i=+b.dataset.kick,p=S.players[i];if(!p)return;if(p.pid&&S.room)db.del(`rooms/${S.room.code}/members/${p.pid}`).catch(()=>{});S.players.splice(i,1);save();render()};
-$("lobbyStart").onclick=()=>{if(S.game==="liars"){if(impPlayers().length<2){toast("Liar's Cards needs at least 2 players with phones");return}lcStart();return}if(S.game==="whowould"){if(impPlayers().length<3){toast("Who Would needs at least 3 players with phones");return}wwStart();return}if(S.game==="imposter"){if(impPlayers().length<3){toast("Imposter needs at least 3 players with phones");return}impStart();return}if(S.players.length<2)return;startGame()};
+$("lobbyStart").onclick=()=>{if(NEED[S.game]&&impPlayers().length<NEED[S.game]){toast(GAME_LBL[S.game].replace(/^\S+ /,"")+" needs at least "+NEED[S.game]+" players with phones");return}if(S.game==="undercover"){ucStart();return}if(S.game==="ballpark"){bpStart();return}if(S.game==="emoji"){emStart();return}if(S.game==="liars"){if(impPlayers().length<2){toast("Liar's Cards needs at least 2 players with phones");return}lcStart();return}if(S.game==="whowould"){if(impPlayers().length<3){toast("Who Would needs at least 3 players with phones");return}wwStart();return}if(S.game==="imposter"){if(impPlayers().length<3){toast("Imposter needs at least 3 players with phones");return}impStart();return}if(S.players.length<2)return;startGame()};
 $("lobbyBack").onclick=()=>ask("Close this room? Phones will be disconnected.",()=>{hostClose(true);S.screen="home";save();render()},"Close room");
-$("lobbySettings").onclick=()=>{S.back="lobby";S.screen="settings";S.setTab=["karaoke","imposter","whowould","liars"].includes(S.game)?S.game:"karaoke";save();render()};
+$("lobbySettings").onclick=()=>{S.back="lobby";S.screen="settings";S.setTab=Object.keys(GAME_LBL).includes(S.game)?S.game:"karaoke";save();render()};
 
 // ---- Phone: controller client ----
 const SO_STAKE_P={1:5,2:5,3:5};
@@ -1868,10 +1957,10 @@ async function joinRoom(code,name){code=(code||"").toUpperCase().replace(/[^A-Z0
 function phoneConnect(){if(!PH)return;if(PH.es)PH.es.close();clearInterval(PH.hb);
   PH.es=db.stream(`rooms/${PH.code}/state`,st=>{PH.state=st;PH.err=false;renderPhone()},()=>{PH.err=true;renderPhone()});
   PH.hb=setInterval(()=>{db.patch(`rooms/${PH.code}/members/${PH.pid}`,{seen:TS}).catch(()=>{})},30000);
-  clearInterval(PHt);PHt=setInterval(()=>{if(S.screen==="phone"&&PH&&PH.state&&PH.state.timer)paintPhoneTimer();const it=$("impPhTimer");if(it&&PH&&PH.state&&PH.state.imp&&PH.state.imp.discussEnd)it.textContent=fmtT(Math.max(0,Math.ceil((PH.state.imp.discussEnd-Date.now())/1000)));const lt=$("lcPhTimer");if(lt&&PH&&PH.state&&PH.state.lc&&PH.state.lc.turnEnd)lt.textContent=Math.max(0,Math.ceil((PH.state.lc.turnEnd-Date.now())/1000))+" s"},500)}
+  clearInterval(PHt);PHt=setInterval(()=>{if(S.screen==="phone"&&PH&&PH.state&&PH.state.timer)paintPhoneTimer();const it=$("impPhTimer");if(it&&PH&&PH.state&&PH.state.imp&&PH.state.imp.discussEnd)it.textContent=fmtT(Math.max(0,Math.ceil((PH.state.imp.discussEnd-Date.now())/1000)));const lt=$("lcPhTimer");if(lt&&PH&&PH.state&&PH.state.lc&&PH.state.lc.turnEnd)lt.textContent=Math.max(0,Math.ceil((PH.state.lc.turnEnd-Date.now())/1000))+" s";document.querySelectorAll("[data-end]").forEach(el=>{el.textContent=fmtT(Math.max(0,Math.ceil((+el.dataset.end-Date.now())/1000)))})},500)}
 function phoneLeave(){if(PH){if(PH.es)PH.es.close();clearInterval(PH.hb);db.del(`rooms/${PH.code}/members/${PH.pid}`).catch(()=>{})}PH=null;phoneSave();clearInterval(PHt);S.screen="home";save();render()}
 function phoneAct(type,extra){if(!PH)return;db.post(`rooms/${PH.code}/actions`,Object.assign({pid:PH.pid,type,at:TS},extra||{})).catch(()=>toast("Not sent – check your connection"))}
-function phoneVote(name){if(!PH)return;const st=PH.state||{};PH.myVote={round:st.game==="whowould"&&st.ww?"ww:"+st.ww.round:st.game==="imposter"&&st.imp?"imp:"+st.imp.round:st.current&&st.current.so&&st.current.so.phase==="vote"?"so:"+st.current.text:(st.vote?st.vote.round:0),name};db.put(`rooms/${PH.code}/votes/${PH.pid}`,name).catch(()=>toast("Not sent – check your connection"));renderPhone()}
+function phoneVote(name){if(!PH)return;const st=PH.state||{};PH.myVote={round:st.game==="undercover"&&st.uc?"uc:"+st.uc.round:st.game==="whowould"&&st.ww?"ww:"+st.ww.round:st.game==="imposter"&&st.imp?"imp:"+st.imp.round:st.current&&st.current.so&&st.current.so.phase==="vote"?"so:"+st.current.text:(st.vote?st.vote.round:0),name};db.put(`rooms/${PH.code}/votes/${PH.pid}`,name).catch(()=>toast("Not sent – check your connection"));renderPhone()}
 function phoneTimerLeft(st){const t=st&&st.timer;if(!t)return null;if(t.left!=null)return t.left;return Math.max(0,Math.ceil((t.end-Date.now())/1000))}
 function paintPhoneTimer(){const el=$("phTimer");if(!el||!PH||!PH.state)return;const l=phoneTimerLeft(PH.state);if(l==null||(PH.state.current&&PH.state.current.accepted)){el.hidden=true;return}el.hidden=false;el.textContent=fmtT(l);el.classList.toggle("warn",l<=10)}
 function renderPhone(){if(S.screen!=="phone"||!PH)return;const st=PH.state;const body=$("phBody");
@@ -1883,6 +1972,12 @@ function renderPhone(){if(S.screen!=="phone"||!PH)return;const st=PH.state;const
   const c=st.current;const holder=c?players[c.holder]:players[st.turn];const mine=meI>=0&&(c?c.holder===meI:st.turn===meI);
   const board=`<ul class="players phboard">${players.map((p,i)=>({...p,i})).sort((a,b)=>b.score-a.score).map((p,r)=>`<li class="${st.phase==="game"&&p.i===(c?c.holder:st.turn)?'active':''}${p.pid===PH.pid?' me':''}"><span class="rank">${r+1}</span>${p.pid?`<span class="dot${p.on?' on':''}"></span>`:''}<span class="name">${esc(p.name)}</span><span class="pts ${p.score<0?'neg':''}">${p.score}</span></li>`).join("")}</ul>`;
   if(st.game==="whowould"&&meI>=0&&st.phase!=="lobby"){if(st.phase==="final"){body.innerHTML=`<div class="who">The review</div>${nextPhoneHtml(st)}${wwReviewHtml(st.cards||[])}`;return}$("phRound").textContent=st.ww?`Question ${st.ww.round} of ${st.wwQ}`:"";body.innerHTML=phoneWwHtml(st,me,meI,players,board);return}
+  if(st.game==="undercover"&&meI>=0&&st.phase!=="final"&&st.phase!=="lobby"){$("phRound").textContent=st.uc?`Round ${st.uc.round} of ${st.ucRounds}`:"";body.innerHTML=phoneUcHtml(st,me,meI,players,board);return}
+  if(st.game==="ballpark"&&meI>=0&&st.phase!=="final"&&st.phase!=="lobby"){$("phRound").textContent=st.bp?`Question ${st.bp.round} of ${st.bpQ}`:"";body.innerHTML=phoneBpHtml(st,me,meI,players,board);const f=$("bpForm");if(f){const r=$("bpRange"),n=$("bpIn"),l=$("bpValLbl");r.oninput=()=>{l.textContent=r.value;n.value=r.value};n.oninput=()=>{const v=Math.max(0,Math.min(100,+n.value||0));r.value=v;l.textContent=v};f.onsubmit=e=>{e.preventDefault();const v=n.value!==""?+n.value:+r.value;if(!(v>=0&&v<=100))return;PH.bpRound=st.bp.round;phoneAct("answer",{text:String(Math.round(v))});renderPhone()}}return}
+  if(st.game==="emoji"&&meI>=0&&st.phase!=="final"&&st.phase!=="lobby"){$("phRound").textContent=st.em&&st.em.round?`Title ${st.em.round}`:"";const focusId=document.activeElement&&document.activeElement.id;body.innerHTML=phoneEmHtml(st,me,meI,players,board);
+    const f=$("emForm"),ei=$("emIn");if(f){ei.oninput=()=>{PH.emDraft=ei.value};f.onsubmit=e=>{e.preventDefault();PH.emDraft=ei.value;phoneAct("emoji",{text:ei.value.slice(0,60)})}}
+    const g=$("emGuessForm"),gi=$("emGuessIn");if(g){gi.value=PH.emGuessDraft||"";gi.oninput=()=>{PH.emGuessDraft=gi.value};g.onsubmit=e=>{e.preventDefault();const t=gi.value.trim();if(!t)return;phoneAct("emguess",{text:t.slice(0,60)});PH.emGuessDraft="";gi.value=""}}
+    if(focusId&&$(focusId)){const el=$(focusId);el.focus();try{el.setSelectionRange(el.value.length,el.value.length)}catch(e){}}return}
   if(st.game==="liars"&&meI>=0&&st.phase!=="final"&&st.phase!=="lobby"){$("phRound").textContent=st.lc?`Deal ${st.lc.n}`:"";body.innerHTML=phoneLcHtml(st,me,meI,players,board);return}
   if(st.game==="imposter"&&meI>=0&&st.phase!=="final"&&st.phase!=="lobby"){$("phRound").textContent=st.imp?`Question ${st.imp.round} of ${st.impQ}`:"";body.innerHTML=phoneImpHtml(st,me,meI,players,board);const f=$("impForm");if(f){f.onsubmit=e=>{e.preventDefault();const t=$("impIn").value.trim();if(!t)return;PH.answeredRound=st.imp.round;phoneAct("answer",{text:t.slice(0,80)});renderPhone()};if(matchMedia("(pointer:fine)").matches)setTimeout(()=>{const i=$("impIn");if(i)i.focus()},50)}return}
   if(meI<0){body.innerHTML=`<div class="phone-msg"><div class="who">You're not in this game</div><p class="hint">The host may have removed you. Join again with your name.</p><button class="btn btn-gold" data-act="rejoin">Join again</button></div>${board}`;return}
@@ -1921,7 +2016,7 @@ $("phBody").onclick=e=>{const b=e.target.closest("[data-act]");if(!b||b.disabled
   if(act==="draw")phoneAct("draw",{diff:+b.dataset.diff});else if(act==="done")phoneAct("done");else if(act==="accept")phoneAct("accept");else if(act==="challenge")phoneAct("challenge");else if(act==="pick")phoneAct("pick",{name:b.dataset.name});else if(act==="startvote")phoneAct("startvote");else if(act==="ready")phoneAct("ready",{key:b.dataset.key});
   else if(act==="pass"){ask("Pass this card? That costs points.",()=>{phoneAct("pass");b.disabled=true;setTimeout(()=>{b.disabled=false},2000)},"Pass");return}
   else if(act==="fail"){const d=PH.state&&PH.state.current?PH.state.current.diff:0;ask("Mark this card as failed? That costs 5 points.",()=>{phoneAct("fail");b.disabled=true;setTimeout(()=>{b.disabled=false},2000)},"Failed");return}
-  else if(act==="lcsel"){const i=+b.dataset.i;PH.lcSel=PH.lcSel||[];const k=PH.lcSel.indexOf(i);if(k>=0)PH.lcSel.splice(k,1);else if(PH.lcSel.length<3)PH.lcSel.push(i);renderPhone();return}else if(act==="lcplay"){const hand=PH.priv?Object.values(PH.priv.hand||{}):[];const cards=(PH.lcSel||[]).map(i=>hand[i]).filter(Boolean);if(!cards.length)return;phoneAct("play",{cards});PH.lcSel=[]}else if(act==="lcliar")phoneAct("liar");else if(act==="vote")phoneVote(b.dataset.name);else if(act==="next")phoneAct("next",{choice:b.dataset.choice});else if(act==="rejoin"){S.screen="join";save();render();$("joinCode").value=PH?PH.code:"";$("joinName").value=PH?PH.name:""}else if(act==="leave")phoneLeave();
+  else if(act==="lcsel"){const i=+b.dataset.i;PH.lcSel=PH.lcSel||[];const k=PH.lcSel.indexOf(i);if(k>=0)PH.lcSel.splice(k,1);else if(PH.lcSel.length<3)PH.lcSel.push(i);renderPhone();return}else if(act==="lcplay"){const hand=PH.priv?Object.values(PH.priv.hand||{}):[];const cards=(PH.lcSel||[]).map(i=>hand[i]).filter(Boolean);if(!cards.length)return;phoneAct("play",{cards});PH.lcSel=[]}else if(act==="lcliar")phoneAct("liar");else if(act==="ucguess"){phoneAct("ucguess",{topic:b.dataset.topic});[...$("phBody").querySelectorAll('[data-act="ucguess"]')].forEach(x=>x.disabled=true)}else if(act==="vote")phoneVote(b.dataset.name);else if(act==="next")phoneAct("next",{choice:b.dataset.choice});else if(act==="rejoin"){S.screen="join";save();render();$("joinCode").value=PH?PH.code:"";$("joinName").value=PH?PH.name:""}else if(act==="leave")phoneLeave();
   if(act==="draw"||act==="done"||act==="pass"||act==="accept"||act==="challenge"||act==="pick"||act==="startvote"||act==="ready"||act==="lcplay"||act==="lcliar"){b.disabled=true;setTimeout(()=>{b.disabled=false},2000)}};
 
 // ---- Navigation, settings, render extras ----
@@ -1934,26 +2029,26 @@ $("cardForm").onsubmit=e=>{e.preventDefault();const text=$("cardText").value.tri
   const all=deck();if(all.some(c=>c[1].toLowerCase()===text.toLowerCase())){toast("That card already exists");return}
   const cat=$("cardCat").value||"Your cards",diff=2;S.customCards.push({text,cat,diff});if(!S.cats.includes(cat))S.cats.push(cat);$("cardText").value="";save();render();toast(`Added: ${text}`);sfx.tick()};
 $("cardList").onclick=e=>{const b=e.target.closest("[data-oc]");if(!b)return;const c=S.customCards[+b.dataset.oc];if(!c)return;ask(`Remove "${c.text}"?`,()=>{S.customCards.splice(+b.dataset.oc,1);S.used=S.used.filter(t=>t!==c.text);save();render()},"Remove")};
-function renderFan(){const icon={karaoke:"#i-mic",imposter:"#i-mask2",whowould:"#i-question",liars:"#i-cards"};const p=S.plays||{};
-  const order=["imposter","karaoke","whowould","liars"].sort((a,b)=>(p[b]||0)-(p[a]||0));
+function renderFan(){const icon={karaoke:"#i-mic",imposter:"#i-mask2",whowould:"#i-question",liars:"#i-cards",undercover:"#i-eye",ballpark:"#i-hash",emoji:"#i-smile"};const p=S.plays||{};
+  const order=["imposter","karaoke","whowould","liars","undercover","ballpark","emoji"].sort((a,b)=>(p[b]||0)-(p[a]||0));
   $("fanF").setAttribute("href",icon[order[0]]);$("fanL").setAttribute("href",icon[order[1]]);$("fanR").setAttribute("href",icon[order[2]])}
 function renderExtra(){renderOwnCards();if(S.screen==="home")renderFan();
   if(S.screen==="settings"){const t=S.setTab||"karaoke";[...$("setTabs").querySelectorAll("[data-tab]")].forEach(b=>b.classList.toggle("on",b.dataset.tab===t));document.querySelectorAll("#scrSettings section[data-tab]").forEach(el=>{el.hidden=el.dataset.tab!==t})}
   const canResume=(S.inGame&&S.players.length>=2)||(S.mode==="host"&&S.room&&!S.inGame);
   $("homeResume").hidden=!canResume;$("homeResume").textContent=S.inGame?"↩ Resume game":"↩ Back to lobby";
   $("homeHost").disabled=!NET_OK;$("homeJoin").disabled=!NET_OK;if(!NET_OK)$("homeHost").title=$("homeJoin").title="Not set up on this copy yet";
-  $("mvpBonus").value=S.mvpBonus;$("awardBonus").value=S.awardBonus;$("mics").value=S.mics||1;$("impQ").value=S.impQ;$("lcHand").value=S.lcHand;$("lcChambers").value=S.lcChambers;$("lcDeals").value=S.lcDeals;$("lcTurnSec").value=S.lcTurnSec;$("wwQ").value=S.wwQ;$("autoMode").value=S.autoMode;$("autoSec").value=S.autoSec;$("impDiscuss").value=S.impDiscuss;$("impPts").value=S.impPts;$("impImpPts").value=S.impImpPts;
+  $("mvpBonus").value=S.mvpBonus;$("awardBonus").value=S.awardBonus;$("mics").value=S.mics||1;$("impQ").value=S.impQ;$("lcHand").value=S.lcHand;$("lcChambers").value=S.lcChambers;$("lcDeals").value=S.lcDeals;$("lcTurnSec").value=S.lcTurnSec;$("ucRounds").value=S.ucRounds;$("ucTime").value=S.ucTime;$("ucPts").value=S.ucPts;$("ucSpyPts").value=S.ucSpyPts;$("bpQ").value=S.bpQ;$("bpTime").value=S.bpTime;$("emRounds").value=S.emRounds;$("emTime").value=S.emTime;$("emPts").value=S.emPts;$("wwQ").value=S.wwQ;$("autoMode").value=S.autoMode;$("autoSec").value=S.autoSec;$("impDiscuss").value=S.impDiscuss;$("impPts").value=S.impPts;$("impImpPts").value=S.impImpPts;
   if(S.screen==="lobby"&&S.room){$("lobbyCode").textContent=S.room.code;$("lobbyUrl").textContent=joinUrl(S.room.code).replace(/^https?:\/\//,"");renderQr();$("lobbyStatus").textContent=netStatusText();
     $("lobbyPlayers").innerHTML=S.players.map((p,i)=>`<li><span class="rank">${i+1}</span><span class="dot${online(p)?' on':''}" style="${p.pid?'':'visibility:hidden'}"></span><span class="name">${esc(p.name)}</span><span class="hint">${p.pid?(online(p)?"phone":"phone offline"):"no phone"}</span><button class="x" data-kick="${i}" title="Remove">×</button></li>`).join("")||`<li style="color:var(--muted)">Nobody yet – scan the QR code or type the room code</li>`;
-    [...$("gameSel").querySelectorAll("[data-game]")].forEach(b=>b.classList.toggle("on",b.dataset.game===(S.game||"karaoke")));$("gameHint").textContent=S.game==="liars"?"Liar's Cards: bluff with cards, call liars, survive the revolver. 2–8 players, all with phones.":S.game==="imposter"?"Imposter: needs at least 3 players, all with phones.":S.game==="whowould"?"Who Would: a question, everyone votes for a player – no points, just the review at the end.":"Karaoke Challenge: draw cards, sing, pass, sing-offs.";
-    const impOk=S.game==="imposter"||S.game==="whowould"?impPlayers().length>=3:S.game==="liars"?impPlayers().length>=2:S.players.length>=2;$("lobbyStart").disabled=!impOk;$("lobbyStart").textContent=!impOk?(S.game==="karaoke"?"Waiting for players…":S.game==="liars"?"Waiting for 2 phones…":"Waiting for 3 phones…"):`Start ${S.game==="imposter"?"Imposter":S.game==="whowould"?"Who Would":S.game==="liars"?"Liar's Cards":"game"} (${S.game==="karaoke"?S.players.length:impPlayers().length} players)`}
+    [...$("gameSel").querySelectorAll("[data-game]")].forEach(b=>b.classList.toggle("on",b.dataset.game===(S.game||"karaoke")));$("gameHint").textContent=S.game==="undercover"?"Undercover: everyone knows the secret topic except the spy – talk, vote, and the spy guesses the topic. 3+ phones.":S.game==="ballpark"?"Ballpark: percent questions, closest guess wins. 2+ phones.":S.game==="emoji"?"Emoji Pictionary: describe an anime title with emojis, the others guess. 2+ phones.":S.game==="liars"?"Liar's Cards: bluff with cards, call liars, survive the revolver. 2–8 players, all with phones.":S.game==="imposter"?"Imposter: needs at least 3 players, all with phones.":S.game==="whowould"?"Who Would: a question, everyone votes for a player – no points, just the review at the end.":"Karaoke Challenge: draw cards, sing, pass, sing-offs.";
+    const need=NEED[S.game]||0;const impOk=S.game==="karaoke"?S.players.length>=2:impPlayers().length>=need;$("lobbyStart").disabled=!impOk;$("lobbyStart").textContent=!impOk?(S.game==="karaoke"?"Waiting for players…":"Waiting for "+need+" phones…"):`Start ${S.game==="karaoke"?"game":GAME_LBL[S.game].replace(/^\S+ /,"")} (${S.game==="karaoke"?S.players.length:impPlayers().length} players)`}
   const hosting=S.mode==="host"&&!!S.room;$("roomChip").hidden=!hosting;if(hosting){$("roomCode").textContent=S.room.code;$("roomN").textContent=S.players.filter(online).length}
   $("stage").classList.toggle("voting",!!S.vote);
   if(S.vote){const v=S.vote,need=voters().filter(i=>S.players[i].pid),n=Object.keys(v.votes).length,pct=need.length?Math.round(100*n/need.length):0;
     $("votebox").hidden=false;$("votebox").innerHTML=`<h3>Round ${v.round} done!</h3><div>Vote on your phones: who had the best performance?</div><div class="bar"><i style="width:${pct}%"></i></div><div class="hint" style="margin:0">${n} of ${need.length} voted · winner gets +${S.mvpBonus}</div><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:6px"><button class="btn btn-gold" id="voteClose" ${n?"":"disabled"}>Close vote now</button><button class="btn btn-ghost" id="voteSkip">Skip vote</button></div>`;
     $("voteClose").onclick=closeVote;$("voteSkip").onclick=()=>{S.vote=null;if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});nextRound()}}
   else{$("votebox").hidden=true}
-  renderSo();renderImp();renderWw();renderLc();
+  renderSo();renderImp();renderWw();renderLc();renderUc();renderBp();renderEm();
   if(S.screen==="final")renderFinal();
   if(S.screen==="phone")renderPhone();
   if(S.screen==="game")paintTimer();
@@ -1965,11 +2060,11 @@ $("homeStart").onclick=()=>{const go=()=>{draft=null;S.screen="players";save();r
 $("homeHost").onclick=()=>{const go=()=>{hostCreate()};if(S.inGame)ask("A game is in progress. Open a new room? Scores will be reset.",go,"New room");else go()};
 
 $("homeJoin").onclick=()=>{S.screen="join";save();render();try{$("joinName").value=localStorage.getItem("kc-name")||""}catch(e){}$("joinCode").focus()};
-$("homeSettings").onclick=()=>{S.back="home";S.screen="settings";S.setTab=["karaoke","imposter","whowould","liars"].includes(S.game)?S.game:"karaoke";save();render()};
-$("homeResume").onclick=()=>{if(S.inGame&&S.game==="liars"){S.screen="lc";save();render()}else if(S.inGame&&S.game==="whowould"){S.screen="ww";save();render()}else if(S.inGame&&S.game==="imposter"){S.screen="imp";save();render()}else if(S.inGame){S.screen="game";save();render();resumeTimer()}else if(S.mode==="host"&&S.room){S.screen="lobby";save();render()}};
+$("homeSettings").onclick=()=>{S.back="home";S.screen="settings";S.setTab=Object.keys(GAME_LBL).includes(S.game)?S.game:"karaoke";save();render()};
+$("homeResume").onclick=()=>{const scr={liars:"lc",undercover:"uc",ballpark:"bp",emoji:"em"}[S.game];if(S.inGame&&scr){S.screen=scr;save();render()}else if(S.inGame&&S.game==="whowould"){S.screen="ww";save();render()}else if(S.inGame&&S.game==="imposter"){S.screen="imp";save();render()}else if(S.inGame){S.screen="game";save();render();resumeTimer()}else if(S.mode==="host"&&S.room){S.screen="lobby";save();render()}};
 $("settingsBack").onclick=$("settingsDone").onclick=()=>{S.screen=S.back||"home";S.back=null;save();render()};
 $("startBtn").onclick=()=>{if(draft)S.players=draft.map(n=>({name:n.trim(),score:0,stats:{}}));if(S.room)hostClose(true);S.mode="local";S.game="karaoke";startGame()};
-$("againBtn").onclick=()=>{if(S.game==="liars")lcStart();else if(S.game==="whowould")wwStart();else if(S.game==="imposter")impStart();else startGame()};
+$("againBtn").onclick=()=>{if(S.game==="undercover")ucStart();else if(S.game==="ballpark")bpStart();else if(S.game==="emoji")emStart();else if(S.game==="liars")lcStart();else if(S.game==="whowould")wwStart();else if(S.game==="imposter")impStart();else startGame()};
 $("endBtn").onclick=()=>ask("End the game now and show the results?",finish,"End game");
 $("homeBtn").onclick=()=>{pauseTimer();S.screen="home";save();render()};
 $("setupBtn").onclick=()=>{S.screen="home";S.current=null;if(S.mode==="host"&&S.room)hostClose(true);save();render()};
@@ -2187,6 +2282,8 @@ $("impHome").onclick=()=>{S.screen="home";save();render()};
 $("impEnd").onclick=()=>ask("End the game now and show the results?",finish,"End game");
 $("lcHand").onchange=e=>{S.lcHand=Math.max(3,Math.min(8,+e.target.value||5));save()};
 $("lcTurnSec").onchange=e=>{S.lcTurnSec=Math.max(0,Math.min(180,+e.target.value||0));save()};
+const numSet=(id,key,min,max,def)=>{$(id).onchange=e=>{S[key]=Math.max(min,Math.min(max,+e.target.value||def));save()}};
+numSet("ucRounds","ucRounds",1,30,5);numSet("ucTime","ucTime",0,900,0);numSet("ucPts","ucPts",0,999,0);numSet("ucSpyPts","ucSpyPts",0,999,0);numSet("bpQ","bpQ",1,100,8);numSet("bpTime","bpTime",0,300,0);numSet("emRounds","emRounds",1,10,1);numSet("emTime","emTime",10,300,60);numSet("emPts","emPts",0,999,0);
 $("lcDeals").onchange=e=>{S.lcDeals=Math.max(0,Math.min(50,+e.target.value||0));save()};
 $("lcChambers").onchange=e=>{S.lcChambers=Math.max(2,Math.min(8,+e.target.value||6));save()};
 $("impQ").onchange=e=>{S.impQ=Math.max(1,Math.min(150,+e.target.value||6));save()};
@@ -2211,6 +2308,246 @@ function phoneImpHtml(st,me,meI,players,board){const m=st.imp;if((st.late||[]).i
     return `<div class="who">Who is the imposter?</div><div class="ballot">${players.filter(p=>p.pid&&p.pid!==PH.pid).map(p=>`<button class="btn btn-ghost" data-act="vote" data-name="${esc(p.name)}">🕵️ ${esc(p.name)}</button>`).join("")}</div>${answers}`}
   const r=m.result;const meImp=r&&r.imposter===me.name;const gotIt=r&&(r.correct||[]).includes(me.name);
   return `<div class="who">${meImp?"You were the imposter 🕵️":"The imposter was <b>"+esc(r.imposter)+"</b>"}</div><p class="hint">${meImp?(r.impPts?"You fooled "+r.missed+" players: +"+r.impPts:"Everyone saw through you – no points"):(gotIt?"You caught them: +"+st.impPts:"Wrong guess – no points")}</p>${autoPhoneHtml(st)}${answers}${board}`}
+
+// ===== Undercover: topics (everyone knows it, the spy has to work it out) =====
+const UC_TOPICS=["Pizza","The beach","Christmas","Football","Harry Potter","Camping","Sushi","Weddings","The gym","Netflix","Airports","Cats","Halloween","Coffee","Zombies","Dating apps","IKEA","Oktoberfest","Space travel","Dinosaurs","Karaoke","Vampires","Pirates","Superheroes","Winter","Summer holidays","School","Hospitals","Casinos","The circus","The zoo","The cinema","Supermarkets","The hairdresser","The dentist","Fast food","Video games","Board games","Music festivals","Disneyland","Cruise ships","The spa","Ski trips","Road trips","Birthday parties","Job interviews","First dates","Barbecues","Farms","Bank robberies","The police","Submarines","The desert","The jungle","Antarctica","The Titanic","The Olympics","The World Cup","Formula 1","Eurovision","K-pop","Taylor Swift","Star Wars","Marvel","Pokémon","Minecraft","TikTok","YouTube","Amazon","McDonald's","Starbucks","Lego","Barbie","New Year's Eve","Valentine's Day","Prison","Airplanes","Trains","Hotels","Saunas","Swimming pools","Yoga","Marathons","Boxing","Chess","Poker","Bowling","Golf","Surfing","Fishing","Gardening","Baking","Wine","Beer","Cocktails","Tea","Dogs","Horses","Babies","Grandparents","Roommates","Exams","Homework","Dieting","Tattoos","Sneakers","Perfume","Makeup","Smartphones","Elevators","Traffic jams","Rain","Thunderstorms","Volcanoes","The moon","Ghosts","Aliens","Robots","Time travel","Magic tricks","Escape rooms","Roller coasters","Ice cream","Chocolate","Pancakes","Spicy food","Vegans","Sleep","Dreams","Mondays","Weekends","Public transport","Bicycles","Electric cars","Selfies","Memes","Podcasts","Audiobooks","Museums","Opera","Ballet","Rap","Heavy metal","Jazz","Reggae","Country music"];
+
+// ===== Ballpark: percent questions (answer = whole percent) =====
+const BP_Q=[
+ ["What percentage of the Earth's surface is covered by water?",71],
+ ["What percentage of the human body is water (adult average)?",60],
+ ["What percentage of the air we breathe is oxygen?",21],
+ ["What percentage of the air we breathe is nitrogen?",78],
+ ["What percentage of the world's population lives in Asia?",59],
+ ["What percentage of people are left-handed?",10],
+ ["What percentage of the world's population has blue eyes?",9],
+ ["What percentage of the world's population has brown eyes?",76],
+ ["What percentage of people worldwide have red hair?",2],
+ ["What percentage of the Earth's water is fresh water?",3],
+ ["What percentage of the Earth's land is covered by forest?",31],
+ ["What percentage of the Earth's land is desert?",33],
+ ["What percentage of the world's oxygen is produced by the oceans (estimate)?",50],
+ ["What percentage of the world's population lives in cities?",57],
+ ["What percentage of the world's population speaks English (natively or as a second language)?",18],
+ ["What percentage of the world's population is under 15 years old?",25],
+ ["What percentage of the world's population is over 65?",10],
+ ["What percentage of adults worldwide own a smartphone?",70],
+ ["What percentage of the world's population uses the internet?",67],
+ ["What percentage of the world's population uses social media?",64],
+ ["What percentage of the world's population is vegetarian (estimate)?",22],
+ ["What percentage of the world's population is lactose intolerant?",68],
+ ["What percentage of the world's population can roll their tongue?",70],
+ ["What percentage of people have dimples?",25],
+ ["What percentage of people can wiggle their ears?",15],
+ ["What percentage of people sneeze when they look at bright light?",25],
+ ["What percentage of people snore regularly?",40],
+ ["What percentage of adults are afraid of spiders (estimate)?",30],
+ ["What percentage of people are afraid of public speaking?",75],
+ ["What percentage of Germans drink coffee every day?",73],
+ ["What percentage of Germans own a car?",77],
+ ["What percentage of German households have a pet?",45],
+ ["What percentage of Germans are members of a sports club?",29],
+ ["What percentage of Germany's electricity came from renewables in 2024?",59],
+ ["What percentage of Germany is covered by forest?",32],
+ ["What percentage of Germans live in cities?",78],
+ ["What percentage of Germans say they can swim well?",50],
+ ["What percentage of Germans have a tattoo?",25],
+ ["What percentage of Germans are single?",42],
+ ["What percentage of Germans use WhatsApp?",83],
+ ["What percentage of the US population lives in California?",12],
+ ["What percentage of Americans have a passport?",48],
+ ["What percentage of Americans believe in ghosts?",41],
+ ["What percentage of Americans are obese?",40],
+ ["What percentage of the world's population is Chinese?",18],
+ ["What percentage of the world's population is Indian?",18],
+ ["What percentage of the world's population lives in Africa?",18],
+ ["What percentage of the world's population lives in Europe?",9],
+ ["What percentage of the world's population lives in the Southern Hemisphere?",12],
+ ["What percentage of the world's population is male?",50],
+ ["What percentage of babies are born on their due date?",4],
+ ["What percentage of births are twins?",3],
+ ["What percentage of marriages in Germany end in divorce?",36],
+ ["What percentage of people say they have been in love at first sight?",34],
+ ["What percentage of couples met online (young adults, estimate)?",40],
+ ["What percentage of the human genome do we share with chimpanzees?",98],
+ ["What percentage of the human genome do we share with bananas (estimate)?",60],
+ ["What percentage of a human's DNA do siblings share on average?",50],
+ ["What percentage of the brain's energy use goes to the brain relative to the body (share of energy)?",20],
+ ["What percentage of an adult's body weight is the skeleton?",15],
+ ["What percentage of body heat is lost through the head (myth-busted true value)?",10],
+ ["What percentage of a cucumber is water?",96],
+ ["What percentage of a watermelon is water?",92],
+ ["What percentage of a banana is water?",75],
+ ["What percentage of milk is water?",87],
+ ["What percentage of a potato is water?",79],
+ ["What percentage of a pizza's calories come from fat (typical, estimate)?",35],
+ ["What percentage of alcohol is in a typical beer?",5],
+ ["What percentage of alcohol is in a typical wine?",12],
+ ["What percentage of alcohol is in vodka?",40],
+ ["What percentage of the world's coffee is grown in Brazil?",38],
+ ["What percentage of the world's chocolate is eaten in Europe (estimate)?",45],
+ ["What percentage of the world's population has never flown on a plane (estimate)?",80],
+ ["What percentage of flights arrive on time worldwide (estimate)?",75],
+ ["What percentage of lottery winners go broke within a few years (estimate)?",30],
+ ["What percentage of new businesses fail within the first five years?",50],
+ ["What percentage of startups fail overall (estimate)?",90],
+ ["What percentage of the world's wealth is owned by the richest 1%?",45],
+ ["What percentage of the world's population lives on less than 3 dollars a day?",10],
+ ["What percentage of an iceberg is below the water?",90],
+ ["What percentage of the Moon is visible from Earth over time?",59],
+ ["What percentage of the universe is dark energy (estimate)?",68],
+ ["What percentage of the Sun's mass is hydrogen?",73],
+ ["What percentage of the world's animal species are insects (estimate)?",80],
+ ["What percentage of a cat's life is spent sleeping?",65],
+ ["What percentage of dogs are left-pawed (estimate)?",30],
+ ["What percentage of the ocean has been explored (estimate)?",5],
+ ["What percentage of the world's plastic has been recycled?",9],
+ ["What percentage of food is wasted worldwide?",17],
+ ["What percentage of the world's population is colorblind (men)?",8],
+ ["What percentage of people need glasses or contact lenses (estimate)?",60],
+ ["What percentage of adults get less than 6 hours of sleep?",30],
+ ["What percentage of people dream in black and white (estimate)?",12],
+ ["What percentage of Netflix users share their password (estimate)?",30],
+ ["What percentage of emails sent worldwide is spam?",45],
+ ["What percentage of Wikipedia edits are made by bots (estimate)?",25],
+ ["What percentage of the world's population has been to a football stadium (estimate)?",20],
+ ["What percentage of Olympic medals has the USA won in total (all Summer Games, estimate)?",14],
+ ["What percentage of penalty kicks are scored in professional football?",76],
+ ["What percentage of goals in football are headers (estimate)?",17],
+ ["What percentage of chess games between top players end in a draw?",55],
+];
+
+// ===== Emoji Pictionary: anime series and movies (title, type, aliases) =====
+const EM_TITLES=[
+ ["Attack on Titan","series",["shingeki no kyojin","aot","snk"]],["One Piece","series",[]],["Naruto","series",["naruto shippuden"]],["Dragon Ball Z","series",["dragon ball","dbz"]],["Death Note","series",[]],
+ ["Demon Slayer","series",["kimetsu no yaiba"]],["My Hero Academia","series",["boku no hero academia","mha"]],["Jujutsu Kaisen","series",["jjk"]],["Fullmetal Alchemist: Brotherhood","series",["fullmetal alchemist","fma"]],["Hunter x Hunter","series",["hunter hunter","hxh"]],
+ ["One Punch Man","series",["one-punch man","opm"]],["Bleach","series",[]],["Tokyo Ghoul","series",[]],["Sword Art Online","series",["sao"]],["Cowboy Bebop","series",[]],
+ ["Neon Genesis Evangelion","series",["evangelion","eva"]],["Chainsaw Man","series",[]],["Spy x Family","series",["spy family"]],["Haikyuu!!","series",["haikyuu","haikyu"]],["Pokémon","series",["pokemon"]],
+ ["Sailor Moon","series",[]],["Fairy Tail","series",[]],["Black Clover","series",[]],["Mob Psycho 100","series",["mob psycho"]],["Steins;Gate","series",["steins gate","steinsgate"]],
+ ["Code Geass","series",[]],["JoJo's Bizarre Adventure","series",["jojo","jojos bizarre adventure","jojo's"]],["Vinland Saga","series",[]],["Dr. Stone","series",["dr stone","doctor stone"]],["The Promised Neverland","series",["promised neverland"]],
+ ["Re:Zero","series",["re zero","rezero"]],["Konosuba","series",[]],["Overlord","series",[]],["That Time I Got Reincarnated as a Slime","series",["slime","tensura"]],["Assassination Classroom","series",[]],
+ ["Blue Lock","series",[]],["Oshi no Ko","series",[]],["Frieren","series",["frieren beyond journey's end","sousou no frieren"]],["Solo Leveling","series",[]],["Kaguya-sama: Love Is War","series",["kaguya-sama","kaguya sama","kaguya"]],
+ ["Bocchi the Rock!","series",["bocchi the rock","bocchi"]],["Dandadan","series",[]],["Cyberpunk: Edgerunners","series",["cyberpunk edgerunners","edgerunners"]],["Hell's Paradise","series",["hells paradise","jigokuraku"]],["Fire Force","series",[]],
+ ["Black Butler","series",["kuroshitsuji"]],["Ouran High School Host Club","series",["ouran"]],["Fruits Basket","series",[]],["Toradora!","series",["toradora"]],["Clannad","series",[]],
+ ["Your Lie in April","series",["shigatsu wa kimi no uso"]],["Violet Evergarden","series",[]],["Anohana","series",[]],["Yu-Gi-Oh!","series",["yu-gi-oh","yugioh","yu gi oh"]],["Digimon","series",["digimon adventure"]],
+ ["Beyblade","series",[]],["Detective Conan","series",["case closed","conan"]],["Inuyasha","series",[]],["Ranma ½","series",["ranma","ranma 1/2"]],["Dragon Ball Super","series",["dbs"]],
+ ["Berserk","series",[]],["Parasyte","series",["parasyte the maxim","kiseijuu"]],["Erased","series",["boku dake ga inai machi"]],["Made in Abyss","series",[]],["Psycho-Pass","series",["psycho pass","psychopass"]],
+ ["Samurai Champloo","series",[]],["Gintama","series",[]],["Great Teacher Onizuka","series",["gto"]],["Slam Dunk","series",[]],["Kuroko's Basketball","series",["kuroko no basket","kurokos basketball","kuroko"]],
+ ["Food Wars","series",["shokugeki no soma","food wars shokugeki no soma"]],["Yuri!!! on Ice","series",["yuri on ice"]],["Free!","series",["free"]],["Nichijou","series",[]],["Kill la Kill","series",[]],
+ ["Trigun","series",[]],["Hellsing","series",["hellsing ultimate"]],["Elfen Lied","series",[]],["Monster","series",[]],["Devilman Crybaby","series",["devilman"]],
+ ["Spirited Away","movie",["chihiro"]],["My Neighbor Totoro","movie",["totoro"]],["Princess Mononoke","movie",["mononoke"]],["Howl's Moving Castle","movie",["howls moving castle","howl"]],["Kiki's Delivery Service","movie",["kikis delivery service","kiki"]],
+ ["Ponyo","movie",[]],["Castle in the Sky","movie",["laputa","laputa castle in the sky"]],["Nausicaä of the Valley of the Wind","movie",["nausicaa"]],["The Wind Rises","movie",["wind rises"]],["The Boy and the Heron","movie",["boy and the heron"]],
+ ["Your Name","movie",["kimi no na wa","your name."]],["Weathering with You","movie",["tenki no ko"]],["Suzume","movie",[]],["A Silent Voice","movie",["koe no katachi","silent voice"]],["I Want to Eat Your Pancreas","movie",["pancreas"]],
+ ["Akira","movie",[]],["Ghost in the Shell","movie",[]],["Perfect Blue","movie",[]],["Paprika","movie",[]],["Grave of the Fireflies","movie",["fireflies"]],
+ ["Wolf Children","movie",[]],["Summer Wars","movie",[]],["The Girl Who Leapt Through Time","movie",["girl who leapt through time"]],["Belle","movie",[]],["Mirai","movie",[]],
+ ["Demon Slayer: Mugen Train","movie",["mugen train","infinity train"]],["Jujutsu Kaisen 0","movie",["jjk 0","jujutsu kaisen zero"]],["Dragon Ball Super: Broly","movie",["broly"]],["One Piece Film: Red","movie",["one piece red","film red"]],["Pokémon: The First Movie","movie",["pokemon the first movie","mewtwo strikes back","pokemon first movie"]],
+ ["Sword Art Online: Ordinal Scale","movie",["ordinal scale"]],["Promare","movie",[]],["Redline","movie",[]],["The Cat Returns","movie",["cat returns"]],["Whisper of the Heart","movie",[]],
+ ["Porco Rosso","movie",[]],["Arrietty","movie",["the secret world of arrietty","secret world of arrietty"]],["From Up on Poppy Hill","movie",["poppy hill"]],["The Tale of the Princess Kaguya","movie",["princess kaguya","kaguya"]],["When Marnie Was There","movie",["marnie"]],
+ ["5 Centimeters per Second","movie",["5 centimeters per second","five centimeters per second"]],["The Garden of Words","movie",["garden of words"]],["Josee, the Tiger and the Fish","movie",["josee"]],["Ride Your Wave","movie",[]],["Lupin III: The Castle of Cagliostro","movie",["castle of cagliostro","cagliostro","lupin"]],
+];
+
+// ===== Undercover: everyone knows the topic, the spy doesn't – talk, vote, then the spy guesses the topic =====
+function ucStart(){countPlay("undercover");S.game="undercover";S.next=null;S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0;delete p.late});S.inGame=true;S.round=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=true;S.log=[];S.ucUsed=S.ucUsed||[];S.uc=null;S.screen="uc";ucNext();sfx.start()}
+function ucNext(){S.round++;S.players.forEach(p=>{delete p.late});if(S.round>S.ucRounds){finish();return}
+  let pool=UC_TOPICS.map((t,i)=>i).filter(i=>!S.ucUsed.includes(i));if(pool.length<6){S.ucUsed=[];pool=UC_TOPICS.map((t,i)=>i)}
+  const ti=pool[Math.floor(Math.random()*pool.length)];S.ucUsed.push(ti);const pl=impPlayers();const cand=pl.filter(i=>i!==(S.uc&&S.uc.spy));const spy=cand.length?cand[Math.floor(Math.random()*cand.length)]:pl[0];
+  const decoys=pool.filter(i=>i!==ti).sort(()=>Math.random()-.5).slice(0,5);const options=[ti,...decoys].sort(()=>Math.random()-.5).map(i=>UC_TOPICS[i]);
+  S.uc={phase:"play",topic:UC_TOPICS[ti],spy,end:S.ucTime?Date.now()+S.ucTime*1000:null,votes:{},options,guess:null,result:null};S.auto=null;
+  if(S.room){db.del(`rooms/${S.room.code}/votes`).catch(()=>{});const priv={};S.players.forEach((p,i)=>{if(p.pid)priv[p.pid]={topic:i===spy?null:S.uc.topic,spy:i===spy,n:S.round,g:"uc"}});db.put(`rooms/${S.room.code}/private`,priv).catch(()=>{})}
+  save();render()}
+function ucStartVote(){const m=S.uc;if(!m||m.phase!=="play")return;m.phase="vote";m.votes={};m.end=null;if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});sfx.tick();toast("Vote on your phones: who is the spy?");save();render()}
+function ucVote(i,name){const m=S.uc;if(!m||m.phase!=="vote")return;const j=S.players.findIndex(p=>p.name.toLowerCase()===String(name).toLowerCase());if(j<0||j===i)return;m.votes[i]=j;if(impPlayers().every(v=>m.votes[v]!=null))ucCloseVote();else{save();render()}}
+function ucCloseVote(){const m=S.uc;if(!m||m.phase!=="vote")return;const voters=impPlayers().filter(v=>v!==m.spy);const cnt={};voters.forEach(v=>{if(m.votes[v]!=null)cnt[m.votes[v]]=(cnt[m.votes[v]]||0)+1});
+  let max=0;Object.values(cnt).forEach(n=>max=Math.max(max,n));const top=Object.keys(cnt).filter(k=>cnt[k]===max).map(Number);const caught=top.length===1&&top[0]===m.spy;const correct=voters.filter(v=>m.votes[v]===m.spy);
+  m.result={caught,correct,guessOk:null};m.phase="guess";sfx.draw();save();render()}
+function ucGuess(i,topic){const m=S.uc;if(!m||m.phase!=="guess"||i!==m.spy)return;m.guess=String(topic||"");m.result.guessOk=m.guess.toLowerCase()===m.topic.toLowerCase();
+  const spy=S.players[m.spy];m.result.correct.forEach(v=>{S.players[v].score+=S.ucPts;stat(S.players[v],"ucCatch")});if(!m.result.caught){spy.score+=S.ucSpyPts;stat(spy,"ucEscape")}if(m.result.guessOk){spy.score+=10;stat(spy,"ucGuess")}
+  S.log.unshift(`🕵️ Round ${S.round}: spy was <b>${esc(spy.name)}</b> – ${m.result.caught?"caught":"not caught"}, guessed “${esc(m.guess)}” ${m.result.guessOk?"✓":"✗"} (topic: ${esc(m.topic)})`);m.phase="result";sfx.win();save();render()}
+let ucT=null;
+function renderUc(){if(S.screen!=="uc"||S.game!=="undercover"){clearInterval(ucT);ucT=null;return}const m=S.uc,st=$("ucStage");$("ucRound").textContent=`Round ${Math.min(S.round,S.ucRounds)} of ${S.ucRounds}`;$("ucChip").hidden=!S.room;$("ucCode").textContent=S.room?S.room.code:"";$("ucN").textContent=S.players.filter(online).length;
+  const sorted=[...S.players].map((p,i)=>({...p,i})).sort((a,b)=>b.score-a.score);$("ucBoard").innerHTML=sorted.map((p,r)=>`<li><span class="rank">${r+1}</span>${p.pid?`<span class="dot${online(p)?' on':''}"></span>`:''}<span class="name">${esc(p.name)}</span><span class="pts ${p.score<0?'neg':''}">${p.score}</span><button class="x" data-rm="${p.i}" title="Remove player">×</button></li>`).join("");
+  if(!m){st.innerHTML=`<div class="lbl">Get ready</div>`;return}const pl=impPlayers(),spy=S.players[m.spy];
+  const left=m.end?Math.max(0,Math.ceil((m.end-Date.now())/1000)):null;
+  if(m.phase==="play"){st.innerHTML=`<div class="lbl">Undercover</div><div class="q secret">Everyone knows the topic – except the spy</div>${left!=null?`<div class="timer"><span id="ucLeft">${fmtT(left)}</span></div>`:""}<div class="hint" style="margin:0">Ask each other questions about the topic. Be vague enough that the spy stays lost, clear enough that you don't look like the spy.</div><div class="row"><button class="btn btn-gold" id="ucVoteBtn">🗳 Start the vote</button><button class="btn btn-ghost" id="ucSkip">Skip round</button></div>`;
+    if(!ucT&&m.end)ucT=setInterval(()=>{if(!S.uc||S.uc.phase!=="play"||!S.uc.end){clearInterval(ucT);ucT=null;return}const l=Math.max(0,Math.ceil((S.uc.end-Date.now())/1000));const el=$("ucLeft");if(el)el.textContent=fmtT(l);if(l<=0){clearInterval(ucT);ucT=null;sfx.buzz();ucStartVote()}},250)}
+  else if(m.phase==="vote"){const nV=pl.filter(i=>m.votes[i]!=null).length;st.innerHTML=`<div class="lbl">Who is the spy?</div><div class="bar"><i style="width:${pl.length?Math.round(100*nV/pl.length):0}%"></i></div><div class="hint" style="margin:0">${nV} of ${pl.length} voted on their phones</div><div class="row">${nV?`<button class="btn btn-ghost" id="ucClose">Close vote (${nV} votes)</button>`:""}</div>`}
+  else if(m.phase==="guess"){const r=m.result;st.innerHTML=`<div class="lbl">The spy was</div><div class="big">🕵️ ${esc(spy.name)}</div><div class="hint" style="margin:0">${r.caught?"Caught! "+r.correct.map(v=>esc(S.players[v].name)).join(", ")+" voted right.":"Not caught – the vote went elsewhere."}</div><div class="q secret">${esc(spy.name)} now guesses the topic on their phone…</div>`}
+  else{const r=m.result;st.innerHTML=`<div class="lbl">The topic was</div><div class="q">${esc(m.topic)}</div><div class="hint" style="margin:0">Spy <b>${esc(spy.name)}</b> guessed “${esc(m.guess)}” ${r.guessOk?"✓ +10":"✗"} · ${r.caught?r.correct.map(v=>esc(S.players[v].name)).join(", ")+" caught the spy: +"+S.ucPts+" each":"nobody caught the spy: +"+S.ucSpyPts+" for "+esc(spy.name)}</div><button class="btn btn-gold" id="ucNextBtn" style="font-size:18px;padding:16px 24px">${S.round>=S.ucRounds?"🏆 Show results":"Next round ▸"}</button>`+autoHtml()}
+  const bind=(id,fn)=>{const b=$(id);if(b)b.onclick=fn};bind("ucVoteBtn",ucStartVote);bind("ucClose",ucCloseVote);bind("ucNextBtn",ucNext);bind("ucSkip",()=>ask("Skip this round?",()=>{S.round--;ucNext()},"Skip"))}
+$("ucHome").onclick=()=>{S.screen="home";save();render()};
+$("ucEnd").onclick=()=>ask("End the game now and show the results?",finish,"End game");
+$("ucBoard").onclick=e=>{const b=e.target.closest("[data-rm]");if(!b)return;const p=S.players[+b.dataset.rm];if(!p)return;ask(`Remove ${p.name} from the game?`,()=>removePlayer(+b.dataset.rm),"Remove")};
+function phoneUcHtml(st,me,meI,players,board){const m=st.uc;if((st.late||[]).includes(PH.pid))return `<div class="who">You're in!</div><p class="hint">You join from the next round.</p>${board}`;if(!m)return `<div class="who">Undercover</div><p class="hint">Waiting for the host…</p>${board}`;
+  if(!(PH.priv&&PH.priv.n===m.round&&PH.priv.g==="uc"))impFetchPriv(m.round);const priv=PH.priv&&PH.priv.n===m.round&&PH.priv.g==="uc"?PH.priv:null;const amSpy=priv&&priv.spy;
+  const role=!priv?`<p class="hint">Loading your role…</p>`:amSpy?`<div class="impq"><small>Only you can see this</small>🕵️ You are the spy – find out the topic!</div>`:`<div class="impq"><small>Topic – don't say it out loud</small>${esc(priv.topic)}</div>`;
+  const voted=(m.voted||[]).includes(PH.pid)||(PH.myVote&&PH.myVote.round==="uc:"+m.round);
+  if(m.phase==="play")return `<div class="who">Round ${m.round} of ${st.ucRounds}</div>${m.end?`<div class="timer phtimer" data-end="${m.end}">${fmtT(Math.max(0,Math.ceil((m.end-Date.now())/1000)))}</div>`:""}${role}<p class="hint">${amSpy?"Listen closely, ask questions, blend in.":"Ask and answer questions – vague, but not suspicious."}</p>`;
+  if(m.phase==="vote"){if(voted)return `<div class="who">Vote received 🗳️</div><p class="hint">${(m.voted||[]).length} of ${m.total} voted…</p>${role}`;return `<div class="who">Who is the spy?</div><div class="ballot">${players.filter(p=>p.pid&&p.pid!==PH.pid).map(p=>`<button class="btn btn-ghost" data-act="vote" data-name="${esc(p.name)}">🕵️ ${esc(p.name)}</button>`).join("")}</div>${role}`}
+  if(m.phase==="guess"){if(amSpy)return `<div class="who">${m.caught?"You were caught 😬":"You got away 😎"}</div><p class="hint">Last chance: which topic were they talking about?</p><div class="ballot">${(m.options||[]).map(o=>`<button class="btn btn-gold" data-act="ucguess" data-topic="${esc(o)}">${esc(o)}</button>`).join("")}</div>`;return `<div class="who">The spy was <b>${esc(m.spyName)}</b></div><p class="hint">${m.caught?"Caught! Now they guess the topic…":"Not caught! Now they guess the topic…"}</p>`}
+  return `<div class="who">${esc(m.topic)}</div><p class="hint">Spy ${esc(m.spyName)} guessed “${esc(m.guess)}” ${m.guessOk?"✓":"✗"}. ${m.caught?"The spy was caught.":"The spy got away."}</p>${autoPhoneHtml(st)}${board}`}
+
+// ===== Ballpark: percent questions, closest tip wins =====
+function bpStart(){countPlay("ballpark");S.game="ballpark";S.next=null;S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0;delete p.late});S.inGame=true;S.round=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=true;S.log=[];S.bpUsed=S.bpUsed||[];S.bp=null;S.screen="bp";bpNext();sfx.start()}
+function bpNext(){S.round++;S.players.forEach(p=>{delete p.late});if(S.round>S.bpQ){finish();return}
+  let pool=BP_Q.map((q,i)=>i).filter(i=>!S.bpUsed.includes(i));if(!pool.length){S.bpUsed=[];pool=BP_Q.map((q,i)=>i)}const qi=pool[Math.floor(Math.random()*pool.length)];S.bpUsed.push(qi);
+  S.bp={phase:"answer",qi,answers:{},end:S.bpTime?Date.now()+S.bpTime*1000:null,result:null};S.auto=null;save();render()}
+function bpAnswer(i,v){const m=S.bp;if(!m||m.phase!=="answer")return;v=Math.round(+v);if(!(v>=0&&v<=100))return;m.answers[i]=v;if(impPlayers().every(j=>m.answers[j]!=null))bpReveal();else{save();render()}}
+function bpReveal(){const m=S.bp;if(!m||m.phase!=="answer")return;const truth=BP_Q[m.qi][1];const rows=impPlayers().filter(i=>m.answers[i]!=null).map(i=>({i,v:m.answers[i],d:Math.abs(m.answers[i]-truth)})).sort((a,b)=>a.d-b.d);
+  const dists=[...new Set(rows.map(r=>r.d))];rows.forEach(r=>{const rank=dists.indexOf(r.d);r.pts=rank===0?10:rank===1?5:0;if(r.pts){S.players[r.i].score+=r.pts;stat(S.players[r.i],rank===0?"bpBest":"bpSecond")}});
+  m.result={truth,rows};m.phase="result";m.end=null;S.log.unshift(`📊 ${esc(BP_Q[m.qi][0])} → <b>${truth}%</b> · ${rows.filter(r=>r.pts).map(r=>esc(S.players[r.i].name)+" +"+r.pts).join(", ")||"no answers"}`);sfx.win();save();render()}
+let bpT=null;
+function renderBp(){if(S.screen!=="bp"||S.game!=="ballpark"){clearInterval(bpT);bpT=null;return}const m=S.bp,st=$("bpStage");$("bpRound").textContent=`Question ${Math.min(S.round,S.bpQ)} of ${S.bpQ}`;$("bpChip").hidden=!S.room;$("bpCode").textContent=S.room?S.room.code:"";$("bpN").textContent=S.players.filter(online).length;
+  const sorted=[...S.players].map((p,i)=>({...p,i})).sort((a,b)=>b.score-a.score);$("bpBoard").innerHTML=sorted.map((p,r)=>`<li><span class="rank">${r+1}</span>${p.pid?`<span class="dot${online(p)?' on':''}"></span>`:''}<span class="name">${esc(p.name)}</span><span class="pts ${p.score<0?'neg':''}">${p.score}</span><button class="x" data-rm="${p.i}" title="Remove player">×</button></li>`).join("");
+  if(!m){st.innerHTML=`<div class="lbl">Get ready</div>`;return}const pl=impPlayers(),q=BP_Q[m.qi][0],nA=pl.filter(i=>m.answers[i]!=null).length;
+  if(m.phase==="answer"){const left=m.end?Math.max(0,Math.ceil((m.end-Date.now())/1000)):null;st.innerHTML=`<div class="lbl">Ballpark – answer in percent</div><div class="q">${esc(q)}</div>${left!=null?`<div class="timer"><span id="bpLeft">${fmtT(left)}</span></div>`:""}<div class="bar"><i style="width:${pl.length?Math.round(100*nA/pl.length):0}%"></i></div><div class="hint" style="margin:0">${nA} of ${pl.length} answered · ${pl.filter(i=>m.answers[i]==null).map(i=>esc(S.players[i].name)).join(", ")||"all in!"}</div><div class="row">${nA?`<button class="btn btn-gold" id="bpReveal">Reveal (${nA} answers)</button>`:""}<button class="btn btn-ghost" id="bpSkip">Skip question</button></div>`;
+    if(!bpT&&m.end)bpT=setInterval(()=>{if(!S.bp||S.bp.phase!=="answer"||!S.bp.end){clearInterval(bpT);bpT=null;return}const l=Math.max(0,Math.ceil((S.bp.end-Date.now())/1000));const el=$("bpLeft");if(el)el.textContent=fmtT(l);if(l<=0){clearInterval(bpT);bpT=null;sfx.buzz();bpReveal()}},250)}
+  else{const r=m.result;const marks=r.rows.map(x=>`<div class="bpmark${x.pts===10?" best":x.pts===5?" second":""}" style="left:${x.v}%"><i></i><span>${esc(S.players[x.i].name)}<br>${x.v}%</span></div>`).join("");
+    st.innerHTML=`<div class="lbl">Ballpark</div><div class="q">${esc(q)}</div><div class="bpline"><div class="axis"></div>${marks}<div class="bptruth" style="left:${r.truth}%"><i></i><span>${r.truth}%</span></div></div><div class="big">${r.truth}%</div><div class="answers">${r.rows.map(x=>`<div class="a${x.pts===10?" imp":""}"><span class="n">${esc(S.players[x.i].name)}</span><span class="t">${x.v}% · off by ${x.d}${x.pts?` · +${x.pts}`:""}</span></div>`).join("")}</div><button class="btn btn-gold" id="bpNextBtn" style="font-size:18px;padding:16px 24px">${S.round>=S.bpQ?"🏆 Show results":"Next question ▸"}</button>`+autoHtml()}
+  const bind=(id,fn)=>{const b=$(id);if(b)b.onclick=fn};bind("bpReveal",bpReveal);bind("bpNextBtn",bpNext);bind("bpSkip",()=>ask("Skip this question?",()=>{S.round--;bpNext()},"Skip"))}
+$("bpHome").onclick=()=>{S.screen="home";save();render()};
+$("bpEnd").onclick=()=>ask("End the game now and show the results?",finish,"End game");
+$("bpBoard").onclick=e=>{const b=e.target.closest("[data-rm]");if(!b)return;const p=S.players[+b.dataset.rm];if(!p)return;ask(`Remove ${p.name} from the game?`,()=>removePlayer(+b.dataset.rm),"Remove")};
+function phoneBpHtml(st,me,meI,players,board){const m=st.bp;if((st.late||[]).includes(PH.pid))return `<div class="who">You're in!</div><p class="hint">You join from the next question.</p>${board}`;if(!m)return `<div class="who">Ballpark</div><p class="hint">Waiting for the host…</p>${board}`;
+  const answered=(m.answered||[]).includes(PH.pid)||PH.bpRound===m.round;
+  if(m.phase==="answer"){if(answered)return `<div class="who">Answer sent ✓</div><div class="impq"><small>Question ${m.round}</small>${esc(m.q)}</div><p class="hint">${(m.answered||[]).length} of ${m.total} answered…</p>`;
+    return `<div class="who">Question ${m.round} of ${st.bpQ}</div>${m.end?`<div class="timer phtimer" data-end="${m.end}">${fmtT(Math.max(0,Math.ceil((m.end-Date.now())/1000)))}</div>`:""}<div class="impq"><small>Answer in percent</small>${esc(m.q)}</div><form class="impans" id="bpForm"><div class="bpval"><b id="bpValLbl">50</b>%</div><input type="range" id="bpRange" min="0" max="100" value="50" step="1"><input id="bpIn" type="number" inputmode="numeric" min="0" max="100" placeholder="0–100" autocomplete="off"><button class="btn btn-gold" type="submit">Send answer</button></form>`}
+  const mine=(m.rows||[]).find(r=>r.pid===PH.pid);return `<div class="who">${m.truth}%</div><div class="impq"><small>The answer</small>${esc(m.q)}</div><p class="hint">${mine?`You said ${mine.v}% – off by ${mine.d}${mine.pts?", +"+mine.pts+" points!":"."}`:"You didn't answer this one."} ${(m.rows||[]).filter(r=>r.pts===10).map(r=>esc(r.name)).join(" & ")||"Nobody"} was closest.</p>${autoPhoneHtml(st)}${board}`}
+
+// ===== Emoji Pictionary: one player describes an anime title with emojis, the others guess =====
+function emNorm(t){return String(t||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g," ").trim()}
+function emMatch(guess,ti){const t=EM_TITLES[ti];const g=emNorm(guess);if(!g)return false;const cands=[t[0],...t[2],t[0].split(":")[0]].map(emNorm).filter(Boolean);return cands.some(c=>c===g||(c.length>=8&&g.length>=Math.max(6,Math.ceil(c.length*0.7))&&(c.includes(g)||g.includes(c))))}
+function emStart(){countPlay("emoji");S.game="emoji";S.next=null;S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0;delete p.late});S.inGame=true;S.round=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=true;S.log=[];S.emUsed=S.emUsed||[];S.em={order:[],k:0,artist:null,phase:"draw"};S.screen="em";emNext();sfx.start()}
+function emNext(){const m=S.em;S.players.forEach(p=>{delete p.late});if(!m.order.length||m.k>=m.order.length){m.round=(m.round||0)+1;if(m.round>S.emRounds){finish();return}m.order=impPlayers().sort(()=>Math.random()-.5);m.k=0}
+  S.round=(m.round-1)*Math.max(1,m.order.length)+m.k+1;let artist=m.order[m.k];while(artist!=null&&!S.players[artist]){m.k++;artist=m.order[m.k]}if(artist==null){m.k=m.order.length;emNext();return}
+  let pool=EM_TITLES.map((t,i)=>i).filter(i=>!S.emUsed.includes(i));if(!pool.length){S.emUsed=[];pool=EM_TITLES.map((t,i)=>i)}const ti=pool[Math.floor(Math.random()*pool.length)];S.emUsed.push(ti);
+  Object.assign(m,{phase:"draw",artist,title:ti,emojis:"",guesses:[],end:S.emTime?Date.now()+S.emTime*1000:null,result:null,start:Date.now()});S.auto=null;
+  if(S.room){const p=S.players[artist];if(p.pid)db.put(`rooms/${S.room.code}/private/${p.pid}`,{title:EM_TITLES[ti][0],type:EM_TITLES[ti][1],n:S.round,g:"em"}).catch(()=>{})}
+  save();render()}
+function emEmoji(i,text){const m=S.em;if(!m||m.phase!=="draw"||i!==m.artist)return;const e=String(text||"").replace(/[A-Za-z0-9]/g,"").trim().slice(0,60);m.emojis=e;save();render()}
+function emGuess(i,text){const m=S.em;if(!m||m.phase!=="draw"||i===m.artist)return;text=String(text||"").trim().slice(0,60);if(!text)return;const ok=emMatch(text,m.title);m.guesses.push({i,text,ok});if(m.guesses.length>40)m.guesses.shift();
+  if(ok){emResult(i)}else{save();render()}}
+function emResult(winner){const m=S.em;if(!m||m.phase!=="draw")return;const a=S.players[m.artist];if(winner!=null){const g=S.players[winner];g.score+=S.emPts;a.score+=S.emPts;stat(g,"emGuess");stat(a,"emDraw");S.log.unshift(`🎨 <b>${esc(a.name)}</b> ${esc(m.emojis)} → <b>${esc(g.name)}</b> got “${esc(EM_TITLES[m.title][0])}” (+${S.emPts} each)`);sfx.win()}
+  else{S.log.unshift(`🎨 <b>${esc(a.name)}</b> ${esc(m.emojis)} → nobody guessed “${esc(EM_TITLES[m.title][0])}”`);sfx.buzz()}
+  m.result={winner};m.phase="result";m.end=null;m.k++;save();render()}
+let emT=null;
+function renderEm(){if(S.screen!=="em"||S.game!=="emoji"){clearInterval(emT);emT=null;return}const m=S.em,st=$("emStage");$("emRound").textContent=m&&m.round?`Round ${Math.min(m.round,S.emRounds)} of ${S.emRounds}`:"";$("emChip").hidden=!S.room;$("emCode").textContent=S.room?S.room.code:"";$("emN").textContent=S.players.filter(online).length;
+  const sorted=[...S.players].map((p,i)=>({...p,i})).sort((a,b)=>b.score-a.score);$("emBoard").innerHTML=sorted.map((p,r)=>`<li><span class="rank">${r+1}</span>${p.pid?`<span class="dot${online(p)?' on':''}"></span>`:''}<span class="name">${esc(p.name)}</span><span class="pts ${p.score<0?'neg':''}">${p.score}</span><button class="x" data-rm="${p.i}" title="Remove player">×</button></li>`).join("");
+  if(!m||m.artist==null){st.innerHTML=`<div class="lbl">Get ready</div>`;return}const a=S.players[m.artist],t=EM_TITLES[m.title];const type=t[1]==="movie"?"Anime movie":"Anime series";
+  const feed=`<div class="emfeed">${m.guesses.slice(-6).reverse().map(g=>`<div class="g${g.ok?" ok":""}"><b>${esc(S.players[g.i]?S.players[g.i].name:"?")}</b> ${esc(g.text)}</div>`).join("")||`<div class="hint" style="margin:0">No guesses yet</div>`}</div>`;
+  if(m.phase==="draw"){const left=m.end?Math.max(0,Math.ceil((m.end-Date.now())/1000)):null;const half=m.end&&S.emTime&&left!=null&&left<=S.emTime/2;const hint=half?`<div class="hint" style="margin:0">Hint: ${t[0].split(" ").length} word${t[0].split(" ").length>1?"s":""}, starts with “${t[0][0]}”</div>`:"";
+    st.innerHTML=`<div class="lbl">${esc(a.name)} draws an ${type.toLowerCase()} with emojis</div><div class="emwall">${esc(m.emojis)||"<span class='hint'>waiting for emojis…</span>"}</div>${left!=null?`<div class="timer"><span id="emLeft">${fmtT(left)}</span></div>`:""}<div class="hint" style="margin:0">${type} · guess on your phones</div>${hint}${feed}<div class="row"><button class="btn btn-ghost" id="emGiveUp">Reveal (nobody got it)</button></div>`;
+    if(!emT&&m.end)emT=setInterval(()=>{if(!S.em||S.em.phase!=="draw"||!S.em.end){clearInterval(emT);emT=null;return}const l=Math.max(0,Math.ceil((S.em.end-Date.now())/1000));const el=$("emLeft");if(el)el.textContent=fmtT(l);if(S.emTime&&l===Math.floor(S.emTime/2))render();if(l<=0){clearInterval(emT);emT=null;emResult(null)}},250)}
+  else{const r=m.result,w=r.winner!=null?S.players[r.winner]:null;st.innerHTML=`<div class="lbl">${type}</div><div class="emwall">${esc(m.emojis)||"–"}</div><div class="big">${esc(t[0])}</div><div class="hint" style="margin:0">${w?`<b>${esc(w.name)}</b> got it – +${S.emPts} for ${esc(w.name)} and ${esc(a.name)}`:"Nobody got it – no points"}</div>${feed}<button class="btn btn-gold" id="emNextBtn" style="font-size:18px;padding:16px 24px">${m.k>=m.order.length&&m.round>=S.emRounds?"🏆 Show results":"Next artist ▸"}</button>`+autoHtml()}
+  const bind=(id,fn)=>{const b=$(id);if(b)b.onclick=fn};bind("emGiveUp",()=>ask("Reveal the title? Nobody gets points.",()=>emResult(null),"Reveal"));bind("emNextBtn",emNext)}
+$("emHome").onclick=()=>{S.screen="home";save();render()};
+$("emEnd").onclick=()=>ask("End the game now and show the results?",finish,"End game");
+$("emBoard").onclick=e=>{const b=e.target.closest("[data-rm]");if(!b)return;const p=S.players[+b.dataset.rm];if(!p)return;ask(`Remove ${p.name} from the game?`,()=>removePlayer(+b.dataset.rm),"Remove")};
+function phoneEmHtml(st,me,meI,players,board){const m=st.em;if((st.late||[]).includes(PH.pid))return `<div class="who">You're in!</div><p class="hint">You join from the next round.</p>${board}`;if(!m||!m.artist)return `<div class="who">Emoji Pictionary</div><p class="hint">Waiting for the host…</p>${board}`;
+  const mine=m.artist===PH.pid;const wall=`<div class="emwall small">${esc(m.emojis)||"<span class='hint'>…</span>"}</div>`;const timer=m.end?`<div class="timer phtimer" data-end="${m.end}">${fmtT(Math.max(0,Math.ceil((m.end-Date.now())/1000)))}</div>`:"";
+  if(m.phase==="draw"){if(mine){if(!(PH.priv&&PH.priv.n===m.round&&PH.priv.g==="em"))impFetchPriv(m.round);const priv=PH.priv&&PH.priv.n===m.round&&PH.priv.g==="em"?PH.priv:null;
+      return `<div class="who">You draw!</div>${timer}${priv?`<div class="impq"><small>${priv.type==="movie"?"Anime movie":"Anime series"} – only you can see this</small>${esc(priv.title)}</div>`:`<p class="hint">Loading your title…</p>`}<form class="impans" id="emForm"><input id="emIn" maxlength="60" placeholder="Emojis only 🎌" autocomplete="off" value="${esc(PH.emDraft||"")}"><button class="btn btn-gold" type="submit">Show emojis</button></form>${wall}<p class="hint">Letters and numbers are removed. You can send again to change your emojis.</p>`}
+    const myLast=(m.guesses||[]).filter(g=>g.pid===PH.pid).slice(-1)[0];return `<div class="who">${esc(m.artistName)} draws</div>${timer}${wall}<p class="hint">${m.type==="movie"?"Anime movie":"Anime series"}${m.hint?" · "+esc(m.hint):""}</p><form class="impans" id="emGuessForm"><input id="emGuessIn" maxlength="60" placeholder="Your guess" autocomplete="off"><button class="btn btn-gold" type="submit">Guess</button></form>${myLast?`<p class="hint">Last guess: “${esc(myLast.text)}” ✗</p>`:""}`}
+  return `<div class="who">${esc(m.title)}</div>${wall}<p class="hint">${m.winnerName?(m.winnerName===me.name?"You got it! +"+st.emPts:esc(m.winnerName)+" got it"+(mine?" – +"+st.emPts+" for you too":"")):"Nobody got it."}</p>${autoPhoneHtml(st)}${board}`}
 
 // ===== Liar's Cards (Liar's Bar rules) =====
 const LC_RANK={Q:"Queen",K:"King",A:"Ace",J:"Joker"},LC_SYM={Q:"♛",K:"♚",A:"A",J:"★"},LC_GL={Q:"♛",K:"♚",A:"A",J:"★"};
@@ -2334,9 +2671,10 @@ function wwResult(){const m=S.ww;if(!m||m.phase!=="vote")return;const cnt={};Obj
 function autoKey(){if(S.autoMode==="off"||!S.inGame)return null;
   if(S.game==="imposter"&&S.imp){if(S.imp.phase==="reveal")return"imp:"+S.round+":reveal";if(S.imp.phase==="result")return"imp:"+S.round+":result"}
   if(S.game==="whowould"&&S.ww&&S.ww.phase==="result")return"ww:"+S.round+":result";
-  if(S.game==="liars"&&S.lc&&S.lc.phase==="reveal")return"lc:"+S.lc.n+":reveal";return null}
+  if(S.game==="liars"&&S.lc&&S.lc.phase==="reveal")return"lc:"+S.lc.n+":reveal";
+  if(S.game==="undercover"&&S.uc&&S.uc.phase==="result")return"uc:"+S.round+":result";if(S.game==="ballpark"&&S.bp&&S.bp.phase==="result")return"bp:"+S.round+":result";if(S.game==="emoji"&&S.em&&S.em.phase==="result")return"em:"+S.round+":result";return null}
 function autoAdvance(){const k=autoKey();if(!k)return;S.auto=null;
-  if(k.startsWith("lc:"))lcNext();else if(k.endsWith(":reveal"))impShowAnswers();else if(k.startsWith("imp:"))impNext();else if(k.startsWith("ww:"))wwNext()}
+  if(k.startsWith("lc:"))lcNext();else if(k.startsWith("uc:"))ucNext();else if(k.startsWith("bp:"))bpNext();else if(k.startsWith("em:"))emNext();else if(k.endsWith(":reveal"))impShowAnswers();else if(k.startsWith("imp:"))impNext();else if(k.startsWith("ww:"))wwNext()}
 function autoSync(){const k=autoKey();if(!k){if(S.auto){S.auto=null}return}
   if(!S.auto||S.auto.key!==k){S.auto={key:k,ready:[],end:S.autoMode==="timer"?Date.now()+S.autoSec*1000:null};save()}}
 function autoReady(i,key){autoSync();const a=S.auto;if(!a||a.key!==key||S.autoMode!=="ready")return;const p=S.players[i];if(!p||!p.pid||a.ready.includes(p.pid))return;a.ready.push(p.pid);
@@ -2365,7 +2703,7 @@ $("autoSec").onchange=e=>{S.autoSec=Math.max(3,Math.min(120,+e.target.value||10)
 $("wwQ").onchange=e=>{S.wwQ=Math.max(1,Math.min(150,+e.target.value||10));save()};
 function wwReviewHtml(players){return `<div class="wwreview">${[...players].sort((a,b)=>(b.cards||[]).length-(a.cards||[]).length).map(p=>`<div class="wwcard"><div class="n">${esc(p.name)}</div>${(p.cards||[]).length?`<ul>${p.cards.map(c=>`<li>${esc(c)}</li>`).join("")}</ul>`:'<div class="hint" style="margin:0">no cards</div>'}</div>`).join("")}</div>`}
 function nextPhoneHtml(st){const n=st.next;if(!n||!st.awardsDone)return"";const my=(n.votes||{})[PH.pid];const nV=Object.keys(n.votes||{}).length;
-  return `<div class="nextbox"><h3>What's next?</h3><div class="ballot">${NEXT_OPTS.map(o=>`<button class="btn ${my===o?"btn-gold":"btn-ghost"}" data-act="next" data-choice="${o}" ${(n.off||[]).includes(o)?"disabled":""}>${GAME_LBL[o]}${o===st.game?" again":""}${my===o?" ✓":""}${(n.off||[]).includes(o)?(o==="liars"?" · needs 2 phones":" · needs 3 phones"):""}</button>`).join("")}</div><p class="hint">${nV} of ${n.total} voted${n.end?" · starting soon…":""}</p></div>`}
+  return `<div class="nextbox"><h3>What's next?</h3><div class="ballot">${NEXT_OPTS.map(o=>`<button class="btn ${my===o?"btn-gold":"btn-ghost"}" data-act="next" data-choice="${o}" ${(n.off||[]).includes(o)?"disabled":""}>${GAME_LBL[o]}${o===st.game?" again":""}${my===o?" ✓":""}${(n.off||[]).includes(o)?" · needs "+(NEED[o]||3)+" phones":""}</button>`).join("")}</div><p class="hint">${nV} of ${n.total} voted${n.end?" · starting soon…":""}</p></div>`}
 function phoneWwHtml(st,me,meI,players,board){const m=st.ww;if((st.late||[]).includes(PH.pid))return `<div class="who">You're in!</div><p class="hint">You join from the next question.</p>`;if(!m)return `<div class="who">Who would…</div><p class="hint">Waiting for the host…</p>`;
   const voted=(m.voted||[]).includes(PH.pid)||(PH.myVote&&PH.myVote.round==="ww:"+m.round);
   if(m.phase==="vote"){if(voted)return `<div class="who">Vote received 🗳️</div><div class="impq"><small>Who would most likely</small>${esc(m.q)}</div><p class="hint">${(m.voted||[]).length} of ${m.total} voted…</p>`;
