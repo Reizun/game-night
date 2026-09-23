@@ -318,12 +318,14 @@ h1 span{color:var(--red-2)}
 .lcc.sel{transform:translateY(-8px);background:linear-gradient(160deg,rgba(224,182,76,.92),rgba(160,120,30,.75));border-color:#ffe9a3}.lcc.sel .g{background:#0b1024;-webkit-background-clip:text;background-clip:text}.lcc.sel small{color:#0b1024}
 .lcc.ok{border-color:#3cb371;box-shadow:0 0 14px rgba(60,179,113,.6)}.lcc.bad{border-color:var(--red);box-shadow:0 0 14px rgba(192,38,45,.7)}
 .lcshot{font-family:Anton,Impact,sans-serif;font-size:30px;color:var(--gold);letter-spacing:.03em}
-.lctable{position:relative;width:100%;max-width:860px;aspect-ratio:1.6;min-height:320px;max-height:520px;margin:0 auto}
+.lctable{position:relative;width:100%;max-width:860px;aspect-ratio:1.55;min-height:340px;max-height:540px;margin:0 auto}
 .lctable::before{content:"";position:absolute;inset:16% 13%;border-radius:50%;background:radial-gradient(circle at 50% 35%,#24345f,#101c3a);box-shadow:inset 0 0 0 6px rgba(255,233,163,.35),inset 0 0 40px rgba(0,0,0,.5),0 12px 30px rgba(0,0,0,.4)}
 .lcseat{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:4px;width:118px;z-index:2}
 .lcseat .hearts{font-size:15px;letter-spacing:1px;color:#e0506a;line-height:1;text-shadow:0 1px 2px rgba(0,0,0,.5)}.lcseat .hearts .off{color:#3a4566}
 .lcseat .oval{background:var(--card);color:var(--card-ink);border:2px solid #e0b64c;border-radius:999px;padding:8px 14px;text-align:center;min-width:88px;box-shadow:0 4px 10px rgba(0,0,0,.4)}
 .lcseat .oval .n{font-weight:900;font-size:14px;line-height:1.1}.lcseat .oval .c{font-size:12px;color:#5a4a2a;line-height:1.1;margin-top:2px}
+.lcseat .score{background:var(--gold);color:#1a1a1a;font-family:Anton,Impact,sans-serif;font-size:14px;letter-spacing:.04em;padding:2px 11px;border-radius:999px;line-height:1.25;box-shadow:0 2px 6px rgba(0,0,0,.4)}.lcseat .score.neg{background:var(--red);color:#fff}.lcseat .score.lead{background:linear-gradient(120deg,#ffe9a3,#e0b64c 55%,#fff2c2);box-shadow:0 0 0 2px #fff2c2,0 0 14px var(--gold),0 0 28px rgba(224,182,76,.7);animation:leadglow 1.5s ease-in-out infinite alternate}@keyframes leadglow{from{box-shadow:0 0 0 2px #fff2c2,0 0 8px var(--gold),0 0 16px rgba(224,182,76,.5)}to{box-shadow:0 0 0 2px #fff2c2,0 0 18px var(--gold),0 0 36px rgba(224,182,76,.9)}}
+.lcseat .oval{position:relative}.lcseat .rm{position:absolute;top:-7px;right:-7px;width:20px;height:20px;border-radius:50%;background:var(--ground-2);color:var(--muted);border:1px solid var(--muted);font:700 12px/18px Nunito,sans-serif;padding:0;cursor:pointer;opacity:.75}.lcseat .rm:hover{opacity:1;color:var(--ink)}
 .lcseat.turn .oval{box-shadow:0 0 0 3px var(--gold),0 0 20px var(--gold)}.lcseat.dead{opacity:.55}.lcseat.dead .oval{filter:grayscale(1)}
 .lccenter{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:8px;width:64%;z-index:1}
 .lccenter .lccard{padding:8px 22px 6px}.lccenter .lccard .g{font-size:40px}.lccenter .lccard small{font-size:9px;margin-top:4px}
@@ -331,7 +333,7 @@ h1 span{color:var(--red-2)}
 .lcpile small{display:block;font-family:Nunito,sans-serif;font-weight:800;font-size:12px;letter-spacing:0;margin-top:2px}
 .lcclaim{font-size:13px;color:#dfe3ea;text-align:center;line-height:1.3;text-shadow:0 1px 2px rgba(0,0,0,.6)}
 .lclog{width:100%;background:var(--ground);border-radius:10px;padding:10px 14px;font-size:14px;color:var(--muted);text-align:center}.lclog b{color:var(--ink)}
-@media(max-width:600px){.lcseat{width:76px}.lcseat .oval{padding:5px 6px;min-width:60px}.lcseat .oval .n{font-size:11px}.lcseat .oval .c{font-size:10px}.lcseat .hearts{font-size:11px;letter-spacing:0}.lccenter{width:54%}.lccenter .lccard{padding:6px 16px 4px}.lccenter .lccard .g{font-size:30px}.lcpile{padding:5px 10px;font-size:12px}.lcclaim{font-size:11px}.lctable{min-height:320px}}
+@media(max-width:600px){.lcseat .score{font-size:12px;padding:1px 8px}.lcseat{width:76px}.lcseat .oval{padding:5px 6px;min-width:60px}.lcseat .oval .n{font-size:11px}.lcseat .oval .c{font-size:10px}.lcseat .hearts{font-size:11px;letter-spacing:0}.lccenter{width:54%}.lccenter .lccard{padding:6px 16px 4px}.lccenter .lccard .g{font-size:30px}.lcpile{padding:5px 10px;font-size:12px}.lcclaim{font-size:11px}.lctable{min-height:320px}}
 .nextbox{width:100%;background:var(--ground-2);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;align-items:center}
 .nextbox h3{margin:0;font-family:Anton,sans-serif;font-weight:400;letter-spacing:.04em;font-size:22px}
 .nextopts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.nextopts .c{display:inline-block;min-width:22px;padding:1px 7px;border-radius:999px;background:var(--ground);margin-left:6px;font-size:13px}
@@ -735,7 +737,6 @@ h1 span{color:var(--red-2)}
       <span style="display:flex;gap:6px"><button class="btn btn-ghost" id="lcHome">⌂</button><button class="btn btn-ghost" id="lcEnd">End game</button></span>
     </div>
     <div class="impstage" id="lcStage"></div>
-    <section class="panel" style="width:100%"><h2>Scoreboard</h2><ul class="players" id="lcBoard"></ul></section>
   </div>
 </div>
 
@@ -2243,12 +2244,10 @@ function lcDone(){const m=S.lc;return lcAlive().length<=1||(S.lcDeals>0&&m.n>=S.
 function lcNext(){const m=S.lc;if(!m||m.phase!=="reveal")return;const al=lcAlive();if(lcDone()){lcFinish(al.length===1?al[0]:null);return}const r=m.reveal;S.auto=null;lcDeal(m.alive[r.target]?r.target:(al.find(j=>j>r.target)??al[0]))}
 function lcFinish(winner){if(winner!=null&&S.players[winner]){S.players[winner].score+=20;stat(S.players[winner],"lcWin");S.log.unshift(`🏆 <b>${esc(S.players[winner].name)}</b> is the last one standing!`)}finish()}
 function renderLc(){if(S.screen!=="lc"||S.game!=="liars")return;const m=S.lc,st=$("lcStage");$("lcRound").textContent=`Deal ${m?m.n:0}`;$("lcChip").hidden=!S.room;$("lcCode").textContent=S.room?S.room.code:"";$("lcN").textContent=S.players.filter(online).length;
-  const sorted=[...S.players].map((p,i)=>({...p,i})).sort((a,b)=>b.score-a.score);
-  $("lcBoard").innerHTML=sorted.map((p,r)=>`<li><span class="rank">${r+1}</span>${p.pid?`<span class="dot${online(p)?' on':''}"></span>`:''}<span class="name">${esc(p.name)}</span><span class="pts ${p.score<0?'neg':''}">${p.score}</span><button class="x" data-rm="${p.i}" title="Remove player">×</button></li>`).join("");
   if(!m){st.innerHTML=`<div class="lbl">Get ready</div>`;return}
-  const pl=lcPlayers(),n=pl.length||1,onTable=m.pile.reduce((a,x)=>a+x.cards.length,0);
-  const seats=pl.map((i,k)=>{const p=S.players[i],a=m.alive[i],c=(m.hands[i]||[]).length,pulls=m.pulls[i]||0,left=Math.max(0,S.lcChambers-pulls);const ang=-Math.PI/2+k*2*Math.PI/n;const x=50+44*Math.cos(ang),y=50+43*Math.sin(ang);
-    return `<div class="lcseat${m.turn===i&&m.phase==="play"?" turn":""}${a?"":" dead"}" style="left:${x.toFixed(1)}%;top:${y.toFixed(1)}%"><div class="hearts">${a?"♥".repeat(left)+`<span class="off">${"♥".repeat(pulls)}</span>`:"💀"}</div><div class="oval"><div class="n">${esc(p.name)}</div><div class="c">${a?c+" card"+(c===1?"":"s"):"out"}</div></div></div>`}).join("");
+  const pl=lcPlayers(),n=pl.length||1,onTable=m.pile.reduce((a,x)=>a+x.cards.length,0),top=Math.max(0,...pl.map(i=>S.players[i].score));
+  const seats=pl.map((i,k)=>{const p=S.players[i],a=m.alive[i],c=(m.hands[i]||[]).length,pulls=m.pulls[i]||0,left=Math.max(0,S.lcChambers-pulls);const ang=-Math.PI/2+k*2*Math.PI/n;const x=50+44*Math.cos(ang),y=50+41*Math.sin(ang);
+    return `<div class="lcseat${m.turn===i&&m.phase==="play"?" turn":""}${a?"":" dead"}" style="left:${x.toFixed(1)}%;top:${y.toFixed(1)}%"><div class="score${p.score<0?" neg":""}${top>0&&p.score===top?" lead":""}">${top>0&&p.score===top?"👑 ":""}${p.score}</div><div class="hearts">${a?"♥".repeat(left)+`<span class="off">${"♥".repeat(pulls)}</span>`:"💀"}</div><div class="oval"><div class="n">${esc(p.name)}</div><div class="c">${a?c+" card"+(c===1?"":"s"):"out"}</div><button class="rm" data-rm="${i}" title="Remove player">×</button></div></div>`}).join("");
   const tableCard=`<div class="lccard"><span class="g">${LC_GL[m.table]}</span><small>${LC_RANK[m.table]}s</small></div>`;
   let center,below;
   if(m.phase==="play"){const T=m.turn!=null?S.players[m.turn]:null;
@@ -2262,7 +2261,7 @@ function renderLc(){if(S.screen!=="lc"||S.game!=="liars")return;const m=S.lc,st=
   const bind=(id,fn)=>{const b=$(id);if(b)b.onclick=fn};bind("lcNextBtn",lcNext);bind("lcAutoBtn",lcAuto);bind("lcRedeal",()=>ask("Deal new cards? The table is cleared, nobody gets shot.",()=>lcDeal(m.turn),"New deal"))}
 $("lcHome").onclick=()=>{S.screen="home";save();render()};
 $("lcEnd").onclick=()=>ask("End the game now and show the results?",finish,"End game");
-$("lcBoard").onclick=e=>{const b=e.target.closest("[data-rm]");if(!b)return;const p=S.players[+b.dataset.rm];if(!p)return;ask(`Remove ${p.name} from the game?`,()=>removePlayer(+b.dataset.rm),"Remove")};
+$("lcStage").onclick=e=>{const b=e.target.closest("[data-rm]");if(!b)return;const p=S.players[+b.dataset.rm];if(!p)return;ask(`Remove ${p.name} from the game?`,()=>removePlayer(+b.dataset.rm),"Remove")};
 // ---- phone side ----
 function lcFetchPriv(v){if(!PH||PH.privBusy)return;PH.privBusy=true;PH.privTries=(PH.privTries||0)+1;
   db.get(`rooms/${PH.code}/private/${PH.pid}`).then(d=>{PH.privBusy=false;if(d&&d.v===v){PH.priv=d;PH.privTries=0;PH.lcSel=[];renderPhone()}else if(PH.privTries<8)setTimeout(()=>lcFetchPriv(v),1000)}).catch(()=>{PH.privBusy=false;if(PH.privTries<8)setTimeout(()=>lcFetchPriv(v),1500)})}
