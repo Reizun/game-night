@@ -498,7 +498,7 @@ h1 span{color:var(--red-2)}
 <div class="app">
 <header>
   <h1>Game <span>Night</span></h1>
-  <div class="script">Karaoke Challenge · Imposter · Who Would</div>
+  <div class="script">Karaoke Challenge · Imposter · Who Would · Liar's Cards</div>
   <button class="btn btn-gold" id="installBtn" hidden style="padding:8px 14px;font-size:13px">📲 Install app</button>
 </header>
 
@@ -511,7 +511,7 @@ h1 span{color:var(--red-2)}
       <button class="btn btn-ghost" id="homeResume" hidden>↩ Resume game</button>
       <button class="btn btn-red" id="homeStart">▶ Start game</button>
       <button class="btn btn-gold" id="homeHost">📱 Host with phones</button>
-      <p class="hint" style="text-align:center;margin:8px 0 0">Start game = Karaoke Challenge on this device. Imposter and Who Would need phones – tap "Host with phones".</p>
+      <p class="hint" style="text-align:center;margin:8px 0 0">Start game = Karaoke Challenge on this device. Imposter, Who Would and Liar's Cards need phones – tap "Host with phones".</p>
       <button class="btn btn-ghost" id="homeJoin">📲 Join with your phone</button>
       <button class="btn btn-ghost" id="homeSettings">⚙ Settings</button>
     </div>
@@ -540,7 +540,7 @@ h1 span{color:var(--red-2)}
         <button class="btn btn-gold" type="submit">+</button>
       </form>
       <div class="filters" id="artistList" style="margin-top:10px"></div>
-      <p class="hint">Each artist becomes a card: "Sing a … song" worth 20 points. Tap an artist to remove it.</p>
+      <p class="hint">Each artist becomes a card: "Sing a … song" worth 10 points. Tap an artist to remove it.</p>
     </div>
     <p class="hint" id="artistsSummary"></p>
   </section>
@@ -579,8 +579,9 @@ h1 span{color:var(--red-2)}
     <div class="rules">
       <label>Cards per player <input type="number" id="lcHand" value="5" min="3" max="8"></label>
       <label>Revolver chambers <input type="number" id="lcChambers" value="6" min="2" max="8"></label>
+      <label>Max deals (0 = until one is left) <input type="number" id="lcDeals" value="0" min="0" max="50"></label>
     </div>
-    <p class="hint">Like Liar's Bar: a table card (Queen, King or Ace) is announced and everyone gets cards. On your turn play 1–3 cards face down and claim they are the table card – Jokers count as anything – or call the previous player a liar. A caught lie or a wrong call means pulling the trigger on your own revolver: one chamber is loaded, and every pull gets riskier. Last one standing wins. The deck grows with the player count (2–8 players, one phone each). Points: +5 for catching a liar or for an honest play that gets called, +20 for the last one standing.</p>
+    <p class="hint">Like Liar's Bar: a table card (Queen, King or Ace) is announced and everyone gets cards. On your turn play 1–3 cards face down and claim they are the table card – Jokers count as anything – or call the previous player a liar. A caught lie or a wrong call means pulling the trigger on your own revolver: one chamber is loaded, and every pull gets riskier. If everyone else has emptied their hand, the last player holding cards pulls the trigger. Last one standing wins – or set a maximum number of deals and let the points decide. The deck grows with the player count (2–8 players, one phone each). Points: +5 for catching a liar or for an honest play that gets called, +10 for going out last, +20 for the last one standing.</p>
   </section>
   <section class="panel" data-tab="general">
     <h2>Auto-pilot</h2>
@@ -665,7 +666,7 @@ h1 span{color:var(--red-2)}
     <h2>Players</h2>
     <ul class="players" id="lobbyPlayers"></ul>
     <form class="addrow" id="lobbyAdd" style="margin-top:10px"><input id="lobbyName" placeholder="Add a player without phone" maxlength="18" autocomplete="off"><button class="btn btn-ghost" type="submit">+</button></form>
-    <p class="hint">Players without a phone are controlled from this screen. Turn order = join order.</p>
+    <p class="hint">Players without a phone can only play Karaoke Challenge and are controlled from this screen. Turn order = join order.</p>
   </section>
   <div class="start"><button class="btn btn-red" id="lobbyStart" disabled>Waiting for players…</button></div>
 </div>
@@ -866,7 +867,7 @@ const CHALLENGES = [
  ["K-Pop","Sing 'Bboom Bboom' by MOMOLAND",1],
  ["K-Pop","Sing 'Rush Hour' by Crush ft. j-hope",2],
  ["K-Pop","Sing 'Ice Cream' by BLACKPINK & Selena Gomez as a duet with {P}",1],
- ["K-Pop","Sing a K-Pop B-side that nobody in the room knows – 30 points if you pull it off",3],
+ ["K-Pop","Sing a K-Pop B-side that nobody in the room knows",3],
  ["K-Pop","Sing a K-Pop song and translate one line into your language on the spot",3],
  ["K-Pop","Sing a K-Pop song while the group holds up light sticks (phones count)",1],
  ["K-Pop","Sing the intro of a K-Pop song only – the group guesses the group",2],
@@ -947,7 +948,6 @@ const CHALLENGES = [
  ["Disney","Sing 'What's This' as Jack Skellington",2],
  ["Disney","Sing 'Strangers Like Me' from Tarzan",2],
  ["Disney","Sing 'You'll Be in My Heart' from Tarzan",1],
- ["Disney","Sing 'Wish' from the movie Wish",2],
  ["Disney","Sing 'This Wish' – the group is the chorus",2],
  ["Disney","Sing a Disney song but as a Disney villain would sing it",2],
  ["Disney","Sing a Disney song as a duet with {P}",2],
@@ -957,7 +957,6 @@ const CHALLENGES = [
  ["Disney","Sing a song from a Disney movie",1],
  ["Disney","Sing 'Let It Go' with the full Elsa arm sweep",2],
  ["Disney","Sing a Disney villain song as evil as you can",2],
- ["Disney","Sing a Disney duet with {P}",2],
  ["Disney","Sing 'A Whole New World' on an imaginary magic carpet",2],
  ["Disney","Sing a Disney song as if you're the sidekick, not the hero",2],
  ["Disney","Sing a Moana song like you're standing on a boat in a storm",2],
@@ -1064,7 +1063,7 @@ const CHALLENGES = [
  ["Artists","Sing an Alicia Keys song",2],
  ["Artists","Sing a Céline Dion song",3],
  ["Artists","Sing an Elvis Presley song",2],
- ["Artists","Sing a The Beatles song",1],
+ ["Artists","Sing a song by The Beatles",1],
  ["Artists","Sing a Bob Marley song",1],
  ["Artists","Sing a Spice Girls song",1],
  ["Artists","Sing a One Direction song",1],
@@ -1112,46 +1111,17 @@ const CHALLENGES = [
  ["Genres","Sing a song from a video game",2],
  ["Genres","Sing a movie theme with no lyrics – you make them up",3],
  // Years
- ["Years","Sing a song released in 1990",2],
- ["Years","Sing a song released in 1991",2],
- ["Years","Sing a song released in 1992",2],
- ["Years","Sing a song released in 1993",2],
- ["Years","Sing a song released in 1994",2],
- ["Years","Sing a song released in 1995",2],
- ["Years","Sing a song released in 1996",2],
- ["Years","Sing a song released in 1997",2],
- ["Years","Sing a song released in 1998",2],
- ["Years","Sing a song released in 1999",2],
- ["Years","Sing a song released in 2000",2],
- ["Years","Sing a song released in 2001",2],
- ["Years","Sing a song released in 2002",2],
- ["Years","Sing a song released in 2003",2],
- ["Years","Sing a song released in 2004",2],
- ["Years","Sing a song released in 2005",1],
- ["Years","Sing a song released in 2006",1],
- ["Years","Sing a song released in 2007",1],
- ["Years","Sing a song released in 2008",1],
- ["Years","Sing a song released in 2009",1],
- ["Years","Sing a song released in 2010",1],
- ["Years","Sing a song released in 2011",1],
- ["Years","Sing a song released in 2012",1],
- ["Years","Sing a song released in 2013",1],
- ["Years","Sing a song released in 2014",1],
- ["Years","Sing a song released in 2015",1],
- ["Years","Sing a song released in 2016",1],
- ["Years","Sing a song released in 2017",1],
- ["Years","Sing a song released in 2018",1],
- ["Years","Sing a song released in 2019",1],
- ["Years","Sing a song released in 2020",1],
- ["Years","Sing a song released in 2021",1],
- ["Years","Sing a song released in 2022",1],
- ["Years","Sing a song released in 2023",1],
- ["Years","Sing a song released in 2024",1],
- ["Years","Sing a song released in 2025",1],
  ["Years","Sing a song from the year {P} was born",2],
  ["Years","Sing a song from the year you finished school",2],
  ["Years","Sing a song from the year of your first phone",2],
  ["Years","The group picks a year – sing a song from it",3],
+ ["Years","Sing a song from 1990–1994",2],
+ ["Years","Sing a song from 1995–1999",2],
+ ["Years","Sing a song from 2000–2004",1],
+ ["Years","Sing a song from 2005–2009",1],
+ ["Years","Sing a song from 2010–2014",1],
+ ["Years","Sing a song from 2015–2019",1],
+ ["Years","Sing a song from 2020 or later",1],
  ["Years","Sing a song older than everyone in the room",3],
  ["Years","Sing a song from the 70s",2],
  ["Years","Sing a song from the year your parents met (a guess is fine)",3],
@@ -1310,9 +1280,9 @@ const BASE = {1:10,2:10,3:10};
 
 // ---- State ----
 const KEY="karaoke-challenge-en-v1";
-let S = {players:[], turn:0, cats:[...CATS], penalty:5, bonus:10, current:null, disabledArtists:[], hiddenArtists:[], log:[], used:[], customArtists:[], customCards:[], game:"karaoke", imp:null, impUsed:[], impQ:6, impDiscuss:90, impPts:10, impImpPts:5, ww:null, wwUsed:[], wwQ:10, autoMode:"ready", autoSec:10, auto:null, plays:{}, lcHand:5, lcChambers:6, rounds:3, timerSec:15, mics:1, round:1, started:0, screen:"home", volume:0.7, muted:false, mode:"local", room:null, inGame:false, mvpBonus:20, awardBonus:15, vote:null, awards:null, awardsDone:false, timer:null, timerBuzzed:false, catsV:0, back:null, lastVote:null};
+let S = {players:[], turn:0, cats:[...CATS], penalty:5, bonus:10, current:null, disabledArtists:[], hiddenArtists:[], log:[], used:[], customArtists:[], customCards:[], game:"karaoke", imp:null, impUsed:[], impQ:6, impDiscuss:90, impPts:10, impImpPts:5, ww:null, wwUsed:[], wwQ:10, autoMode:"ready", autoSec:10, auto:null, plays:{}, lcHand:5, lcChambers:6, lcDeals:0, rounds:3, timerSec:15, mics:1, round:1, started:0, screen:"home", volume:0.7, muted:false, mode:"local", room:null, inGame:false, mvpBonus:20, awardBonus:15, vote:null, awards:null, awardsDone:false, timer:null, timerBuzzed:false, catsV:0, back:null, lastVote:null};
 let draft=null;
-try{const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.players){S={...S,...s};if(!S.catsV){for(const c of ["2000s","K-Pop","Disney","High School Musical","Word Hunt","Artists","Genres","Years","Mood"])if(!S.cats.includes(c))S.cats.push(c);}if(!Array.isArray(S.disabledArtists))S.disabledArtists=[];if(!Array.isArray(S.hiddenArtists))S.hiddenArtists=[];if(!S.customArtists)S.customArtists=[];if(!Array.isArray(S.customCards))S.customCards=[];if(!S.game)S.game="karaoke";if(!S.impQ)S.impQ=6;if(S.impDiscuss==null)S.impDiscuss=90;if(S.impPts==null)S.impPts=10;if(S.impImpPts==null)S.impImpPts=5;if(!Array.isArray(S.impUsed))S.impUsed=[];if(!S.wwQ)S.wwQ=10;if(!S.autoMode)S.autoMode="ready";if(!S.plays||typeof S.plays!=="object")S.plays={};if(!S.lcHand)S.lcHand=5;if(!S.lcChambers)S.lcChambers=6;if(!S.autoSec)S.autoSec=10;if(!Array.isArray(S.wwUsed))S.wwUsed=[];if(S.rounds==null)S.rounds=3;if(S.volume==null)S.volume=.7;if(S.muted==null)S.muted=false;if(S.timerSec==null)S.timerSec=15;if(!S.mics)S.mics=1;if(!S.round)S.round=1;if(!S.started)S.started=0;if(!["home","settings","players","game","final","lobby","join","phone","imp","ww"].includes(S.screen))S.screen="home";if(S.screen==="setup")S.screen="home";}}catch(e){}
+try{const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.players){S={...S,...s};if(!S.catsV){for(const c of ["2000s","K-Pop","Disney","High School Musical","Word Hunt","Artists","Genres","Years","Mood"])if(!S.cats.includes(c))S.cats.push(c);}if(!Array.isArray(S.disabledArtists))S.disabledArtists=[];if(!Array.isArray(S.hiddenArtists))S.hiddenArtists=[];if(!S.customArtists)S.customArtists=[];if(!Array.isArray(S.customCards))S.customCards=[];if(!S.game)S.game="karaoke";if(!S.impQ)S.impQ=6;if(S.impDiscuss==null)S.impDiscuss=90;if(S.impPts==null)S.impPts=10;if(S.impImpPts==null)S.impImpPts=5;if(!Array.isArray(S.impUsed))S.impUsed=[];if(!S.wwQ)S.wwQ=10;if(!S.autoMode)S.autoMode="ready";if(!S.plays||typeof S.plays!=="object")S.plays={};if(!S.lcHand)S.lcHand=5;if(!S.lcChambers)S.lcChambers=6;if(S.lcDeals==null)S.lcDeals=0;if(!S.autoSec)S.autoSec=10;if(!Array.isArray(S.wwUsed))S.wwUsed=[];if(S.rounds==null)S.rounds=3;if(S.volume==null)S.volume=.7;if(S.muted==null)S.muted=false;if(S.timerSec==null)S.timerSec=15;if(!S.mics)S.mics=1;if(!S.round)S.round=1;if(!S.started)S.started=0;if(!["home","settings","players","game","final","lobby","join","phone","imp","ww","lc"].includes(S.screen))S.screen="home";if(S.screen==="setup")S.screen="home";}}catch(e){}
 if(!(S.catsV>=3)&&!S.cats.includes("Your cards"))S.cats.push("Your cards");S.catsV=3;if(!S.decV){if(S.timerSec===90)S.timerSec=15;S.decV=1}S.players.forEach(p=>{p.stats=p.stats||{}});if(!S.mode)S.mode="local";if(S.mvpBonus==null)S.mvpBonus=20;if(S.awardBonus==null)S.awardBonus=15;
 if(S.inGame==null)S.inGame=!!(S.current||(S.players.length>=2&&(S.round>1||S.started>0||S.players.some(p=>p.score!==0))));
 if(S.screen==="lobby"&&!(S.mode==="host"&&S.room))S.screen="home";
@@ -1489,7 +1459,7 @@ function render(){
     $("card").classList.add("flipped");
   }else{
     $("who").innerHTML=ok?`Up next: <b>${esc(cur.name)}</b>`:"Add players first";
-    $("sub").textContent=ok?"Pick 10, 20 or 30 points to draw a card.":"At least 2 players, then draw a card.";
+    $("sub").textContent=ok?"Draw a card – every card is worth 10 points.":"At least 2 players, then draw a card.";
     $("draw").hidden=false;{const av=deck().filter(c=>S.cats.includes(c[0]));[...$("draw").querySelectorAll("[data-diff]")].forEach(b=>{const d=+b.dataset.diff;b.disabled=!ok||!av.some(c=>d===0||c[2]===d)})}$("done").hidden=true;$("pass").hidden=true;$("fail").hidden=true;$("accept").hidden=true;$("picked").hidden=true;
     $("card").classList.remove("flipped");
   }
@@ -1688,12 +1658,13 @@ function removePlayer(i){const p=S.players[i];if(!p)return;const kar=S.game==="k
   if(S.imp&&S.imp.imposter===i){S.imp=null;S.round--;S.players.splice(i,1);if(S.turn>i)S.turn--;if(S.turn>=S.players.length)S.turn=0;toast(`${p.name} was the imposter – new question`);impNext();return}
   if(S.imp){S.imp.imposter=sh(S.imp.imposter);S.imp.answers=remapKeys(S.imp.answers);S.imp.votes=remap(S.imp.votes)}
   if(S.ww)S.ww.votes=remap(S.ww.votes);
-  if(S.lc){const m=S.lc;m.hands=remapKeys(m.hands);m.alive=remapKeys(m.alive);m.pulls=remapKeys(m.pulls);m.bullet=remapKeys(m.bullet);m.pile=m.pile.filter(x=>x.by!==i).map(x=>({...x,by:sh(x.by)}));
-    if(m.last&&m.last.by===i)m.last=null;else if(m.last)m.last.by=sh(m.last.by);m.turn=m.turn===i?null:sh(m.turn);
+  if(S.awards){S.awards.forEach(a=>{a.winners=a.winners.filter(x=>x!==i).map(sh)});S.awards=S.awards.filter(a=>a.winners.length)}if(S.lastVote)S.lastVote.win=(S.lastVote.win||[]).filter(x=>x!==i).map(sh);
+  if(S.lc){const m=S.lc;const nxTurn=m.turn===i?lcNextActor(i):null;m.hands=remapKeys(m.hands);m.alive=remapKeys(m.alive);m.pulls=remapKeys(m.pulls);m.bullet=remapKeys(m.bullet);m.pile=m.pile.filter(x=>x.by!==i).map(x=>({...x,by:sh(x.by)}));
+    if(m.last&&m.last.by===i)m.last=null;else if(m.last)m.last.by=sh(m.last.by);m.turn=m.turn===i?(nxTurn==null?null:sh(nxTurn)):sh(m.turn);
     if(m.reveal){const r=m.reveal;if([r.caller,r.by,r.target].includes(i))m.reveal=null;else{r.caller=sh(r.caller);r.by=sh(r.by);r.target=sh(r.target)}}}
   S.players.splice(i,1);if(S.turn>i)S.turn--;if(S.turn>=S.players.length)S.turn=0;S.auto=null;toast(`${p.name} removed`);
   if(S.imp&&S.imp.phase==="answer"&&impPlayers().every(j=>S.imp.answers[j]!=null))S.imp.phase="reveal";
-  if(S.lc){const m=S.lc;if(m.phase==="reveal"&&!m.reveal)m.phase="play";if(m.phase==="play"&&(m.turn==null||!m.alive[m.turn]))m.turn=lcAlive()[0];if(lcAlive().length<=1){save();lcFinish(lcAlive()[0]);return}}
+  if(S.lc){const m=S.lc;if(m.phase==="reveal"&&!m.reveal)m.phase="play";if(lcAlive().length<=1){save();lcFinish(lcAlive()[0]);return}if(m.phase==="play"&&(m.turn==null||!m.alive[m.turn])){const c=lcAlive().find(j=>(m.hands[j]||[]).length>0&&!(m.last&&m.last.by===j));if(c!=null)m.turn=c;else{save();lcDeal(lcAlive()[0]);return}}}
   save();render();
   if(S.imp&&S.imp.phase==="vote"&&impPlayers().every(j=>S.imp.votes[j]!=null))impResult();
   if(S.ww&&S.ww.phase==="vote"&&impPlayers().every(j=>S.ww.votes[j]!=null))wwResult()}
@@ -1718,7 +1689,7 @@ function tallyVote(){const v=S.vote,t={};Object.values(v.votes).forEach(n=>{n=St
   let max=0;Object.values(t).forEach(n=>max=Math.max(max,n));const win=S.players.map((p,i)=>i).filter(i=>max>0&&t[S.players[i].name.toLowerCase()]===max);return{t,max,win}}
 function closeVote(){const v=S.vote;if(!v)return;const {t,max,win}=tallyVote();
   S.players.forEach(p=>{const n=t[p.name.toLowerCase()];if(n)stat(p,"mvp",n)});
-  if(win.length){win.forEach(i=>{const p=S.players[i];p.score+=S.mvpBonus;stat(p,"mvpWins")});const names=win.map(i=>S.players[i].name).join(" & ");
+  if(win.length){win.forEach(i=>{const p=S.players[i];p.score+=S.mvpBonus;p.rs=(p.rs||0)+S.mvpBonus;stat(p,"mvpWins")});const names=win.map(i=>S.players[i].name).join(" & ");
     S.log.unshift(`🏅 Best performance in round ${v.round}: <b>${esc(names)}</b> <span class="up">+${S.mvpBonus}</span>`);toast(`🏅 ${names} +${S.mvpBonus} – best performance!`);sfx.win()}
   else toast("No votes came in – no bonus this round");
   S.lastVote={round:v.round,win};S.vote=null;if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});nextRound()}
@@ -1752,7 +1723,7 @@ function nextVote(i,choice){if(!S.next||!NEXT_OPTS.includes(choice)||!nextAvail(
 function nextStart(g){if(!NEXT_OPTS.includes(g))return;if(!nextAvail(g)){toast(GAME_LBL[g].replace(/^\S+ /,"")+(g==="karaoke"?" needs 2 players":g==="liars"?" needs at least 2 players with phones":" needs at least 3 players with phones"));if(S.next){S.next.end=null;save();render()}return}clearInterval(nextT);nextT=null;S.next=null;S.game=g;if(g==="imposter")impStart();else if(g==="whowould")wwStart();else if(g==="liars")lcStart();else startGame()}
 let nextT=null;
 function renderNext(done){const box=$("nextBox");const show=done&&S.next&&S.mode==="host"&&!!S.room;box.hidden=!show;if(!show){clearInterval(nextT);nextT=null;return}const t=nextTally();const left=S.next.end?Math.max(0,Math.ceil((S.next.end-Date.now())/1000)):null;
-  box.innerHTML=`<h3>What's next?</h3><div class="hint" style="margin:0">Vote on your phones – or the host picks.</div><div class="nextopts">${NEXT_OPTS.map(o=>`<button class="btn ${t.lead===o?"btn-gold":"btn-ghost"}" data-next="${o}" ${nextAvail(o)?"":"disabled title=\"Needs 3 players with phones\""}>${GAME_LBL[o]}${o===S.game?" again":""}<span class="c">${t.cnt[o]||0}</span></button>`).join("")}</div>${NEXT_OPTS.some(o=>!nextAvail(o))?`<div class="hint" style="margin:0">Imposter and Who Would need 3 players with phones, Liar's Cards 2.</div>`:""}<div class="hint" style="margin:0">${t.nV} of ${t.total} voted${left!=null&&t.lead?` · everyone's in – starting ${GAME_LBL[t.lead]} in <b id="nextLeft">${left}</b> s`:t.tie&&t.nV>=t.total?" · it's a tie – host decides":""}</div>`;
+  box.innerHTML=`<h3>What's next?</h3><div class="hint" style="margin:0">Vote on your phones – or the host picks.</div><div class="nextopts">${NEXT_OPTS.map(o=>`<button class="btn ${t.lead===o?"btn-gold":"btn-ghost"}" data-next="${o}" ${nextAvail(o)?"":"disabled title=\""+(o==="liars"?"Needs 2":"Needs 3")+" players with phones\""}>${GAME_LBL[o]}${o===S.game?" again":""}<span class="c">${t.cnt[o]||0}</span></button>`).join("")}</div>${NEXT_OPTS.some(o=>!nextAvail(o))?`<div class="hint" style="margin:0">Imposter and Who Would need 3 players with phones, Liar's Cards 2.</div>`:""}<div class="hint" style="margin:0">${t.nV} of ${t.total} voted${left!=null&&t.lead?` · everyone's in – starting ${GAME_LBL[t.lead]} in <b id="nextLeft">${left}</b> s`:t.tie&&t.nV>=t.total?" · it's a tie – host decides":""}</div>`;
   box.querySelectorAll("[data-next]").forEach(b=>b.onclick=()=>nextStart(b.dataset.next));
   if(S.next.end&&!nextT)nextT=setInterval(()=>{if(!S.next||!S.next.end||S.screen!=="final"){clearInterval(nextT);nextT=null;return}const l=Math.max(0,Math.ceil((S.next.end-Date.now())/1000));const el=$("nextLeft");if(el)el.textContent=l;if(l<=0){clearInterval(nextT);nextT=null;const tt=nextTally();if(tt.lead)nextStart(tt.lead)}},250)}
 function renderFinal(){const done=!!S.awardsDone;renderNext(done);const sorted=[...S.players].sort((a,b)=>b.score-a.score);const top=sorted.length?sorted[0].score:0;const wins=sorted.filter(p=>p.score===top);
@@ -1775,7 +1746,7 @@ function snapshot(){const phase=S.screen==="final"?"final":S.vote?"vote":S.inGam
   const lm=S.game==="liars"?S.lc:null;const pidOf=i=>i==null?null:(S.players[i]||{}).pid||null,nameOf=i=>i==null?"":(S.players[i]||{}).name||"";
   const lcSnap=lm?{n:lm.n,phase:lm.phase,table:lm.table,turn:pidOf(lm.turn),turnName:nameOf(lm.turn),aliveN:lcAlive().length,hv:lm.hv||{},chambers:S.lcChambers,
     last:lm.last?{name:nameOf(lm.last.by),n:lm.last.cards.length}:null,pile:lm.pile.length,
-    reveal:lm.reveal?{caller:nameOf(lm.reveal.caller),by:nameOf(lm.reveal.by),cards:lm.reveal.cards,target:nameOf(lm.reveal.target),dead:lm.reveal.dead,liar:lm.reveal.liar,pull:lm.reveal.pull}:null,
+    reveal:lm.reveal?{caller:nameOf(lm.reveal.caller),by:nameOf(lm.reveal.by),cards:lm.reveal.cards,target:nameOf(lm.reveal.target),dead:lm.reveal.dead,liar:lm.reveal.liar,pull:lm.reveal.pull,forced:!!lm.reveal.forced}:null,
     players:lcPlayers().map(i=>({name:S.players[i].name,pid:S.players[i].pid,alive:!!lm.alive[i],cards:(lm.hands[i]||[]).length,pulls:lm.pulls[i]||0}))}:null;
   autoSync();const au=S.auto?{key:S.auto.key,ready:S.auto.ready,end:S.auto.end||null,mode:S.autoMode,total:impPlayers().length}:null;
   return{phase,game:S.game||"karaoke",imp:impSnap,ww:wwSnap,lc:lcSnap,auto:au,wwQ:S.wwQ,cards:S.game==="whowould"?S.players.map(p=>({name:p.name,cards:p.cards||[]})):null,impQ:S.impQ,impPts:S.impPts,round:S.round,rounds:S.rounds,turn:S.turn,
@@ -1785,7 +1756,7 @@ function snapshot(){const phase=S.screen==="final"?"final":S.vote?"vote":S.inGam
     vote:S.vote?{round:S.vote.round,voted:Object.keys(S.vote.votes),total:voters().filter(i=>S.players[i].pid).length}:null,
     lastVote:S.lastVote?{round:S.lastVote.round,win:S.lastVote.win.map(i=>S.players[i]&&S.players[i].name).filter(Boolean)}:null,
     awards:(S.awards||[]).filter(a=>a.revealed).map(a=>({em:a.em,t:a.t,d:a.d,winners:a.winners.map(i=>S.players[i].name)})),
-    awardsLeft:(S.awards||[]).filter(a=>!a.revealed).length,awardsDone:!!S.awardsDone,next:S.screen==="final"&&S.next?{votes:S.next.votes,total:impPlayers().length,end:S.next.end||null,off:NEXT_OPTS.filter(o=>!nextAvail(o))}:null,log:S.log.slice(0,4),at:Date.now()}}
+    late:S.players.filter(p=>p.late&&p.pid).map(p=>p.pid),awardsLeft:(S.awards||[]).filter(a=>!a.revealed).length,awardsDone:!!S.awardsDone,next:S.screen==="final"&&S.next?{votes:S.next.votes,total:impPlayers().length,end:S.next.end||null,off:NEXT_OPTS.filter(o=>!nextAvail(o))}:null,log:S.log.slice(0,4),at:Date.now()}}
 function netStatusText(){if(!S.room)return"";const n=S.players.filter(online).length;return `${n} phone${n===1?"":"s"} connected`}
 function rememberRoom(code){S.myRooms=(S.myRooms||[]).filter(r=>r.code!==code);S.myRooms.push({code,at:Date.now()});S.myRooms=S.myRooms.slice(-10)}
 function cleanupRooms(){const keep=S.room&&S.room.code;const old=(S.myRooms||[]).filter(r=>r.code!==keep);old.forEach(r=>{db.del(`rooms/${r.code}`).catch(()=>{})});S.myRooms=(S.myRooms||[]).filter(r=>r.code===keep)}
@@ -1929,7 +1900,7 @@ $("phBody").onclick=e=>{const b=e.target.closest("[data-act]");if(!b||b.disabled
 // ---- Navigation, settings, render extras ----
 let WL=null;
 async function wakeLock(on){try{if(on&&!WL&&navigator.wakeLock&&document.visibilityState==="visible"){WL=await navigator.wakeLock.request("screen");WL.addEventListener("release",()=>{WL=null})}else if(!on&&WL){const w=WL;WL=null;await w.release()}}catch(e){WL=null}}
-document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")wakeLock(["game","lobby","phone","imp","ww"].includes(S.screen))});
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")wakeLock(["game","lobby","phone","imp","ww","lc"].includes(S.screen))});
 function renderOwnCards(){const sel=$("cardCat");if(!sel.options.length)sel.innerHTML=CATS.map(c=>`<option value="${esc(c)}"${c==="Your cards"?" selected":""}>${esc(c)}</option>`).join("");
   $("cardList").innerHTML=S.customCards.map((c,i)=>`<div class="oc"><span class="t">${esc(c.text)}</span><span class="m"><b>10</b> · ${esc(c.cat)}</span><button class="x" data-oc="${i}" title="Remove">×</button></div>`).join("")||'<div class="hint" style="margin:0">No own cards yet.</div>';}
 $("cardForm").onsubmit=e=>{e.preventDefault();const text=$("cardText").value.trim().replace(/\s+/g," ");if(text.length<5){toast("Write a bit more");return}
@@ -1944,7 +1915,7 @@ function renderExtra(){renderOwnCards();if(S.screen==="home")renderFan();
   const canResume=(S.inGame&&S.players.length>=2)||(S.mode==="host"&&S.room&&!S.inGame);
   $("homeResume").hidden=!canResume;$("homeResume").textContent=S.inGame?"↩ Resume game":"↩ Back to lobby";
   $("homeHost").disabled=!NET_OK;$("homeJoin").disabled=!NET_OK;if(!NET_OK)$("homeHost").title=$("homeJoin").title="Not set up on this copy yet";
-  $("mvpBonus").value=S.mvpBonus;$("awardBonus").value=S.awardBonus;$("mics").value=S.mics||1;$("impQ").value=S.impQ;$("lcHand").value=S.lcHand;$("lcChambers").value=S.lcChambers;$("wwQ").value=S.wwQ;$("autoMode").value=S.autoMode;$("autoSec").value=S.autoSec;$("impDiscuss").value=S.impDiscuss;$("impPts").value=S.impPts;$("impImpPts").value=S.impImpPts;
+  $("mvpBonus").value=S.mvpBonus;$("awardBonus").value=S.awardBonus;$("mics").value=S.mics||1;$("impQ").value=S.impQ;$("lcHand").value=S.lcHand;$("lcChambers").value=S.lcChambers;$("lcDeals").value=S.lcDeals;$("wwQ").value=S.wwQ;$("autoMode").value=S.autoMode;$("autoSec").value=S.autoSec;$("impDiscuss").value=S.impDiscuss;$("impPts").value=S.impPts;$("impImpPts").value=S.impImpPts;
   if(S.screen==="lobby"&&S.room){$("lobbyCode").textContent=S.room.code;$("lobbyUrl").textContent=joinUrl(S.room.code).replace(/^https?:\/\//,"");renderQr();$("lobbyStatus").textContent=netStatusText();
     $("lobbyPlayers").innerHTML=S.players.map((p,i)=>`<li><span class="rank">${i+1}</span><span class="dot${online(p)?' on':''}" style="${p.pid?'':'visibility:hidden'}"></span><span class="name">${esc(p.name)}</span><span class="hint">${p.pid?(online(p)?"phone":"phone offline"):"no phone"}</span><button class="x" data-kick="${i}" title="Remove">×</button></li>`).join("")||`<li style="color:var(--muted)">Nobody yet – scan the QR code or type the room code</li>`;
     [...$("gameSel").querySelectorAll("[data-game]")].forEach(b=>b.classList.toggle("on",b.dataset.game===(S.game||"karaoke")));$("gameHint").textContent=S.game==="liars"?"Liar's Cards: bluff with cards, call liars, survive the revolver. 2–8 players, all with phones.":S.game==="imposter"?"Imposter: needs at least 3 players, all with phones.":S.game==="whowould"?"Who Would: a question, everyone votes for a player – no points, just the review at the end.":"Karaoke Challenge: draw cards, sing, pass, sing-offs.";
@@ -1959,7 +1930,7 @@ function renderExtra(){renderOwnCards();if(S.screen==="home")renderFan();
   if(S.screen==="final")renderFinal();
   if(S.screen==="phone")renderPhone();
   if(S.screen==="game")paintTimer();
-  wakeLock(["game","lobby","phone"].includes(S.screen))}
+  wakeLock(["game","lobby","phone","imp","ww","lc"].includes(S.screen))}
 $("mics").onchange=e=>{S.mics=Math.max(1,Math.min(8,+e.target.value||1));save()};
 $("mvpBonus").onchange=e=>{S.mvpBonus=Math.max(0,+e.target.value||0);save()};
 $("awardBonus").onchange=e=>{S.awardBonus=Math.max(0,+e.target.value||0);save()};
@@ -2005,13 +1976,13 @@ const IMP_Q=[
  ["How many countries have you visited?","How many countries could you name in one minute?"],
  ["Name a celebrity you'd have dinner with","Name a celebrity you find overrated"],
  ["What's your favorite drink on a night out?","What drink do you order when you don't want to drink?"],
- ["Beach or mountains?","Beach or pool?"],
+ ["Beach or mountains?","Beach or mountains – where would you rather live?"],
  ["What's your most used app?","What app do you keep deleting and reinstalling?"],
  ["Name a hobby you'd love to start","Name a hobby you gave up on"],
  ["What's your favorite board game?","What board game ends friendships?"],
  ["Name a city you'd move to tomorrow","Name a city you found disappointing"],
  ["What's your comfort food?","What's the weirdest thing you've eaten?"],
- ["What time do you usually go to bed?","What time do you usually get up on weekends?"],
+ ["What time do you usually go to bed?","What time do you go to bed on a weekend night?"],
  ["What's your favorite Disney movie?","Which Disney movie is overrated?"],
  ["Name a job you'd never do","Name a job you'd do for free"],
  ["What's one thing you can't live without?","What's one thing you should throw away?"],
@@ -2039,8 +2010,8 @@ const IMP_Q=[
  ["What's the best concert you've been to?","What concert would you love to go to?"],
  ["What's your favorite dessert?","What dessert do you find overrated?"],
  ["Name a book everyone should read","Name a book you never finished"],
- ["What's your favorite thing about this group?","What's the most annoying thing about this group?"],
- ["What's your biggest fear?","What's your biggest pet peeve?"],
+ ["What's your favorite thing about game nights?","What's the most annoying thing about game nights?"],
+ ["What's your biggest fear?","What were you most afraid of as a kid?"],
  ["Which social network could you delete forever?","Which social network do you check first?"],
  ["What's your favorite ice cream flavor?","What ice cream flavor should not exist?"],
  ["Name a place you'd go for a honeymoon","Name a place you'd go for a bachelor party"],
@@ -2064,7 +2035,7 @@ const IMP_Q=[
  ["What's your favorite month?","What's the most boring month?"],
  ["How many times have you been on a plane?","How many times have you been to a concert?"],
  ["Name a celebrity you'd trust with a secret","Name a celebrity you'd never trust"],
- ["What's your go-to drink at a café?","What's your go-to drink at a bar?"],
+ ["What's your go-to drink at a café?","What do you order at a café when it's hot outside?"],
  ["City or countryside?","City or countryside – where would you retire?"],
  ["What's the most useful app on your phone?","What's the most useless app on your phone?"],
  ["Name a skill you wish you had","Name a skill you're secretly proud of"],
@@ -2072,7 +2043,7 @@ const IMP_Q=[
  ["Name a city with the best nightlife","Name a city with the most beautiful buildings"],
  ["What do you cook when you have no time?","What do you cook when you want to impress someone?"],
  ["What time do you usually have dinner?","What time do you usually get home from work?"],
- ["What's the best animated movie?","What's the best superhero movie?"],
+ ["What's the best animated movie?","Which animated movie is overrated?"],
  ["Name a job that looks fun but probably isn't","Name a job that looks boring but is probably great"],
  ["What's one thing you always carry with you?","What's one thing you always forget at home?"],
  ["Pancakes or waffles?","Pancakes or waffles – which is harder to make?"],
@@ -2096,14 +2067,14 @@ const IMP_Q=[
  ["Name a famous person you'd want as a neighbor","Name a famous person you'd want as a roommate"],
  ["What's the perfect temperature outside?","What temperature outside is too hot?"],
  ["What's your lucky number?","What number would you pick for a jersey?"],
- ["What's the best festival you've been to?","What's the best wedding you've been to?"],
+ ["What's the best festival you've been to?","What festival would you love to go to?"],
  ["What's your favorite chocolate?","What chocolate do you never buy?"],
  ["Name a book that changed how you think","Name a book you pretend to have read"],
  ["What's the best thing that happened to you this year?","What's the best thing that happened to you this week?"],
  ["What's the scariest thing you've ever done?","What's the most embarrassing thing you've ever done?"],
  ["Which app do you spend too much money in?","Which app do you spend too much time in?"],
  ["What's your favorite ice cream topping?","What topping ruins an ice cream?"],
- ["Name a place for a perfect first date","Name a place for a perfect friends' trip"],
+ ["Name a place for a perfect first date","Name a place you'd never pick for a first date"],
  ["What color is your bedroom?","What color is your favorite jacket?"],
  ["What's your favorite gummy candy?","What's your favorite chewing gum flavor?"],
  ["How long could you survive in the wild?","How long could you survive without music?"],
@@ -2139,7 +2110,7 @@ const IMP_Q=[
  ["Name a hobby you'd try if it were free","Name a hobby you'd never try"],
  ["Which sound do you love?","Which sound do you hate?"],
  ["What would your walk-out song be?","What would your ringtone be?"],
- ["What's your favorite hot drink in winter?","What's your favorite cold drink in summer?"],
+ ["What's your favorite hot drink in winter?","What's your go-to hot drink at work?"],
 ];
 
 // ===== Imposter mode: everyone answers a question on their phone, one player secretly got a different question =====
@@ -2188,6 +2159,7 @@ function renderImp(){if(S.screen!=="imp"||S.game!=="imposter"){clearInterval(imp
 $("impHome").onclick=()=>{S.screen="home";save();render()};
 $("impEnd").onclick=()=>ask("End the game now and show the results?",finish,"End game");
 $("lcHand").onchange=e=>{S.lcHand=Math.max(3,Math.min(8,+e.target.value||5));save()};
+$("lcDeals").onchange=e=>{S.lcDeals=Math.max(0,Math.min(50,+e.target.value||0));save()};
 $("lcChambers").onchange=e=>{S.lcChambers=Math.max(2,Math.min(8,+e.target.value||6));save()};
 $("impQ").onchange=e=>{S.impQ=Math.max(1,Math.min(150,+e.target.value||6));save()};
 $("impDiscuss").onchange=e=>{S.impDiscuss=Math.max(0,+e.target.value||0);save()};
@@ -2198,7 +2170,7 @@ $("setTabs").onclick=e=>{const b=e.target.closest("[data-tab]");if(!b)return;S.s
 // ---- phone side ----
 function impFetchPriv(round){if(!PH||PH.privBusy)return;PH.privBusy=true;PH.privTries=(PH.privTries||0)+1;
   db.get(`rooms/${PH.code}/private/${PH.pid}`).then(d=>{PH.privBusy=false;if(d&&d.n===round){PH.priv=d;PH.privTries=0;renderPhone()}else if(PH.privTries<8)setTimeout(()=>impFetchPriv(round),1000)}).catch(()=>{PH.privBusy=false;if(PH.privTries<8)setTimeout(()=>impFetchPriv(round),1500)})}
-function phoneImpHtml(st,me,meI,players,board){const m=st.imp;if(m&&m.phase==="answer"&&!(PH.priv&&PH.priv.n===m.round))impFetchPriv(m.round);if(!m)return `<div class="who">Imposter</div><p class="hint">Waiting for the host…</p>${board}`;
+function phoneImpHtml(st,me,meI,players,board){const m=st.imp;if((st.late||[]).includes(PH.pid))return `<div class="who">You're in!</div><p class="hint">You join from the next question.</p>${board}`;if(m&&m.phase==="answer"&&!(PH.priv&&PH.priv.n===m.round))impFetchPriv(m.round);if(!m)return `<div class="who">Imposter</div><p class="hint">Waiting for the host…</p>${board}`;
   const priv=PH.priv&&PH.priv.n===m.round?PH.priv:null;const answered=(m.answered||[]).includes(PH.pid)||PH.answeredRound===m.round;const voted=(m.voted||[]).includes(PH.pid)||(PH.myVote&&PH.myVote.round==="imp:"+m.round);
   const answers=m.answers?`<div class="answers">${m.answers.map(a=>`<div class="a${m.result&&a.name===m.result.imposter?" imp":""}"><span class="n">${esc(a.name)}${m.result&&a.name===m.result.imposter?" · 🕵️":""}</span><span class="t">${esc(a.text)}</span></div>`).join("")}</div>`:"";
   const timer=m.phase==="discuss"&&m.discussEnd?`<div class="timer phtimer" id="impPhTimer">${fmtT(Math.max(0,Math.ceil((m.discussEnd-Date.now())/1000)))}</div>`:"";
@@ -2216,7 +2188,7 @@ function phoneImpHtml(st,me,meI,players,board){const m=st.imp;if(m&&m.phase==="a
 const LC_RANK={Q:"Queen",K:"King",A:"Ace",J:"Joker"},LC_SYM={Q:"♛",K:"♚",A:"A",J:"★"};
 function lcPlayers(){return impPlayers()}
 function lcAlive(){return S.lc?lcPlayers().filter(i=>S.lc.alive[i]):[]}
-function lcDeck(n){const total=n*S.lcHand,jokers=Math.max(1,Math.round(n/2)),per=Math.ceil((total-jokers)/3),d=[];for(const r of ["Q","K","A"])for(let k=0;k<per;k++)d.push(r);for(let k=0;k<jokers;k++)d.push("J");
+function lcDeck(n){const total=n*S.lcHand,jokers=Math.max(2,Math.round(n/2)),per=Math.ceil((total-jokers)/3),d=[];for(const r of ["Q","K","A"])for(let k=0;k<per;k++)d.push(r);for(let k=0;k<jokers;k++)d.push("J");
   for(let i=d.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[d[i],d[j]]=[d[j],d[i]]}return d}
 function lcStart(){countPlay("liars");S.game="liars";S.next=null;S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0;delete p.late});S.inGame=true;S.round=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=true;S.log=[];
   S.lc={n:0,phase:"play",table:"Q",hands:{},alive:{},pulls:{},bullet:{},pile:[],last:null,turn:null,reveal:null,hv:{}};S.screen="lc";lcDeal(null);sfx.start()}
@@ -2228,15 +2200,21 @@ function lcNextActor(from){const m=S.lc,al=lcAlive();const k=al.indexOf(from);fo
 function lcPlay(i,cards){const m=S.lc;if(!m||m.phase!=="play"||m.turn!==i)return;cards=(cards||[]).map(String).filter(c=>LC_RANK[c]).slice(0,3);if(!cards.length)return;
   const hand=(m.hands[i]||[]).slice();for(const c of cards){const k=hand.indexOf(c);if(k<0)return;hand.splice(k,1)}m.hands[i]=hand;m.pile.push({by:i,cards});m.last={by:i,cards};lcPushHand(i);
   const p=S.players[i];S.log.unshift(`🃏 <b>${esc(p.name)}</b> plays ${cards.length} card${cards.length>1?"s":""} as ${LC_RANK[m.table]}s`);
-  const nx=lcNextActor(i);if(nx==null){m.turn=null;toast("Nobody left to call – new deal");save();render();setTimeout(()=>{if(S.lc===m&&m.phase==="play")lcDeal(i)},2000);return}
+  const nx=lcNextActor(i);if(nx==null){if(hand.length>0){lcForced(i);return}m.turn=null;toast("All hands empty – new deal");save();render();setTimeout(()=>{if(S.lc===m&&m.phase==="play")lcDeal(i)},2000);return}
   m.turn=nx;save();render();sfx.tick()}
-function lcLiar(i){const m=S.lc;if(!m||m.phase!=="play"||m.turn!==i||!m.last)return;const L=m.last;const liar=L.cards.some(c=>c!==m.table&&c!=="J");const target=liar?L.by:i;
+function lcLiar(i){const m=S.lc;if(!m||m.phase!=="play"||m.turn!==i||!m.last||m.last.by===i)return;const L=m.last;const liar=L.cards.some(c=>c!==m.table&&c!=="J");const target=liar?L.by:i;
   m.pulls[target]=(m.pulls[target]||0)+1;const dead=m.pulls[target]>=m.bullet[target];if(dead)m.alive[target]=false;
   const caller=S.players[i],by=S.players[L.by],T=S.players[target];if(liar){caller.score+=5;stat(caller,"lcCatch")}else{by.score+=5;stat(by,"lcHonest")}
-  m.reveal={caller:i,by:L.by,cards:L.cards,liar,target,dead,pull:m.pulls[target]};m.phase="reveal";m.turn=null;
+  m.reveal={caller:i,by:L.by,cards:L.cards,liar,target,dead,pull:m.pulls[target]};m.phase="reveal";m.turn=null;lcRunnerUp();
   S.log.unshift(`${liar?"🎯":"😬"} <b>${esc(caller.name)}</b> calls liar on ${esc(by.name)}: ${L.cards.map(c=>LC_SYM[c]).join(" ")} – ${liar?"a lie! "+esc(by.name):"honest! "+esc(caller.name)} pulls the trigger… ${dead?"💥 BANG":"click"}`);
   if(dead){sfx.buzz();toast(`💥 ${T.name} is out!`)}else{sfx.pass();toast(`*click* – ${T.name} survives (${m.pulls[target]} of ${S.lcChambers})`)}save();render()}
-function lcNext(){const m=S.lc;if(!m||m.phase!=="reveal")return;const al=lcAlive();if(al.length<=1){lcFinish(al[0]);return}const r=m.reveal;S.auto=null;lcDeal(m.alive[r.target]?r.target:(al.find(j=>j>r.target)??al[0]))}
+function lcForced(i){const m=S.lc,p=S.players[i];m.pulls[i]=(m.pulls[i]||0)+1;const dead=m.pulls[i]>=m.bullet[i];if(dead)m.alive[i]=false;
+  m.reveal={caller:null,by:i,cards:[],liar:false,target:i,dead,pull:m.pulls[i],forced:true};m.phase="reveal";m.turn=null;
+  S.log.unshift(`🃏 <b>${esc(p.name)}</b> is the last one holding cards – pulls the trigger… ${dead?"💥 BANG":"click"}`);
+  if(dead){sfx.buzz();toast(`💥 ${p.name} is out!`)}else{sfx.pass();toast(`*click* – ${p.name} survives (${m.pulls[i]} of ${S.lcChambers})`)}lcRunnerUp();save();render()}
+function lcRunnerUp(){const m=S.lc;if(m.reveal&&m.reveal.dead&&lcAlive().length===1){const p=S.players[m.reveal.target];if(p){p.score+=10;stat(p,"lcSecond");S.log.unshift(`🥈 <b>${esc(p.name)}</b> went out last: +10`)}}}
+function lcDone(){const m=S.lc;return lcAlive().length<=1||(S.lcDeals>0&&m.n>=S.lcDeals)}
+function lcNext(){const m=S.lc;if(!m||m.phase!=="reveal")return;const al=lcAlive();if(lcDone()){lcFinish(al.length===1?al[0]:null);return}const r=m.reveal;S.auto=null;lcDeal(m.alive[r.target]?r.target:(al.find(j=>j>r.target)??al[0]))}
 function lcFinish(winner){if(winner!=null&&S.players[winner]){S.players[winner].score+=20;stat(S.players[winner],"lcWin");S.log.unshift(`🏆 <b>${esc(S.players[winner].name)}</b> is the last one standing!`)}finish()}
 function renderLc(){if(S.screen!=="lc"||S.game!=="liars")return;const m=S.lc,st=$("lcStage");$("lcRound").textContent=`Deal ${m?m.n:0}`;$("lcChip").hidden=!S.room;$("lcCode").textContent=S.room?S.room.code:"";$("lcN").textContent=S.players.filter(online).length;
   const sorted=[...S.players].map((p,i)=>({...p,i})).sort((a,b)=>b.score-a.score);
@@ -2246,7 +2224,7 @@ function renderLc(){if(S.screen!=="lc"||S.game!=="liars")return;const m=S.lc,st=
   const tableHtml=`<div class="lbl">Table card</div><div class="lccard">${LC_SYM[m.table]}<small>${LC_RANK[m.table]}s</small></div>`;
   if(m.phase==="play"){const T=m.turn!=null?S.players[m.turn]:null;const last=m.last?`<div class="hint" style="margin:0"><b>${esc(S.players[m.last.by].name)}</b> played <b>${m.last.cards.length}</b> card${m.last.cards.length>1?"s":""} as ${LC_RANK[m.table]}s · ${m.pile.length} play${m.pile.length>1?"s":""} on the table</div>`:`<div class="hint" style="margin:0">Nothing on the table yet</div>`;
     st.innerHTML=tableHtml+ring+last+(T?`<div class="big">${esc(T.name)}</div><div class="hint" style="margin:0">${m.last?"plays cards or calls <b>Liar!</b>":"opens the round"} – on their phone</div>`:`<div class="hint" style="margin:0">Dealing…</div>`)+`<div class="row"><button class="btn btn-ghost" id="lcRedeal">New deal</button></div>`}
-  else{const r=m.reveal;const T=S.players[r.target];st.innerHTML=tableHtml+`<div class="lbl">${esc(S.players[r.caller].name)} called liar on ${esc(S.players[r.by].name)}</div><div class="lchand">${r.cards.map(c=>`<span class="lcc${c===m.table||c==="J"?" ok":" bad"}">${LC_SYM[c]}<small>${LC_RANK[c]}</small></span>`).join("")}</div><div class="big">${r.liar?"LIAR! 🎯":"HONEST 😬"}</div><div class="hint" style="margin:0">${esc(T.name)} pulls the trigger… chamber ${r.pull} of ${S.lcChambers}</div><div class="lcshot">${r.dead?"💥 BANG – "+esc(T.name)+" is out":"*click* – "+esc(T.name)+" survives"}</div>`+ring+`<button class="btn btn-gold" id="lcNextBtn" style="font-size:18px;padding:16px 24px">${lcAlive().length<=1?"🏆 Show results":"Next deal ▸"}</button>`;st.insertAdjacentHTML("beforeend",autoHtml())}
+  else{const r=m.reveal;const T=S.players[r.target];st.innerHTML=tableHtml+`<div class="lbl">${r.forced?esc(S.players[r.by].name)+" was the last one holding cards":esc(S.players[r.caller].name)+" called liar on "+esc(S.players[r.by].name)}</div><div class="lchand">${r.cards.map(c=>`<span class="lcc${c===m.table||c==="J"?" ok":" bad"}">${LC_SYM[c]}<small>${LC_RANK[c]}</small></span>`).join("")}</div><div class="big">${r.forced?"FORCED SHOT 🔫":r.liar?"LIAR! 🎯":"HONEST 😬"}</div><div class="hint" style="margin:0">${esc(T.name)} pulls the trigger… chamber ${r.pull} of ${S.lcChambers}</div><div class="lcshot">${r.dead?"💥 BANG – "+esc(T.name)+" is out":"*click* – "+esc(T.name)+" survives"}</div>`+ring+`<button class="btn btn-gold" id="lcNextBtn" style="font-size:18px;padding:16px 24px">${lcDone()?"🏆 Show results":"Next deal ▸"}</button>`;st.insertAdjacentHTML("beforeend",autoHtml())}
   const bind=(id,fn)=>{const b=$(id);if(b)b.onclick=fn};bind("lcNextBtn",lcNext);bind("lcRedeal",()=>ask("Deal new cards? The table is cleared, nobody gets shot.",()=>lcDeal(m.turn),"New deal"))}
 $("lcHome").onclick=()=>{S.screen="home";save();render()};
 $("lcEnd").onclick=()=>ask("End the game now and show the results?",finish,"End game");
@@ -2254,13 +2232,13 @@ $("lcBoard").onclick=e=>{const b=e.target.closest("[data-rm]");if(!b)return;cons
 // ---- phone side ----
 function lcFetchPriv(v){if(!PH||PH.privBusy)return;PH.privBusy=true;PH.privTries=(PH.privTries||0)+1;
   db.get(`rooms/${PH.code}/private/${PH.pid}`).then(d=>{PH.privBusy=false;if(d&&d.v===v){PH.priv=d;PH.privTries=0;PH.lcSel=[];renderPhone()}else if(PH.privTries<8)setTimeout(()=>lcFetchPriv(v),1000)}).catch(()=>{PH.privBusy=false;if(PH.privTries<8)setTimeout(()=>lcFetchPriv(v),1500)})}
-function phoneLcHtml(st,me,meI,players,board){const m=st.lc;if(!m)return `<div class="who">Liar's Cards</div><p class="hint">Waiting for the host…</p>${board}`;
+function phoneLcHtml(st,me,meI,players,board){const m=st.lc;if((st.late||[]).includes(PH.pid))return `<div class="who">You're in!</div><p class="hint">You join from the next deal.</p>${board}`;if(!m)return `<div class="who">Liar's Cards</div><p class="hint">Waiting for the host…</p>${board}`;
   const mine=(m.players||[]).find(p=>p.pid===PH.pid)||{};const v=(m.hv||{})[PH.pid];if(mine.alive&&v&&!(PH.priv&&PH.priv.v===v))lcFetchPriv(v);
   const hand=PH.priv&&PH.priv.v===v?Object.values(PH.priv.hand||{}):null;const sel=(PH.lcSel||[]).filter(i=>hand&&hand[i]);
   const table=`<div class="impq"><small>Table card</small>${LC_SYM[m.table]} ${LC_RANK[m.table]}s</div>`;
   const others=`<p class="hint">${(m.players||[]).map(p=>`${p.alive?"":"💀 "}${esc(p.name)} ${p.alive?p.cards+" 🂠 · 🔫 "+p.pulls+"/"+m.chambers:"out"}`).join(" · ")}</p>`;
+  if(m.phase==="reveal"){const r=m.reveal||{};return `<div class="who">${r.forced?"Forced shot 🔫":r.liar?"Liar! 🎯":"Honest 😬"}</div>${table}<p class="hint">${r.forced?esc(r.by)+" was the last one holding cards.":esc(r.caller)+" called liar on "+esc(r.by)+": "+(r.cards||[]).map(c=>LC_SYM[c]+" "+LC_RANK[c]).join(", ")+"."} ${esc(r.target)} pulled the trigger – ${r.dead?"💥 BANG! "+esc(r.target)+" is out.":"click. Chamber "+r.pull+" of "+m.chambers+"."}</p>${autoPhoneHtml(st)}${others}`}
   if(!mine.alive)return `<div class="who">💀 You're out</div>${table}<p class="hint">Watch the host screen – ${m.aliveN} still in.</p>${others}`;
-  if(m.phase==="reveal"){const r=m.reveal||{};return `<div class="who">${r.liar?"Liar! 🎯":"Honest 😬"}</div>${table}<p class="hint">${esc(r.caller)} called liar on ${esc(r.by)}: ${(r.cards||[]).map(c=>LC_SYM[c]+" "+LC_RANK[c]).join(", ")}. ${esc(r.target)} pulled the trigger – ${r.dead?"💥 BANG! "+esc(r.target)+" is out.":"click. Chamber "+r.pull+" of "+m.chambers+"."}</p>${autoPhoneHtml(st)}${others}`}
   const handHtml=hand?`<div class="lchand">${hand.map((c,i)=>`<button class="lcc${sel.includes(i)?" sel":""}" data-act="lcsel" data-i="${i}">${LC_SYM[c]}<small>${LC_RANK[c]}</small></button>`).join("")||"<span class='hint'>No cards left – sit tight</span>"}</div>`:`<p class="hint">Loading your cards…</p>`;
   const myTurn=m.turn===PH.pid;
   if(!myTurn)return `<div class="who">${m.turnName?esc(m.turnName)+"'s turn":"Dealing…"}</div>${table}${m.last?`<p class="hint">${esc(m.last.name)} played ${m.last.n} card${m.last.n>1?"s":""} as ${LC_RANK[m.table]}s.</p>`:""}${handHtml}<p class="hint">Tap cards to pre-select. Jokers count as anything.</p>${others}`;
@@ -2283,20 +2261,20 @@ const WW_Q=[
  "…forget their passport at the airport?","…win a pub quiz single-handedly?","…become a monk for a year?","…fall in love on a bus ride?","…lose a bet and shave their head?",
  "…get a pet without telling anyone?","…start a food truck?","…win an argument with a toddler?","…start a conga line?","…sleep through an earthquake?",
  "…become a famous chef?","…spend a whole day in bed?","…get stuck in an elevator and make a friend?","…win a lip-sync battle?","…book a flight for the wrong day?",
- "…become mayor of their town?","…cry over a cute dog video?","…eat a whole cake alone?","…lock themselves out of their flat?","…win a poker night?",
+ "…become mayor of their town?","…name their car?","…eat a whole cake alone?","…lock themselves out of their flat?","…win a poker night?",
  "…move into a van and travel?","…keep a plant alive for ten years?","…forget an anniversary?","…get a job at a circus?","…win a rap battle?",
- "…take a selfie with a celebrity by accident?","…hike a mountain in flip-flops?","…start crying at karaoke?","…own a boat one day?","…get a parking ticket twice in one day?",
+ "…take a selfie with a celebrity by accident?","…hike a mountain in flip-flops?","…propose at a karaoke bar?","…own a boat one day?","…get a parking ticket twice in one day?",
  "…write a bestseller?","…keep a secret for exactly one day?","…be caught sleeping at work?","…buy a round for the whole bar?","…survive on a desert island?",
  "…miss their stop because of a podcast?","…become a fitness influencer?","…organize the best birthday party ever?","…fake an illness to skip a meeting?","…dance in the rain?",
  "…become a pro gamer?","…forget to pay at the restaurant?","…own 100 pairs of shoes?","…talk to their plants?","…get a face tattoo?",
  "…live to 100?","…spend a night in a haunted house?","…win a chess tournament?","…show up to a costume party without a costume?","…become a wedding DJ?",
- "…run away from a spider?","…get on the wrong train abroad?","…become a millionaire and still take the bus?","…cook a meal for 50 people?","…sing the national anthem at a stadium?",
+ "…run away from a spider?","…get on the wrong train abroad?","…win big and still use coupons?","…cook a meal for 50 people?","…sing the national anthem at a stadium?",
  "…get emotional over a sunset?","…invent something useful?","…win a game show?","…leave a bad review for a friend's restaurant?","…live in a treehouse?",
  "…be a great detective?","…spend a fortune on a concert ticket?","…get caught singing in the car?","…open a bar?","…become a meme?",
  "…fall asleep at the cinema?","…marry someone they met on holiday?","…become an astronaut?","…forget their wallet on a date?","…win a limbo contest?",
- "…complain to the manager?","…own a farm?","…be a secret millionaire?","…ghost someone by accident?","…become a sports commentator?",
+ "…complain to the manager?","…own a farm?","…secretly be a chess grandmaster?","…ghost someone by accident?","…become a sports commentator?",
  "…survive a week without coffee?","…start a podcast?","…learn ten languages?","…get lost in IKEA?","…become a game show host?",
- "…adopt a stray cat abroad?","…cry at the end of a video game?","…win a bake-off?","…host a house party that gets out of hand?","…become a cat café owner?",
+ "…adopt a stray cat abroad?","…build a blanket fort as an adult?","…win a bake-off?","…host a house party that gets out of hand?","…become a cat café owner?",
  "…become a professional dancer?","…negotiate a discount at the supermarket?","…get free drinks by charming the bartender?","…live on a cruise ship?","…be the first to leave the group chat?",
 ];
 
@@ -2347,7 +2325,7 @@ $("wwQ").onchange=e=>{S.wwQ=Math.max(1,Math.min(150,+e.target.value||10));save()
 function wwReviewHtml(players){return `<div class="wwreview">${players.map(p=>`<div class="wwcard"><div class="n">${esc(p.name)}</div>${(p.cards||[]).length?`<ul>${p.cards.map(c=>`<li>${esc(c)}</li>`).join("")}</ul>`:'<div class="hint" style="margin:0">no cards</div>'}</div>`).join("")}</div>`}
 function nextPhoneHtml(st){const n=st.next;if(!n||!st.awardsDone)return"";const my=(n.votes||{})[PH.pid];const nV=Object.keys(n.votes||{}).length;
   return `<div class="nextbox"><h3>What's next?</h3><div class="ballot">${NEXT_OPTS.map(o=>`<button class="btn ${my===o?"btn-gold":"btn-ghost"}" data-act="next" data-choice="${o}" ${(n.off||[]).includes(o)?"disabled":""}>${GAME_LBL[o]}${o===st.game?" again":""}${my===o?" ✓":""}${(n.off||[]).includes(o)?(o==="liars"?" · needs 2 phones":" · needs 3 phones"):""}</button>`).join("")}</div><p class="hint">${nV} of ${n.total} voted${n.end?" · starting soon…":""}</p></div>`}
-function phoneWwHtml(st,me,meI,players,board){const m=st.ww;if(!m)return `<div class="who">Who would…</div><p class="hint">Waiting for the host…</p>`;
+function phoneWwHtml(st,me,meI,players,board){const m=st.ww;if((st.late||[]).includes(PH.pid))return `<div class="who">You're in!</div><p class="hint">You join from the next question.</p>`;if(!m)return `<div class="who">Who would…</div><p class="hint">Waiting for the host…</p>`;
   const voted=(m.voted||[]).includes(PH.pid)||(PH.myVote&&PH.myVote.round==="ww:"+m.round);
   if(m.phase==="vote"){if(voted)return `<div class="who">Vote received 🗳️</div><div class="impq"><small>Who would most likely</small>${esc(m.q)}</div><p class="hint">${(m.voted||[]).length} of ${m.total} voted…</p>`;
     return `<div class="impq"><small>Who would most likely</small>${esc(m.q)}</div><div class="ballot">${players.filter(p=>p.pid&&p.pid!==PH.pid).map(p=>`<button class="btn btn-ghost" data-act="vote" data-name="${esc(p.name)}">${esc(p.name)}</button>`).join("")}</div>`}
