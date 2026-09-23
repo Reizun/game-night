@@ -265,6 +265,30 @@ h1 span{color:var(--red-2)}
 .owncards .oc .t{flex:1;font-weight:700;line-height:1.3}
 .owncards .oc .m{font-size:12px;color:var(--muted);white-space:nowrap}
 .owncards .oc .m b{font-family:Anton,sans-serif;font-weight:400;color:var(--gold);font-size:14px}
+
+/* Imposter mode */
+.imp{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:18px;align-items:center}
+.impstage{width:100%;background:var(--ground-2);border-radius:16px;padding:22px 18px;display:flex;flex-direction:column;gap:14px;align-items:center;text-align:center}
+.impstage .q{font-family:Anton,Impact,sans-serif;font-size:clamp(24px,4.5vw,40px);letter-spacing:.02em;line-height:1.15;text-wrap:balance}
+.impstage .q.secret{color:var(--muted);font-size:clamp(20px,3.5vw,28px)}
+.impstage .lbl{font-size:13px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-weight:800}
+.answers{width:100%;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;text-align:left}
+.answers .a{background:var(--ground);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;animation:pop .35s both}
+.answers .a .n{font-size:12px;color:var(--muted);font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.answers .a .t{font-weight:800;font-size:17px;line-height:1.3}
+.answers .a.imp{box-shadow:inset 0 0 0 2px var(--red-2)}
+.answers .a .v{font-size:12px;color:var(--muted)}
+.impstage .big{font-family:Anton,sans-serif;font-size:clamp(28px,6vw,48px);color:var(--gold);letter-spacing:.04em;text-transform:uppercase}
+.impstage .row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.impstage .bar{width:100%;max-width:520px;height:12px;border-radius:999px;background:var(--ground);overflow:hidden}
+.impstage .bar i{display:block;height:100%;background:var(--gold);transition:width .3s}
+.phone .impq{background:var(--card);color:var(--card-ink);border-radius:14px;padding:18px 16px;font-family:Anton,Impact,sans-serif;font-size:22px;line-height:1.2;text-wrap:balance}
+.phone .impq small{display:block;font-family:Caveat,cursive;font-size:18px;color:var(--red);margin-bottom:6px}
+.phone .impans{display:flex;flex-direction:column;gap:8px}
+.phone .impans input{padding:14px;border-radius:10px;border:2px solid transparent;background:var(--ground-2);color:var(--ink);font:inherit;font-size:18px;text-align:center}
+.phone .answers{grid-template-columns:1fr}
+.gamesel{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.gamesel .chip{font-size:15px;padding:10px 16px}
 </style>
 </head>
 <body>
@@ -445,7 +469,8 @@ h1 span{color:var(--red-2)}
     <div class="menu">
       <button class="btn btn-ghost" id="homeResume" hidden>↩ Resume game</button>
       <button class="btn btn-red" id="homeStart">▶ Start game</button>
-      <button class="btn btn-gold" id="homeHost">📱 Host with phones</button>
+      <button class="btn btn-gold" id="homeHost">📱 Host Karaoke with phones</button>
+      <button class="btn btn-gold" id="homeImp">🕵️ Host Imposter (phones)</button>
       <button class="btn btn-ghost" id="homeJoin">📲 Join with your phone</button>
       <button class="btn btn-ghost" id="homeSettings">⚙ Settings</button>
     </div>
@@ -489,6 +514,16 @@ h1 span{color:var(--red-2)}
     </form>
     <div class="owncards" id="cardList"></div>
     <p class="hint" id="cardHint">Your cards join the deck under the category you choose (or "Your cards"). They stay on this device. Tip: write {P} where a random player's name should go, e.g. "Sing a duet with {P}".</p>
+  </section>
+  <section class="panel">
+    <h2>🕵️ Imposter</h2>
+    <div class="rules">
+      <label>Questions per game <input type="number" id="impQ" value="6" min="1" max="30"></label>
+      <label>Discussion seconds (0 = no timer) <input type="number" id="impDiscuss" value="90" min="0"></label>
+      <label>Points for catching the imposter <input type="number" id="impPts" value="10" min="0"></label>
+      <label>Imposter points per player fooled <input type="number" id="impImpPts" value="5" min="0"></label>
+    </div>
+    <p class="hint">Everyone answers a question on their phone – one player secretly gets a different question. The host reveals the real question and all answers, the group discusses, then everyone votes.</p>
   </section>
   <section class="panel">
     <h2>Rules</h2>
@@ -556,6 +591,8 @@ h1 span{color:var(--red-2)}
     <div class="qr" id="lobbyQr"></div>
     <div class="hint">Scan the code, or open <b id="lobbyUrl" style="color:var(--ink);word-break:break-all"></b> and type the code.</div>
     <div class="hint" id="lobbyStatus">Connecting…</div>
+    <div class="gamesel" id="gameSel"><button class="chip" data-game="karaoke" type="button">🎤 Karaoke Challenge</button><button class="chip" data-game="imposter" type="button">🕵️ Imposter</button></div>
+    <div class="hint" id="gameHint"></div>
   </section>
   <section class="panel">
     <h2>Players</h2>
@@ -588,6 +625,19 @@ h1 span{color:var(--red-2)}
 </div>
 
 <!-- GAME SCREEN -->
+<!-- IMPOSTER SCREEN (host) -->
+<div class="screen" id="scrImp">
+  <div class="imp">
+    <div class="topbar" style="width:100%;justify-content:space-between">
+      <span style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="round" id="impRound"></span><span class="roomchip" id="impChip"><span class="dot on"></span>Room <b id="impCode"></b> · <span id="impN">0</span> 📱</span></span>
+      <div class="timer" id="impTimer" hidden><span style="font-size:13px;font-family:Nunito,sans-serif;color:var(--muted);letter-spacing:.06em">DISCUSS</span><span id="impTimerVal">1:30</span></div>
+      <span style="display:flex;gap:6px"><button class="btn btn-ghost" id="impHome">⌂</button><button class="btn btn-ghost" id="impEnd">End game</button></span>
+    </div>
+    <div class="impstage" id="impStage"></div>
+    <section class="panel" style="width:100%"><h2>Scoreboard</h2><ul class="players" id="impBoard"></ul></section>
+  </div>
+</div>
+
 <div class="screen grid" id="scrGame">
   <section class="panel stage" id="stage">
     <div class="topbar" style="width:100%;justify-content:space-between">
@@ -1193,9 +1243,9 @@ const BASE = {1:10,2:20,3:30};
 
 // ---- State ----
 const KEY="karaoke-challenge-en-v1";
-let S = {players:[], turn:0, cats:[...CATS], penalty:5, bonus:10, current:null, disabledArtists:[], hiddenArtists:[], log:[], used:[], customArtists:[], customCards:[], rounds:3, timerSec:15, mics:1, round:1, started:0, screen:"home", volume:0.7, muted:false, mode:"local", room:null, inGame:false, mvpBonus:20, awardBonus:15, vote:null, awards:null, awardsDone:false, timer:null, timerBuzzed:false, catsV:0, back:null, lastVote:null};
+let S = {players:[], turn:0, cats:[...CATS], penalty:5, bonus:10, current:null, disabledArtists:[], hiddenArtists:[], log:[], used:[], customArtists:[], customCards:[], game:"karaoke", imp:null, impUsed:[], impQ:6, impDiscuss:90, impPts:10, impImpPts:5, rounds:3, timerSec:15, mics:1, round:1, started:0, screen:"home", volume:0.7, muted:false, mode:"local", room:null, inGame:false, mvpBonus:20, awardBonus:15, vote:null, awards:null, awardsDone:false, timer:null, timerBuzzed:false, catsV:0, back:null, lastVote:null};
 let draft=null;
-try{const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.players){S={...S,...s};if(!S.catsV){for(const c of ["2000s","K-Pop","Disney","High School Musical","Word Hunt","Artists","Genres","Years","Mood"])if(!S.cats.includes(c))S.cats.push(c);}if(!Array.isArray(S.disabledArtists))S.disabledArtists=[];if(!Array.isArray(S.hiddenArtists))S.hiddenArtists=[];if(!S.customArtists)S.customArtists=[];if(!Array.isArray(S.customCards))S.customCards=[];if(S.rounds==null)S.rounds=3;if(S.volume==null)S.volume=.7;if(S.muted==null)S.muted=false;if(S.timerSec==null)S.timerSec=15;if(!S.mics)S.mics=1;if(!S.round)S.round=1;if(!S.started)S.started=0;if(!["home","settings","players","game","final","lobby","join","phone"].includes(S.screen))S.screen="home";if(S.screen==="setup")S.screen="home";}}catch(e){}
+try{const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.players){S={...S,...s};if(!S.catsV){for(const c of ["2000s","K-Pop","Disney","High School Musical","Word Hunt","Artists","Genres","Years","Mood"])if(!S.cats.includes(c))S.cats.push(c);}if(!Array.isArray(S.disabledArtists))S.disabledArtists=[];if(!Array.isArray(S.hiddenArtists))S.hiddenArtists=[];if(!S.customArtists)S.customArtists=[];if(!Array.isArray(S.customCards))S.customCards=[];if(!S.game)S.game="karaoke";if(!S.impQ)S.impQ=6;if(S.impDiscuss==null)S.impDiscuss=90;if(S.impPts==null)S.impPts=10;if(S.impImpPts==null)S.impImpPts=5;if(!Array.isArray(S.impUsed))S.impUsed=[];if(S.rounds==null)S.rounds=3;if(S.volume==null)S.volume=.7;if(S.muted==null)S.muted=false;if(S.timerSec==null)S.timerSec=15;if(!S.mics)S.mics=1;if(!S.round)S.round=1;if(!S.started)S.started=0;if(!["home","settings","players","game","final","lobby","join","phone","imp"].includes(S.screen))S.screen="home";if(S.screen==="setup")S.screen="home";}}catch(e){}
 if(!(S.catsV>=3)&&!S.cats.includes("Your cards"))S.cats.push("Your cards");S.catsV=3;if(!S.decV){if(S.timerSec===90)S.timerSec=15;S.decV=1}S.players.forEach(p=>{p.stats=p.stats||{}});if(!S.mode)S.mode="local";if(S.mvpBonus==null)S.mvpBonus=20;if(S.awardBonus==null)S.awardBonus=15;
 if(S.inGame==null)S.inGame=!!(S.current||(S.players.length>=2&&(S.round>1||S.started>0||S.players.some(p=>p.score!==0))));
 if(S.screen==="lobby"&&!(S.mode==="host"&&S.room))S.screen="home";
@@ -1318,7 +1368,7 @@ function sfxDraw(){try{sfx.draw()}catch(e){}}
 function render(){
   $("penalty").value=S.penalty; $("bonus").value=S.bonus; $("rounds").value=S.rounds; $("timerSec").value=S.timerSec;
   document.querySelector("header").style.display=["home","phone"].includes(S.screen)?"none":"";
-  document.querySelectorAll(".screen").forEach(el=>el.classList.toggle("on",el.id==={home:"scrHome",settings:"scrSettings",players:"scrPlayers",game:"scrGame",final:"scrFinal",lobby:"scrLobby",join:"scrJoin",phone:"scrPhone"}[S.screen]));
+  document.querySelectorAll(".screen").forEach(el=>el.classList.toggle("on",el.id==={home:"scrHome",settings:"scrSettings",players:"scrPlayers",game:"scrGame",final:"scrFinal",lobby:"scrLobby",join:"scrJoin",phone:"scrPhone",imp:"scrImp"}[S.screen]));
   const allD=deck(), nD=allD.filter(c=>S.cats.includes(c[0])).length;
   $("homeStat").textContent=`${nD} cards · ${S.cats.length} categories`;
   $("homeStart").disabled=S.cats.length===0;
@@ -1597,15 +1647,15 @@ function awardVal(p,id){if(id==="comeback")return p.rs==null?0:p.score-p.rs;retu
 function pickAwards(){const cand=AWARDS.map(a=>{const vals=S.players.map(p=>awardVal(p,a.id));const max=Math.max(...vals);if(!(max>0))return null;
     const winners=vals.map((v,i)=>v===max?i:-1).filter(i=>i>=0);if(winners.length>=S.players.length)return null;return{id:a.id,em:a.em,t:a.t,d:a.d,winners,val:max,revealed:false}}).filter(Boolean);
   for(let i=cand.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cand[i],cand[j]]=[cand[j],cand[i]]}return cand.slice(0,3)}
-function finish(){stopTimer();S.current=null;S.vote=null;S.inGame=false;S.screen="final";$("card").classList.remove("flipped");
-  S.awards=S.awardBonus>0&&S.players.length>=2?pickAwards():[];S.awardsDone=!S.awards.length;save();render();if(S.awardsDone)sfx.win();else sfx.start()}
+function finish(){stopTimer();S.current=null;S.vote=null;S.inGame=false;S.imp=null;S.screen="final";$("card").classList.remove("flipped");
+  S.awards=S.awardBonus>0&&S.players.length>=2&&S.game!=="imposter"?pickAwards():[];S.awardsDone=!S.awards.length;save();render();if(S.awardsDone)sfx.win();else sfx.start()}
 function revealAward(){const a=(S.awards||[]).find(x=>!x.revealed);if(!a)return;a.revealed=true;a.winners.forEach(i=>{S.players[i].score+=S.awardBonus});sfx.ok();
   if(!S.awards.some(x=>!x.revealed)){S.awardsDone=true;setTimeout(()=>sfx.win(),700)}save();render()}
 $("revealBtn").onclick=revealAward;
 function renderFinal(){const done=!!S.awardsDone;const sorted=[...S.players].sort((a,b)=>b.score-a.score);const top=sorted.length?sorted[0].score:0;const wins=sorted.filter(p=>p.score===top);
   $("awards").innerHTML=(S.awards||[]).filter(a=>a.revealed).map(a=>`<div class="award"><span class="em">${a.em}</span><span><div class="t">${a.t}</div><div class="d">${a.d}</div></span><span class="w">${a.winners.map(i=>esc(S.players[i].name)).join(" &amp; ")}<small>+${S.awardBonus}</small></span></div>`).join("");
   const left=(S.awards||[]).filter(a=>!a.revealed).length;$("revealBtn").hidden=!left;$("revealBtn").textContent=`🎁 Reveal secret award (${left} left)`;
-  $("finalWin").hidden=!done;$("finalTitle").textContent=done?"Game over":"Secret awards";$("finalTrophy").textContent=done?"🏆":"🎁";$("finalPre").hidden=done;
+  $("finalWin").hidden=!done;$("finalTitle").textContent=done?(S.game==="imposter"?"Imposter – game over":"Game over"):"Secret awards";$("finalTrophy").textContent=done?"🏆":"🎁";$("finalPre").hidden=done;
   $("finalPre").innerHTML=`<div class="hint" style="margin:0">Standings so far: ${sorted.map(p=>`${esc(p.name)} ${p.score}`).join(" · ")}</div>`;
   $("winnerName").textContent=wins.map(p=>p.name).join(" & ");$("winnerPts").textContent=`${top} points${wins.length>1?" – it's a tie!":""}`;
   $("podium").innerHTML=sorted.map(p=>`<li class="${p.score===top?'win':''}"><span>${esc(p.name)}</span><span>${p.score}</span></li>`).join("")}
@@ -1613,8 +1663,11 @@ function renderFinal(){const done=!!S.awardsDone;const sorted=[...S.players].sor
 // ---- Host: room lifecycle ----
 let HS=null,pushT=null;const doneActions=new Set();
 function netPush(){if(S.mode!=="host"||!S.room)return;clearTimeout(pushT);pushT=setTimeout(()=>{const code=S.room&&S.room.code;if(!code)return;db.patch(`rooms/${code}`,{state:snapshot(),updatedAt:TS}).catch(()=>{})},60)}
-function snapshot(){const phase=S.screen==="final"?"final":S.vote?"vote":S.inGame?"game":"lobby";const c=S.current;
-  return{phase,round:S.round,rounds:S.rounds,turn:S.turn,
+function snapshot(){const phase=S.screen==="final"?"final":S.vote?"vote":S.inGame?"game":"lobby";const c=S.current;const m=S.game==="imposter"?S.imp:null;
+  const impSnap=m?{phase:m.phase,round:S.round,total:impPlayers().length,answered:impPlayers().filter(i=>m.answers[i]!=null).map(i=>S.players[i].pid),voted:impPlayers().filter(i=>m.votes[i]!=null).map(i=>S.players[i].pid),
+    q:m.phase!=="answer"?IMP_Q[m.qi][0]:null,answers:["discuss","vote","result"].includes(m.phase)?impPlayers().map(i=>({name:S.players[i].name,text:m.answers[i]||"–"})):null,discussEnd:m.discussEnd||null,
+    result:m.result?{imposter:S.players[m.result.imposter].name,correct:m.result.correct.map(i=>S.players[i].name),missed:m.result.missed.length,impPts:m.result.impPts}:null}:null;
+  return{phase,game:S.game||"karaoke",imp:impSnap,impQ:S.impQ,impPts:S.impPts,round:S.round,rounds:S.rounds,turn:S.turn,
     players:S.players.map(p=>({name:p.name,score:p.score,pid:p.pid||null,on:online(p)})),
     current:c?{cat:c.cat,text:c.text,raw:c.raw||c.text,diff:c.diff,accepted:!!c.accepted,so:c.accepted&&c.so?{phase:c.so.phase,opp:c.so.opp,challengers:c.so.challengers.map(i=>S.players[i]&&S.players[i].name).filter(Boolean),voted:Object.keys(c.so.votes||{}),total:soVoters().length}:null,worth:c.worth,chain:c.chain,holder:c.holder,pick:c.pick==null?null:c.pick,partner:c.pick!=null&&needsPartner(c.raw||c.text),inText:needsPick(c.raw||c.text)}:null,
     timer:S.timer||null,timerSec:S.timerSec,mics:S.mics||1,penalty:S.penalty,bonus:S.bonus,mvpBonus:S.mvpBonus,awardBonus:S.awardBonus,tiers:tiersAvail(),
@@ -1654,10 +1707,13 @@ function handleActions(acts){for(const k of Object.keys(acts).sort()){if(doneAct
   else if(a.type==="pass"){if(S.current&&S.current.holder===i)doPass()}
   else if(a.type==="fail"){if(S.current&&S.current.holder===i)doFail()}
   else if(a.type==="accept"){if(S.current&&S.current.holder===i)doAccept(false)}
+  else if(a.type==="answer"){if(S.game==="imposter")impAnswer(i,a.text)}
   else if(a.type==="challenge"){soChallenge(i)}
   else if(a.type==="pick"){if(S.current&&S.current.holder===i){const j=S.players.findIndex(p=>p.name===a.name);if(j>=0)soPick(j)}}
   else if(a.type==="startvote"){if(S.current&&S.current.holder===i)soStartVote()}}}
-function syncVotes(v){const so=soState();
+function syncVotes(v){if(S.game==="imposter"&&S.imp&&S.imp.phase==="vote"){let changed=false;for(const [pid,target] of Object.entries(v)){const vi=S.players.findIndex(p=>p.pid===pid);if(vi<0||S.imp.votes[vi]!=null||typeof target!=="string")continue;const j=S.players.findIndex(p=>p.name.toLowerCase()===target.toLowerCase());if(j<0||j===vi)continue;S.imp.votes[vi]=j;changed=true}
+    if(changed){if(impPlayers().every(x=>S.imp.votes[x]!=null))impResult();else{save();render()}}return}
+  const so=soState();
   if(so&&so.phase==="vote"){const c=S.current,names=[S.players[c.holder].name.toLowerCase(),S.players[so.opp].name.toLowerCase()];const votes={};
     for(const [pid,target] of Object.entries(v)){const vi=S.players.findIndex(p=>p.pid===pid);if(vi<0||vi===c.holder||vi===so.opp||typeof target!=="string")continue;if(!names.includes(target.toLowerCase()))continue;votes[pid]=target}
     so.votes=votes;save();render();soCheck();return}
@@ -1672,7 +1728,7 @@ function renderQr(){const el=$("lobbyQr");if(!S.room)return;const url=joinUrl(S.
   qrLib=document.createElement("script");qrLib.src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js";qrLib.onload=draw;qrLib.onerror=()=>{el.innerHTML="";qrLib=null};document.head.appendChild(qrLib)}
 $("lobbyAdd").onsubmit=e=>{e.preventDefault();const n=$("lobbyName").value.trim().slice(0,18);if(!n)return;if(S.players.length>=12){toast("Max 12 players");return}S.players.push({name:uniqueName(n),score:0,stats:{},rs:0});$("lobbyName").value="";save();render()};
 $("lobbyPlayers").onclick=e=>{const b=e.target.closest("[data-kick]");if(!b)return;const i=+b.dataset.kick,p=S.players[i];if(!p)return;if(p.pid&&S.room)db.del(`rooms/${S.room.code}/members/${p.pid}`).catch(()=>{});S.players.splice(i,1);save();render()};
-$("lobbyStart").onclick=()=>{if(S.players.length<2)return;startGame()};
+$("lobbyStart").onclick=()=>{if(S.game==="imposter"){if(impPlayers().length<3){toast("Imposter needs at least 3 players with phones");return}impStart();return}if(S.players.length<2)return;startGame()};
 $("lobbyBack").onclick=()=>ask("Close this room? Phones will be disconnected.",()=>{hostClose(true);S.screen="home";save();render()},"Close room");
 $("lobbySettings").onclick=()=>{S.back="lobby";S.screen="settings";save();render()};
 
@@ -1695,10 +1751,10 @@ async function joinRoom(code,name){code=(code||"").toUpperCase().replace(/[^A-Z0
 function phoneConnect(){if(!PH)return;if(PH.es)PH.es.close();clearInterval(PH.hb);
   PH.es=db.stream(`rooms/${PH.code}/state`,st=>{PH.state=st;PH.err=false;renderPhone()},()=>{PH.err=true;renderPhone()});
   PH.hb=setInterval(()=>{db.patch(`rooms/${PH.code}/members/${PH.pid}`,{seen:TS}).catch(()=>{})},30000);
-  clearInterval(PHt);PHt=setInterval(()=>{if(S.screen==="phone"&&PH&&PH.state&&PH.state.timer)paintPhoneTimer()},500)}
+  clearInterval(PHt);PHt=setInterval(()=>{if(S.screen==="phone"&&PH&&PH.state&&PH.state.timer)paintPhoneTimer();const it=$("impPhTimer");if(it&&PH&&PH.state&&PH.state.imp&&PH.state.imp.discussEnd)it.textContent=fmtT(Math.max(0,Math.ceil((PH.state.imp.discussEnd-Date.now())/1000)))},500)}
 function phoneLeave(){if(PH){if(PH.es)PH.es.close();clearInterval(PH.hb);db.del(`rooms/${PH.code}/members/${PH.pid}`).catch(()=>{})}PH=null;phoneSave();clearInterval(PHt);S.screen="home";save();render()}
 function phoneAct(type,extra){if(!PH)return;db.post(`rooms/${PH.code}/actions`,Object.assign({pid:PH.pid,type,at:TS},extra||{})).catch(()=>toast("Not sent – check your connection"))}
-function phoneVote(name){if(!PH)return;const st=PH.state||{};PH.myVote={round:st.current&&st.current.so&&st.current.so.phase==="vote"?"so:"+st.current.text:(st.vote?st.vote.round:0),name};db.put(`rooms/${PH.code}/votes/${PH.pid}`,name).catch(()=>toast("Not sent – check your connection"));renderPhone()}
+function phoneVote(name){if(!PH)return;const st=PH.state||{};PH.myVote={round:st.game==="imposter"&&st.imp?"imp:"+st.imp.round:st.current&&st.current.so&&st.current.so.phase==="vote"?"so:"+st.current.text:(st.vote?st.vote.round:0),name};db.put(`rooms/${PH.code}/votes/${PH.pid}`,name).catch(()=>toast("Not sent – check your connection"));renderPhone()}
 function phoneTimerLeft(st){const t=st&&st.timer;if(!t)return null;if(t.left!=null)return t.left;return Math.max(0,Math.ceil((t.end-Date.now())/1000))}
 function paintPhoneTimer(){const el=$("phTimer");if(!el||!PH||!PH.state)return;const l=phoneTimerLeft(PH.state);if(l==null||(PH.state.current&&PH.state.current.accepted)){el.hidden=true;return}el.hidden=false;el.textContent=fmtT(l);el.classList.toggle("warn",l<=10)}
 function renderPhone(){if(S.screen!=="phone"||!PH)return;const st=PH.state;const body=$("phBody");
@@ -1709,6 +1765,7 @@ function renderPhone(){if(S.screen!=="phone"||!PH)return;const st=PH.state;const
   $("phRound").textContent=(st.phase==="game"||st.phase==="vote")?(st.rounds?`Round ${st.round} of ${st.rounds}`:`Round ${st.round}`):"";
   const c=st.current;const holder=c?players[c.holder]:players[st.turn];const mine=meI>=0&&(c?c.holder===meI:st.turn===meI);
   const board=`<ul class="players phboard">${players.map((p,i)=>({...p,i})).sort((a,b)=>b.score-a.score).map((p,r)=>`<li class="${st.phase==="game"&&p.i===(c?c.holder:st.turn)?'active':''}${p.pid===PH.pid?' me':''}"><span class="rank">${r+1}</span>${p.pid?`<span class="dot${p.on?' on':''}"></span>`:''}<span class="name">${esc(p.name)}</span><span class="pts ${p.score<0?'neg':''}">${p.score}</span></li>`).join("")}</ul>`;
+  if(st.game==="imposter"&&meI>=0&&st.phase!=="final"&&st.phase!=="lobby"){$("phRound").textContent=st.imp?`Question ${st.imp.round} of ${st.impQ}`:"";body.innerHTML=phoneImpHtml(st,me,meI,players,board);const f=$("impForm");if(f){f.onsubmit=e=>{e.preventDefault();const t=$("impIn").value.trim();if(!t)return;PH.answeredRound=st.imp.round;phoneAct("answer",{text:t.slice(0,80)});renderPhone()};if(matchMedia("(pointer:fine)").matches)setTimeout(()=>{const i=$("impIn");if(i)i.focus()},50)}return}
   if(meI<0){body.innerHTML=`<div class="phone-msg"><div class="who">You're not in this game</div><p class="hint">The host may have removed you. Join again with your name.</p><button class="btn btn-gold" data-act="rejoin">Join again</button></div>${board}`;return}
   let html="";
   if(st.phase==="lobby"){html=`<div class="who">You're in, <b>${esc(me.name)}</b>!</div><p class="hint">Waiting for the host to start the game…</p>${board}`}
@@ -1751,7 +1808,7 @@ $("phBody").onclick=e=>{const b=e.target.closest("[data-act]");if(!b||b.disabled
 // ---- Navigation, settings, render extras ----
 let WL=null;
 async function wakeLock(on){try{if(on&&!WL&&navigator.wakeLock&&document.visibilityState==="visible"){WL=await navigator.wakeLock.request("screen");WL.addEventListener("release",()=>{WL=null})}else if(!on&&WL){const w=WL;WL=null;await w.release()}}catch(e){WL=null}}
-document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")wakeLock(["game","lobby","phone"].includes(S.screen))});
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")wakeLock(["game","lobby","phone","imp"].includes(S.screen))});
 function renderOwnCards(){const sel=$("cardCat");if(!sel.options.length)sel.innerHTML=CATS.map(c=>`<option value="${esc(c)}"${c==="Your cards"?" selected":""}>${esc(c)}</option>`).join("");
   $("cardList").innerHTML=S.customCards.map((c,i)=>`<div class="oc"><span class="t">${esc(c.text)}</span><span class="m"><b>${BASE[c.diff]||20}</b> · ${esc(c.cat)}</span><button class="x" data-oc="${i}" title="Remove">×</button></div>`).join("")||'<div class="hint" style="margin:0">No own cards yet.</div>';}
 $("cardForm").onsubmit=e=>{e.preventDefault();const text=$("cardText").value.trim().replace(/\s+/g," ");if(text.length<5){toast("Write a bit more");return}
@@ -1762,17 +1819,18 @@ function renderExtra(){renderOwnCards();
   const canResume=(S.inGame&&S.players.length>=2)||(S.mode==="host"&&S.room&&!S.inGame);
   $("homeResume").hidden=!canResume;$("homeResume").textContent=S.inGame?"↩ Resume game":"↩ Back to lobby";
   $("homeHost").disabled=!NET_OK;$("homeJoin").disabled=!NET_OK;if(!NET_OK)$("homeHost").title=$("homeJoin").title="Not set up on this copy yet";
-  $("mvpBonus").value=S.mvpBonus;$("awardBonus").value=S.awardBonus;$("mics").value=S.mics||1;
+  $("mvpBonus").value=S.mvpBonus;$("awardBonus").value=S.awardBonus;$("mics").value=S.mics||1;$("impQ").value=S.impQ;$("impDiscuss").value=S.impDiscuss;$("impPts").value=S.impPts;$("impImpPts").value=S.impImpPts;
   if(S.screen==="lobby"&&S.room){$("lobbyCode").textContent=S.room.code;$("lobbyUrl").textContent=joinUrl(S.room.code).replace(/^https?:\/\//,"");renderQr();$("lobbyStatus").textContent=netStatusText();
     $("lobbyPlayers").innerHTML=S.players.map((p,i)=>`<li><span class="rank">${i+1}</span><span class="dot${online(p)?' on':''}" style="${p.pid?'':'visibility:hidden'}"></span><span class="name">${esc(p.name)}</span><span class="hint">${p.pid?(online(p)?"phone":"phone offline"):"no phone"}</span><button class="x" data-kick="${i}" title="Remove">×</button></li>`).join("")||`<li style="color:var(--muted)">Nobody yet – scan the QR code or type the room code</li>`;
-    $("lobbyStart").disabled=S.players.length<2;$("lobbyStart").textContent=S.players.length<2?"Waiting for players…":`Start game (${S.players.length} players)`}
+    [...$("gameSel").querySelectorAll("[data-game]")].forEach(b=>b.classList.toggle("on",b.dataset.game===(S.game||"karaoke")));$("gameHint").textContent=S.game==="imposter"?"Imposter: needs at least 3 players, all with phones.":"Karaoke Challenge: draw cards, sing, pass, sing-offs.";
+    const impOk=S.game==="imposter"?impPlayers().length>=3:S.players.length>=2;$("lobbyStart").disabled=!impOk;$("lobbyStart").textContent=!impOk?(S.game==="imposter"?"Waiting for 3 phones…":"Waiting for players…"):`Start ${S.game==="imposter"?"Imposter":"game"} (${S.players.length} players)`}
   const hosting=S.mode==="host"&&!!S.room;$("roomChip").hidden=!hosting;if(hosting){$("roomCode").textContent=S.room.code;$("roomN").textContent=S.players.filter(online).length}
   $("stage").classList.toggle("voting",!!S.vote);
   if(S.vote){const v=S.vote,need=voters().filter(i=>S.players[i].pid),n=Object.keys(v.votes).length,pct=need.length?Math.round(100*n/need.length):0;
     $("votebox").hidden=false;$("votebox").innerHTML=`<h3>Round ${v.round} done!</h3><div>Vote on your phones: who had the best performance?</div><div class="bar"><i style="width:${pct}%"></i></div><div class="hint" style="margin:0">${n} of ${need.length} voted · winner gets +${S.mvpBonus}</div><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:6px"><button class="btn btn-gold" id="voteClose" ${n?"":"disabled"}>Close vote now</button><button class="btn btn-ghost" id="voteSkip">Skip vote</button></div>`;
     $("voteClose").onclick=closeVote;$("voteSkip").onclick=()=>{S.vote=null;if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});nextRound()}}
   else{$("votebox").hidden=true}
-  renderSo();
+  renderSo();renderImp();
   if(S.screen==="final")renderFinal();
   if(S.screen==="phone")renderPhone();
   if(S.screen==="game")paintTimer();
@@ -1781,13 +1839,14 @@ $("mics").onchange=e=>{S.mics=Math.max(1,Math.min(8,+e.target.value||1));save()}
 $("mvpBonus").onchange=e=>{S.mvpBonus=Math.max(0,+e.target.value||0);save()};
 $("awardBonus").onchange=e=>{S.awardBonus=Math.max(0,+e.target.value||0);save()};
 $("homeStart").onclick=()=>{const go=()=>{draft=null;S.screen="players";save();render();$("names").querySelector("input")?.focus()};if(S.inGame)ask("A game is in progress. Start a new one? Scores will be reset.",go,"New game");else go()};
-$("homeHost").onclick=()=>{if(S.inGame)ask("A game is in progress. Open a new room? Scores will be reset.",hostCreate,"New room");else hostCreate()};
+$("homeHost").onclick=()=>{const go=()=>{S.game="karaoke";hostCreate()};if(S.inGame)ask("A game is in progress. Open a new room? Scores will be reset.",go,"New room");else go()};
+$("homeImp").onclick=()=>{const go=()=>{S.game="imposter";hostCreate()};if(S.inGame)ask("A game is in progress. Open a new room? Scores will be reset.",go,"New room");else go()};
 $("homeJoin").onclick=()=>{S.screen="join";save();render();try{$("joinName").value=localStorage.getItem("kc-name")||""}catch(e){}$("joinCode").focus()};
 $("homeSettings").onclick=()=>{S.back="home";S.screen="settings";save();render()};
-$("homeResume").onclick=()=>{if(S.inGame){S.screen="game";save();render();resumeTimer()}else if(S.mode==="host"&&S.room){S.screen="lobby";save();render()}};
+$("homeResume").onclick=()=>{if(S.inGame&&S.game==="imposter"){S.screen="imp";save();render()}else if(S.inGame){S.screen="game";save();render();resumeTimer()}else if(S.mode==="host"&&S.room){S.screen="lobby";save();render()}};
 $("settingsBack").onclick=$("settingsDone").onclick=()=>{S.screen=S.back||"home";S.back=null;save();render()};
 $("startBtn").onclick=()=>{if(draft)S.players=draft.map(n=>({name:n.trim(),score:0,stats:{}}));if(S.room)hostClose(true);S.mode="local";startGame()};
-$("againBtn").onclick=()=>startGame();
+$("againBtn").onclick=()=>{if(S.game==="imposter")impStart();else startGame()};
 $("endBtn").onclick=()=>ask("End the game now and show the results?",finish,"End game");
 $("homeBtn").onclick=()=>{pauseTimer();S.screen="home";save();render()};
 $("setupBtn").onclick=()=>{S.screen="home";S.current=null;if(S.mode==="host"&&S.room)hostClose(true);save();render()};
@@ -1802,6 +1861,136 @@ function boot(){
   if(S.current&&!S.current.accepted&&S.screen==="game")resumeTimer();
   if(navigator.onLine&&!NET_LOCAL&&S.screen!=="phone")setTimeout(()=>ytApi().catch(()=>{}),4000);
 }
+
+// Imposter question pairs: [question for everyone, question for the imposter]
+const IMP_Q=[
+ ["What's your favorite pizza topping?","What's your favorite ice cream flavor?"],
+ ["How many hours do you sleep on a normal night?","How many cups of coffee or tea do you drink a day?"],
+ ["Name a country you'd love to visit","Name a country you'd never want to live in"],
+ ["What's the first thing you do in the morning?","What's the last thing you do before bed?"],
+ ["What's your go-to karaoke song?","What song do you secretly hate?"],
+ ["Which animal would you be?","Which animal are you afraid of?"],
+ ["What's your favorite movie?","What movie made you cry?"],
+ ["What's the best age to be?","At what age did you have your first kiss?"],
+ ["Name a food you could eat every day","Name a food you refuse to eat"],
+ ["What's your dream car?","What was your first car (or bike)?"],
+ ["What superpower would you pick?","What superpower would be the most annoying to have?"],
+ ["What's your favorite season?","Which season do you dislike the most?"],
+ ["How many countries have you visited?","How many languages do you speak (badly counts)?"],
+ ["Name a celebrity you'd have dinner with","Name a celebrity you find overrated"],
+ ["What's your favorite drink on a night out?","What's your hangover cure?"],
+ ["Beach or mountains?","Summer or winter?"],
+ ["What's your most used app?","What app do you keep deleting and reinstalling?"],
+ ["Name a hobby you'd love to start","Name a hobby you gave up on"],
+ ["What's your favorite board game?","What's your favorite card game?"],
+ ["Name a city you'd move to tomorrow","Name a city you found disappointing"],
+ ["What's your comfort food?","What's the weirdest thing you've eaten?"],
+ ["What time do you usually go to bed?","What time do you usually get up on weekends?"],
+ ["What's your favorite Disney movie?","What's your favorite animated series?"],
+ ["Name a job you'd never do","Name a job you'd do for free"],
+ ["What's one thing you can't live without?","What's one thing you should throw away?"],
+ ["Dogs or cats?","Coffee or tea?"],
+ ["What's your favorite emoji?","What emoji do you never use?"],
+ ["Name a song everyone knows the lyrics to","Name a song with the worst lyrics"],
+ ["What's your favorite pasta dish?","What's your favorite soup?"],
+ ["How many pillows do you sleep with?","How many alarms do you set in the morning?"],
+ ["What was your favorite school subject?","What school subject did you hate?"],
+ ["Name a place in your city you love","Name a place in your city you avoid"],
+ ["What's the best gift you ever received?","What's the worst gift you ever received?"],
+ ["Which decade had the best music?","Which decade had the worst fashion?"],
+ ["What's your favorite fast-food chain?","What's your favorite thing to cook?"],
+ ["Name a TV show you've watched twice","Name a TV show you quit after one episode"],
+ ["What would you buy first with a million?","What would you never spend money on?"],
+ ["What's your favorite fruit?","What's your favorite vegetable?"],
+ ["What's your favorite way to spend a Sunday?","What's your favorite way to spend a Friday night?"],
+ ["Name a sport you enjoy watching","Name a sport you'd never try"],
+ ["What's your favorite holiday?","What's the most overrated holiday?"],
+ ["How long is your average shower?","How long does it take you to get ready?"],
+ ["What's your favorite snack at the cinema?","What's your favorite snack while gaming?"],
+ ["Name a famous person you share a birthday with (or would like to)","Name a famous person you look a bit like"],
+ ["What's your favorite kind of weather?","What's the worst weather for your mood?"],
+ ["What's your favorite number?","How many siblings do you have?"],
+ ["What's the best concert you've been to?","What's the best party you've been to?"],
+ ["What's your favorite dessert?","What's your favorite breakfast?"],
+ ["Name a book everyone should read","Name a book you never finished"],
+ ["What's your favorite thing about this group?","What's your favorite thing about yourself?"],
+ ["What's your biggest fear?","What's your biggest pet peeve?"],
+ ["Which social network could you delete forever?","Which website do you visit every day?"],
+ ["What's your favorite ice cream flavor?","What's your favorite cake?"],
+ ["Name a place you'd go for a honeymoon","Name a place you'd go for a bachelor party"],
+ ["What's your favorite color?","What color do you never wear?"],
+ ["What's your favorite candy?","What's your favorite chewing gum flavor?"],
+ ["What's the longest you've gone without your phone?","What's the longest you've slept?"],
+ ["Name a musician you'd love to see live","Name a musician you think is overrated"],
+ ["What's your favorite video game?","What's your favorite childhood toy?"],
+ ["Name a dish you'd order at a fancy restaurant","Name a dish you'd order at 3 am"],
+];
+
+// ===== Imposter mode: everyone answers a question on their phone, one player secretly got a different question =====
+function impPlayers(){return S.players.map((p,i)=>i).filter(i=>S.players[i].pid)}
+function impStart(){S.game="imposter";S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0});S.inGame=true;S.round=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=false;S.log=[];S.impUsed=S.impUsed||[];S.imp=null;S.screen="imp";impNext();sfx.start()}
+function impNext(){S.round++;
+  if(S.round>S.impQ){finish();return}
+  let pool=IMP_Q.map((q,i)=>i).filter(i=>!S.impUsed.includes(i));if(!pool.length){S.impUsed=[];pool=IMP_Q.map((q,i)=>i)}
+  const qi=pool[Math.floor(Math.random()*pool.length)];S.impUsed.push(qi);
+  const cand=impPlayers().filter(i=>i!==(S.imp&&S.imp.imposter));const imp=cand.length?cand[Math.floor(Math.random()*cand.length)]:impPlayers()[0];
+  S.imp={phase:"answer",qi,imposter:imp,answers:{},votes:{},discussEnd:null,result:null};
+  if(S.room){db.del(`rooms/${S.room.code}/answers`).catch(()=>{});db.del(`rooms/${S.room.code}/votes`).catch(()=>{});
+    const priv={};S.players.forEach((p,i)=>{if(p.pid)priv[p.pid]={q:i===imp?IMP_Q[qi][1]:IMP_Q[qi][0],n:S.round}});db.put(`rooms/${S.room.code}/private`,priv).catch(()=>{})}
+  save();render()}
+function impAnswer(i,text){const m=S.imp;if(!m||m.phase!=="answer")return;text=String(text||"").trim().slice(0,80);if(!text)return;m.answers[i]=text;
+  if(impPlayers().every(j=>m.answers[j]!=null)){m.phase="reveal";sfx.draw();toast("Everyone answered!")}save();render()}
+function impShowAnswers(){const m=S.imp;if(!m||m.phase!=="reveal")return;m.phase="discuss";m.discussEnd=S.impDiscuss?Date.now()+S.impDiscuss*1000:null;sfx.start();save();render()}
+function impStartVote(){const m=S.imp;if(!m||m.phase!=="discuss")return;m.phase="vote";m.votes={};if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});sfx.tick();toast("Vote on your phones: who is the imposter?");save();render()}
+function impVote(i,name){const m=S.imp;if(!m||m.phase!=="vote")return;const j=S.players.findIndex(p=>p.name.toLowerCase()===String(name).toLowerCase());if(j<0||j===i)return;m.votes[i]=j;
+  const voters=impPlayers();if(voters.every(v=>m.votes[v]!=null))impResult();else{save();render()}}
+function impResult(){const m=S.imp;if(!m||m.phase!=="vote")return;const imp=m.imposter,voters=impPlayers();const correct=voters.filter(v=>m.votes[v]===imp);const missed=voters.filter(v=>v!==imp&&m.votes[v]!==imp);
+  correct.forEach(v=>{S.players[v].score+=S.impPts;stat(S.players[v],"caught")});const impPts=missed.length*S.impImpPts;S.players[imp].score+=impPts;stat(S.players[imp],"imp");if(!correct.length)stat(S.players[imp],"impClean");
+  m.result={imposter:imp,correct,missed,impPts};m.phase="result";
+  S.log.unshift(`🕵️ Q${S.round}: imposter was <b>${esc(S.players[imp].name)}</b> – caught by ${correct.length?correct.map(v=>esc(S.players[v].name)).join(", "):"nobody"}${impPts?` · imposter <span class="up">+${impPts}</span>`:""}`);
+  sfx.win();save();render()}
+function impLeft(){const m=S.imp;if(!m||!m.discussEnd)return null;return Math.max(0,Math.ceil((m.discussEnd-Date.now())/1000))}
+let impT=null;
+function renderImp(){if(S.screen!=="imp"||S.game!=="imposter"){clearInterval(impT);impT=null;return}const m=S.imp;const st=$("impStage");
+  $("impRound").textContent=`Question ${Math.min(S.round,S.impQ)} of ${S.impQ}`;$("impCode").textContent=S.room?S.room.code:"";$("impN").textContent=S.players.filter(online).length;
+  const sorted=[...S.players].map((p,i)=>({...p,i})).sort((a,b)=>b.score-a.score);
+  $("impBoard").innerHTML=sorted.map((p,r)=>`<li><span class="rank">${r+1}</span>${p.pid?`<span class="dot${online(p)?' on':''}"></span>`:''}<span class="name">${esc(p.name)}</span><span class="pts ${p.score<0?'neg':''}">${p.score}</span></li>`).join("");
+  const left=impLeft();$("impTimer").hidden=!(m&&m.phase==="discuss"&&left!=null);if(!$("impTimer").hidden){$("impTimerVal").textContent=fmtT(left);$("impTimer").classList.toggle("warn",left<=10)}
+  if(!impT&&m&&m.phase==="discuss"&&m.discussEnd)impT=setInterval(()=>{const l=impLeft();if(S.screen!=="imp"||!S.imp||S.imp.phase!=="discuss"){clearInterval(impT);impT=null;return}$("impTimerVal").textContent=fmtT(l);$("impTimer").classList.toggle("warn",l<=10);if(l===10)sfx.tick();if(l<=0){clearInterval(impT);impT=null;sfx.buzz();impStartVote()}},250);
+  if(!m){st.innerHTML=`<div class="lbl">Get ready</div>`;return}
+  const q=IMP_Q[m.qi],pl=impPlayers(),nA=pl.filter(i=>m.answers[i]!=null).length,nV=pl.filter(i=>m.votes[i]!=null).length;
+  const answersHtml=(show)=>`<div class="answers">${pl.map(i=>`<div class="a${show&&i===m.imposter?" imp":""}"><span class="n">${esc(S.players[i].name)}${show&&i===m.imposter?" · 🕵️ imposter":""}</span><span class="t">${esc(m.answers[i]||"–")}</span>${show&&m.result?`<span class="v">voted: ${m.votes[i]!=null?esc(S.players[m.votes[i]].name):"–"}${m.result.correct.includes(i)?" ✓":""}</span>`:""}</div>`).join("")}</div>`;
+  if(m.phase==="answer")st.innerHTML=`<div class="lbl">Everyone is answering on their phones</div><div class="q secret">Question hidden until everyone has answered</div><div class="bar"><i style="width:${pl.length?Math.round(100*nA/pl.length):0}%"></i></div><div class="hint" style="margin:0">${nA} of ${pl.length} answered · ${pl.filter(i=>m.answers[i]==null).map(i=>esc(S.players[i].name)).join(", ")||"all in!"}</div><div class="row"><button class="btn btn-ghost" id="impSkip">Skip question</button>${nA>=2?`<button class="btn btn-ghost" id="impForce">Continue without the rest</button>`:""}</div>`;
+  else if(m.phase==="reveal")st.innerHTML=`<div class="lbl">The real question was</div><div class="q">${esc(q[0])}</div><div class="hint" style="margin:0">One of you got a different question. Ready to see the answers?</div><button class="btn btn-gold" id="impShow" style="font-size:18px;padding:16px 24px">👀 Reveal the answers</button>`;
+  else if(m.phase==="discuss")st.innerHTML=`<div class="lbl">Question</div><div class="q">${esc(q[0])}</div>${answersHtml(false)}<div class="hint" style="margin:0">Discuss: who answered a different question? ${left!=null?"The vote starts when the timer ends.":""}</div><div class="row"><button class="btn btn-gold" id="impVoteBtn">🗳 Start the vote</button></div>`;
+  else if(m.phase==="vote")st.innerHTML=`<div class="lbl">Question</div><div class="q">${esc(q[0])}</div>${answersHtml(false)}<div class="bar"><i style="width:${pl.length?Math.round(100*nV/pl.length):0}%"></i></div><div class="hint" style="margin:0">${nV} of ${pl.length} voted</div><div class="row">${nV?`<button class="btn btn-ghost" id="impClose">Close vote (${nV} votes)</button>`:""}</div>`;
+  else{const r=m.result,I=S.players[r.imposter];st.innerHTML=`<div class="lbl">The imposter was</div><div class="big">🕵️ ${esc(I.name)}</div><div class="hint" style="margin:0">Their question: “${esc(q[1])}” · real question: “${esc(q[0])}”</div>${answersHtml(true)}<div class="hint" style="margin:0">${r.correct.length?r.correct.map(v=>esc(S.players[v].name)).join(", ")+` caught the imposter: +${S.impPts} each.`:"Nobody caught the imposter!"} ${r.impPts?`${esc(I.name)} fooled ${r.missed.length}: +${r.impPts}.`:""}</div><button class="btn btn-gold" id="impNextBtn" style="font-size:18px;padding:16px 24px">${S.round>=S.impQ?"🏆 Show results":"Next question ▸"}</button>`}
+  const bind=(id,fn)=>{const b=$(id);if(b)b.onclick=fn};
+  bind("impShow",impShowAnswers);bind("impVoteBtn",impStartVote);bind("impNextBtn",()=>impNext());bind("impClose",impResult);
+  bind("impSkip",()=>ask("Skip this question?",()=>{S.round--;impNext()},"Skip"));bind("impForce",()=>{m.phase="reveal";save();render()})}
+$("impHome").onclick=()=>{S.screen="home";save();render()};
+$("impEnd").onclick=()=>ask("End the game now and show the results?",finish,"End game");
+$("impQ").onchange=e=>{S.impQ=Math.max(1,Math.min(30,+e.target.value||6));save()};
+$("impDiscuss").onchange=e=>{S.impDiscuss=Math.max(0,+e.target.value||0);save()};
+$("impPts").onchange=e=>{S.impPts=Math.max(0,+e.target.value||0);save()};
+$("impImpPts").onchange=e=>{S.impImpPts=Math.max(0,+e.target.value||0);save()};
+$("gameSel").onclick=e=>{const b=e.target.closest("[data-game]");if(!b)return;S.game=b.dataset.game;save();render()};
+// ---- phone side ----
+function impFetchPriv(round){if(!PH||PH.privBusy)return;PH.privBusy=true;PH.privTries=(PH.privTries||0)+1;
+  db.get(`rooms/${PH.code}/private/${PH.pid}`).then(d=>{PH.privBusy=false;if(d&&d.n===round){PH.priv=d;PH.privTries=0;renderPhone()}else if(PH.privTries<8)setTimeout(()=>impFetchPriv(round),1000)}).catch(()=>{PH.privBusy=false;if(PH.privTries<8)setTimeout(()=>impFetchPriv(round),1500)})}
+function phoneImpHtml(st,me,meI,players,board){const m=st.imp;if(m&&m.phase==="answer"&&!(PH.priv&&PH.priv.n===m.round))impFetchPriv(m.round);if(!m)return `<div class="who">Imposter</div><p class="hint">Waiting for the host…</p>${board}`;
+  const priv=PH.priv&&PH.priv.n===m.round?PH.priv:null;const answered=(m.answered||[]).includes(PH.pid)||PH.answeredRound===m.round;const voted=(m.voted||[]).includes(PH.pid)||(PH.myVote&&PH.myVote.round==="imp:"+m.round);
+  const answers=m.answers?`<div class="answers">${m.answers.map(a=>`<div class="a${m.result&&a.name===m.result.imposter?" imp":""}"><span class="n">${esc(a.name)}${m.result&&a.name===m.result.imposter?" · 🕵️":""}</span><span class="t">${esc(a.text)}</span></div>`).join("")}</div>`:"";
+  const timer=m.phase==="discuss"&&m.discussEnd?`<div class="timer phtimer" id="impPhTimer">${fmtT(Math.max(0,Math.ceil((m.discussEnd-Date.now())/1000)))}</div>`:"";
+  if(m.phase==="answer"){if(answered)return `<div class="who">Answer sent ✓</div><p class="hint">${(m.answered||[]).length} of ${m.total} answered – waiting for the rest…</p>${board}`;
+    if(!priv)return `<div class="who">Question ${m.round}</div><p class="hint">Loading your question…</p>`;
+    return `<div class="who">Question ${m.round} of ${st.impQ}</div><div class="impq"><small>Only you can see this</small>${esc(priv.q)}</div><form class="impans" id="impForm"><input id="impIn" maxlength="80" placeholder="Your answer" autocomplete="off"><button class="btn btn-gold" type="submit">Send answer</button></form><p class="hint">Keep it short. If you're the imposter, your question is different – blend in!</p>`}
+  if(m.phase==="reveal")return `<div class="who">All answers are in</div><p class="hint">Look at the host screen – the answers are about to be revealed.</p>${board}`;
+  if(m.phase==="discuss")return `<div class="who">Discuss!</div>${timer}<div class="impq"><small>The real question</small>${esc(m.q)}</div>${answers}<p class="hint">Who answered a different question?</p>`;
+  if(m.phase==="vote"){if(voted)return `<div class="who">Vote received 🗳️</div><p class="hint">${(m.voted||[]).length} of ${m.total} voted…</p>${answers}`;
+    return `<div class="who">Who is the imposter?</div><div class="ballot">${players.filter(p=>p.pid&&p.pid!==PH.pid).map(p=>`<button class="btn btn-ghost" data-act="vote" data-name="${esc(p.name)}">🕵️ ${esc(p.name)}</button>`).join("")}</div>${answers}`}
+  const r=m.result;const meImp=r&&r.imposter===me.name;const gotIt=r&&(r.correct||[]).includes(me.name);
+  return `<div class="who">${meImp?"You were the imposter 🕵️":"The imposter was <b>"+esc(r.imposter)+"</b>"}</div><p class="hint">${meImp?(r.impPts?"You fooled "+r.missed+" players: +"+r.impPts:"Everyone saw through you – no points"):(gotIt?"You caught them: +"+st.impPts:"Wrong guess – no points")}</p>${answers}${board}`}
 
 // ---- In-app YouTube player ----
 const YT_KEY="AIzaSyDSXRg08h9ifPWx9-m8RT9DFuf1jj0UTlA";const ytCache={};let YTS={list:[],i:0,q:""};
