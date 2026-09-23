@@ -1,4 +1,6 @@
-# Karaoke Challenge (PWA)
+# Game Night (PWA)
+
+Three party games in one app: **Karaoke Challenge**, **Imposter** and **Who Would**. Live at https://reizun.github.io/game-night/
 
 Static web app – no build step, no server logic. Play on one device (pass it around) or host with phones: every player joins with a 4-letter room code and uses their own phone as a controller (draw, done, pass, vote for the best performance of each round). Three secret awards are revealed at the end.
 

@@ -1,7 +1,7 @@
 {
-  "name": "Karaoke Challenge",
-  "short_name": "Karaoke",
-  "description": "Karaoke party game with challenge cards, players, scoring and pass-it-on bonus.",
+  "name": "Game Night",
+  "short_name": "Game Night",
+  "description": "Party games for one screen and everyone's phones: Karaoke Challenge, Imposter, Who Would.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
