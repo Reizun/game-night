@@ -485,7 +485,7 @@ h1 span{color:var(--red-2)}
 <!-- HOME SCREEN -->
 <div class="screen" id="scrHome">
   <div class="home">
-    <div class="deckart"><div class="fan f1"><div class="frame"><svg viewBox="0 0 64 64"><use href="#i-mic"/></svg></div></div><div class="fan f3"><div class="frame"><svg viewBox="0 0 64 64"><use href="#i-question"/></svg></div></div><div class="fan f2"><div class="frame"><svg viewBox="0 0 64 64"><use href="#i-mask2"/></svg></div></div></div>
+    <div class="deckart"><div class="fan f1"><div class="frame"><svg viewBox="0 0 64 64"><use id="fanL" href="#i-mic"/></svg></div></div><div class="fan f3"><div class="frame"><svg viewBox="0 0 64 64"><use id="fanR" href="#i-question"/></svg></div></div><div class="fan f2"><div class="frame"><svg viewBox="0 0 64 64"><use id="fanF" href="#i-mask2"/></svg></div></div></div>
     <div class="title">Game <span>Night</span></div>
     <div class="menu">
       <button class="btn btn-ghost" id="homeResume" hidden>↩ Resume game</button>
@@ -1278,9 +1278,9 @@ const BASE = {1:10,2:20,3:30};
 
 // ---- State ----
 const KEY="karaoke-challenge-en-v1";
-let S = {players:[], turn:0, cats:[...CATS], penalty:5, bonus:10, current:null, disabledArtists:[], hiddenArtists:[], log:[], used:[], customArtists:[], customCards:[], game:"karaoke", imp:null, impUsed:[], impQ:6, impDiscuss:90, impPts:10, impImpPts:5, ww:null, wwUsed:[], wwQ:10, autoMode:"ready", autoSec:10, auto:null, rounds:3, timerSec:15, mics:1, round:1, started:0, screen:"home", volume:0.7, muted:false, mode:"local", room:null, inGame:false, mvpBonus:20, awardBonus:15, vote:null, awards:null, awardsDone:false, timer:null, timerBuzzed:false, catsV:0, back:null, lastVote:null};
+let S = {players:[], turn:0, cats:[...CATS], penalty:5, bonus:10, current:null, disabledArtists:[], hiddenArtists:[], log:[], used:[], customArtists:[], customCards:[], game:"karaoke", imp:null, impUsed:[], impQ:6, impDiscuss:90, impPts:10, impImpPts:5, ww:null, wwUsed:[], wwQ:10, autoMode:"ready", autoSec:10, auto:null, plays:{}, rounds:3, timerSec:15, mics:1, round:1, started:0, screen:"home", volume:0.7, muted:false, mode:"local", room:null, inGame:false, mvpBonus:20, awardBonus:15, vote:null, awards:null, awardsDone:false, timer:null, timerBuzzed:false, catsV:0, back:null, lastVote:null};
 let draft=null;
-try{const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.players){S={...S,...s};if(!S.catsV){for(const c of ["2000s","K-Pop","Disney","High School Musical","Word Hunt","Artists","Genres","Years","Mood"])if(!S.cats.includes(c))S.cats.push(c);}if(!Array.isArray(S.disabledArtists))S.disabledArtists=[];if(!Array.isArray(S.hiddenArtists))S.hiddenArtists=[];if(!S.customArtists)S.customArtists=[];if(!Array.isArray(S.customCards))S.customCards=[];if(!S.game)S.game="karaoke";if(!S.impQ)S.impQ=6;if(S.impDiscuss==null)S.impDiscuss=90;if(S.impPts==null)S.impPts=10;if(S.impImpPts==null)S.impImpPts=5;if(!Array.isArray(S.impUsed))S.impUsed=[];if(!S.wwQ)S.wwQ=10;if(!S.autoMode)S.autoMode="ready";if(!S.autoSec)S.autoSec=10;if(!Array.isArray(S.wwUsed))S.wwUsed=[];if(S.rounds==null)S.rounds=3;if(S.volume==null)S.volume=.7;if(S.muted==null)S.muted=false;if(S.timerSec==null)S.timerSec=15;if(!S.mics)S.mics=1;if(!S.round)S.round=1;if(!S.started)S.started=0;if(!["home","settings","players","game","final","lobby","join","phone","imp","ww"].includes(S.screen))S.screen="home";if(S.screen==="setup")S.screen="home";}}catch(e){}
+try{const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.players){S={...S,...s};if(!S.catsV){for(const c of ["2000s","K-Pop","Disney","High School Musical","Word Hunt","Artists","Genres","Years","Mood"])if(!S.cats.includes(c))S.cats.push(c);}if(!Array.isArray(S.disabledArtists))S.disabledArtists=[];if(!Array.isArray(S.hiddenArtists))S.hiddenArtists=[];if(!S.customArtists)S.customArtists=[];if(!Array.isArray(S.customCards))S.customCards=[];if(!S.game)S.game="karaoke";if(!S.impQ)S.impQ=6;if(S.impDiscuss==null)S.impDiscuss=90;if(S.impPts==null)S.impPts=10;if(S.impImpPts==null)S.impImpPts=5;if(!Array.isArray(S.impUsed))S.impUsed=[];if(!S.wwQ)S.wwQ=10;if(!S.autoMode)S.autoMode="ready";if(!S.plays||typeof S.plays!=="object")S.plays={};if(!S.autoSec)S.autoSec=10;if(!Array.isArray(S.wwUsed))S.wwUsed=[];if(S.rounds==null)S.rounds=3;if(S.volume==null)S.volume=.7;if(S.muted==null)S.muted=false;if(S.timerSec==null)S.timerSec=15;if(!S.mics)S.mics=1;if(!S.round)S.round=1;if(!S.started)S.started=0;if(!["home","settings","players","game","final","lobby","join","phone","imp","ww"].includes(S.screen))S.screen="home";if(S.screen==="setup")S.screen="home";}}catch(e){}
 if(!(S.catsV>=3)&&!S.cats.includes("Your cards"))S.cats.push("Your cards");S.catsV=3;if(!S.decV){if(S.timerSec===90)S.timerSec=15;S.decV=1}S.players.forEach(p=>{p.stats=p.stats||{}});if(!S.mode)S.mode="local";if(S.mvpBonus==null)S.mvpBonus=20;if(S.awardBonus==null)S.awardBonus=15;
 if(S.inGame==null)S.inGame=!!(S.current||(S.players.length>=2&&(S.round>1||S.started>0||S.players.some(p=>p.score!==0))));
 if(S.screen==="lobby"&&!(S.mode==="host"&&S.room))S.screen="home";
@@ -1651,7 +1651,8 @@ function endCard(){stopTimer();ytClose();const c=S.current;S.current=null;$("don
 function nextRound(){S.round++;
   if(S.rounds&&S.round>S.rounds){S.round=S.rounds;save();setTimeout(finish,400);return}
   toast(`Round ${S.round}`);S.players.forEach(p=>p.rs=p.score);save();setTimeout(render,350)}
-function startGame(){S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0});S.screen="game";S.round=1;S.started=0;S.turn=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=false;S.lastVote=null;S.log=[];S.used=[];S.inGame=true;S.timer=null;S.timerBuzzed=false;save();render();sfx.start()}
+function countPlay(g){S.plays=S.plays||{};S.plays[g]=(S.plays[g]||0)+1}
+function startGame(){countPlay("karaoke");S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0});S.screen="game";S.round=1;S.started=0;S.turn=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=false;S.lastVote=null;S.log=[];S.used=[];S.inGame=true;S.timer=null;S.timerBuzzed=false;save();render();sfx.start()}
 
 // ---- Round vote: best performance (phones) ----
 function voters(){return S.players.map((p,i)=>i).filter(i=>online(S.players[i]))}
@@ -1857,7 +1858,10 @@ $("cardForm").onsubmit=e=>{e.preventDefault();const text=$("cardText").value.tri
   const all=deck();if(all.some(c=>c[1].toLowerCase()===text.toLowerCase())){toast("That card already exists");return}
   const cat=$("cardCat").value||"Your cards",diff=+$("cardDiff").value||2;S.customCards.push({text,cat,diff});if(!S.cats.includes(cat))S.cats.push(cat);$("cardText").value="";save();render();toast(`Added: ${text} (${BASE[diff]} points)`);sfx.tick()};
 $("cardList").onclick=e=>{const b=e.target.closest("[data-oc]");if(!b)return;const c=S.customCards[+b.dataset.oc];if(!c)return;ask(`Remove "${c.text}"?`,()=>{S.customCards.splice(+b.dataset.oc,1);S.used=S.used.filter(t=>t!==c.text);save();render()},"Remove")};
-function renderExtra(){renderOwnCards();
+function renderFan(){const icon={karaoke:"#i-mic",imposter:"#i-mask2",whowould:"#i-question"};const p=S.plays||{};
+  const order=["imposter","karaoke","whowould"].sort((a,b)=>(p[b]||0)-(p[a]||0));
+  $("fanF").setAttribute("href",icon[order[0]]);$("fanL").setAttribute("href",icon[order[1]]);$("fanR").setAttribute("href",icon[order[2]])}
+function renderExtra(){renderOwnCards();if(S.screen==="home")renderFan();
   const canResume=(S.inGame&&S.players.length>=2)||(S.mode==="host"&&S.room&&!S.inGame);
   $("homeResume").hidden=!canResume;$("homeResume").textContent=S.inGame?"↩ Resume game":"↩ Back to lobby";
   $("homeHost").disabled=!NET_OK;$("homeJoin").disabled=!NET_OK;if(!NET_OK)$("homeHost").title=$("homeJoin").title="Not set up on this copy yet";
@@ -1970,7 +1974,7 @@ const IMP_Q=[
 
 // ===== Imposter mode: everyone answers a question on their phone, one player secretly got a different question =====
 function impPlayers(){return S.players.map((p,i)=>i).filter(i=>S.players[i].pid)}
-function impStart(){S.game="imposter";S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0});S.inGame=true;S.round=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=false;S.log=[];S.impUsed=S.impUsed||[];S.imp=null;S.screen="imp";impNext();sfx.start()}
+function impStart(){countPlay("imposter");S.game="imposter";S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0});S.inGame=true;S.round=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=false;S.log=[];S.impUsed=S.impUsed||[];S.imp=null;S.screen="imp";impNext();sfx.start()}
 function impNext(){S.round++;
   if(S.round>S.impQ){finish();return}
   let pool=IMP_Q.map((q,i)=>i).filter(i=>!S.impUsed.includes(i));if(!pool.length){S.impUsed=[];pool=IMP_Q.map((q,i)=>i)}
@@ -2052,7 +2056,7 @@ const WW_Q=[
 ];
 
 // ===== Who Would: one question, everyone votes for a player on their phone, no points, review at the end =====
-function wwStart(){S.game="whowould";S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0;p.cards=[]});S.inGame=true;S.round=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=true;S.log=[];S.wwUsed=S.wwUsed||[];S.ww=null;S.screen="ww";wwNext();sfx.start()}
+function wwStart(){countPlay("whowould");S.game="whowould";S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0;p.cards=[]});S.inGame=true;S.round=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=true;S.log=[];S.wwUsed=S.wwUsed||[];S.ww=null;S.screen="ww";wwNext();sfx.start()}
 function wwNext(){S.round++;if(S.round>S.wwQ){finish();return}
   let pool=WW_Q.map((q,i)=>i).filter(i=>!S.wwUsed.includes(i));if(!pool.length){S.wwUsed=[];pool=WW_Q.map((q,i)=>i)}
   const qi=pool[Math.floor(Math.random()*pool.length)];S.wwUsed.push(qi);S.ww={phase:"vote",qi,votes:{},result:null};
