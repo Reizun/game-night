@@ -12,7 +12,7 @@ Static web app – no build step, no server logic. Karaoke Challenge runs on one
 - **Ballpark** – percent questions, everyone guesses 0–100, closest wins (100 questions).
 - **Emoji Pictionary** – the host shows an emoji card (124 built-in movies and anime, plus your own), everyone guesses the title on their phone (German titles count too, switchable in Settings); or switch to draw mode, where a player describes a title with emojis live.
 - **Color** – like dialed.gg: a color flashes on the TV, everyone mixes it from memory on their phone (hue, saturation, brightness); scored 0–10 by color difference.
-- **Color Toon** – a cartoon, game or anime character with one part hatched (Pikachu's cheeks, Mario's overalls, Goku's gi …); color it in from memory. 157 official pictures loaded from Wikipedia and Fandom wikis at runtime (not stored in this repo; region masks by flood fill, shading kept) plus 9 drawings; everyday objects optional.
+- **Color Toon** – a cartoon, game or anime character with one part hatched (Pikachu's cheeks, Mario's overalls, Goku's gi …); color it in from memory. 154 official pictures loaded from Wikipedia and Fandom wikis at runtime (not stored in this repo; every pixel of the region colour is recoloured, shading kept) plus 9 drawings; everyday objects optional.
 - **Time Imposter** – everyone gets a secret time except the imposter; one after another everyone holds their button that long, the imposter copies the others; then all times are revealed, discuss and vote.
 
 ## Run locally
