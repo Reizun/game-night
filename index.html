@@ -716,6 +716,11 @@ html.tv body{zoom:var(--tvz,1)}html.tv .lctable{max-height:460px;min-height:300p
     <p class="hint">One player secretly gets an anime series or movie and describes it with emojis only. The host screen shows the emojis, everyone else types guesses on their phone. First correct guess: points for the guesser and the artist. Halfway through the time a hint appears (word count and first letter). Five guesses per player and title. Scoring like skribbl.io: after the first correct guess the answer stays hidden and everyone else has 10–30 more seconds (set above); points by order – 1st 200, 2nd 150, 3rd 120, 4th 100, 5th 80 … In draw mode the artist gets the set points per correct guesser, plus the same again if everyone got it. 120 built-in anime titles for draw mode and 30 built-in emoji cards for cards mode – add your own (movies, songs, whatever) above, they stay on this device. In cards mode nobody draws: the host shows a card, everyone guesses, first correct guess scores.</p>
   </section>
   <section class="panel" data-tab="general">
+    <h2>🎙️ Announcer voice</h2>
+    <label class="hint" style="display:flex;gap:8px;align-items:center;cursor:pointer;margin:0"><input type="checkbox" id="voiceOn" checked> Read cards, questions and announcements aloud on the host screen</label>
+    <p class="hint">Pre-recorded voice, no internet service needed. Player names, your own cards and players' answers are never read aloud. Uses the sound volume below; muting the sound also mutes the voice.</p>
+  </section>
+  <section class="panel" data-tab="general">
     <h2>📺 TV mode</h2>
     <label class="hint" style="display:flex;gap:8px;align-items:center;cursor:pointer;margin:0"><input type="checkbox" id="tvOn"> Scale the host screen up for a TV</label>
     <p class="hint">Smart TVs report a very wide screen, so everything looks tiny. TV mode scales the whole host screen to the TV's width and makes the focus frame bigger for remote controls. Phones are not affected. You can also toggle it with the 📺 button in the corner.</p>
@@ -1768,7 +1773,7 @@ function drawCard(want){if(S.current||S.vote||S.players.length<2)return false;
   if(!pool.length){S.used=S.used.filter(t=>!all.some(c=>c[1]===t));pool=all;toast(want?`${BASE[want]}-point cards reshuffled`:"Deck reshuffled")}
   const [cat,text,diff]=pool[Math.floor(Math.random()*pool.length)];S.used.push(text);
   S.current={cat,text,raw:text,pick:null,diff,worth:BASE[diff],holder:S.turn,starter:S.turn,chain:0,passedBy:[]};resolveText();
-  startTimer();save();render();sfx.draw();return true}
+  startTimer();save();render();sfx.draw();vo(S.current.raw||S.current.text);return true}
 function doAccept(auto){const c=S.current;if(!c||c.accepted)return;const p=S.players[c.holder];c.accepted=true;c.so={challengers:[],opp:null,phase:"open",votes:{}};
   if(!auto&&S.timerSec&&tLeftNow()>S.timerSec*2/3)stat(p,"fast");stopTimer();
   toast(auto?`Time's up – ${p.name} is in!`:`${p.name} accepts – sing!`);if(!auto)sfx.draw();save();render()}
@@ -1883,7 +1888,13 @@ function endCard(){stopTimer();ytClose();const c=S.current;S.current=null;$("don
 function nextRound(){S.round++;
   if(S.rounds&&S.round>S.rounds){S.round=S.rounds;save();setTimeout(finish,400);return}
   toast(`Round ${S.round}`);S.players.forEach(p=>p.rs=p.score);save();setTimeout(render,350)}
-function countPlay(g){evCommit();S.plays=S.plays||{};S.plays[g]=(S.plays[g]||0)+1}
+// ---- Announcer: pre-generated voice clips ----
+let VO_IDS=null,voQ=[],voA=null;
+function voId(t){let x=2166136261>>>0;for(let i=0;i<t.length;i++){x^=t.charCodeAt(i);x=Math.imul(x,16777619)>>>0}return x.toString(36)}
+function voLoad(){if(VO_IDS)return;VO_IDS=new Set();fetch("voice/index.json",{cache:"no-cache"}).then(r=>r.ok?r.json():[]).then(a=>{VO_IDS=new Set(Array.isArray(a)?a:[])}).catch(()=>{})}
+function vo(text){if(!text||S.voiceOn===false||S.muted||S.screen==="phone"||S.screen==="join")return;voLoad();const id=voId(String(text));if(!VO_IDS.has(id))return;voQ.push(id);if(voQ.length>3)voQ.splice(0,voQ.length-3);if(!voA)voNext()}
+function voNext(){const id=voQ.shift();if(!id){voA=null;return}voA=new Audio("voice/"+id+".mp3");voA.volume=Math.max(0,Math.min(1,S.volume==null?.8:S.volume));voA.onended=voA.onerror=()=>{voA=null;setTimeout(voNext,250)};voA.play().catch(()=>{voA=null;voQ=[]})}
+function countPlay(g){evCommit();vo((GAME_LBL[g]||"").replace(/^\S+ /,"")+"!");S.plays=S.plays||{};S.plays[g]=(S.plays[g]||0)+1}
 const AV_KINDS=["b1","b2","b3","b4","b5","b6","b7","b8","b9","b10","g1","g2","g3","g4","g5","g6","g7","g8","g9","g10"];
 const AV_SKIN=["#f9dcc4","#f1c27d","#e0ac69","#c68642","#8d5524","#5c3a21"];
 const AV_HAIR=["#1f1a17","#4a2c1a","#8b5a2b","#d9a441","#f2e2a0","#b7472a","#9aa0a6","#7b4fd6","#2f9bd6","#e0508a"];
@@ -1949,7 +1960,7 @@ function awardVal(p,id){if(id==="comeback")return p.rs==null?0:p.score-p.rs;retu
 function pickAwards(){const cand=AWARDS.map(a=>{const vals=S.players.map(p=>awardVal(p,a.id));const max=Math.max(...vals);if(!(max>0))return null;
     const winners=vals.map((v,i)=>v===max?i:-1).filter(i=>i>=0);if(winners.length>=S.players.length)return null;return{id:a.id,em:a.em,t:a.t,d:a.d,winners,val:max,revealed:false}}).filter(Boolean);
   for(let i=cand.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cand[i],cand[j]]=[cand[j],cand[i]]}return cand.slice(0,3)}
-function finish(){evEnsure();S.evPending={game:S.game||"karaoke",at:Date.now()};stopTimer();S.current=null;S.vote=null;S.inGame=false;S.imp=null;S.ww=null;S.lc=null;S.uc=null;S.bp=null;S.em=null;S.players.forEach(p=>{delete p.late});S.next=S.mode==="host"&&S.room?{votes:{},end:null}:null;S.screen="final";$("card").classList.remove("flipped");
+function finish(){evEnsure();S.evPending={game:S.game||"karaoke",at:Date.now()};stopTimer();S.current=null;S.vote=null;S.inGame=false;S.imp=null;S.ww=null;S.lc=null;S.uc=null;S.bp=null;S.em=null;S.players.forEach(p=>{delete p.late});S.next=S.mode==="host"&&S.room?{votes:{},end:null}:null;if(S.next)setTimeout(()=>vo("What's next? Vote on your phones."),1500);S.screen="final";$("card").classList.remove("flipped");
   S.awards=S.awardBonus>0&&S.players.length>=2&&S.game==="karaoke"?pickAwards():[];S.awardsDone=!S.awards.length;save();render();if(S.awardsDone)sfx.win();else sfx.start()}
 function revealAward(){const a=(S.awards||[]).find(x=>!x.revealed);if(!a)return;a.revealed=true;a.winners.forEach(i=>{S.players[i].score+=S.awardBonus});sfx.ok();
   if(!S.awards.some(x=>!x.revealed)){S.awardsDone=true;setTimeout(()=>sfx.win(),700)}save();render()}
@@ -2080,7 +2091,7 @@ function renderQr(){const el=$("lobbyQr");if(!S.room)return;const url=joinUrl(S.
   qrLib=document.createElement("script");qrLib.src="./qrcode.min.js";qrLib.onload=draw;qrLib.onerror=()=>{el.innerHTML="";qrLib=null};document.head.appendChild(qrLib)}
 $("lobbyAdd").onsubmit=e=>{e.preventDefault();const n=$("lobbyName").value.trim().slice(0,18);if(!n)return;if(S.players.length>=12){toast("Max 12 players");return}S.players.push({name:uniqueName(n),score:0,stats:{},rs:0});$("lobbyName").value="";save();render()};
 $("lobbyPlayers").onclick=e=>{const b=e.target.closest("[data-kick]");if(!b)return;const i=+b.dataset.kick,p=S.players[i];if(!p)return;if(p.pid&&S.room)db.del(`rooms/${S.room.code}/members/${p.pid}`).catch(()=>{});S.players.splice(i,1);save();render()};
-$("lobbyStart").onclick=()=>{const G=nextGames();if(G.length===1){nextStart(G[0]);return}if(!G.some(g=>nextAvail(g))){toast("Not enough players yet");return}S.next={votes:{},end:null};save();render();sfx.start()};
+$("lobbyStart").onclick=()=>{const G=nextGames();if(G.length===1){nextStart(G[0]);return}if(!G.some(g=>nextAvail(g))){toast("Not enough players yet");return}S.next={votes:{},end:null};save();render();sfx.start();vo("Which game do you want to play first? Vote on your phones.")};
 $("lobbyBack").onclick=()=>ask("Close this room? Phones will be disconnected.",()=>{hostClose(true);S.screen="home";save();render()},"Close room");
 $("lobbySettings").onclick=()=>{S.back="lobby";S.screen="settings";S.setTab=Object.keys(GAME_LBL).includes(S.game)?S.game:"karaoke";save();render()};
 
@@ -2211,7 +2222,7 @@ function tvApply(){const on=!!S.tvMode&&S.screen!=="phone"&&S.screen!=="join";co
   const b=$("tvBtn");if(b){b.hidden=S.screen==="phone"||S.screen==="join";b.textContent=S.tvMode?"📺 TV mode: on":"📺 TV mode";b.classList.toggle("on",!!S.tvMode)}}
 window.addEventListener("resize",()=>tvApply());
 function renderExtra(){tvApply();renderOwnCards();if(S.screen==="home")renderFan();
-  if(S.screen==="settings"){$("tutOn").checked=S.tutorials!==false;$("tvOn").checked=!!S.tvMode;const t=S.setTab||"karaoke";[...$("setTabs").querySelectorAll("[data-tab]")].forEach(b=>b.classList.toggle("on",b.dataset.tab===t));document.querySelectorAll("#scrSettings section[data-tab]").forEach(el=>{el.hidden=el.dataset.tab!==t})}
+  if(S.screen==="settings"){$("tutOn").checked=S.tutorials!==false;$("voiceOn").checked=S.voiceOn!==false;$("tvOn").checked=!!S.tvMode;const t=S.setTab||"karaoke";[...$("setTabs").querySelectorAll("[data-tab]")].forEach(b=>b.classList.toggle("on",b.dataset.tab===t));document.querySelectorAll("#scrSettings section[data-tab]").forEach(el=>{el.hidden=el.dataset.tab!==t})}
   const canResume=(S.inGame&&S.players.length>=2)||(S.mode==="host"&&S.room&&!S.inGame);
   $("homeResume").hidden=!canResume;$("homeResume").textContent=S.inGame?"↩ Resume game":"↩ Back to lobby";
   $("homeHost").disabled=!NET_OK;$("homeJoin").disabled=!NET_OK;if(!NET_OK)$("homeHost").title=$("homeJoin").title="Not set up on this copy yet";
@@ -2430,16 +2441,16 @@ function impNext(){S.round++;S.players.forEach(p=>{delete p.late});
     S.privV=(S.privV||0)+1;const priv={};S.players.forEach((p,i)=>{if(p.pid)priv[p.pid]={q:imps.includes(i)?IMP_Q[qi][1]:IMP_Q[qi][0],n:S.privV}});db.put(`rooms/${S.room.code}/private`,priv).catch(()=>{})}
   save();render()}
 function impAnswer(i,text){const m=S.imp;if(!m||m.phase!=="answer")return;text=String(text||"").trim().slice(0,80);if(!text)return;m.answers[i]=text;
-  if(impPlayers().every(j=>m.answers[j]!=null)){m.phase="reveal";sfx.draw();toast("Everyone answered!")}save();render()}
+  if(impPlayers().every(j=>m.answers[j]!=null)){m.phase="reveal";sfx.draw();toast("Everyone answered!");vo("Everyone answered. Here is the real question.");vo(IMP_Q[m.qi][0])}save();render()}
 function impShowAnswers(){const m=S.imp;if(!m||m.phase!=="reveal")return;m.phase="discuss";m.discussEnd=S.impDiscuss?Date.now()+S.impDiscuss*1000:null;sfx.start();save();render()}
-function impStartVote(){const m=S.imp;if(!m||m.phase!=="discuss")return;m.phase="vote";m.votes={};if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});sfx.tick();toast("Vote on your phones: who is the imposter?");save();render()}
+function impStartVote(){if(S.imp&&S.imp.phase==="discuss")vo("Who is the imposter? Vote now.");const m=S.imp;if(!m||m.phase!=="discuss")return;m.phase="vote";m.votes={};if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});sfx.tick();toast("Vote on your phones: who is the imposter?");save();render()}
 function impVote(i,name){const m=S.imp;if(!m||m.phase!=="vote")return;const j=S.players.findIndex(p=>p.name.toLowerCase()===String(name).toLowerCase());if(j<0||j===i)return;m.votes[i]=j;
   const voters=impPlayers();if(voters.every(v=>m.votes[v]!=null))impResult();else{save();render()}}
 function impResult(){const m=S.imp;if(!m||m.phase!=="vote")return;const imps=m.imps||[m.imposter],imp=imps[0],voters=impPlayers();const correct=voters.filter(v=>imps.includes(m.votes[v]));const missed=voters.filter(v=>!imps.includes(v)&&m.votes[v]!=null&&!imps.includes(m.votes[v]));
   correct.forEach(v=>{S.players[v].score+=S.impPts;stat(S.players[v],"caught")});const impPts=missed.length*S.impImpPts;imps.forEach(j=>{const P=S.players[j];if(!P)return;P.score+=impPts;stat(P,"imp");if(!voters.some(v=>m.votes[v]===j))stat(P,"impClean")});
   m.result={imposter:imp,imps,correct,missed,impPts};m.phase="result";
   S.log.unshift(`🕵️ Q${S.round}: imposter${imps.length>1?"s were":" was"} <b>${imps.map(j=>esc((S.players[j]||{}).name||"?")).join(" & ")}</b> – caught by ${correct.length?correct.map(v=>esc(S.players[v].name)).join(", "):"nobody"}${impPts?` · imposter${imps.length>1?"s":""} <span class="up">+${impPts}</span>`:""}`);
-  sfx.win();save();render()}
+  vo(correct.length?"The imposter was caught!":"Nobody caught the imposter!");sfx.win();save();render()}
 function impLeft(){const m=S.imp;if(!m||!m.discussEnd)return null;return Math.max(0,Math.ceil((m.discussEnd-Date.now())/1000))}
 let impT=null;
 function renderImp(){if(S.screen!=="imp"||S.game!=="imposter"){clearInterval(impT);impT=null;return}const m=S.imp;const st=$("impStage");
@@ -2475,6 +2486,7 @@ $("impPts").onchange=e=>{S.impPts=Math.max(0,+e.target.value||0);save()};
 $("impImpPts").onchange=e=>{S.impImpPts=Math.max(0,+e.target.value||0);save()};
 $("gameSel").onclick=e=>{const b=e.target.closest("[data-game]");if(!b)return;const g=b.dataset.game;let a=nextGames().slice();if(a.includes(g)){if(a.length===1){toast("Keep at least one game");return}a=a.filter(x=>x!==g)}else a.push(g);S.activeGames=NEXT_OPTS.filter(x=>a.includes(x));if(S.next){S.next.votes={};S.next.end=null}save();render()};
 $("tvBtn").onclick=()=>{S.tvMode=!S.tvMode;save();render();toast(S.tvMode?"TV mode on – everything is scaled for the big screen":"TV mode off")};
+$("voiceOn").onchange=e=>{S.voiceOn=e.target.checked;save();if(!S.voiceOn){voQ=[];if(voA){try{voA.pause()}catch(x){}voA=null}}};
 $("tvOn").onchange=e=>{S.tvMode=e.target.checked;save();render()};
 $("tutOn").onchange=e=>{S.tutorials=e.target.checked;save()};
 $("tutReset").onclick=()=>{S.tutSeen={};save();toast("Tutorials will show again")};
@@ -2638,10 +2650,10 @@ function ucNext(){S.round++;S.players.forEach(p=>{delete p.late});if(S.round>S.u
   let pool=UC_TOPICS.map((t,i)=>i).filter(i=>!S.ucUsed.includes(i));if(pool.length<6){S.ucUsed=[];pool=UC_TOPICS.map((t,i)=>i)}
   const ti=pool[Math.floor(Math.random()*pool.length)];S.ucUsed.push(ti);const pl=impPlayers();S.ucSpyN=S.ucSpyN||{};const cnt=i=>S.ucSpyN[S.players[i].pid]||0;const nSpy=Math.max(1,Math.min(S.ucSpies||1,Math.floor((pl.length-1)/2)));const prevS=(S.uc&&(S.uc.spies||[S.uc.spy]))||[];const spies=[];let pool2=pl.filter(i=>!prevS.includes(i));if(pool2.length<nSpy)pool2=pl.slice();while(spies.length<nSpy&&pool2.length){const mn=Math.min(...pool2.map(cnt));const c2=pool2.filter(i=>cnt(i)===mn);const pick=c2[Math.floor(Math.random()*c2.length)];spies.push(pick);pool2=pool2.filter(i=>i!==pick)}spies.forEach(j=>{S.ucSpyN[S.players[j].pid]=cnt(j)+1});const spy=spies[0];
   const decoys=pool.filter(i=>i!==ti).sort(()=>Math.random()-.5).slice(0,5);const options=[ti,...decoys].sort(()=>Math.random()-.5).map(i=>UC_TOPICS[i]);
-  const ucFirstPick=(()=>{const prev=S.uc&&S.uc.first;let c=pl.filter(i=>i!==prev);if(!c.length)c=pl;return c[Math.floor(Math.random()*c.length)]})();S.uc={phase:"play",topic:UC_TOPICS[ti],spy,spies,guesses:{},first:ucFirstPick,end:S.ucTime?Date.now()+S.ucTime*1000:null,votes:{},options,guess:null,result:null};S.auto=null;
+  const ucFirstPick=(()=>{const prev=S.uc&&S.uc.first;let c=pl.filter(i=>i!==prev);if(!c.length)c=pl;return c[Math.floor(Math.random()*c.length)]})();S.uc={phase:"play",topic:UC_TOPICS[ti],spy,spies,guesses:{},first:ucFirstPick,end:S.ucTime?Date.now()+S.ucTime*1000:null,votes:{},options,guess:null,result:null};S.auto=null;vo("Everyone knows the topic – except the spy. Start talking!");
   if(S.room){db.del(`rooms/${S.room.code}/votes`).catch(()=>{});S.privV=(S.privV||0)+1;const priv={};S.players.forEach((p,i)=>{if(p.pid)priv[p.pid]={topic:spies.includes(i)?null:S.uc.topic,spy:spies.includes(i),n:S.privV,g:"uc"}});db.put(`rooms/${S.room.code}/private`,priv).catch(()=>{})}
   save();render()}
-function ucStartVote(){const m=S.uc;if(!m||m.phase!=="play")return;m.phase="vote";m.votes={};m.end=null;if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});sfx.tick();toast("Vote on your phones: who is the spy?");save();render()}
+function ucStartVote(){if(S.uc&&S.uc.phase==="play")vo("Who is the spy? Vote now.");const m=S.uc;if(!m||m.phase!=="play")return;m.phase="vote";m.votes={};m.end=null;if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});sfx.tick();toast("Vote on your phones: who is the spy?");save();render()}
 function ucVote(i,name){const m=S.uc;if(!m||m.phase!=="vote")return;const j=S.players.findIndex(p=>p.name.toLowerCase()===String(name).toLowerCase());if(j<0||j===i)return;m.votes[i]=j;if(impPlayers().every(v=>m.votes[v]!=null))ucCloseVote();else{save();render()}}
 function ucCloseVote(){const m=S.uc;if(!m||m.phase!=="vote")return;const spies=m.spies||[m.spy];const voters=impPlayers().filter(v=>!spies.includes(v));const cnt={};voters.forEach(v=>{if(m.votes[v]!=null)cnt[m.votes[v]]=(cnt[m.votes[v]]||0)+1});
   let max=0;Object.values(cnt).forEach(n=>max=Math.max(max,n));const top=Object.keys(cnt).filter(k=>cnt[k]===max).map(Number);const caughtSet=top.length===1&&spies.includes(top[0])?[top[0]]:[];const caught=caughtSet.length>0;const tie=top.length>1&&top.some(t=>spies.includes(t));const correct=voters.filter(v=>spies.includes(m.votes[v]));
@@ -2651,7 +2663,7 @@ function ucFinish(){const m=S.uc;if(!m||m.phase!=="guess")return;const spies=m.s
   if(r.caught)r.correct.forEach(v=>{S.players[v].score+=S.ucPts;stat(S.players[v],"ucCatch")});
   spies.forEach(j=>{const P=S.players[j];if(!P)return;const g=m.guesses[j]||"";const ok=!!g&&g.toLowerCase()===m.topic.toLowerCase();const caughtMe=(r.caughtSet||[]).includes(j);let pts=0;if(!caughtMe&&!r.tie){pts+=S.ucSpyPts;stat(P,"ucEscape")}const b=ok?(caughtMe?5:10):0;if(ok)stat(P,"ucGuess");P.score+=pts+b;r.spyRes[j]={guess:g,ok,bonus:b}});
   const f=spies[0];m.guess=m.guesses[f]||"";r.guessOk=!!(r.spyRes[f]&&r.spyRes[f].ok);r.bonus=r.spyRes[f]?r.spyRes[f].bonus:0;
-  S.log.unshift(`🕵️ Round ${S.round}: ${spies.map(j=>"<b>"+esc((S.players[j]||{}).name||"?")+"</b> guessed “"+esc(m.guesses[j]||"–")+"” "+(r.spyRes[j]&&r.spyRes[j].ok?"✓":"✗")).join(", ")} – ${r.caught?"caught":"not caught"} (topic: ${esc(m.topic)})`);m.phase="result";sfx.win();save();render()}
+  S.log.unshift(`🕵️ Round ${S.round}: ${spies.map(j=>"<b>"+esc((S.players[j]||{}).name||"?")+"</b> guessed “"+esc(m.guesses[j]||"–")+"” "+(r.spyRes[j]&&r.spyRes[j].ok?"✓":"✗")).join(", ")} – ${r.caught?"caught":"not caught"} (topic: ${esc(m.topic)})`);m.phase="result";vo(r.caught?"The spy was caught!":"The spy got away!");sfx.win();save();render()}
 let ucT=null;
 function renderUc(){if(S.screen!=="uc"||S.game!=="undercover"){clearInterval(ucT);ucT=null;return}const m=S.uc,st=$("ucStage");$("ucRound").textContent=`Round ${Math.min(S.round,S.ucRounds)} of ${S.ucRounds}`;$("ucChip").hidden=!S.room;$("ucCode").textContent=S.room?S.room.code:"";$("ucN").textContent=S.players.filter(online).length;
   const sorted=[...S.players].map((p,i)=>({...p,i})).sort((a,b)=>b.score-a.score);$("ucBoard").innerHTML=sorted.map((p,r)=>`<li><span class="rank">${r+1}</span>${p.pid?`<span class="dot${online(p)?' on':''}"></span>`:''}<span class="name">${avHtml(p)}${esc(p.name)}</span>${ptsHtml(p)}<button class="x" data-rm="${p.i}" title="Remove player">×</button></li>`).join("");
@@ -2679,11 +2691,11 @@ function phoneUcHtml(st,me,meI,players,board){const m=st.uc;if((st.late||[]).inc
 function bpStart(){if(tutGate("ballpark"))return;countPlay("ballpark");S.game="ballpark";S.next=null;S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0;delete p.late});S.inGame=true;S.round=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=true;S.log=[];S.bpUsed=S.bpUsed||[];S.bp=null;S.screen="bp";bpNext();sfx.start()}
 function bpNext(){S.round++;S.players.forEach(p=>{delete p.late});if(S.round>S.bpQ){finish();return}
   let pool=BP_Q.map((q,i)=>i).filter(i=>!S.bpUsed.includes(i));if(!pool.length){S.bpUsed=[];pool=BP_Q.map((q,i)=>i)}const qi=pool[Math.floor(Math.random()*pool.length)];S.bpUsed.push(qi);
-  S.bp={phase:"answer",qi,answers:{},end:S.bpTime?Date.now()+S.bpTime*1000:null,result:null};S.auto=null;save();render()}
+  S.bp={phase:"answer",qi,answers:{},end:S.bpTime?Date.now()+S.bpTime*1000:null,result:null};S.auto=null;save();render();vo(BP_Q[qi][0])}
 function bpAnswer(i,v){const m=S.bp;if(!m||m.phase!=="answer")return;v=Math.round(+v);if(!(v>=0&&v<=100))return;m.answers[i]=v;if(impPlayers().every(j=>m.answers[j]!=null))bpReveal();else{save();render()}}
 function bpReveal(){const m=S.bp;if(!m||m.phase!=="answer")return;const truth=BP_Q[m.qi][1];const rows=impPlayers().filter(i=>m.answers[i]!=null).map(i=>({i,v:m.answers[i],d:Math.abs(m.answers[i]-truth)})).sort((a,b)=>a.d-b.d);
   const dists=[...new Set(rows.map(r=>r.d))];rows.forEach(r=>{const rank=dists.indexOf(r.d);r.rank=rank;r.pts=rankPts(rank);S.players[r.i].score+=r.pts;stat(S.players[r.i],rank===0?"bpBest":rank===1?"bpSecond":"bpClose")});
-  m.result={truth,rows};m.phase="result";m.end=null;S.log.unshift(`📊 ${esc(BP_Q[m.qi][0])} → <b>${truth}%</b> · ${rows.filter(r=>r.pts).map(r=>esc(S.players[r.i].name)+" +"+r.pts).join(", ")||"no answers"}`);sfx.win();save();render()}
+  m.result={truth,rows};m.phase="result";vo("Here's the answer.");m.end=null;S.log.unshift(`📊 ${esc(BP_Q[m.qi][0])} → <b>${truth}%</b> · ${rows.filter(r=>r.pts).map(r=>esc(S.players[r.i].name)+" +"+r.pts).join(", ")||"no answers"}`);sfx.win();save();render()}
 let bpT=null;
 function renderBp(){if(S.screen!=="bp"||S.game!=="ballpark"){clearInterval(bpT);bpT=null;return}const m=S.bp,st=$("bpStage");$("bpRound").textContent=`Question ${Math.min(S.round,S.bpQ)} of ${S.bpQ}`;$("bpChip").hidden=!S.room;$("bpCode").textContent=S.room?S.room.code:"";$("bpN").textContent=S.players.filter(online).length;
   const sorted=[...S.players].map((p,i)=>({...p,i})).sort((a,b)=>b.score-a.score);$("bpBoard").innerHTML=sorted.map((p,r)=>`<li><span class="rank">${r+1}</span>${p.pid?`<span class="dot${online(p)?' on':''}"></span>`:''}<span class="name">${avHtml(p)}${esc(p.name)}</span>${ptsHtml(p)}<button class="x" data-rm="${p.i}" title="Remove player">×</button></li>`).join("");
@@ -2740,7 +2752,7 @@ function emMatch(guess,t){if(!t)return false;const sq=x=>emNorm(x).replace(/ /g,
 function emStart(){if(tutGate("emoji"))return;countPlay("emoji");S.game="emoji";S.next=null;S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0;delete p.late});S.inGame=true;S.round=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=true;S.log=[];S.emUsed=S.emUsed||[];S.em={order:[],k:0,artist:null,phase:"draw"};S.screen="em";emNext();sfx.start()}
 function emNext(){const m=S.em;S.players.forEach(p=>{delete p.late});
   if(S.emMode==="cards"){m.round=(m.round||0)+1;if(m.round>S.emQ){finish();return}S.round=m.round;const ALL=emCardsAll();if(!ALL.length){toast("Add emoji cards in Settings first");finish();return}S.emUsedC=S.emUsedC||[];let pool=ALL.map((c,i)=>i).filter(i=>!S.emUsedC.includes(i));if(!pool.length){S.emUsedC=[];pool=ALL.map((c,i)=>i)}const ci=pool[Math.floor(Math.random()*pool.length)];S.emUsedC.push(ci);
-    Object.assign(m,{phase:"draw",artist:null,title:null,card:ci,emojis:ALL[ci][0],guesses:[],correct:[],end:S.emTime?Date.now()+S.emTime*1000:null,result:null,start:Date.now()});S.auto=null;save();render();return}
+    vo("Here's an emoji card. What is it?");Object.assign(m,{phase:"draw",artist:null,title:null,card:ci,emojis:ALL[ci][0],guesses:[],correct:[],end:S.emTime?Date.now()+S.emTime*1000:null,result:null,start:Date.now()});S.auto=null;save();render();return}
   if(!m.order.length||m.k>=m.order.length){m.round=(m.round||0)+1;if(m.round>S.emRounds){finish();return}m.order=impPlayers().sort(()=>Math.random()-.5);m.k=0}
   S.round=(m.round-1)*Math.max(1,m.order.length)+m.k+1;let artist=m.order[m.k];while(artist!=null&&!S.players[artist]){m.k++;artist=m.order[m.k]}if(artist==null){m.k=m.order.length;emNext();return}
   const ALL=emAll();if(!ALL.length){toast("Add titles in Settings first");finish();return}let pool=ALL.map((t,i)=>i).filter(i=>!S.emUsed.includes(i));if(!pool.length){S.emUsed=[];pool=ALL.map((t,i)=>i)}const ti=pool[Math.floor(Math.random()*pool.length)];S.emUsed.push(ti);
@@ -2749,13 +2761,13 @@ function emNext(){const m=S.em;S.players.forEach(p=>{delete p.late});
   save();render()}
 function emEmoji(i,text){const m=S.em;if(!m||m.phase!=="draw"||i!==m.artist)return;const e=String(text||"").replace(/[\p{L}\p{N}]/gu,"").trim().slice(0,60);m.emojis=e;save();render()}
 function emGuess(i,text){const m=S.em;if(!m||m.phase!=="draw"||i===m.artist||!S.players[i]||S.players[i].late)return;m.correct=m.correct||[];if(m.correct.some(c=>c.i===i))return;if((m.guesses||[]).filter(g=>g.i===i).length>=5)return;text=String(text||"").trim().slice(0,60);if(!text)return;const ok=emMatch(text,emCur());m.guesses.push({i,text,ok});if(m.guesses.length>40)m.guesses.shift();
-  if(ok){const pos=m.correct.length;m.correct.push({i,pts:rankPts(pos)});sfx.ok();if(pos===0)m.end=Date.now()+(S.emSteal||10)*1000;const need=impPlayers().filter(j=>j!==m.artist);if(need.length&&need.every(j=>m.correct.some(c=>c.i===j))){emResult();return}}save();render()}
+  if(ok){const pos=m.correct.length;m.correct.push({i,pts:rankPts(pos)});sfx.ok();if(pos===0){m.end=Date.now()+(S.emSteal||10)*1000;vo("Someone got it! Hurry up!")}const need=impPlayers().filter(j=>j!==m.artist);if(need.length&&need.every(j=>m.correct.some(c=>c.i===j))){emResult();return}}save();render()}
 function emResult(){const m=S.em;if(!m||m.phase!=="draw")return;const a=m.artist!=null?S.players[m.artist]:null;const T=(emCur()||["?"])[0];const who=a?`<b>${esc(a.name)}</b> `:"";m.correct=m.correct||[];
   m.correct.forEach((c,k)=>{const p=S.players[c.i];if(p){p.score+=c.pts;stat(p,"emGuess");if(k===0)stat(p,"emFirst")}});let ap=0;
   if(a&&m.correct.length){ap=m.correct.length*S.emPts;const need=impPlayers().filter(j=>j!==m.artist).length;if(need&&m.correct.length>=need)ap+=S.emPts;a.score+=ap;stat(a,"emDraw")}
   if(m.correct.length){S.log.unshift(`🎨 ${who}${esc(m.emojis)} → “${esc(T)}”: ${m.correct.map((c,k)=>"#"+(k+1)+" "+esc((S.players[c.i]||{}).name||"?")+" +"+c.pts).join(", ")}${ap?", "+esc(a.name)+" +"+ap:""}`);sfx.win()}
   else{S.log.unshift(`🎨 ${who}${esc(m.emojis)} → nobody guessed “${esc(T)}”`);sfx.buzz()}
-  m.result={winner:m.correct.length?m.correct[0].i:null,artistPts:ap};m.phase="result";m.end=null;if(m.artist!=null)m.k++;save();render()}
+  m.result={winner:m.correct.length?m.correct[0].i:null,artistPts:ap};if(m.card!=null&&S.emBuiltin!==false&&m.card<EM_CARDS.length)vo("It was "+T+"!");else if(!m.correct.length)vo("Nobody got it.");m.phase="result";m.end=null;if(m.artist!=null)m.k++;save();render()}
 let emT=null;
 function renderEm(){if(S.screen!=="em"||S.game!=="emoji"){clearInterval(emT);emT=null;return}const m=S.em,st=$("emStage");$("emRound").textContent=m&&m.round?(S.emMode==="cards"?`Card ${Math.min(m.round,S.emQ)} of ${S.emQ}`:`Round ${Math.min(m.round,S.emRounds)} of ${S.emRounds}`):"";$("emChip").hidden=!S.room;$("emCode").textContent=S.room?S.room.code:"";$("emN").textContent=S.players.filter(online).length;
   const sorted=[...S.players].map((p,i)=>({...p,i})).sort((a,b)=>b.score-a.score);$("emBoard").innerHTML=sorted.map((p,r)=>`<li><span class="rank">${r+1}</span>${p.pid?`<span class="dot${online(p)?' on':''}"></span>`:''}<span class="name">${avHtml(p)}${esc(p.name)}</span>${ptsHtml(p)}<button class="x" data-rm="${p.i}" title="Remove player">×</button></li>`).join("");
@@ -2822,7 +2834,7 @@ function evCommit(){const pend=S.evPending;if(!pend)return;evEnsure();const E=S.
   E.games.push({game:pend.game,at:pend.at,scores});const vals=Object.values(E.totals);const max=vals.length?Math.max(...vals):0;E.leaders.push({after:E.games.length-1,at:pend.at,names:Object.keys(E.totals).filter(k=>E.totals[k]===max),max});S.evPending=null}
 function evTotalOf(p){const E=S.evening;const base=E&&E.totals?(E.totals[p.name]||0):0;return base+((S.inGame||S.evPending)?(p.score||0):0)}
 function ptsHtml(p){const tot=p.tot!=null?p.tot:evTotalOf(p);const has=p.tot!=null||(S.evening&&S.evening.games&&S.evening.games.length);return `<span class="pts ${p.score<0?'neg':''}">${p.score}</span>${has&&tot!==p.score?`<span class="tot" title="Tonight's total">Σ ${tot}</span>`:""}`}
-function evEnd(){evCommit();evEnsure();clearInterval(nextT);nextT=null;S.next=null;S.inGame=false;S.screen="eve";save();render();sfx.win()}
+function evEnd(){vo("Tonight's results!");evCommit();evEnsure();clearInterval(nextT);nextT=null;S.next=null;S.inGame=false;S.screen="eve";save();render();sfx.win()}
 function evReset(){evNew();S.evPending=null;S.players.forEach(p=>{p.score=0});S.screen=S.mode==="host"&&S.room?"lobby":"home";save();render();toast("New evening – all totals reset")}
 function evRank(){const E=S.evening||{totals:{}};return Object.keys(E.totals).map(n=>({name:n,tot:E.totals[n],av:(E.av||{})[n]||null})).sort((a,b)=>b.tot-a.tot)}
 function evTime(t){const d=new Date(t);return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")}
@@ -2857,7 +2869,7 @@ function lcStart(){if(tutGate("liars"))return;countPlay("liars");S.game="liars";
   S.lc={n:0,phase:"play",table:"Q",hands:{},alive:{},pulls:{},bullet:{},pile:[],last:null,turn:null,reveal:null,hv:{},calls:[],believe:[]};S.screen="lc";lcDeal(null);sfx.start()}
 function lcDeal(startAt){const m=S.lc;S.players.forEach(p=>{delete p.late});const al=lcPlayers();al.forEach(i=>{m.alive[i]=true});
   m.n++;S.round=m.n;m.table=["Q","K","A"][Math.floor(Math.random()*3)];const d=lcDeck(al.length);m.hands={};al.forEach((i,k)=>{m.hands[i]=d.slice(k*S.lcHand,(k+1)*S.lcHand)});
-  m.pending=false;m.callEnd=null;m.believe=[];m.calls=[];m.pile=[];m.last=null;m.reveal=null;m.phase="play";m.turn=startAt!=null&&al.includes(startAt)?startAt:al[0];lcArm();S.auto=null;al.forEach(i=>lcPushHand(i));save();render();sfx.draw()}
+  m.pending=false;m.callEnd=null;m.believe=[];m.calls=[];m.pile=[];m.last=null;m.reveal=null;m.phase="play";m.turn=startAt!=null&&al.includes(startAt)?startAt:al[0];lcArm();S.auto=null;al.forEach(i=>lcPushHand(i));save();render();sfx.draw();vo("The table card is "+LC_RANK[m.table]+"s.")}
 function lcPushHand(i){const m=S.lc,p=S.players[i];if(!S.room||!p||!p.pid)return;m.hv[p.pid]=(m.hv[p.pid]||0)+1;db.put(`rooms/${S.room.code}/private/${p.pid}`,{hand:m.hands[i]||[],v:m.hv[p.pid],n:m.n}).catch(()=>{})}
 function lcArm(){const m=S.lc;if(!m)return;m.turnEnd=S.lcTurnSec>0&&m.turn!=null&&m.phase==="play"?Date.now()+S.lcTurnSec*1000:null;if(m.turnEnd&&!lcT)setTimeout(()=>{if(S.lc&&S.lc.phase==="play"&&S.lc.turnEnd&&S.screen!=="lc")renderLcTimer()},0)}
 function lcDone(){const m=S.lc;return S.lcDeals>0&&m.n>=S.lcDeals}
@@ -2889,7 +2901,7 @@ function lcResolve(){const m=S.lc;if(!m||m.phase!=="play"||!m.last||!(m.calls||[
   const byPts=liar?-lcR5(pot/2):lcR5(pot/2);if(by){by.score+=byPts;stat(by,liar?"lcCaught":"lcHonest")}
   m.reveal={by:L.by,cards:L.cards,liar,pot,results,byPts,resolved:true,at:Date.now()};m.phase="reveal";m.callEnd=null;m.believe=[];m.turn=null;m.turnEnd=null;
   S.log.unshift(`${liar?"🎯":"😬"} ${results.map(r=>esc((S.players[r.i]||{}).name||"?")).join(", ")} called liar on <b>${esc(by?by.name:"?")}</b>: ${L.cards.map(c=>LC_SYM[c]).join(" ")} – ${liar?"a lie!":"honest!"} (pot ${pot})`);
-  if(liar)sfx.win();else sfx.buzz();save();render()}
+  if(liar)sfx.win();else sfx.buzz();vo(liar?"It was a lie!":"It was honest!");save();render()}
 function lcNext(){const m=S.lc;if(!m||m.phase!=="reveal")return;if(lcDone()){lcFinish();return}const r=m.reveal;S.auto=null;const al=lcPlayers();const k=al.indexOf(r?r.by:-1);lcDeal(al.length?al[(k+1+al.length)%al.length]:null)}
 function lcFinish(){finish()}
 let lcAnimSeen=null;
@@ -2977,7 +2989,7 @@ const WW_Q=[
 function wwStart(){if(tutGate("whowould"))return;countPlay("whowould");S.game="whowould";S.next=null;S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0;p.cards=[]});S.inGame=true;S.round=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=true;S.log=[];S.wwUsed=S.wwUsed||[];S.ww=null;S.screen="ww";wwNext();sfx.start()}
 function wwNext(){S.round++;S.players.forEach(p=>{delete p.late});if(S.round>S.wwQ){finish();return}
   let pool=WW_Q.map((q,i)=>i).filter(i=>!S.wwUsed.includes(i));if(!pool.length){S.wwUsed=[];pool=WW_Q.map((q,i)=>i)}
-  const qi=pool[Math.floor(Math.random()*pool.length)];S.wwUsed.push(qi);S.ww={phase:"vote",qi,votes:{},result:null};
+  const qi=pool[Math.floor(Math.random()*pool.length)];S.wwUsed.push(qi);S.ww={phase:"vote",qi,votes:{},result:null};vo("Who would most likely "+WW_Q[qi].replace(/^…/,""));
   if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});save();render()}
 function wwVote(i,name){const m=S.ww;if(!m||m.phase!=="vote")return;const j=S.players.findIndex(p=>p.name.toLowerCase()===String(name).toLowerCase());if(j<0||j===i)return;m.votes[i]=j;
   if(impPlayers().every(v=>m.votes[v]!=null))wwResult();else{save();render()}}
