@@ -385,6 +385,8 @@ h1 span{color:var(--red-2)}
 .evchart{width:100%;max-width:720px;color:var(--muted)}.evtl{display:flex;flex-direction:column;gap:6px;width:100%;max-width:560px}.evt{display:grid;grid-template-columns:52px 1fr auto auto;gap:10px;align-items:center;background:var(--ground);border-radius:10px;padding:6px 12px;font-size:14px;text-align:left}.evt .t{font-weight:800;color:var(--muted)}
 .evtab{width:100%;overflow-x:auto}.evtab table{border-collapse:collapse;margin:0 auto;font-size:14px}.evtab th,.evtab td{padding:6px 10px;text-align:center;border-bottom:1px solid rgba(255,255,255,.08)}.evtab td:first-child{text-align:left;white-space:nowrap}.evtab td.neg{color:#ff7a7a}
 .evfacts{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.evfacts div{background:var(--ground);border-radius:12px;padding:8px 14px;display:flex;flex-direction:column;align-items:center;min-width:110px}.evfacts b{font-size:18px}.evfacts span{font-size:12px;color:var(--muted);text-align:center}
+html.tv body{zoom:var(--tvz,1)}html.tv .lctable{max-height:460px;min-height:300px}html.tv header{margin-bottom:4px}html.tv :focus-visible{outline:4px solid var(--gold)!important;outline-offset:3px}html.tv .toast{font-size:1.2em}
+.tvbtn{position:fixed;right:10px;bottom:10px;z-index:60;font:800 12px Nunito,sans-serif;padding:6px 10px;border-radius:999px;background:var(--ground-2);color:var(--muted);border:1px solid rgba(255,255,255,.15);opacity:.7;cursor:pointer}.tvbtn:hover,.tvbtn:focus-visible{opacity:1}.tvbtn.on{color:#1a1a1a;background:var(--gold);opacity:.9}
 .nextbox{width:100%;background:var(--ground-2);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px;align-items:center}
 .nextbox h3{margin:0;font-family:Anton,sans-serif;font-weight:400;letter-spacing:.04em;font-size:22px}
 .nextopts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.nextopts .c{display:inline-block;min-width:22px;padding:1px 7px;border-radius:999px;background:var(--ground);margin-left:6px;font-size:13px}
@@ -714,6 +716,11 @@ h1 span{color:var(--red-2)}
     <p class="hint">One player secretly gets an anime series or movie and describes it with emojis only. The host screen shows the emojis, everyone else types guesses on their phone. First correct guess: points for the guesser and the artist. Halfway through the time a hint appears (word count and first letter). Five guesses per player and title. Scoring like skribbl.io: after the first correct guess the answer stays hidden and everyone else has 10–30 more seconds (set above); points by order – 1st 200, 2nd 150, 3rd 120, 4th 100, 5th 80 … In draw mode the artist gets the set points per correct guesser, plus the same again if everyone got it. 120 built-in anime titles for draw mode and 30 built-in emoji cards for cards mode – add your own (movies, songs, whatever) above, they stay on this device. In cards mode nobody draws: the host shows a card, everyone guesses, first correct guess scores.</p>
   </section>
   <section class="panel" data-tab="general">
+    <h2>📺 TV mode</h2>
+    <label class="hint" style="display:flex;gap:8px;align-items:center;cursor:pointer;margin:0"><input type="checkbox" id="tvOn"> Scale the host screen up for a TV</label>
+    <p class="hint">Smart TVs report a very wide screen, so everything looks tiny. TV mode scales the whole host screen to the TV's width and makes the focus frame bigger for remote controls. Phones are not affected. You can also toggle it with the 📺 button in the corner.</p>
+  </section>
+  <section class="panel" data-tab="general">
     <h2>Tutorials</h2>
     <label class="hint" style="display:flex;gap:8px;align-items:center;cursor:pointer;margin:0"><input type="checkbox" id="tutOn" checked> Show a short tutorial the first time each game is played in an evening</label>
     <div class="row" style="margin-top:10px"><button class="chip" id="tutReset" type="button">↺ Show all tutorials again</button></div>
@@ -978,6 +985,7 @@ h1 span{color:var(--red-2)}
 </div>
 </div>
 <div class="toast" id="toast"></div>
+<button class="tvbtn" id="tvBtn" type="button" title="TV mode: scales everything up for a big screen">📺 TV mode</button>
 <div class="ytwrap" id="ytOverlay" hidden><div class="ytbox"><div class="ythead"><button class="btn btn-ghost" id="ytBack" type="button" hidden>◂ List</button><span class="t" id="ytTitle">Searching…</span><button class="btn btn-ghost" id="ytNext" type="button" hidden>Next ▸</button><a class="btn btn-ghost" id="ytOpen" target="_blank" rel="noopener">YouTube ↗</a><button class="btn btn-ghost" id="ytClose" type="button">✕</button></div><form class="ytsearch" id="ytForm"><input id="ytQ" placeholder="Not the right one? Search for another song or artist…" autocomplete="off"><button class="btn btn-gold" type="submit">Search</button></form><div class="ytlist" id="ytList"></div><div class="ytframe" id="ytFrame" hidden></div><div class="ytfoot"><span id="ytHint"></span><span>Tap ✕ or outside to close</span></div></div></div>
 <div class="modal" id="modal" hidden><div class="box"><p id="modalMsg"></p><div class="row"><button class="btn btn-ghost" id="modalNo" type="button">Cancel</button><button class="btn btn-red" id="modalYes" type="button">Yes</button></div></div></div>
 
@@ -2199,8 +2207,11 @@ $("cardList").onclick=e=>{const b=e.target.closest("[data-oc]");if(!b)return;con
 function renderFan(){const icon={karaoke:"#i-mic",imposter:"#i-mask2",whowould:"#i-question",liars:"#i-cards",undercover:"#i-eye",ballpark:"#i-hash",emoji:"#i-smile"};const p=S.plays||{};
   const order=["imposter","karaoke","whowould","liars","undercover","ballpark","emoji"].sort((a,b)=>(p[b]||0)-(p[a]||0));
   $("fanF").setAttribute("href",icon[order[0]]);$("fanL").setAttribute("href",icon[order[1]]);$("fanR").setAttribute("href",icon[order[2]])}
-function renderExtra(){renderOwnCards();if(S.screen==="home")renderFan();
-  if(S.screen==="settings"){$("tutOn").checked=S.tutorials!==false;const t=S.setTab||"karaoke";[...$("setTabs").querySelectorAll("[data-tab]")].forEach(b=>b.classList.toggle("on",b.dataset.tab===t));document.querySelectorAll("#scrSettings section[data-tab]").forEach(el=>{el.hidden=el.dataset.tab!==t})}
+function tvApply(){const on=!!S.tvMode&&S.screen!=="phone"&&S.screen!=="join";const el=document.documentElement;el.classList.toggle("tv",on);el.style.setProperty("--tvz",on?String(Math.max(1.2,Math.min(3.2,window.innerWidth/1150,window.innerHeight/680)).toFixed(3)):"1");
+  const b=$("tvBtn");if(b){b.hidden=S.screen==="phone"||S.screen==="join";b.textContent=S.tvMode?"📺 TV mode: on":"📺 TV mode";b.classList.toggle("on",!!S.tvMode)}}
+window.addEventListener("resize",()=>tvApply());
+function renderExtra(){tvApply();renderOwnCards();if(S.screen==="home")renderFan();
+  if(S.screen==="settings"){$("tutOn").checked=S.tutorials!==false;$("tvOn").checked=!!S.tvMode;const t=S.setTab||"karaoke";[...$("setTabs").querySelectorAll("[data-tab]")].forEach(b=>b.classList.toggle("on",b.dataset.tab===t));document.querySelectorAll("#scrSettings section[data-tab]").forEach(el=>{el.hidden=el.dataset.tab!==t})}
   const canResume=(S.inGame&&S.players.length>=2)||(S.mode==="host"&&S.room&&!S.inGame);
   $("homeResume").hidden=!canResume;$("homeResume").textContent=S.inGame?"↩ Resume game":"↩ Back to lobby";
   $("homeHost").disabled=!NET_OK;$("homeJoin").disabled=!NET_OK;if(!NET_OK)$("homeHost").title=$("homeJoin").title="Not set up on this copy yet";
@@ -2463,6 +2474,8 @@ $("impDiscuss").onchange=e=>{S.impDiscuss=Math.max(0,+e.target.value||0);save()}
 $("impPts").onchange=e=>{S.impPts=Math.max(0,+e.target.value||0);save()};
 $("impImpPts").onchange=e=>{S.impImpPts=Math.max(0,+e.target.value||0);save()};
 $("gameSel").onclick=e=>{const b=e.target.closest("[data-game]");if(!b)return;const g=b.dataset.game;let a=nextGames().slice();if(a.includes(g)){if(a.length===1){toast("Keep at least one game");return}a=a.filter(x=>x!==g)}else a.push(g);S.activeGames=NEXT_OPTS.filter(x=>a.includes(x));if(S.next){S.next.votes={};S.next.end=null}save();render()};
+$("tvBtn").onclick=()=>{S.tvMode=!S.tvMode;save();render();toast(S.tvMode?"TV mode on – everything is scaled for the big screen":"TV mode off")};
+$("tvOn").onchange=e=>{S.tvMode=e.target.checked;save();render()};
 $("tutOn").onchange=e=>{S.tutorials=e.target.checked;save()};
 $("tutReset").onclick=()=>{S.tutSeen={};save();toast("Tutorials will show again")};
 $("setTabs").onclick=e=>{const b=e.target.closest("[data-tab]");if(!b)return;S.setTab=b.dataset.tab;save();render()};
