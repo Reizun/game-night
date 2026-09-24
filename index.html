@@ -436,6 +436,9 @@ html.tv .tutvideo{min-height:0;margin:0 auto}html.tv .lctable{max-height:460px;m
 .murows{width:100%;display:flex;flex-direction:column;gap:6px;max-height:40vh;overflow:auto}.murow{display:grid;grid-template-columns:minmax(70px,.7fr) 1fr 1fr;gap:10px;align-items:center;background:var(--ground);border-radius:10px;padding:8px 12px;text-align:left}.murow.one{grid-template-columns:minmax(70px,.7fr) 2fr}.murow>*{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .murow .ok,.muok{color:#3cb371;font-weight:800}.murow .no,.muno{color:#e05a5a;font-weight:700}.murow .no{opacity:.8}.muform label.mulbl{margin-top:6px}.muform label .muok,.muform label .muno{letter-spacing:0;text-transform:none;font-size:13px;margin-left:6px}.muform input:disabled{opacity:.7}
 .prechips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:6px 0 10px}.prechips .chip{font-size:15px;padding:10px 14px}
+#soloPane{position:fixed;z-index:60;background:var(--ground);box-shadow:0 0 30px rgba(0,0,0,.45)}#soloPane iframe{width:100%;height:100%;border:0;display:block}
+@media (min-width:900px){#soloPane{top:0;right:0;bottom:0;width:390px}html.solo body{padding-right:390px}}
+@media (max-width:899px){#soloPane{left:0;right:0;bottom:0;height:48vh}html.solo body{padding-bottom:48vh}}
 img.emoji{height:1em;width:1em;margin:0 .04em;vertical-align:-.12em;display:inline-block}
 .muart{width:170px;height:170px;object-fit:cover;border-radius:14px;display:block;margin:6px auto;box-shadow:0 6px 20px rgba(0,0,0,.4)}
 /* time imposter */
@@ -652,7 +655,7 @@ img.emoji{height:1em;width:1em;margin:0 .04em;vertical-align:-.12em;display:inli
     <div class="title">Game <span>Night</span></div>
     <div class="menu">
       <button class="btn btn-ghost" id="homeResume" hidden>↩ Resume game</button>
-      <button class="btn btn-red" id="homeStart">🎤 Karaoke only · host mode</button>
+      <button class="btn btn-red" id="homeStart">🎧 Solo mode</button>
       <button class="btn btn-gold" id="homeHost">📱 Host with phones</button>
       <button class="btn btn-ghost" id="homeJoin">📲 Join with your phone</button>
       <button class="btn btn-ghost" id="homeSettings">⚙ Settings</button>
@@ -905,7 +908,7 @@ img.emoji{height:1em;width:1em;margin:0 .04em;vertical-align:-.12em;display:inli
 
 <!-- LOBBY SCREEN (host with phones) -->
 <div class="screen lobby" id="scrLobby">
-  <div class="topbar" style="justify-content:space-between"><button class="btn btn-ghost" id="lobbyBack">← Close room</button><span class="round">Host with phones</span><button class="btn btn-ghost" id="lobbySettings">⚙ Settings</button></div>
+  <div class="topbar" style="justify-content:space-between"><button class="btn btn-ghost" id="lobbyBack">← Close room</button><span class="round" id="lobbyTitle">Host with phones</span><button class="btn btn-ghost" id="lobbySettings">⚙ Settings</button></div>
   <section class="panel center">
     <div class="lobl">
     <div class="round">Room code</div>
@@ -1137,6 +1140,7 @@ img.emoji{height:1em;width:1em;margin:0 .04em;vertical-align:-.12em;display:inli
 <div class="ytwrap" id="ytOverlay" hidden><div class="ytbox"><div class="ythead"><button class="btn btn-ghost" id="ytBack" type="button" hidden>◂ List</button><span class="t" id="ytTitle">Searching…</span><button class="btn btn-ghost" id="ytNext" type="button" hidden>Next ▸</button><a class="btn btn-ghost" id="ytOpen" target="_blank" rel="noopener">YouTube ↗</a><button class="btn btn-ghost" id="ytClose" type="button">✕</button></div><form class="ytsearch" id="ytForm"><input id="ytQ" placeholder="Not the right one? Search for another song or artist…" autocomplete="off"><button class="btn btn-gold" type="submit">Search</button></form><div class="ytlist" id="ytList"></div><div class="ytframe" id="ytFrame" hidden></div><div class="ytfoot"><span id="ytHint"></span><span>Tap ✕ or outside to close</span></div></div></div>
 <div class="modal" id="modal" hidden><div class="box"><p id="modalMsg"></p><div class="row"><button class="btn btn-ghost" id="modalNo" type="button">Cancel</button><button class="btn btn-red" id="modalYes" type="button">Yes</button></div></div></div>
 
+<div id="soloPane" hidden><iframe id="soloFrame" title="Your controller" allow="autoplay; vibrate"></iframe></div>
 <script src="https://cdn.jsdelivr.net/npm/@twemoji/api@17.0.3/dist/twemoji.min.js" crossorigin="anonymous" async onload="try{render()}catch(e){}"></script>
 <script>
 // ---- Challenges: [Kategorie, Text, Schwierigkeit 1-3] ----
@@ -1626,7 +1630,9 @@ const CHALLENGES = [
 const BASE = {1:10,2:10,3:10};
 
 // ---- State ----
-const KEY="karaoke-challenge-en-v1";
+// the embedded solo controller (?solo=CODE) keeps its own saved state and phone login
+const SOLO_PH=/[?&]solo=/.test(location.search);
+const KEY="karaoke-challenge-en-v1"+(SOLO_PH?"-solo":""),PHK="kc-phone"+(SOLO_PH?"-solo":"");
 let S = {players:[], turn:0, cats:[...CATS], penalty:3, bonus:10, current:null, disabledArtists:[], hiddenArtists:[], log:[], used:[], customArtists:[], customCards:[], game:"karaoke", imp:null, impUsed:[], impQ:6, impDiscuss:90, impPts:20, impImpPts:5, ww:null, wwUsed:[], wwQ:10, autoMode:"ready", autoSec:10, auto:null, plays:{}, lcHand:5, lcChambers:6, lcDeals:8, lcTurnSec:30, lcCallSec:30, ucRounds:5, ucTime:180, ucPts:15, ucSpyPts:10, bpQ:8, bpTime:30, coQ:5, coShow:3, coTime:30, ctQ:6, ctTime:30, tiQ:5, tiImps:1, tiDiscuss:60, tiPts:20, tiImpPts:5, tiTurnSec:20, muQ:10, muClip:10, muAns:10, emRounds:1, emTime:60, emPts:5, emCustom:[], emCards:[], emMode:"cards", emQ:10, rounds:3, timerSec:15, mics:1, round:1, started:0, screen:"home", volume:0.7, muted:false, mode:"local", room:null, inGame:false, mvpBonus:10, awardBonus:10, vote:null, awards:null, awardsDone:false, timer:null, timerBuzzed:false, catsV:0, back:null, lastVote:null};
 let draft=null;
 try{const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.players){S={...S,...s};if(!S.catsV){for(const c of ["2000s","K-Pop","Disney","High School Musical","Word Hunt","Artists","Genres","Years","Mood"])if(!S.cats.includes(c))S.cats.push(c);}if(!Array.isArray(S.disabledArtists))S.disabledArtists=[];if(!Array.isArray(S.hiddenArtists))S.hiddenArtists=[];if(!S.customArtists)S.customArtists=[];if(!Array.isArray(S.customCards))S.customCards=[];if(!S.game)S.game="karaoke";if(!S.impQ)S.impQ=6;if(S.impDiscuss==null)S.impDiscuss=90;if(S.impPts==null)S.impPts=20;if(!S.impScV){if(S.impPts===10)S.impPts=20;S.impScV=1}if(S.impImpPts==null)S.impImpPts=5;if(!Array.isArray(S.impUsed))S.impUsed=[];if(!S.wwQ)S.wwQ=10;if(!S.autoMode)S.autoMode="ready";if(!S.plays||typeof S.plays!=="object")S.plays={};if(!S.lcHand)S.lcHand=5;if(!S.lcChambers)S.lcChambers=6;if(S.lcDeals==null)S.lcDeals=8;if(!S.lcPtV){if(!S.lcDeals)S.lcDeals=8;S.lcPtV=1}if(S.tutorials==null)S.tutorials=true;if(!S.tutSeen||typeof S.tutSeen!=="object")S.tutSeen={};if(S.ucRounds==null){S.ucRounds=5;S.ucTime=180;S.ucPts=15;S.ucSpyPts=10}if(!S.balV){if(S.ucPts===10)S.ucPts=15;if(S.tiTurnSec==null)S.tiTurnSec=20;S.balV=1}if(S.bpQ==null){S.bpQ=8;S.bpTime=30}if(S.coQ==null){S.coQ=5;S.coShow=3;S.coTime=30;S.ctQ=6;S.ctTime=30;S.tiQ=5;S.tiImps=1;S.tiDiscuss=60;S.tiPts=20;S.tiImpPts=5}if(S.muQ==null){S.muQ=10;S.muClip=10;S.muAns=10}if(S.emRounds==null){S.emRounds=1;S.emTime=60;S.emPts=5}if(!S.emScV||S.emScV<2){if(S.emPts===10||S.emPts===50)S.emPts=5;S.emScV=2}if(!S.emSteal)S.emSteal=10;if(!Array.isArray(S.emCustom))S.emCustom=[];if(!Array.isArray(S.emCards))S.emCards=[];if(!S.emMode)S.emMode="cards";if(!S.emQ)S.emQ=10;if(!S.mvpV){if(S.mvpBonus===20)S.mvpBonus=10;S.mvpV=1}if(!S.penV){if(S.penalty===5)S.penalty=3;S.penV=1}if(!S.awV){if(S.awardBonus===15)S.awardBonus=10;S.awV=1}if(S.lcTurnSec==null)S.lcTurnSec=30;if(!S.impCount)S.impCount=1;if(!S.ucSpies)S.ucSpies=1;if(S.lcCallSec==null)S.lcCallSec=30;if(!S.autoSec)S.autoSec=10;if(!Array.isArray(S.wwUsed))S.wwUsed=[];if(S.rounds==null)S.rounds=3;if(S.volume==null)S.volume=.7;if(S.muted==null)S.muted=false;if(S.timerSec==null)S.timerSec=15;if(!S.mics)S.mics=1;if(!S.round)S.round=1;if(!S.started)S.started=0;if(!["home","settings","players","game","final","lobby","join","phone","imp","ww","lc","uc","bp","em","tut","eve","cg","ti","mu"].includes(S.screen))S.screen="home";if(S.screen==="tut"&&!S.tut)S.screen="home";if(S.screen==="setup")S.screen="home";}}catch(e){}
@@ -1889,7 +1895,8 @@ const db={
 };
 const CODE_CHARS="ABCDEFGHJKMNPQRSTUVWXYZ23456789";
 function genCode(){let c="";for(let i=0;i<4;i++)c+=CODE_CHARS[Math.floor(Math.random()*CODE_CHARS.length)];return c}
-function online(p){return !!p.pid&&!!p.seen&&Date.now()-p.seen<120e3}
+const OFFLINE_MS=35e3;
+function online(p){return !!p.pid&&!!p.seen&&Date.now()-p.seen<OFFLINE_MS}
 function stat(p,k,n=1){p.stats=p.stats||{};p.stats[k]=(p.stats[k]||0)+n}
 function art(a){return /^[aeiou]/i.test(a)&&!/^(one|uni|eu|use|ub)/i.test(a)?"an":"a"}
 function joinUrl(code){return location.origin+location.pathname.replace(/index\.html$/,"")+"?join="+code}
@@ -2114,7 +2121,11 @@ function revealAward(){const a=(S.awards||[]).find(x=>!x.revealed);if(!a)return;
   if(!S.awards.some(x=>!x.revealed)){S.awardsDone=true;setTimeout(()=>sfx.win(),700)}save();render()}
 $("revealBtn").onclick=revealAward;
 const NEXT_OPTS=["karaoke","imposter","whowould","liars","undercover","ballpark","emoji","color","colortoon","timeimp","music"];
-function nextGames(){const a=(Array.isArray(S.activeGames)&&S.activeGames.length?S.activeGames:NEXT_OPTS).filter(g=>NEXT_OPTS.includes(g));return a.length?a:NEXT_OPTS.slice()}
+function soloOK(g){return g==="karaoke"||(NEED[g]||3)<=1}
+function nextGames(){let a=(Array.isArray(S.activeGames)&&S.activeGames.length?S.activeGames:NEXT_OPTS).filter(g=>NEXT_OPTS.includes(g));if(S.solo){a=a.filter(soloOK);return a.length?a:NEXT_OPTS.filter(soloOK)}return a.length?a:NEXT_OPTS.slice()}
+async function soloStart(){let n="You";try{n=localStorage.getItem("kc-name")||"You"}catch(e){}await hostCreate();if(!S.room)return;S.solo={name:n};save();render()}
+function renderSolo(){const on=!!(S.solo&&S.room&&S.mode==="host"&&!SOLO_PH&&S.screen!=="home");document.documentElement.classList.toggle("solo",on);const pane=$("soloPane"),fr=$("soloFrame");if(!pane)return;pane.hidden=!on;
+  if(!on){if(pane.dataset.src){pane.dataset.src="";fr.src="about:blank"}return}const src="./?solo="+S.room.code+"&n="+encodeURIComponent(S.solo.name||"You");if(pane.dataset.src!==src){pane.dataset.src=src;fr.src=src}}
 function nextOpts(){const a=nextGames();return a.length>1?a.concat("random"):a}
 function nextAvail(g){if(g==="random")return nextGames().some(x=>nextAvail(x));return g==="karaoke"?S.players.length>=1:impPlayers().length>=(NEED[g]||3)}
 function nextTally(){const v=S.next?S.next.votes:{};const cnt={};Object.values(v).forEach(c=>{cnt[c]=(cnt[c]||0)+1});let max=0;nextOpts().forEach(o=>max=Math.max(max,cnt[o]||0));const top=nextOpts().filter(o=>(cnt[o]||0)===max&&max>0);
@@ -2194,7 +2205,7 @@ function snapshot(){const phase=S.screen==="eve"?"evening":S.screen==="final"?"f
     vote:S.vote?{round:S.vote.round,voted:Object.keys(S.vote.votes),total:voters().filter(i=>S.players[i].pid).length}:null,
     lastVote:S.lastVote?{round:S.lastVote.round,win:S.lastVote.win.map(i=>S.players[i]&&S.players[i].name).filter(Boolean)}:null,
     awards:(S.awards||[]).filter(a=>a.revealed).map(a=>({em:a.em,t:a.t,d:a.d,winners:a.winners.map(i=>S.players[i].name)})),
-    late:S.players.filter(p=>p.late&&p.pid).map(p=>p.pid),awardsLeft:(S.awards||[]).filter(a=>!a.revealed).length,awardsDone:!!S.awardsDone,next:(S.screen==="final"||S.screen==="lobby")&&S.next?{votes:S.next.votes,total:impPlayers().length,end:S.next.end||null,off:nextOpts().filter(o=>!nextAvail(o)),opts:nextOpts(),lobby:S.screen==="lobby"}:null,pre:(S.screen==="final"||S.screen==="lobby")&&S.pre?{g:S.pre.g,kind:S.pre.kind,votes:S.pre.votes,end:S.pre.end,total:impPlayers().length,cats:S.pre.kind==="cats"?MU_CATS:null,opts:S.pre.kind==="mode"?PRE_OPTS[S.pre.g]:null,res:S.pre.kind==="cats"?preTally().res:null}:null,log:S.log.slice(0,4),at:Date.now()}}
+    late:S.players.filter(p=>p.late&&p.pid).map(p=>p.pid),retired:(S.retired||[]).slice(-20),awardsLeft:(S.awards||[]).filter(a=>!a.revealed).length,awardsDone:!!S.awardsDone,next:(S.screen==="final"||S.screen==="lobby")&&S.next?{votes:S.next.votes,total:impPlayers().length,end:S.next.end||null,off:nextOpts().filter(o=>!nextAvail(o)),opts:nextOpts(),lobby:S.screen==="lobby"}:null,pre:(S.screen==="final"||S.screen==="lobby")&&S.pre?{g:S.pre.g,kind:S.pre.kind,votes:S.pre.votes,end:S.pre.end,total:impPlayers().length,cats:S.pre.kind==="cats"?MU_CATS:null,opts:S.pre.kind==="mode"?PRE_OPTS[S.pre.g]:null,res:S.pre.kind==="cats"?preTally().res:null}:null,log:S.log.slice(0,4),at:Date.now()}}
 function netStatusText(){if(!S.room)return"";const n=S.players.filter(online).length;return `${n} phone${n===1?"":"s"} connected`}
 function rememberRoom(code){S.myRooms=(S.myRooms||[]).filter(r=>r.code!==code);S.myRooms.push({code,at:Date.now()});S.myRooms=S.myRooms.slice(-10)}
 function cleanupRooms(){const keep=S.room&&S.room.code;const old=(S.myRooms||[]).filter(r=>r.code!==keep);old.forEach(r=>{db.del(`rooms/${r.code}`).catch(()=>{})});S.myRooms=(S.myRooms||[]).filter(r=>r.code===keep)}
@@ -2202,7 +2213,7 @@ async function hostCreate(){if(!NET_OK){toast("Phones aren't set up on this copy
   toast("Opening a room…");let code=genCode();
   try{for(let i=0;i<6;i++){const st=await db.get(`rooms/${code}/updatedAt`);if(!st||Date.now()-st>8*3600e3)break;code=genCode()}}catch(e){toast("Can't reach the server – check your internet");return}
   if(S.room)hostClose(true);
-  S.mode="host";S.room={code,key:Math.random().toString(36).slice(2)};S.players=[];S.imp=null;S.ww=null;S.cg=null;S.ti=null;S.mu=null;S.lc=null;S.uc=null;S.bp=null;S.em=null;S.tut=null;S.next=null;S.pre=null;S.auto=null;if(!Object.keys(GAME_LBL).includes(S.game))S.game="karaoke";S.inGame=false;S.current=null;S.vote=null;S.awards=null;S.awardsDone=false;S.log=[];S.timer=null;S.screen="lobby";
+  S.mode="host";S.room={code,key:Math.random().toString(36).slice(2)};S.players=[];S.imp=null;S.ww=null;S.cg=null;S.ti=null;S.mu=null;S.lc=null;S.uc=null;S.bp=null;S.em=null;S.tut=null;S.next=null;S.pre=null;S.auto=null;S.retired=[];S.solo=null;if(!Object.keys(GAME_LBL).includes(S.game))S.game="karaoke";S.inGame=false;S.current=null;S.vote=null;S.awards=null;S.awardsDone=false;S.log=[];S.timer=null;S.screen="lobby";
   try{await db.put(`rooms/${code}`,{hostKey:S.room.key,createdAt:TS,updatedAt:TS,state:snapshot()})}catch(e){toast("Couldn't create the room");S.room=null;S.mode="local";S.screen="home";save();render();return}
   cleanupRooms();rememberRoom(code);save();render();hostConnect();sfx.start()}
 function hostConnect(){if(HS){HS.close();HS=null}if(!S.room)return;const code=S.room.code;
@@ -2211,16 +2222,22 @@ function hostConnect(){if(HS){HS.close();HS=null}if(!S.room)return;const code=S.
     if(path==="/"||path.startsWith("/actions"))handleActions(room.actions||{});
     if(path==="/"||path.startsWith("/votes"))syncVotes(room.votes||{});
     $("lobbyStatus").textContent=netStatusText()},()=>{$("lobbyStatus").textContent="Reconnecting…"})}
-function hostClose(del){if(HS){HS.close();HS=null}const r=S.room;S.room=null;S.mode="local";S.vote=null;S.players.forEach(p=>{delete p.pid;delete p.seen});if(del&&r){db.del(`rooms/${r.code}`).catch(()=>{});S.myRooms=(S.myRooms||[]).filter(x=>x.code!==r.code)}save()}
+function hostClose(del){if(HS){HS.close();HS=null}const r=S.room;S.room=null;S.solo=null;S.mode="local";S.vote=null;S.players.forEach(p=>{delete p.pid;delete p.seen});if(del&&r){db.del(`rooms/${r.code}`).catch(()=>{});S.myRooms=(S.myRooms||[]).filter(x=>x.code!==r.code)}save()}
 function uniqueName(n){let x=n,i=2;while(S.players.some(p=>p.name.toLowerCase()===x.toLowerCase()))x=n+" "+(i++);return x}
 function pidChanged(p){const i=S.players.indexOf(p);if(i<0||!S.room)return;if(S.game==="timeimp"&&S.ti&&S.ti.phase!=="result"){const imp=S.ti.imps.includes(i);db.put(`rooms/${S.room.code}/private/${p.pid}`,{t:imp?null:S.ti.t,imp,n:S.privV||0,g:"ti"}).catch(()=>{})}if(S.game==="liars"&&S.lc&&S.inGame)lcPushHand(i);
-  if(S.game==="undercover"&&S.uc)db.put(`rooms/${S.room.code}/private/${p.pid}`,{topic:(S.uc.spies||[S.uc.spy]).includes(i)?null:S.uc.topic,spy:(S.uc.spies||[S.uc.spy]).includes(i),n:S.privV||0,g:"uc"}).catch(()=>{});
+  if(S.game==="undercover"&&S.uc){const sp=(S.uc.spies||[S.uc.spy]).includes(i);db.put(`rooms/${S.room.code}/private/${p.pid}`,{topic:sp?null:S.uc.topic,spy:sp,opts:sp?S.uc.options||null:null,n:S.privV||0,g:"uc"}).catch(()=>{})}
   if(S.game==="emoji"&&S.em&&S.em.phase==="draw"&&S.em.artist===i)db.put(`rooms/${S.room.code}/private/${p.pid}`,{title:emAll()[S.em.title][0],type:emAll()[S.em.title][1],n:S.privV||0,g:"em"}).catch(()=>{});
   if(S.game==="imposter"&&S.imp&&S.imp.phase==="answer")db.put(`rooms/${S.room.code}/private/${p.pid}`,{q:(S.imp.imps||[S.imp.imposter]).includes(i)?IMP_Q[S.imp.qi][1]:IMP_Q[S.imp.qi][0],n:S.privV||0}).catch(()=>{})}
-function syncMembers(m){let changed=false,seenChanged=false;const seen=new Set();
-  for(const [pid,mem] of Object.entries(m)){if(!mem||!mem.name)continue;const name=String(mem.name).trim().slice(0,18);if(!name)continue;seen.add(pid);
+const RECON_MS=30e3;
+function syncMembers(m){let changed=false,seenChanged=false;const seen=new Set();S.retired=Array.isArray(S.retired)?S.retired:[];
+  for(const [pid,mem] of Object.entries(m)){if(!mem||!mem.name)continue;const name=String(mem.name).trim().slice(0,18);if(!name)continue;
+    // a device whose player was taken over by another device is ignored (its entry is removed)
+    if(S.retired.includes(pid)){if(S.room)db.del(`rooms/${S.room.code}/members/${pid}`).catch(()=>{});continue}seen.add(pid);
     let p=S.players.find(p=>p.pid===pid);
-    if(!p){p=S.players.find(p=>!p.pid&&p.name.toLowerCase()===name.toLowerCase())||S.players.find(p=>p.name.toLowerCase()===name.toLowerCase()&&!seen.has(p.pid)&&!m[p.pid]);if(p){p.pid=pid;changed=true;pidChanged(p)}}
+    if(!p){const same=q=>q.name.toLowerCase()===name.toLowerCase();p=S.players.find(q=>!q.pid&&same(q))||S.players.find(q=>same(q)&&((!m[q.pid]&&!seen.has(q.pid))||(q.pid&&Date.now()-(q.seen||0)>RECON_MS)));
+      if(p){const old=p.pid;p.pid=pid;p.seen=mem.seen||Date.now();changed=true;
+        if(old&&old!==pid){S.retired=S.retired.concat(old).slice(-50);if(S.room)db.del(`rooms/${S.room.code}/members/${old}`).catch(()=>{});toast(`${p.name} is back (new device)`)}
+        pidChanged(p)}}
     if(!p){if(S.players.length>=12)continue;p={name:uniqueName(name),score:0,stats:{},pid,rs:0};if(S.inGame&&S.game!=="karaoke")p.late=true;S.players.push(p);changed=true;if(S.inGame)toast(`${p.name} joined the game${p.late?" – in from the next round":""}`);else sfx.tick()}
     if(p.seen!==mem.seen){p.seen=mem.seen||Date.now();seenChanged=true}const av=avClean(mem.av);if(av&&JSON.stringify(av)!==JSON.stringify(p.av||null)){p.av=av;changed=true}}
   if(!S.inGame&&S.screen!=="final"){const n=S.players.length;S.players=S.players.filter(p=>!p.pid||seen.has(p.pid));if(S.players.length!==n)changed=true}
@@ -2278,13 +2295,13 @@ $("lobbySettings").onclick=()=>{S.back="lobby";S.screen="settings";S.setTab=Obje
 // ---- Phone: controller client ----
 const SO_STAKE_P={1:5,2:5,3:5};
 let PH=null,PHt=null,TAPPED=false;addEventListener("pointerdown",()=>{TAPPED=true},{once:true,passive:true});
-function phoneSave(){try{if(PH)localStorage.setItem("kc-phone",JSON.stringify({code:PH.code,pid:PH.pid,name:PH.name}));else localStorage.removeItem("kc-phone")}catch(e){}}
+function phoneSave(){try{if(PH)localStorage.setItem(PHK,JSON.stringify({code:PH.code,pid:PH.pid,name:PH.name}));else localStorage.removeItem(PHK)}catch(e){}}
 async function joinRoom(code,name){code=(code||"").toUpperCase().replace(/[^A-Z0-9]/g,"");name=(name||"").trim().slice(0,18);
   if(code.length!==4){toast("Enter the 4-letter room code");$("joinCode").focus();return}if(!name){toast("Enter your name");$("joinName").focus();return}
   if(!NET_OK){toast("Phones aren't set up on this copy yet");return}
   $("joinBtn").disabled=true;
   try{const st=await db.get(`rooms/${code}/state`);if(!st){toast("No room with that code");$("joinBtn").disabled=false;return}
-    let old=null;try{old=JSON.parse(localStorage.getItem("kc-phone"))}catch(e){}
+    let old=null;try{old=JSON.parse(localStorage.getItem(PHK))}catch(e){}
     const pid=(old&&old.code===code&&old.pid)||("p"+Math.random().toString(36).slice(2,10));
     let av=null;try{av=avClean(JSON.parse(localStorage.getItem("kc-avatar")))}catch(e){}
     await db.put(`rooms/${code}/members/${pid}`,av?{name,at:TS,seen:TS,av}:{name,at:TS,seen:TS});
@@ -2294,7 +2311,7 @@ async function joinRoom(code,name){code=(code||"").toUpperCase().replace(/[^A-Z0
   $("joinBtn").disabled=false}
 function phoneConnect(){if(!PH)return;if(PH.es)PH.es.close();clearInterval(PH.hb);
   PH.es=db.stream(`rooms/${PH.code}/state`,st=>{PH.state=st;PH.err=false;renderPhoneSoft()},()=>{PH.err=true;renderPhone()});
-  PH.hb=setInterval(()=>{db.patch(`rooms/${PH.code}/members/${PH.pid}`,{seen:TS}).catch(()=>{})},30000);
+  PH.hb=setInterval(()=>{db.patch(`rooms/${PH.code}/members/${PH.pid}`,{seen:TS}).catch(()=>{})},10000);
   clearInterval(PHt);PHt=setInterval(()=>{if(S.screen==="phone"&&PH&&PH.state&&PH.state.timer)paintPhoneTimer();const it=$("impPhTimer");if(it&&PH&&PH.state&&PH.state.imp&&PH.state.imp.discussEnd)it.textContent=fmtT(Math.max(0,Math.ceil((PH.state.imp.discussEnd-Date.now())/1000)));const lt=$("lcPhTimer");if(lt&&PH&&PH.state&&PH.state.lc&&PH.state.lc.turnEnd)lt.textContent=Math.max(0,Math.ceil((PH.state.lc.turnEnd-Date.now())/1000))+" s";document.querySelectorAll("[data-end]").forEach(el=>{el.textContent=fmtT(Math.max(0,Math.ceil((+el.dataset.end-Date.now())/1000)))});document.querySelectorAll("[data-sec]").forEach(el=>{el.textContent=Math.max(0,Math.ceil((+el.dataset.sec-Date.now())/1000))})},500)}
 function phoneLeave(){if(PH){if(PH.es)PH.es.close();clearInterval(PH.hb);db.del(`rooms/${PH.code}/members/${PH.pid}`).catch(()=>{})}PH=null;phoneSave();clearInterval(PHt);S.screen="home";save();render()}
 function phoneAct(type,extra){if(!PH)return;db.post(`rooms/${PH.code}/actions`,Object.assign({pid:PH.pid,type,at:TS},extra||{})).catch(()=>toast("Not sent – check your connection"))}
@@ -2340,7 +2357,7 @@ function renderPhone0(){if(S.screen!=="phone"||!PH)return;const st=PH.state;cons
     if(focusId&&$(focusId)){const el=$(focusId);el.focus();try{el.setSelectionRange(el.value.length,el.value.length)}catch(e){}}return}
   if(st.game==="liars"&&meI>=0&&st.phase!=="final"&&st.phase!=="lobby"){$("phRound").textContent=st.lc?`Deal ${st.lc.n}`:"";body.innerHTML=phoneLcHtml(st,me,meI,players,board);return}
   if(st.game==="imposter"&&meI>=0&&st.phase!=="final"&&st.phase!=="lobby"){$("phRound").textContent=st.imp?`Question ${st.imp.round} of ${st.impQ}`:"";body.innerHTML=phoneImpHtml(st,me,meI,players,board);const f=$("impForm");if(f){f.onsubmit=e=>{e.preventDefault();const t=$("impIn").value.trim();if(!t)return;PH.answeredRound=st.imp.round;phoneAct("answer",{text:t.slice(0,80)});renderPhone()};if(matchMedia("(pointer:fine)").matches)setTimeout(()=>{const i=$("impIn");if(i)i.focus()},50)}return}
-  if(meI<0){body.innerHTML=`<div class="phone-msg"><div class="who">You're not in this game</div><p class="hint">The host may have removed you. Join again with your name.</p><button class="btn btn-gold" data-act="rejoin">Join again</button></div>${board}`;return}
+  if(meI<0){if(PH.hb&&(st.retired||[]).includes(PH.pid)){clearInterval(PH.hb);PH.hb=null}body.innerHTML=`<div class="phone-msg"><div class="who">You're not in this game</div><p class="hint">The host may have removed you, or you continued on another device. Join again with your name.</p><button class="btn btn-gold" data-act="rejoin">Join again</button></div>${board}`;return}
   let html="";
   if(st.phase==="lobby"){html=`<div class="who">You're in, <b>${esc(me.name)}</b>!</div>${st.next||st.pre?nextPhoneHtml(st):`<p class="hint">Waiting for the host to start the game…</p>`}${phAvEditor()}${board}`}
   else if(st.phase==="vote"){const v=st.vote||{round:st.round,voted:[],total:0};const voted=(v.voted||[]).includes(PH.pid)||(PH.myVote&&PH.myVote.round===v.round);
@@ -2380,7 +2397,7 @@ $("phBody").onclick=e=>{const b=e.target.closest("[data-act]");if(!b||b.disabled
   else if(act==="avk"||act==="avs"||act==="avh"||act==="avc"){PH.avOpen=true;phAvSet(act,b.dataset.v);return}
   else if(act==="lcsel"){const i=+b.dataset.i;PH.lcSel=PH.lcSel||[];const k=PH.lcSel.indexOf(i);if(k>=0)PH.lcSel.splice(k,1);else if(PH.lcSel.length<3)PH.lcSel.push(i);renderPhone();return}else if(act==="lcplay"){const hand=PH.priv?Object.values(PH.priv.hand||{}):[];const cards=(PH.lcSel||[]).map(i=>hand[i]).filter(Boolean);if(!cards.length)return;phoneAct("play",{cards});PH.lcSel=[]}else if(act==="lcliar")phoneAct("liar");else if(act==="lcbelieve"){phoneAct("lcbelieve");b.disabled=true}else if(act==="ucopen"){PH.ucOpen=!PH.ucOpen;renderPhone()}else if(act==="ucearly"){if(ucEarlyGet())return;phoneAct("ucguess",{topic:b.dataset.topic});ucEarlySet(b.dataset.topic);PH.ucOpen=false;renderPhone()}else if(act==="ucguess"){phoneAct("ucguess",{topic:b.dataset.topic});[...$("phBody").querySelectorAll('[data-act="ucguess"]')].forEach(x=>x.disabled=true)}else if(act==="tutskip"){phoneAct("tutskip");PH.tutSkip=PH.state&&PH.state.tut?PH.state.tut.start:1;b.disabled=true}else if(act==="vote")phoneVote(b.dataset.name);else if(act==="next")phoneAct("next",{choice:b.dataset.choice});else if(act==="pre")phoneAct("pre",{v:b.dataset.v});
     else if(act==="precat"){const st2=PH.state;if(!st2||!st2.pre)return;const c=preSel(st2),v=b.dataset.v,k=c.indexOf(v);if(k>=0)c.splice(k,1);else c.push(v);phoneAct("pre",{v:{c:c.slice(),r:0}});renderPhone()}
-    else if(act==="preready"){const st2=PH.state;if(!st2||!st2.pre)return;phoneAct("pre",{v:{c:preSel(st2).slice(),r:1}});b.disabled=true}else if(act==="rejoin"){S.screen="join";save();render();$("joinCode").value=PH?PH.code:"";$("joinName").value=PH?PH.name:""}else if(act==="leave")phoneLeave();
+    else if(act==="preready"){const st2=PH.state;if(!st2||!st2.pre)return;phoneAct("pre",{v:{c:preSel(st2).slice(),r:1}});b.disabled=true}else if(act==="rejoin"){try{localStorage.removeItem(PHK)}catch(e){}S.screen="join";save();render();$("joinCode").value=PH?PH.code:"";$("joinName").value=PH?PH.name:""}else if(act==="leave")phoneLeave();
   if(act==="draw"||act==="done"||act==="pass"||act==="accept"||act==="challenge"||act==="pick"||act==="startvote"||act==="ready"||act==="lcplay"||act==="lcliar"){b.disabled=true;setTimeout(()=>{b.disabled=false},2000)}};
 
 // ---- Navigation, settings, render extras ----
@@ -2421,9 +2438,9 @@ function renderExtra(){tvApply();renderOwnCards();if(S.screen==="home")renderFan
   $("homeResume").hidden=!canResume;$("homeResume").textContent=S.inGame?"↩ Resume game":"↩ Back to lobby";
   $("homeHost").disabled=!NET_OK;$("homeJoin").disabled=!NET_OK;if(!NET_OK)$("homeHost").title=$("homeJoin").title="Not set up on this copy yet";
   $("mvpBonus").value=S.mvpBonus;$("awardBonus").value=S.awardBonus;$("mics").value=S.mics||1;$("impQ").value=S.impQ;$("lcHand").value=S.lcHand;$("lcChambers").value=S.lcChambers;$("lcDeals").value=S.lcDeals;$("lcTurnSec").value=S.lcTurnSec;$("lcCallSec").value=S.lcCallSec;$("ucRounds").value=S.ucRounds;$("ucSpies").value=S.ucSpies||1;$("impCount").value=S.impCount||1;$("ucTime").value=S.ucTime;$("ucPts").value=S.ucPts;$("ucSpyPts").value=S.ucSpyPts;$("bpQ").value=S.bpQ;$("bpTime").value=S.bpTime;$("coQ").value=S.coQ;$("coShow").value=S.coShow;$("coTime").value=S.coTime;$("ctQ").value=S.ctQ;$("ctTime").value=S.ctTime;$("tiQ").value=S.tiQ;$("tiImps").value=S.tiImps;$("tiDiscuss").value=S.tiDiscuss;$("tiPts").value=S.tiPts;$("tiImpPts").value=S.tiImpPts;$("tiTurnSec").value=S.tiTurnSec==null?20:S.tiTurnSec;$("muQ").value=S.muQ;$("muClip").value=S.muClip;$("muAns").value=S.muAns;renderMuCats();$("emRounds").value=S.emRounds;$("emSteal").value=S.emSteal||10;$("emMode").value=S.emMode||"cards";$("emQ").value=S.emQ;$("emTime").value=S.emTime;$("emPts").value=S.emPts;$("wwQ").value=S.wwQ;$("autoMode").value=S.autoMode;$("autoSec").value=S.autoSec;$("impDiscuss").value=S.impDiscuss;$("impPts").value=S.impPts;$("impImpPts").value=S.impImpPts;
-  if(S.screen==="lobby"&&S.room){$("lobbyCode").textContent=S.room.code;$("lobbyUrl").textContent=joinUrl(S.room.code).replace(/^https?:\/\//,"");renderQr();$("lobbyStatus").textContent=netStatusText();
+  if(S.screen==="lobby"&&S.room){$("lobbyTitle").textContent=S.solo?"Solo mode":"Host with phones";$("lobbyCode").textContent=S.room.code;$("lobbyUrl").textContent=joinUrl(S.room.code).replace(/^https?:\/\//,"");renderQr();$("lobbyStatus").textContent=netStatusText();
     $("lobbyPlayers").innerHTML=S.players.map((p,i)=>`<li><span class="rank">${i+1}</span><span class="dot${online(p)?' on':''}" style="${p.pid?'':'visibility:hidden'}"></span><span class="name">${avHtml(p)}${esc(p.name)}</span><span class="hint">${p.pid?(online(p)?"phone":"phone offline"):"no phone"}</span><button class="x" data-kick="${i}" title="Remove">×</button></li>`).join("")||`<li style="color:var(--muted)">Nobody yet – scan the QR code or type the room code</li>`;
-    $("gameSel").innerHTML=NEXT_OPTS.map(g=>`<button class="chip gchip${nextGames().includes(g)?" on":""}" data-game="${g}" type="button"><b>${GAME_LBL[g]}</b><small>${GAME_DESC[g]}</small></button>`).join("");renderNextLobby();$("gameHint").textContent="Tap a game to switch it on or off for tonight. When you press Start, the players vote which game comes first.";
+    $("gameSel").innerHTML=NEXT_OPTS.filter(g=>!S.solo||soloOK(g)).map(g=>`<button class="chip gchip${nextGames().includes(g)?" on":""}" data-game="${g}" type="button"><b>${GAME_LBL[g]}</b><small>${GAME_DESC[g]}</small></button>`).join("");renderNextLobby();$("gameHint").textContent=S.solo?"Solo mode – only games that work alone. Your controller is next to this screen; others can still join with the room code.":"Tap a game to switch it on or off for tonight. When you press Start, the players vote which game comes first.";
     const G=nextGames(),avG=G.filter(g=>nextAvail(g));$("lobbyStart").disabled=!avG.length||!!S.next||!!S.pre;$("lobbyStart").textContent=S.next||S.pre?"Players are voting…":!avG.length?"Waiting for players…":G.length===1?`Start ${GAME_LBL[G[0]].replace(/^\S+ /,"")} (${S.players.length} player${S.players.length===1?"":"s"})`:`Start – vote for the first game (${S.players.length} player${S.players.length===1?"":"s"})`}
   const hosting=S.mode==="host"&&!!S.room;$("roomChip").hidden=!hosting;if(hosting){$("roomCode").textContent=S.room.code;$("roomN").textContent=S.players.filter(online).length}
   $("stage").classList.toggle("voting",!!S.vote);
@@ -2431,7 +2448,7 @@ function renderExtra(){tvApply();renderOwnCards();if(S.screen==="home")renderFan
     $("votebox").hidden=false;$("votebox").innerHTML=`<h3>Round ${v.round} done!</h3><div>Vote on your phones: who had the best performance?</div><div class="bar"><i style="width:${pct}%"></i></div><div class="hint" style="margin:0">${n} of ${need.length} voted · winner gets +${S.mvpBonus}</div><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:6px"><button class="btn btn-gold" id="voteClose" ${n?"":"disabled"}>Close vote now</button><button class="btn btn-ghost" id="voteSkip">Skip vote</button></div>`;
     $("voteClose").onclick=closeVote;$("voteSkip").onclick=()=>{S.vote=null;if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});nextRound()}}
   else{$("votebox").hidden=true}
-  renderSo();renderImp();renderWw();renderLc();renderUc();renderBp();renderEm();if(S.screen==="em")twe($("emStage"));renderCg();renderTi();renderMu();renderTut();renderEve();{const b=$("lobbyEve");if(b)b.hidden=!((S.evening&&S.evening.games&&S.evening.games.length)||S.evPending)}
+  renderSo();renderImp();renderWw();renderLc();renderUc();renderBp();renderEm();if(S.screen==="em")twe($("emStage"));renderCg();renderTi();renderMu();renderTut();renderEve();renderSolo();{const b=$("lobbyEve");if(b)b.hidden=!((S.evening&&S.evening.games&&S.evening.games.length)||S.evPending)}
   if(S.screen==="final")renderFinal();
   if(S.screen==="phone")renderPhone();
   if(S.screen==="game")paintTimer();
@@ -2439,7 +2456,7 @@ function renderExtra(){tvApply();renderOwnCards();if(S.screen==="home")renderFan
 $("mics").onchange=e=>{S.mics=Math.max(1,Math.min(8,+e.target.value||1));save()};
 $("mvpBonus").onchange=e=>{S.mvpBonus=Math.max(0,+e.target.value||0);save()};
 $("awardBonus").onchange=e=>{S.awardBonus=Math.max(0,+e.target.value||0);save()};
-$("homeStart").onclick=()=>{const go=()=>{draft=null;S.screen="players";save();render();$("names").querySelector("input")?.focus()};if(S.inGame)ask("A game is in progress. Start a new one? Scores will be reset.",go,"New game");else go()};
+$("homeStart").onclick=()=>{const go=()=>{soloStart()};if(S.inGame)ask("A game is in progress. Start solo instead? Scores will be reset.",go,"Solo mode");else go()};
 $("homeHost").onclick=()=>{const go=()=>{hostCreate()};if(S.inGame)ask("A game is in progress. Open a new room? Scores will be reset.",go,"New room");else go()};
 
 $("homeJoin").onclick=()=>{S.screen="join";save();render();try{$("joinName").value=localStorage.getItem("kc-name")||""}catch(e){}$("joinCode").focus()};
@@ -2458,7 +2475,9 @@ $("setupBtn").onclick=()=>{S.screen="home";S.current=null;if(S.mode==="host"&&S.
 function boot(){
   try{const j=new URLSearchParams(location.search).get("join");if(j&&/^[A-Z0-9]{4}$/i.test(j)){history.replaceState(null,"",location.pathname);S.screen="join";S.back=null;
     setTimeout(()=>{$("joinCode").value=j.toUpperCase();try{$("joinName").value=localStorage.getItem("kc-name")||""}catch(e){}$("joinName").focus()},0)}}catch(e){}
-  if(S.screen==="phone"){let p=null;try{p=JSON.parse(localStorage.getItem("kc-phone"))}catch(e){}
+  if(SOLO_PH){S.muted=true;const q=new URLSearchParams(location.search),code=(q.get("solo")||"").toUpperCase(),n=(q.get("n")||"You").slice(0,18);let p=null;try{p=JSON.parse(localStorage.getItem(PHK))}catch(e){}
+    if(p&&p.code===code)S.screen="phone";else{S.screen="join";setTimeout(()=>joinRoom(code,n),300)}}
+  if(S.screen==="phone"){let p=null;try{p=JSON.parse(localStorage.getItem(PHK))}catch(e){}
     if(p&&p.code&&p.pid&&NET_OK){PH={code:p.code,pid:p.pid,name:p.name,state:undefined};phoneConnect();let av=null;try{av=avClean(JSON.parse(localStorage.getItem("kc-avatar")))}catch(e){}db.patch(`rooms/${p.code}/members/${p.pid}`,av?{name:p.name,seen:TS,av}:{name:p.name,seen:TS}).catch(()=>{})}else S.screen="home"}
   if(S.mode==="host"&&S.room){if(NET_OK)hostConnect();else{S.room=null;S.mode="local"}}
   if(NET_OK&&S.mode!=="host"&&(S.myRooms||[]).length)cleanupRooms();
