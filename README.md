@@ -14,6 +14,7 @@ Static web app – no build step, no server logic. Karaoke Challenge runs on one
 - **Color** – like dialed.gg: a color flashes on the TV, everyone mixes it from memory on their phone (hue, saturation, brightness); scored 0–10 by color difference.
 - **Color Toon** – a cartoon, game or anime character with one part hatched (Pikachu's cheeks, Mario's overalls, Goku's gi …); color it in from memory. 154 official pictures loaded from Wikipedia and Fandom wikis at runtime (not stored in this repo; every pixel of the region colour is recoloured, shading kept); a picture that fails to load is skipped.
 - **Time Imposter** – everyone gets a secret time except the imposter; one after another everyone holds their button that long, the imposter copies the others; then all times are revealed, discuss and vote.
+- **Guess the Song** – the host plays the first seconds of a song (YouTube intro, buffered in advance; iTunes preview as fallback), everyone picks one of four answers on their phone, fastest right answer scores most. Categories: 2000s, 2010s, Current hits, K-Pop, Disney (German), Anime (German), Anime (Japanese) (164 songs).
 
 ## Run locally
 Any static server works, e.g.:
