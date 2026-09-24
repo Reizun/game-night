@@ -3295,7 +3295,7 @@ async function muYtId(q){if(MU_YT[q])return MU_YT[q];const c=muYtCache();if(c[q]
 // two players: the current song plays in one, the next song is buffered in the other while the result is shown
 const MUP=[{id:"muYt",p:null,ok:false,w:[],err:null},{id:"muYt2",p:null,ok:false,w:[],err:null}];
 function muPlayer(k){const P=MUP[k];return ytApi().then(()=>new Promise((res,rej)=>{if(P.p&&P.ok)return res(P.p);P.w.push(res);if(P.p)return;
-  P.p=new YT.Player(P.id,{width:"320",height:"180",playerVars:{autoplay:0,controls:0,disablekb:1,rel:0,playsinline:1,fs:0,iv_load_policy:3},
+  P.p=new YT.Player(P.id,{host:"https://www.youtube-nocookie.com",width:"320",height:"180",playerVars:{autoplay:0,controls:0,disablekb:1,rel:0,playsinline:1,fs:0,iv_load_policy:3},
     events:{onReady:()=>{P.ok=true;P.w.splice(0).forEach(f=>f(P.p))},onError:e=>{P.err=e.data}}});setTimeout(()=>rej(new Error("player")),10000)}))}
 function muCurP(){const P=MUP[MUX.pi||0];return P.p&&P.ok?P.p:null}
 const muSleep=ms=>new Promise(r=>setTimeout(r,ms));
@@ -3321,12 +3321,16 @@ async function muPrepare(si){const tok=++MUX.tok;muStop();MUX.ready=false;MUX.sr
   if(r.fail){MUX.ready="fail";return MUX.ready}
   MUX.pi=r.k;MUX.src=r.src;MUX.ytId=r.ytId;MUX.audio=r.audio;MUX.ready=true;return MUX.ready}
 // pause = end of one intro play (the loop goes on) · stop = end of the song
-function muPause(){clearTimeout(MUX.stopT);MUX.stopT=null;const p=muCurP();try{if(p)p.pauseVideo()}catch(e){}try{if(MUX.audio)MUX.audio.pause()}catch(e){}}
+// ad guard: while a clip should be heard, a playing player whose video time does not move is showing an ad → mute it and hold the clip timer
+function muAdGuard(){if(MUX.adT)return;MUX.adT=setInterval(()=>{if(MUX.src!=="yt"||!MUX.audible)return;const p=muCurP();if(!p)return;let st=-1,tm=0;try{st=p.getPlayerState();tm=p.getCurrentTime()||0}catch(e){return}
+  const still=st===1&&Math.abs(tm-(MUX.gT==null?-1:MUX.gT))<.05;MUX.gT=tm;if(still){if(++MUX.gN>=2&&!MUX.adMuted){MUX.adMuted=true;try{p.mute()}catch(e){}if(MUX.stopT){clearTimeout(MUX.stopT);MUX.stopT=null;MUX.stopLeft=Math.max(0,(MUX.stopAt||0)-Date.now())}}}
+  else if(st===1){MUX.gN=0;if(MUX.adMuted){MUX.adMuted=false;try{p.unMute()}catch(e){}if(MUX.stopLeft!=null){MUX.stopAt=Date.now()+MUX.stopLeft;MUX.stopT=setTimeout(muPause,MUX.stopLeft);MUX.stopLeft=null}}}},400)}
+function muPause(){clearTimeout(MUX.stopT);MUX.stopT=null;MUX.audible=false;MUX.adMuted=false;MUX.stopLeft=null;MUX.gN=0;const p=muCurP();try{if(p)p.pauseVideo()}catch(e){}try{if(MUX.audio)MUX.audio.pause()}catch(e){}}
 function muStop(){clearTimeout(MUX.loopT);MUX.loopT=null;muPause()}
 async function muPlayFor(sec,fromStart){clearTimeout(MUX.stopT);const v=muVol();const tok=MUX.tok;const p=muCurP();
-  if(MUX.src==="yt"&&p){try{if(fromStart)p.seekTo(0,true);p.unMute();p.setVolume(Math.round(v*100));p.playVideo()}catch(e){}
+  if(MUX.src==="yt"&&p){try{if(fromStart)p.seekTo(0,true);p.unMute();p.setVolume(Math.round(v*100));p.playVideo()}catch(e){}MUX.audible=true;MUX.gN=0;MUX.gT=null;muAdGuard();
     const t0=fromStart?0:(()=>{try{return p.getCurrentTime()||0}catch(e){return 0}})();await muSleep(2500);if(tok!==MUX.tok)return false;let t1=0;try{t1=p.getCurrentTime()||0}catch(e){}
-    if(t1-t0<.5){try{p.pauseVideo()}catch(e){}if(!MUX.audio)return false;MUX.src="it"}else{MUX.stopT=setTimeout(muPause,Math.max(0,sec*1000-2500));return true}}
+    if(t1-t0<.5&&!MUX.adMuted){try{p.pauseVideo()}catch(e){}MUX.audible=false;if(!MUX.audio)return false;MUX.src="it"}else{MUX.stopAt=Date.now()+Math.max(0,sec*1000-2500);if(MUX.adMuted)MUX.stopLeft=MUX.stopAt-Date.now();else MUX.stopT=setTimeout(muPause,Math.max(0,sec*1000-2500));return true}}
   if(MUX.src==="it"&&MUX.audio){try{if(fromStart)MUX.audio.currentTime=0;MUX.audio.volume=v;await MUX.audio.play();if(tok!==MUX.tok){MUX.audio.pause();return false}MUX.stopT=setTimeout(muPause,sec*1000);return true}catch(e){return false}}
   return false}
 function muStart(){if(tutGate("music"))return;countPlay("music");S.game="music";S.next=null;S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0;delete p.late});S.inGame=true;S.round=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=true;S.log=[];S.muUsed=S.muUsed||[];S.mu=null;S.muStuck=false;S.muTries=0;S.screen="mu";S.muPlan=muMakePlan();muNext();sfx.start()}
@@ -3345,10 +3349,10 @@ async function muGo(){const m=S.mu;if(!m||m.phase!=="load")return;const clip=S.m
 function muReplayLater(m){clearTimeout(MUX.loopT);MUX.loopT=setTimeout(()=>{if(S.mu!==m||m.phase!=="play"||m.last)return;m.replayed=true;save();render();muReplayPlay(Math.max(1,(m.end-Date.now())/1000+1))},Math.max(0,m.replayAt-Date.now()))}
 // play the song from the start for sec seconds – YouTube may need a moment to buffer again after the pause; only if it really does not run, the iTunes preview takes over
 function muReplayPlay(sec){clearTimeout(MUX.stopT);const p=muCurP(),v=muVol(),tok=MUX.tok;const it=()=>{if(!MUX.audio)return;MUX.src="it";try{MUX.audio.currentTime=0;MUX.audio.volume=v;MUX.audio.play().catch(()=>{})}catch(e){}};const st=()=>{try{return p.getPlayerState()}catch(e){return -1}};
-  if(MUX.src==="yt"&&p){try{p.seekTo(0,true);p.unMute();p.setVolume(Math.round(v*100));p.playVideo()}catch(e){}
+  if(MUX.src==="yt"&&p){try{p.seekTo(0,true);p.unMute();p.setVolume(Math.round(v*100));p.playVideo()}catch(e){}MUX.audible=true;MUX.gN=0;MUX.gT=null;muAdGuard();
     setTimeout(()=>{if(tok!==MUX.tok||!S.mu||S.mu.phase!=="play")return;if(st()!==1&&st()!==3){try{p.playVideo()}catch(e){}setTimeout(()=>{if(tok!==MUX.tok||!S.mu||S.mu.phase!=="play")return;if(st()!==1&&st()!==3)it()},3000)}},3000)}
   else it();
-  MUX.stopT=setTimeout(muPause,sec*1000)}
+  MUX.stopAt=Date.now()+sec*1000;MUX.stopT=setTimeout(muPause,sec*1000)}
 // ---- typed answers: tolerant matching (case, accents, umlauts, "the", typos, one of several artists, extra brackets, known aliases)
 const MU_ALIAS={"Naruto Shippuden":["naruto"],"Attack on Titan":["shingeki no kyojin","aot"],"Demon Slayer":["kimetsu no yaiba"],"Neon Genesis Evangelion":["evangelion"],"Fullmetal Alchemist: Brotherhood":["fullmetal alchemist","fma"],"Dragon Ball Z":["dbz","dragonball z"],"Dragon Ball":["dragonball"],"Dragon Ball GT":["dragonball gt"],"My Hero Academia":["boku no hero academia","mha"],"Jujutsu Kaisen":["jjk"],"Sword Art Online":["sao"],"Hunter x Hunter":["hxh","hunter hunter"],"Haikyu!!":["haikyuu"],"Spy x Family":["spy family"],"Detektiv Conan":["detective conan","case closed","conan"],"Die Biene Maja":["biene maja","maya the bee"],"Wickie und die starken Männer":["wickie","vicky the viking"],"Captain Tsubasa":["die tollen fussballstars","tsubasa"],"Yu-Gi-Oh!":["yugioh"],"Inu Yasha":["inuyasha"],"Mila Superstar":["attacker you"],"Oshi no Ko":["oshinoko"],"Pokémon":["pokemon"],
   "Die Eiskönigin":["frozen","eiskonigin"],"Die Eiskönigin 2":["frozen 2","eiskonigin 2"],"Der König der Löwen":["konig der lowen","lion king","the lion king"],"Arielle, die Meerjungfrau":["arielle","the little mermaid","little mermaid","kleine meerjungfrau"],"Das Dschungelbuch":["dschungelbuch","jungle book"],"Die Schöne und das Biest":["beauty and the beast"],"Vaiana":["moana"],"Rapunzel":["tangled","rapunzel neu verfohnt"],
