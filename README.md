@@ -1,8 +1,8 @@
 # Game Night (PWA)
 
-Seven party games in one app: **Karaoke Challenge**, **Imposter**, **Who Would**, **Liar's Cards**, **Undercover**, **Ballpark** and **Emoji Pictionary**. Live at https://reizun.github.io/game-night/
+Eleven party games in one app: **Karaoke Challenge**, **Imposter**, **Who Would**, **Liar's Cards**, **Undercover**, **Ballpark**, **Emoji Pictionary**, **Color**, **Color Toon**, **Time Imposter** and **Guess the Song**. Live at https://reizun.github.io/game-night/
 
-Static web app – no build step, no server logic. Karaoke Challenge runs on one device; every game runs with phones: players join with a 4-letter room code and use their own phone as a controller (draw, done, pass, sing-off votes, Imposter answers, Who Would ballots, Liar's Cards hands). Every card is worth 10 points, sing-offs add ±5, three secret awards are revealed at the end, and after each game the phones vote what to play next.
+Static web app – no build step, no server logic. Karaoke Challenge runs on one device; every game runs with phones: players join with a 4-letter room code and use their own phone as a controller (draw, done, pass, sing-off votes, Imposter answers, Who Would ballots, Liar's Cards hands). Every card is worth 10 points, a sing-off moves ±5 for the holder (+10 or −5 for the challenger), three secret awards are revealed at the end, and after each game the phones vote what to play next.
 
 - **Karaoke Challenge** – draw a card, accept or pass before the timer runs out, sing, get challenged to a sing-off.
 - **Imposter** – everyone answers a question on their phone, one player secretly got a different one; discuss and vote – votes are final, the fastest correct vote scores most (150 question pairs).
@@ -14,7 +14,7 @@ Static web app – no build step, no server logic. Karaoke Challenge runs on one
 - **Color** – like dialed.gg: a color flashes on the TV, everyone mixes it from memory on their phone (hue, saturation, brightness); scored 0–10 by color difference.
 - **Color Toon** – a cartoon, game or anime character with one part hatched (Pikachu's cheeks, Mario's overalls, Goku's gi …); color it in from memory. 154 official pictures loaded from Wikipedia and Fandom wikis at runtime (not stored in this repo; every pixel of the region colour is recoloured, shading kept); a picture that fails to load is skipped.
 - **Time Imposter** – everyone gets a secret time except the imposter; one after another everyone holds their button that long, the imposter copies the others; then all times are revealed, discuss and vote.
-- **Guess the Song** – the host plays the first seconds of a song (YouTube intro, buffered in advance; iTunes preview as fallback), everyone picks one of four answers on their phone, fastest right answer scores most. Categories: 2000s, 2010s, Current hits, K-Pop, Disney (German), Anime (German), Anime (Japanese) (164 songs).
+- **Guess the Song** – the host plays the first seconds of a song (YouTube intro, buffered in advance; iTunes preview as fallback), everyone types artist and title on their phone (with suggestions – the title list shows songs by the typed artist; small typos are fine, 3 tries each), fastest right answer scores most. Categories: 2000s, 2010s, Current hits, K-Pop, Disney (German), Anime (German), Anime (Japanese) (164 songs).
 
 ## Run locally
 Any static server works, e.g.:
