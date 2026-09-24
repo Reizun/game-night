@@ -467,6 +467,8 @@ html.tv .tutvideo{min-height:0;margin:0 auto}
 #soloPane .solobar{display:flex;align-items:center;justify-content:space-between;padding:4px 12px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);cursor:pointer;user-select:none}
 #soloPane.fold iframe{height:0!important}
 html.solo body{padding-bottom:var(--soloH,140px)}
+html.soloph body>.app>header,html.soloph .roomchip,html.soloph .screen section.panel:has(ul.players),html.soloph #lobbyCode,html.soloph #lobbyQr,html.soloph #scrLobby .lobl>.round,html.soloph #scrLobby .lobl>.hint{display:none!important}
+html.soloph #soloPane{width:100vw;border-radius:12px 12px 0 0;border-left:0;border-right:0}html.soloph body>.app{padding-top:6px}
 html.soloctl #scrPhone .topbar,html.soloctl .phboard,html.soloctl .aved{display:none!important}html.soloctl body{background:transparent}html.soloctl #scrPhone .phone{padding-top:8px}
 img.emoji{height:1em;width:1em;margin:0 .04em;vertical-align:-.12em;display:inline-block}
 .mucover img.mubg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(16px) brightness(.5);transform:scale(1.15)}.mucover img.mufg{position:relative;width:100%;height:100%;object-fit:contain}.mubox.res .mucover{overflow:hidden}
@@ -2185,9 +2187,11 @@ function soloOK(g){return g==="karaoke"||(NEED[g]||3)<=1}
 function nextGames(){let a=(Array.isArray(S.activeGames)&&S.activeGames.length?S.activeGames:NEXT_OPTS).filter(g=>NEXT_OPTS.includes(g));if(S.solo){a=a.filter(soloOK);return a.length?a:NEXT_OPTS.filter(soloOK)}return a.length?a:NEXT_OPTS.slice()}
 async function soloStart(){let n="You";try{n=localStorage.getItem("kc-name")||"You"}catch(e){}await hostCreate();if(!S.room)return;S.solo={name:n};save();render()}
 let soloSizeT=null;
-function soloSize(){const pane=$("soloPane"),fr=$("soloFrame");if(!pane||pane.hidden)return;let h=120;try{const d=fr.contentDocument;const b=d&&d.getElementById("phBody");if(b)h=Math.max(70,Math.ceil(b.getBoundingClientRect().bottom)+12)}catch(e){}
-  h=Math.min(h,Math.round(innerHeight*.52));if(fr.style.height!==h+"px")fr.style.height=h+"px";document.documentElement.style.setProperty("--soloH",(pane.classList.contains("fold")?26:h+26)+"px")}
-function renderSolo(){const on=!!(S.solo&&S.room&&S.mode==="host"&&!SOLO_PH&&S.screen!=="home");document.documentElement.classList.toggle("solo",on);const pane=$("soloPane"),fr=$("soloFrame");if(!pane)return;pane.hidden=!on;
+function soloSize(){const pane=$("soloPane"),fr=$("soloFrame");if(!pane||pane.hidden)return;const ph=innerWidth<760;document.documentElement.classList.toggle("soloph",ph);let h=120;try{const d=fr.contentDocument;const b=d&&d.getElementById("phBody");if(b)h=Math.max(70,Math.ceil(b.getBoundingClientRect().bottom)+12)}catch(e){}
+  h=Math.min(h,Math.round(innerHeight*(ph?.55:.52)));if(fr.style.height!==h+"px")fr.style.height=h+"px";const hud=pane.classList.contains("fold")?26:h+26;document.documentElement.style.setProperty("--soloH",hud+"px");
+  // phone: shrink the host view until it fits above the controls
+  const app=document.querySelector("body>.app");if(!app)return;if(!ph||!innerHeight){if(app.style.zoom)app.style.zoom="";return}app.style.zoom="1";const need=app.scrollHeight+8,avail=innerHeight-hud;app.style.zoom=String(Math.max(.4,Math.min(1,avail/need)).toFixed(3))}
+function renderSolo(){const on=!!(S.solo&&S.room&&S.mode==="host"&&!SOLO_PH&&S.screen!=="home");document.documentElement.classList.toggle("solo",on);if(!on){document.documentElement.classList.remove("soloph");const app=document.querySelector("body>.app");if(app&&app.style.zoom)app.style.zoom=""}const pane=$("soloPane"),fr=$("soloFrame");if(!pane)return;pane.hidden=!on;
   if(!on){if(pane.dataset.src){pane.dataset.src="";fr.src="about:blank"}return}const src="./?solo="+S.room.code+"&n="+encodeURIComponent(S.solo.name||"You");if(pane.dataset.src!==src){pane.dataset.src=src;fr.src=src}
   if(!soloSizeT)soloSizeT=setInterval(()=>{if(!S.solo){clearInterval(soloSizeT);soloSizeT=null;return}soloSize()},400);
   const bar=$("soloBar");if(bar&&!bar.onclick)bar.onclick=()=>{pane.classList.toggle("fold");$("soloFold").textContent=pane.classList.contains("fold")?"▴ show":"▾ hide";soloSize()}}
