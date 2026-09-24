@@ -5,10 +5,10 @@ Seven party games in one app: **Karaoke Challenge**, **Imposter**, **Who Would**
 Static web app – no build step, no server logic. Karaoke Challenge runs on one device; every game runs with phones: players join with a 4-letter room code and use their own phone as a controller (draw, done, pass, sing-off votes, Imposter answers, Who Would ballots, Liar's Cards hands). Every card is worth 10 points, sing-offs add ±5, three secret awards are revealed at the end, and after each game the phones vote what to play next.
 
 - **Karaoke Challenge** – draw a card, accept or pass before the timer runs out, sing, get challenged to a sing-off.
-- **Imposter** – everyone answers a question on their phone, one player secretly got a different one; discuss and vote (150 question pairs).
+- **Imposter** – everyone answers a question on their phone, one player secretly got a different one; discuss and vote – votes are final, the fastest correct vote scores most (150 question pairs).
 - **Who Would** – "Who would most likely …": everyone votes for a player, no points, review at the end (150 questions).
 - **Liar's Cards** – Liar's Bar with points: play 1–3 cards face down as the table card; after every play everyone has 30 s to call liar. The pot grows with every play – first correct caller gets the pot, later callers less, wrong calls cost points. The deck grows with the player count (2–8).
-- **Undercover** – everyone gets the same secret topic except the spy; talk, vote, then the spy guesses the topic from six options (140 topics).
+- **Undercover** – everyone gets the same secret topic except the spy; talk, vote, then the spy guesses the topic from six options – or guesses early during the talk for up to 20 points (140 topics).
 - **Ballpark** – percent questions, everyone guesses 0–100, closest wins (100 questions).
 - **Emoji Pictionary** – the host shows an emoji card (124 built-in movies and anime, plus your own), everyone guesses the title on their phone; or switch to draw mode, where a player describes a title with emojis live.
 
