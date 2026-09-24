@@ -303,7 +303,10 @@ h1 span{color:var(--red-2)}
 .phone .answers{grid-template-columns:1fr}
 .gamesel{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 .gamesel .chip{font-size:15px;padding:10px 16px}
-.settabs{position:sticky;top:0;z-index:3;background:var(--ground);padding:4px 0 10px;margin:-6px 0 -8px}.settabs .chip{flex:1 1 auto;padding:10px 8px}
+.settabs{position:sticky;top:0;z-index:3;background:var(--ground);padding:4px 0 10px;margin:-6px 0 -8px}
+/* phones: settings tabs as one swipeable row, no TV mode */
+@media (max-width:819px){.tvbtn{display:none!important}}
+@media (max-width:700px){.settabs{flex-wrap:nowrap!important;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:-6px -16px -4px;padding:6px 16px 8px}.settabs::-webkit-scrollbar{display:none}.settabs .chip{flex:0 0 auto;white-space:nowrap;padding:8px 12px}}.settabs .chip{flex:1 1 auto;padding:10px 8px}
 .impstage .ballot{width:100%;max-width:420px}.impstage .impans{display:flex;flex-direction:column;gap:8px;width:100%;max-width:420px}
 .impstage .impans input{padding:14px;border-radius:10px;border:2px solid transparent;background:var(--ground);color:var(--ink);font:inherit;font-size:18px;text-align:center}
 .impstage .q.priv{background:var(--card);color:var(--card-ink);border-radius:14px;padding:18px 16px;width:100%;max-width:520px}
@@ -1788,7 +1791,9 @@ function resolveText(){const c=S.current;if(!c)return;const raw=c.raw||c.text;c.
 function sfxDraw(){try{sfx.draw()}catch(e){}}
 
 // ---- Render ----
+let lastScreen=null;
 function render(){
+  if(S.screen!==lastScreen){const first=lastScreen===null;lastScreen=S.screen;if(!first)try{scrollTo(0,0)}catch(e){}}
   $("penalty").value=S.penalty; $("bonus").value=S.bonus; $("rounds").value=S.rounds; $("timerSec").value=S.timerSec;
   document.querySelector("header").style.display=["home","phone"].includes(S.screen)?"none":"";
   document.querySelectorAll(".screen").forEach(el=>el.classList.toggle("on",el.id==={home:"scrHome",settings:"scrSettings",players:"scrPlayers",game:"scrGame",final:"scrFinal",lobby:"scrLobby",join:"scrJoin",phone:"scrPhone",imp:"scrImp",ww:"scrWw",lc:"scrLc",uc:"scrUc",bp:"scrBp",em:"scrEm",cg:"scrCg",ti:"scrTi",mu:"scrMu",tut:"scrTut",eve:"scrEve"}[S.screen]));
@@ -2190,7 +2195,7 @@ function soloSize(){const pane=$("soloPane"),fr=$("soloFrame");if(!pane||pane.hi
   pane.classList.toggle("empty",empty);if(empty){document.documentElement.style.setProperty("--soloH","0px")}
   if(fr.style.height!==h+"px")fr.style.height=h+"px";const hud=0;
   // phone: shrink the host view until it fits above the controls
-  const app=document.querySelector("body>.app");if(!app)return;if(!ph||!innerHeight){if(app.style.zoom)app.style.zoom="";return}app.style.zoom="1";const need=app.scrollHeight+8,avail=innerHeight;app.style.zoom=String(Math.max(.4,Math.min(1,avail/need)).toFixed(3))}
+  const app=document.querySelector("body>.app");if(!app)return;if(!ph||!innerHeight){if(app.style.zoom)app.style.zoom="";return}let typing=false;try{const a=fr.contentDocument.activeElement;typing=!!a&&/^(INPUT|TEXTAREA)$/.test(a.tagName)&&a.type!=="range"}catch(e){}if(typing&&app.style.zoom)return;app.style.zoom="1";const need=app.scrollHeight+8,avail=innerHeight;app.style.zoom=String(Math.max(.7,Math.min(1,avail/need)).toFixed(3))}
 function renderSolo(){const on=!!(S.solo&&S.room&&S.mode==="host"&&!SOLO_PH&&S.screen!=="home");document.documentElement.classList.toggle("solo",on);if(!on){document.documentElement.classList.remove("soloph");const app=document.querySelector("body>.app");if(app&&app.style.zoom)app.style.zoom=""}const pane=$("soloPane"),fr=$("soloFrame");if(!pane)return;pane.hidden=!on;
   if(!on){if(pane.dataset.src){pane.dataset.src="";fr.src="about:blank"}return}const src="./?solo="+S.room.code+"&n="+encodeURIComponent(S.solo.name||"You");{const sc=document.querySelector(".screen.on");const card=sc&&(sc.querySelector(".impstage")||sc.querySelector("#stage"));
     if(card){if(card.id==="stage"){if(pane.parentNode!==card)card.appendChild(pane)}else if(card.nextElementSibling!==pane)card.after(pane)}}
@@ -2501,7 +2506,7 @@ const TV_NOFIT=["settings","players","home"];let tvT=null;
 function tvFit(){const el=document.documentElement;if(!el.classList.contains("tv"))return;const set=z=>el.style.setProperty("--tvz",z.toFixed(3));
   let z=Math.max(1,Math.min(3.2,window.innerWidth/1250,window.innerHeight/620));set(z);if(TV_NOFIT.includes(S.screen))return;
   const fits=()=>el.scrollHeight<=window.innerHeight+1;if(fits())return;let lo=.7,hi=z;set(lo);if(!fits())return;for(let k=0;k<7;k++){const mid=(lo+hi)/2;set(mid);if(fits())lo=mid;else hi=mid}set(lo)}
-function tvApply(){const on=!!S.tvMode&&S.screen!=="phone"&&S.screen!=="join";const el=document.documentElement;el.classList.toggle("tv",on);
+function tvApply(){const on=!!S.tvMode&&S.screen!=="phone"&&S.screen!=="join"&&innerWidth>=820;const el=document.documentElement;el.classList.toggle("tv",on);
   if(!on)el.style.setProperty("--tvz","1");else{document.querySelectorAll(".screen>.imp").forEach(x=>x.classList.toggle("tvsolo",!x.querySelector(":scope>section.panel")));requestAnimationFrame(tvFit);clearTimeout(tvT);tvT=setTimeout(tvFit,500)}
   const b=$("tvBtn");if(b){b.hidden=S.screen==="phone"||S.screen==="join";b.textContent=S.tvMode?"📺 TV mode: on":"📺 TV mode";b.classList.toggle("on",!!S.tvMode)}}
 window.addEventListener("resize",()=>tvApply());
