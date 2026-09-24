@@ -462,9 +462,12 @@ html.tv .tutvideo{min-height:0;margin:0 auto}
 .murows{width:100%;display:flex;flex-direction:column;gap:6px;max-height:40vh;overflow:auto}.murow{display:grid;grid-template-columns:minmax(70px,.7fr) 1fr 1fr;gap:10px;align-items:center;background:var(--ground);border-radius:10px;padding:8px 12px;text-align:left}.murow.one{grid-template-columns:minmax(70px,.7fr) 2fr}.murow>*{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .murow .ok,.muok{color:#3cb371;font-weight:800}.murow .no,.muno{color:#e05a5a;font-weight:700}.murow .no{opacity:.8}.muform label.mulbl{margin-top:6px}.muform label .muok,.muform label .muno{letter-spacing:0;text-transform:none;font-size:13px;margin-left:6px}.muform input:disabled{opacity:.7}
 .prechips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:6px 0 10px}.prechips .chip{font-size:15px;padding:10px 14px}
-#soloPane{position:fixed;z-index:60;background:var(--ground);box-shadow:0 0 30px rgba(0,0,0,.45)}#soloPane iframe{width:100%;height:100%;border:0;display:block}
-@media (min-width:900px){#soloPane{top:0;right:0;bottom:0;width:390px}html.solo body{padding-right:390px}}
-@media (max-width:899px){#soloPane{left:0;right:0;bottom:0;height:48vh}html.solo body{padding-bottom:48vh}}
+#soloPane{position:fixed;z-index:60;left:50%;bottom:0;transform:translateX(-50%);width:min(560px,100vw);background:var(--ground);border-radius:16px 16px 0 0;box-shadow:0 -6px 30px rgba(0,0,0,.5);border:2px solid #33415f;border-bottom:0;overflow:hidden}
+#soloPane iframe{width:100%;height:120px;max-height:52vh;border:0;display:block;transition:height .2s}
+#soloPane .solobar{display:flex;align-items:center;justify-content:space-between;padding:4px 12px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);cursor:pointer;user-select:none}
+#soloPane.fold iframe{height:0!important}
+html.solo body{padding-bottom:var(--soloH,140px)}
+html.soloctl #scrPhone .topbar,html.soloctl .phboard,html.soloctl .aved{display:none!important}html.soloctl body{background:transparent}html.soloctl #scrPhone .phone{padding-top:8px}
 img.emoji{height:1em;width:1em;margin:0 .04em;vertical-align:-.12em;display:inline-block}
 .mucover img.mubg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(16px) brightness(.5);transform:scale(1.15)}.mucover img.mufg{position:relative;width:100%;height:100%;object-fit:contain}.mubox.res .mucover{overflow:hidden}
 .muart{width:170px;height:170px;object-fit:contain;background:#0b1330;border-radius:14px;display:block;margin:6px auto;box-shadow:0 6px 20px rgba(0,0,0,.4)}
@@ -1169,7 +1172,7 @@ img.emoji{height:1em;width:1em;margin:0 .04em;vertical-align:-.12em;display:inli
 <div class="ytwrap" id="ytOverlay" hidden><div class="ytbox"><div class="ythead"><button class="btn btn-ghost" id="ytBack" type="button" hidden>◂ List</button><span class="t" id="ytTitle">Searching…</span><button class="btn btn-ghost" id="ytNext" type="button" hidden>Next ▸</button><a class="btn btn-ghost" id="ytOpen" target="_blank" rel="noopener">YouTube ↗</a><button class="btn btn-ghost" id="ytClose" type="button">✕</button></div><form class="ytsearch" id="ytForm"><input id="ytQ" placeholder="Not the right one? Search for another song or artist…" autocomplete="off"><button class="btn btn-gold" type="submit">Search</button></form><div class="ytlist" id="ytList"></div><div class="ytframe" id="ytFrame" hidden></div><div class="ytfoot"><span id="ytHint"></span><span>Tap ✕ or outside to close</span></div></div></div>
 <div class="modal" id="modal" hidden><div class="box"><p id="modalMsg"></p><div class="row"><button class="btn btn-ghost" id="modalNo" type="button">Cancel</button><button class="btn btn-red" id="modalYes" type="button">Yes</button></div></div></div>
 
-<div id="soloPane" hidden><iframe id="soloFrame" title="Your controller" allow="autoplay; vibrate"></iframe></div>
+<div id="soloPane" hidden><div class="solobar" id="soloBar"><span>🎮 Your controls</span><span id="soloFold">▾ hide</span></div><iframe id="soloFrame" title="Your controls" allow="autoplay; vibrate"></iframe></div>
 <script src="https://cdn.jsdelivr.net/npm/@twemoji/api@17.0.3/dist/twemoji.min.js" crossorigin="anonymous" async onload="try{render()}catch(e){}"></script>
 <script>
 // ---- Challenges: [Kategorie, Text, Schwierigkeit 1-3] ----
@@ -2181,8 +2184,13 @@ const NEXT_OPTS=["karaoke","imposter","whowould","liars","undercover","ballpark"
 function soloOK(g){return g==="karaoke"||(NEED[g]||3)<=1}
 function nextGames(){let a=(Array.isArray(S.activeGames)&&S.activeGames.length?S.activeGames:NEXT_OPTS).filter(g=>NEXT_OPTS.includes(g));if(S.solo){a=a.filter(soloOK);return a.length?a:NEXT_OPTS.filter(soloOK)}return a.length?a:NEXT_OPTS.slice()}
 async function soloStart(){let n="You";try{n=localStorage.getItem("kc-name")||"You"}catch(e){}await hostCreate();if(!S.room)return;S.solo={name:n};save();render()}
+let soloSizeT=null;
+function soloSize(){const pane=$("soloPane"),fr=$("soloFrame");if(!pane||pane.hidden)return;let h=120;try{const d=fr.contentDocument;const b=d&&d.getElementById("phBody");if(b)h=Math.max(70,Math.ceil(b.getBoundingClientRect().bottom)+12)}catch(e){}
+  h=Math.min(h,Math.round(innerHeight*.52));if(fr.style.height!==h+"px")fr.style.height=h+"px";document.documentElement.style.setProperty("--soloH",(pane.classList.contains("fold")?26:h+26)+"px")}
 function renderSolo(){const on=!!(S.solo&&S.room&&S.mode==="host"&&!SOLO_PH&&S.screen!=="home");document.documentElement.classList.toggle("solo",on);const pane=$("soloPane"),fr=$("soloFrame");if(!pane)return;pane.hidden=!on;
-  if(!on){if(pane.dataset.src){pane.dataset.src="";fr.src="about:blank"}return}const src="./?solo="+S.room.code+"&n="+encodeURIComponent(S.solo.name||"You");if(pane.dataset.src!==src){pane.dataset.src=src;fr.src=src}}
+  if(!on){if(pane.dataset.src){pane.dataset.src="";fr.src="about:blank"}return}const src="./?solo="+S.room.code+"&n="+encodeURIComponent(S.solo.name||"You");if(pane.dataset.src!==src){pane.dataset.src=src;fr.src=src}
+  if(!soloSizeT)soloSizeT=setInterval(()=>{if(!S.solo){clearInterval(soloSizeT);soloSizeT=null;return}soloSize()},400);
+  const bar=$("soloBar");if(bar&&!bar.onclick)bar.onclick=()=>{pane.classList.toggle("fold");$("soloFold").textContent=pane.classList.contains("fold")?"▴ show":"▾ hide";soloSize()}}
 function nextOpts(){const a=nextGames();return a.length>1?a.concat("random"):a}
 function nextAvail(g){if(g==="random")return nextGames().some(x=>nextAvail(x));return g==="karaoke"?S.players.length>=1:impPlayers().length>=(NEED[g]||3)}
 function nextTally(){const v=S.next?S.next.votes:{};const cnt={};Object.values(v).forEach(c=>{cnt[c]=(cnt[c]||0)+1});let max=0;nextOpts().forEach(o=>max=Math.max(max,cnt[o]||0));const top=nextOpts().filter(o=>(cnt[o]||0)===max&&max>0);
@@ -2498,7 +2506,7 @@ function renderExtra(){tvApply();renderOwnCards();if(S.screen==="home")renderFan
   $("mvpBonus").value=S.mvpBonus;$("awardBonus").value=S.awardBonus;$("mics").value=S.mics||1;$("impQ").value=S.impQ;$("lcHand").value=S.lcHand;$("lcChambers").value=S.lcChambers;$("lcDeals").value=S.lcDeals;$("lcTurnSec").value=S.lcTurnSec;$("lcCallSec").value=S.lcCallSec;$("ucRounds").value=S.ucRounds;$("ucSpies").value=S.ucSpies||1;$("impCount").value=S.impCount||1;$("ucTime").value=S.ucTime;$("ucPts").value=S.ucPts;$("ucSpyPts").value=S.ucSpyPts;$("bpQ").value=S.bpQ;$("bpTime").value=S.bpTime;$("coQ").value=S.coQ;$("coShow").value=S.coShow;$("coTime").value=S.coTime;$("ctQ").value=S.ctQ;$("ctTime").value=S.ctTime;$("tiQ").value=S.tiQ;$("tiImps").value=S.tiImps;$("tiDiscuss").value=S.tiDiscuss;$("tiPts").value=S.tiPts;$("tiImpPts").value=S.tiImpPts;$("tiTurnSec").value=S.tiTurnSec==null?20:S.tiTurnSec;$("muQ").value=S.muQ;$("muClip").value=S.muClip;$("muAns").value=S.muAns;$("muGap").value=muGapS();$("muLast").value=muLastS();renderMuCats();$("emRounds").value=S.emRounds;$("emSteal").value=S.emSteal||10;$("emMode").value=S.emMode||"cards";$("emQ").value=S.emQ;$("emTime").value=S.emTime;$("emPts").value=S.emPts;$("wwQ").value=S.wwQ;$("autoMode").value=S.autoMode;$("autoSec").value=S.autoSec;$("impDiscuss").value=S.impDiscuss;$("impPts").value=S.impPts;$("impImpPts").value=S.impImpPts;
   if(S.screen==="lobby"&&S.room){$("lobbyTitle").textContent=S.solo?"Solo mode":"Host with phones";$("lobbyCode").textContent=S.room.code;$("lobbyUrl").textContent=joinUrl(S.room.code).replace(/^https?:\/\//,"");renderQr();$("lobbyStatus").textContent=netStatusText();
     $("lobbyPlayers").innerHTML=S.players.map((p,i)=>`<li><span class="rank">${i+1}</span><span class="dot${online(p)?' on':''}" style="${p.pid?'':'visibility:hidden'}"></span><span class="name">${avHtml(p)}${esc(p.name)}</span><span class="hint">${p.pid?(online(p)?"phone":"phone offline"):"no phone"}</span><button class="x" data-kick="${i}" title="Remove">×</button></li>`).join("")||`<li style="color:var(--muted)">Nobody yet – scan the QR code or type the room code</li>`;
-    $("gameSel").innerHTML=NEXT_OPTS.filter(g=>!S.solo||soloOK(g)).map(g=>`<button class="chip gchip${nextGames().includes(g)?" on":""}" data-game="${g}" type="button"><b>${GAME_LBL[g]}</b><small>${GAME_DESC[g]}</small></button>`).join("");renderNextLobby();$("gameHint").textContent=S.solo?"Solo mode – only games that work alone. Your controller is next to this screen; others can still join with the room code.":"Tap a game to switch it on or off for tonight. When you press Start, the players vote which game comes first.";
+    $("gameSel").innerHTML=NEXT_OPTS.filter(g=>!S.solo||soloOK(g)).map(g=>`<button class="chip gchip${nextGames().includes(g)?" on":""}" data-game="${g}" type="button"><b>${GAME_LBL[g]}</b><small>${GAME_DESC[g]}</small></button>`).join("");renderNextLobby();$("gameHint").textContent=S.solo?"Solo mode – only games that work alone. Your controls are at the bottom of this screen; others can still join with the room code.":"Tap a game to switch it on or off for tonight. When you press Start, the players vote which game comes first.";
     const G=nextGames(),avG=G.filter(g=>nextAvail(g));$("lobbyStart").disabled=!avG.length||!!S.next||!!S.pre;$("lobbyStart").textContent=S.next||S.pre?"Players are voting…":!avG.length?"Waiting for players…":G.length===1?`Start ${GAME_LBL[G[0]].replace(/^\S+ /,"")} (${S.players.length} player${S.players.length===1?"":"s"})`:(nextFree()?`Start – pick a game (${S.players.length} player${S.players.length===1?"":"s"})`:`Start – vote for the first game (${S.players.length} player${S.players.length===1?"":"s"})`)}
   const hosting=S.mode==="host"&&!!S.room;$("roomChip").hidden=!hosting;if(hosting){$("roomCode").textContent=S.room.code;$("roomN").textContent=S.players.filter(online).length}
   $("stage").classList.toggle("voting",!!S.vote);
@@ -2533,7 +2541,7 @@ $("setupBtn").onclick=()=>{S.screen="home";S.current=null;if(S.mode==="host"&&S.
 function boot(){
   try{const j=new URLSearchParams(location.search).get("join");if(j&&/^[A-Z0-9]{4}$/i.test(j)){history.replaceState(null,"",location.pathname);S.screen="join";S.back=null;
     setTimeout(()=>{$("joinCode").value=j.toUpperCase();try{$("joinName").value=localStorage.getItem("kc-name")||""}catch(e){}$("joinName").focus()},0)}}catch(e){}
-  if(SOLO_PH){S.muted=true;const q=new URLSearchParams(location.search),code=(q.get("solo")||"").toUpperCase(),n=(q.get("n")||"You").slice(0,18);let p=null;try{p=JSON.parse(localStorage.getItem(PHK))}catch(e){}
+  if(SOLO_PH){document.documentElement.classList.add("soloctl");S.muted=true;const q=new URLSearchParams(location.search),code=(q.get("solo")||"").toUpperCase(),n=(q.get("n")||"You").slice(0,18);let p=null;try{p=JSON.parse(localStorage.getItem(PHK))}catch(e){}
     if(p&&p.code===code)S.screen="phone";else{S.screen="join";setTimeout(()=>joinRoom(code,n),300)}}
   if(S.screen==="phone"){let p=null;try{p=JSON.parse(localStorage.getItem(PHK))}catch(e){}
     if(p&&p.code&&p.pid&&NET_OK){PH={code:p.code,pid:p.pid,name:p.name,state:undefined};phoneConnect();let av=null;try{av=avClean(JSON.parse(localStorage.getItem("kc-avatar")))}catch(e){}db.patch(`rooms/${p.code}/members/${p.pid}`,av?{name:p.name,seen:TS,av}:{name:p.name,seen:TS}).catch(()=>{})}else S.screen="home"}
@@ -3295,7 +3303,7 @@ async function muYtId(q){if(MU_YT[q])return MU_YT[q];const c=muYtCache();if(c[q]
 // two players: the current song plays in one, the next song is buffered in the other while the result is shown
 const MUP=[{id:"muYt",p:null,ok:false,w:[],err:null},{id:"muYt2",p:null,ok:false,w:[],err:null}];
 function muPlayer(k){const P=MUP[k];return ytApi().then(()=>new Promise((res,rej)=>{if(P.p&&P.ok)return res(P.p);P.w.push(res);if(P.p)return;
-  P.p=new YT.Player(P.id,{host:"https://www.youtube-nocookie.com",width:"320",height:"180",playerVars:{autoplay:0,controls:0,disablekb:1,rel:0,playsinline:1,fs:0,iv_load_policy:3},
+  P.p=new YT.Player(P.id,{width:"320",height:"180",playerVars:{autoplay:0,controls:0,disablekb:1,rel:0,playsinline:1,fs:0,iv_load_policy:3},
     events:{onReady:()=>{P.ok=true;P.w.splice(0).forEach(f=>f(P.p))},onError:e=>{P.err=e.data}}});setTimeout(()=>rej(new Error("player")),10000)}))}
 function muCurP(){const P=MUP[MUX.pi||0];return P.p&&P.ok?P.p:null}
 const muSleep=ms=>new Promise(r=>setTimeout(r,ms));
