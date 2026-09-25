@@ -452,6 +452,7 @@ html.tv .tutvideo{min-height:0;margin:0 auto}
 .mulbl{width:100%;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;margin-top:4px}.mulbl small{letter-spacing:0;text-transform:none;opacity:.7}
 .mubox{position:relative;width:min(100%,380px);aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:#0b1330;box-shadow:0 10px 30px rgba(0,0,0,.35)}
 .mubox #muYt,.mubox #muYt2,.mubox iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+html.muwarm #scrMu:not(.on){display:block!important;position:fixed;right:0;bottom:0;width:320px;height:220px;overflow:hidden;opacity:.01;pointer-events:none;z-index:-1}
 .mucover{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(circle at 30% 20%,#2c4a8f,#0b1330 70%)}
 .mucover img{width:100%;height:100%;object-fit:cover}
 .mubox.res .mucover{background:#0b1330}
@@ -2089,7 +2090,7 @@ function voId(t){let x=2166136261>>>0;for(let i=0;i<t.length;i++){x^=t.charCodeA
 function voLoad(){if(VO_IDS)return;VO_IDS=new Set();fetch("voice/index.json",{cache:"no-cache"}).then(r=>r.ok?r.json():[]).then(a=>{VO_IDS=new Set(Array.isArray(a)?a:[]);if(S.screen==="tut"){tutSaid="";renderTut()}}).catch(()=>{})}
 function vo(text){if(!text||S.voiceOn===false||S.muted||S.screen==="phone"||S.screen==="join")return;voLoad();const id=voId(String(text));if(!VO_IDS.has(id))return;voQ.push(id);if(voQ.length>3)voQ.splice(0,voQ.length-3);if(!voA)voNext()}
 function voNext(){const id=voQ.shift();if(!id){voA=null;return}voA=new Audio("voice/"+id+".mp3");voA.volume=Math.max(0,Math.min(1,S.volume==null?.8:S.volume));voA.onended=voA.onerror=()=>{voA=null;setTimeout(voNext,250)};voA.play().catch(()=>{voA=null;voQ=[]})}
-function countPlay(g){S.pre=null;clearInterval(preT);preT=null;evCommit();vo((GAME_LBL[g]||"").replace(/^\S+ /,"")+"!");S.plays=S.plays||{};S.plays[g]=(S.plays[g]||0)+1}
+function countPlay(g){if(g!=="music")muEarlyEnd();S.pre=null;clearInterval(preT);preT=null;evCommit();vo((GAME_LBL[g]||"").replace(/^\S+ /,"")+"!");S.plays=S.plays||{};S.plays[g]=(S.plays[g]||0)+1}
 const AV_KINDS=["b1","b2","b3","b4","b5","b6","b7","b8","b9","b10","g1","g2","g3","g4","g5","g6","g7","g8","g9","g10"];
 const AV_SKIN=["#f9dcc4","#f1c27d","#e0ac69","#c68642","#8d5524","#5c3a21"];
 const AV_HAIR=["#1f1a17","#4a2c1a","#8b5a2b","#d9a441","#f2e2a0","#b7472a","#9aa0a6","#7b4fd6","#2f9bd6","#e0508a"];
@@ -2222,7 +2223,7 @@ const PRE_KIND={music:"cats",imposter:"mode",whowould:"mode",emoji:"mode"};let p
 const PRE_OPTS={imposter:[["normal","😇 Normal","the usual questions plus deep ones"],["spicy","🌶️ 18+","spicy questions mixed in"]],whowould:[["normal","😇 Normal","the usual questions plus deep ones"],["spicy","🌶️ 18+","spicy questions mixed in"]],
   emoji:[["cards","🃏 Emoji cards","ready-made emoji cards – everyone guesses"],["draw","✏️ Live","you make the emojis yourselves, one after another"]]};
 const PRE_SET={imposter:"impMode",whowould:"wwMode",emoji:"emMode"};
-function preOpen(g){clearInterval(nextT);nextT=null;S.next=null;S.pre={g,kind:PRE_KIND[g],votes:{},end:Date.now()+(PRE_KIND[g]==="cats"?40000:20000)};save();render();sfx.start()}
+function preOpen(g){clearInterval(nextT);nextT=null;S.next=null;S.pre={g,kind:PRE_KIND[g],votes:{},end:Date.now()+(PRE_KIND[g]==="cats"?40000:20000)};save();render();sfx.start();if(g==="music")muEarly()}
 function preTally(){const P=S.pre,total=impPlayers().length;const vals=Object.values(P.votes||{});
   if(P.kind==="mode"){const O=PRE_OPTS[P.g].map(o=>o[0]),cnt={};vals.forEach(v=>{if(O.includes(v))cnt[v]=(cnt[v]||0)+1});const mx=Math.max(0,...O.map(o=>cnt[o]||0));const top=O.filter(o=>(cnt[o]||0)===mx);return{n:vals.length,total,cnt,res:top.length===1?top[0]:O[0]}}
   const cnt={};let n=0;vals.forEach(v=>{const c=v&&Array.isArray(v.c)?v.c:[];if(c.length)n++;c.forEach(x=>{if(MU_CATS.includes(x))cnt[x]=(cnt[x]||0)+1})});
@@ -2234,7 +2235,7 @@ function preVote(i,v){const P=S.pre,p=S.players[i];if(!P||!p||!p.pid)return;
   const tt=preTally();if(tt.n>=tt.total)P.end=Math.min(P.end,Date.now()+3000);save();render()}
 function preFinish(force){const P=S.pre;if(!P)return;const tt=preTally();clearInterval(preT);preT=null;S.pre=null;
   if(P.kind==="mode"){const O=PRE_OPTS[P.g],mode=O.some(o=>o[0]===force)?force:tt.res;S[PRE_SET[P.g]]=mode;const o=O.find(x=>x[0]===mode);toast(o[1]+" – "+o[2])}
-  else S.muCats=tt.res;
+  else{S.muCats=tt.res;if(P.g==="music")muEarly()}
   S.preOk=P.g;nextStart(P.g)}
 function preTick(){if(S.pre&&!preT)preT=setInterval(()=>{if(!S.pre||(S.screen!=="final"&&S.screen!=="lobby")){clearInterval(preT);preT=null;return}const l=Math.max(0,Math.ceil((S.pre.end-Date.now())/1000));const el=$("preLeft");if(el)el.textContent=l;if(l<=0)preFinish()},250)}
 function preBoxHtml(){const P=S.pre,tt=preTally(),left=Math.max(0,Math.ceil((P.end-Date.now())/1000));
@@ -3337,20 +3338,25 @@ function muCurP(){const P=MUP[MUX.pi||0];return P.p&&P.ok?P.p:null}
 const muSleep=ms=>new Promise(r=>setTimeout(r,ms));
 function muVol(){return Math.max(0,Math.min(1,S.volume==null?.8:S.volume))}
 // load song si into player k: {src,ytId,audio,k} · {fail:true} · null when cancelled
-async function muLoad(si,k,alive){const s=MU_SONGS[si],P=MUP[k];let audio=null,id=null;if(s[6]){audio=new Audio();audio.preload="auto";audio.crossOrigin="anonymous";audio.src=s[6]}
+async function muLoad(si,k,alive,maxMs){const tries=Math.ceil((maxMs||30000)/200);const s=MU_SONGS[si],P=MUP[k];let audio=null,id=null;if(s[6]){audio=new Audio();audio.preload="auto";audio.crossOrigin="anonymous";audio.src=s[6]}
   try{id=await Promise.race([muYtId(s[3]),muSleep(6000).then(()=>null)]);if(!alive())return null;if(!id)throw new Error("no id");
     const p=await Promise.race([muPlayer(k),muSleep(8000).then(()=>null)]);if(!alive())return null;if(!p)throw new Error("no player");
     const own=MUX.lid=(MUX.lid||0)+1;P.owner=own;P.err=null;p.mute();p.loadVideoById({videoId:id,startSeconds:0});
     // wait until the real video runs (ads keep the video time at 0), then park it at the start
-    for(let n=0;n<100;n++){await muSleep(200);if(!alive()){if(P.owner===own)try{p.stopVideo()}catch(e){}return null}if(P.err)throw new Error("yt "+P.err);let x=0;try{x=p.getCurrentTime()||0}catch(e){}if(x>.35)break;if(n===99)throw new Error("slow")}
+    for(let n=0;n<tries;n++){await muSleep(200);if(!alive()){if(P.owner===own)try{p.stopVideo()}catch(e){}return null}if(P.err)throw new Error("yt "+P.err);let x=0;try{x=p.getCurrentTime()||0}catch(e){}if(x>.35)break;if(n===tries-1)throw new Error("slow")}
     p.pauseVideo();p.seekTo(0,true);return{src:"yt",ytId:id,audio,k}}
   catch(e){if(!alive())return null;if(id&&P.err&&!MU_YT[s[3]]){try{const c=muYtCache();delete c[s[3]];localStorage.setItem("kc-muyt",JSON.stringify(c))}catch(x){}}
     return audio?{src:"it",ytId:null,audio,k}:{fail:true}}}
 // prefetch: during the result the next song of the plan is buffered in the other player
 const MUPRE={tok:0,si:null,pr:null};
 function muPrefetchCancel(){MUPRE.tok++;MUPRE.si=null;MUPRE.pr=null}
-function muPrefetch(){muPrefetchCancel();if(S.round>=S.muQ||S.screen!=="mu"||!S.mu||S.mu.phase!=="result")return;const si=(S.muPlan||[]).find(i=>MU_SONGS[i]&&!muBad().includes(i));if(si==null)return;
-  const tok=MUPRE.tok;MUPRE.si=si;MUPRE.pr=muLoad(si,1-(MUX.pi||0),()=>tok===MUPRE.tok)}
+function muPrefetchSi(si,maxMs){if(MUPRE.si===si&&MUPRE.pr)return;muPrefetchCancel();const tok=MUPRE.tok;MUPRE.si=si;MUPRE.pr=muLoad(si,1-(MUX.pi||0),()=>tok===MUPRE.tok,maxMs)}
+function muPrefetch(){if(S.round>=S.muQ||S.screen!=="mu"||!S.mu||(S.mu.phase!=="result"&&S.mu.phase!=="play"))return;const si=(S.muPlan||[]).find(i=>MU_SONGS[i]&&!muBad().includes(i));if(si==null)return;muPrefetchSi(si,90000)}
+// early load: as soon as Guess the Song is picked (category vote, tutorial) the first song loads silently, so its ad runs before the game starts
+let MUEARLY=null;
+function muEarly(){if(S.screen==="mu")return;const cats=muCats().join("|");document.documentElement.classList.add("muwarm");if(MUEARLY&&MUEARLY.cats===cats&&MUPRE.pr)return;
+  let plan=muMakePlan();if(!plan.length)return;if(MUPRE.si!=null&&MUPRE.pr&&plan.includes(MUPRE.si))plan=[MUPRE.si,...plan.filter(i=>i!==MUPRE.si)];MUEARLY={cats,plan};muPrefetchSi(plan[0],90000)}
+function muEarlyEnd(keep){document.documentElement.classList.remove("muwarm");if(!keep){MUEARLY=null;muPrefetchCancel()}}
 async function muPrepare(si){const tok=++MUX.tok;muStop();MUX.ready=false;MUX.src=null;MUX.ytId=null;MUX.audio=null;const alive=()=>tok===MUX.tok;
   let r=null;if(MUPRE.si===si&&MUPRE.pr){const pr=MUPRE.pr;MUPRE.si=null;MUPRE.pr=null;r=await pr;if(!alive())return;if(r&&r.fail)r=null}else muPrefetchCancel();
   if(!r){r=await muLoad(si,MUX.pi||0,alive);if(!alive()||!r)return}
@@ -3369,7 +3375,7 @@ async function muPlayFor(sec,fromStart){clearTimeout(MUX.stopT);const v=muVol();
     if(t1-t0<.5&&!MUX.adMuted){try{p.pauseVideo()}catch(e){}MUX.audible=false;if(!MUX.audio)return false;MUX.src="it"}else{MUX.stopAt=Date.now()+Math.max(0,sec*1000-2500);if(MUX.adMuted)MUX.stopLeft=MUX.stopAt-Date.now();else MUX.stopT=setTimeout(muPause,Math.max(0,sec*1000-2500));return true}}
   if(MUX.src==="it"&&MUX.audio){try{if(fromStart)MUX.audio.currentTime=0;MUX.audio.volume=v;await MUX.audio.play();if(tok!==MUX.tok){MUX.audio.pause();return false}MUX.stopT=setTimeout(muPause,sec*1000);return true}catch(e){return false}}
   return false}
-function muStart(){if(tutGate("music"))return;countPlay("music");S.game="music";S.next=null;S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0;delete p.late});S.inGame=true;S.round=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=true;S.log=[];S.muUsed=S.muUsed||[];S.mu=null;S.muStuck=false;S.muTries=0;S.screen="mu";S.muPlan=muMakePlan();muNext();sfx.start()}
+function muStart(){if(tutGate("music"))return;countPlay("music");S.game="music";S.next=null;S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0;delete p.late});S.inGame=true;S.round=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=true;S.log=[];S.muUsed=S.muUsed||[];S.mu=null;S.muStuck=false;S.muTries=0;S.screen="mu";const ep=MUEARLY&&MUEARLY.cats===muCats().join("|")?MUEARLY.plan.filter(i=>MU_SONGS[i]&&!muBad().includes(i)):null;S.muPlan=ep&&ep.length?ep:muMakePlan();muEarlyEnd(true);MUEARLY=null;muNext();sfx.start()}
 function muNext(){S.round++;S.players.forEach(p=>{delete p.late});if(S.round>S.muQ){muStop();finish();return}S.auto=null;
   S.muPlan=(S.muPlan||[]).filter(i=>MU_SONGS[i]&&!muBad().includes(i));if(!S.muPlan.length)S.muPlan=muMakePlan();const si=S.muPlan.shift();if(si==null){S.round--;S.mu=null;S.muStuck=true;save();render();return}
   S.muUsed.push(si);if(S.muUsed.length>200)S.muUsed=S.muUsed.slice(-200);
@@ -3380,7 +3386,7 @@ function muAfterPrep(si,r){if(MUX.busy===si)MUX.busy=null;const m=S.mu;if(!m||m.
 function muTotal(){return (S.muAns||120)*1000}
 function muLastS(){return S.muLast==null?10:S.muLast}function muGapS(){return S.muGap==null?30:S.muGap}
 async function muGo(){const m=S.mu;if(!m||m.phase!=="load")return;const clip=S.muClip||10;m.phase="play";m.end=Date.now()+muTotal();m.ansEnd=m.end;m.last=false;save();render();const src0=MUX.src;
-  const ok=await muPlayFor(clip,true);if(S.mu!==m)return;if(!ok){if(m.phase==="play")muFailed(m.si);return}S.muTries=0;if(MUX.src!==src0&&m.phase==="play"&&!m.last){m.end=Date.now()+muTotal();m.ansEnd=m.end}m.replayAt=Date.now()-2500+(clip+muGapS())*1000;save();render();muReplayLater(m)}
+  const ok=await muPlayFor(clip,true);if(S.mu!==m)return;if(!ok){if(m.phase==="play")muFailed(m.si);return}S.muTries=0;if(MUX.src!==src0&&m.phase==="play"&&!m.last){m.end=Date.now()+muTotal();m.ansEnd=m.end}m.replayAt=Date.now()-2500+(clip+muGapS())*1000;save();render();muReplayLater(m);setTimeout(()=>{if(S.mu===m)muPrefetch()},4000)}
 // intro (muClip s), then MU_GAP s of silence to guess; if nobody has the title by then, the song plays again from the start until the time is up
 function muReplayLater(m){clearTimeout(MUX.loopT);if(m.replayed)return;MUX.loopT=setTimeout(()=>{if(S.mu!==m||m.phase!=="play"||m.last||m.replayed||S.screen!=="mu")return;m.replayed=true;save();render();muReplayPlay(Math.max(1,(m.end-Date.now())/1000+1))},Math.max(0,m.replayAt-Date.now()))}
 // play the song from the start for sec seconds – YouTube may need a moment to buffer again after the pause; only if it really does not run, the iTunes preview takes over
@@ -3663,7 +3669,7 @@ const TUT_V={
 function tutVis(t,k){return (TUT_V[t.game==="emoji"&&t.mode==="draw"?"emojiDraw":t.game]||[])[k]||""}
 const TUT_START={karaoke:()=>startGame(),imposter:()=>impStart(),whowould:()=>wwStart(),liars:()=>lcStart(),undercover:()=>ucStart(),ballpark:()=>bpStart(),emoji:()=>emStart(),color:()=>cgStart("color"),colortoon:()=>cgStart("colortoon"),timeimp:()=>tiStart(),music:()=>muStart()};
 function tutSteps(t){return TUT[t.game==="emoji"&&t.mode==="draw"?"emojiDraw":t.game]||[]}
-function tutGate(g){if(S.tutorials===false||!TUT[g])return false;S.tutSeen=S.tutSeen||{};if(Date.now()-(S.tutSeen[g]||0)<TUT_EVENING)return false;
+function tutGate(g){if(g==="music")muEarly();if(S.tutorials===false||!TUT[g])return false;S.tutSeen=S.tutSeen||{};if(Date.now()-(S.tutSeen[g]||0)<TUT_EVENING)return false;
   if(!(S.tut&&S.tut.game===g))S.tut={game:g,start:Date.now(),skip:[],mode:g==="emoji"?(S.emMode||"cards"):null};S.game=g;S.inGame=false;S.next=null;S.screen="tut";save();render();sfx.start();return true}
 function tutDone(){const t=S.tut;if(!t)return;clearInterval(tutT);tutT=null;S.tutSeen=S.tutSeen||{};S.tutSeen[t.game]=Date.now();S.tut=null;const f=TUT_START[t.game];if(f)f();else{S.screen="home";save();render()}}
 function tutCancel(){clearInterval(tutT);tutT=null;S.tut=null;S.screen=S.mode==="host"&&S.room?"lobby":"home";save();render()}
