@@ -863,6 +863,11 @@ html.soloph .mubox.mupic .mucover img.mufg{max-height:52vh}
     <p class="hint">The host plays the first 10 seconds of a song, then there are 30 seconds to guess; if nobody has the title by then, the song plays again from the start until the time is up (2 minutes). As soon as someone has the title, everyone else gets 10 more seconds (YouTube, the next song is buffered in advance; if a video can't play, a 30-second iTunes preview is used instead – then it's not always the intro). Everyone types the artist (or anime / movie) and the title on their phone – small typos are fine; once the artist is right, the title field suggests that artist's songs; unlimited tries for the artist / anime / movie, 3 tries for the title. Each right answer scores by speed (title 12, 9, 7 …, artist 8, 6, 5 …, both right = up to 20; songs with only one question: 20, 15, 12 …); a wrong guess locks the player for 2 seconds. A song that can't be loaded is skipped and doesn't count. 198 songs.</p>
   </section>
   <section class="panel" data-tab="general">
+    <h2>🔄 App version</h2>
+    <div class="row" style="align-items:center;gap:10px;flex-wrap:wrap"><button class="btn btn-gold" id="updBtn" type="button">🔄 Check for updates</button><span class="hint" id="updVer" style="margin:0"></span></div>
+    <p class="hint">The app also looks for updates by itself when you come back to it and every few minutes; it only reloads on the start screen, in the lobby or after a game.</p>
+  </section>
+  <section class="panel" data-tab="general">
     <h2>🎙️ Announcer voice</h2>
     <label class="hint" style="display:flex;gap:8px;align-items:center;cursor:pointer;margin:0"><input type="checkbox" id="voiceOn" checked> Read cards, questions and announcements aloud on the host screen</label>
     <p class="hint">Pre-recorded voice, no internet service needed. Player names, your own cards and players' answers are never read aloud. Uses the sound volume below; muting the sound also mutes the voice.</p>
@@ -2425,7 +2430,7 @@ function phAvEditor(){const a=phAv(),cur=a||avDefault();const open=!a||(PH&&PH.a
   return `<details class="aved"${open?" open":""}><summary>${a?avHtml({av:a},true)+" <b>Your avatar</b><span class='hint' style='margin:0 0 0 auto'>change</span>":"👤 <b>Choose your avatar</b>"}</summary>
   <div class="avlbl">Boys</div><div class="avgrid">${thumbs(AV_KINDS.slice(0,10))}</div><div class="avlbl">Girls</div><div class="avgrid">${thumbs(AV_KINDS.slice(10))}</div>
   <div class="avlbl">Skin</div><div class="avrow">${sw("avs",AV_SKIN,a&&a.s)}</div><div class="avlbl">Hair</div><div class="avrow">${sw("avh",AV_HAIR,a&&a.h)}</div><div class="avlbl">Clothes</div><div class="avrow">${sw("avc",AV_CLOTH,a&&a.c)}</div></details>`}
-const APPV="v1790334780";
+const APPV="v1790335131";
 function phVerHint(){let el=$("phVer");const st=PH&&PH.state;const bad=S.screen==="phone"&&!SOLO_PH&&st&&st.av&&st.av!==APPV&&(st.phase==="lobby"||st.phase==="final");if(!bad){if(el)el.remove();return}if(!el){el=document.createElement("div");el.id="phVer";el.className="phver";el.innerHTML='The app was updated – <button class="btn btn-ghost" type="button">Reload</button>';el.querySelector("button").onclick=()=>location.reload();document.body.appendChild(el)}}
 function renderPhone0(){if(S.screen!=="phone"||!PH)return;const st=PH.state;const body=$("phBody");
   $("phRoom").textContent="Room "+PH.code;$("phDot").className="dot"+(st&&!PH.err?" on":"");
@@ -2527,7 +2532,7 @@ function tvApply(){const on=!!S.tvMode&&S.screen!=="phone"&&S.screen!=="join"&&i
   const b=$("tvBtn");if(b){b.hidden=S.screen==="phone"||S.screen==="join";b.textContent=S.tvMode?"📺 TV mode: on":"📺 TV mode";b.classList.toggle("on",!!S.tvMode)}}
 window.addEventListener("resize",()=>tvApply());
 function appVerTxt(){const n=+String(APPV).slice(1);if(!n)return APPV;const d=new Date(n*1000),p=x=>String(x).padStart(2,"0");return `${p(d.getDate())}.${p(d.getMonth()+1)}. ${p(d.getHours())}:${p(d.getMinutes())}`}
-function renderExtra(){{const av=$("appVer");if(av){av.textContent="Version "+appVerTxt();av.hidden=SOLO_PH||!["home","join","settings","lobby"].includes(S.screen)}}tvApply();renderOwnCards();if(S.screen==="home")renderFan();
+function renderExtra(){{const uv=$("updVer");if(uv)uv.textContent="Version "+appVerTxt();const ub=$("updBtn");if(ub&&!ub.onclick)ub.onclick=checkUpdates;const av=$("appVer");if(av){av.textContent="Version "+appVerTxt();av.hidden=SOLO_PH||!["home","join","settings","lobby"].includes(S.screen)}}tvApply();renderOwnCards();if(S.screen==="home")renderFan();
   if(S.screen==="settings"){$("tutOn").checked=S.tutorials!==false;$("voiceOn").checked=S.voiceOn!==false;$("emDe").checked=S.emDe!==false;$("tvOn").checked=!!S.tvMode;const t=S.setTab||"karaoke";[...$("setTabs").querySelectorAll("[data-tab]")].forEach(b=>b.classList.toggle("on",b.dataset.tab===t));document.querySelectorAll("#scrSettings section[data-tab]").forEach(el=>{el.hidden=el.dataset.tab!==t})}
   const canResume=(S.inGame&&S.players.length>=1)||(S.mode==="host"&&S.room&&!S.inGame);
   $("homeResume").hidden=!canResume;$("homeResume").textContent=S.inGame?"↩ Resume game":"↩ Back to lobby";
@@ -4026,8 +4031,16 @@ $("modal").onclick=e=>{if(e.target.id==="modal")$("modal").hidden=true};
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("modal").hidden)$("modal").hidden=true});
 // ---- PWA ----
 if("serviceWorker" in navigator){const hadSW=!!navigator.serviceWorker.controller;
-  navigator.serviceWorker.addEventListener("controllerchange",()=>{if(!hadSW||window.__swReloaded)return;window.__swReloaded=true;const go=()=>{toast("Updating to the latest version…");setTimeout(()=>location.reload(),600)};if(swSafe())go();else{const iv=setInterval(()=>{if(swSafe()){clearInterval(iv);go()}},4000)}});
-  window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").then(r=>{try{r.update()}catch(e){}}).catch(()=>{}))}
+  navigator.serviceWorker.addEventListener("controllerchange",()=>{if((!hadSW&&!window.__swForce)||window.__swReloaded)return;window.__swReloaded=true;const go=()=>{toast("Updating to the latest version…");setTimeout(()=>location.reload(),600)};if(window.__swForce||swSafe())go();else{const iv=setInterval(()=>{if(swSafe()){clearInterval(iv);go()}},4000)}});
+  window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").then(r=>{swReg=r;try{r.update()}catch(e){}}).catch(()=>{}));
+  document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")swCheck()});setInterval(swCheck,5*60e3)}
+let swReg=null,swLast=0;function swCheck(){if(!swReg||Date.now()-swLast<30e3)return;swLast=Date.now();swReg.update().catch(()=>{})}
+// manual update: new service worker → reload as soon as it takes over; otherwise compare the version on the server with this page
+async function checkUpdates(){const b=$("updBtn");if(b)b.disabled=true;toast("Checking for updates…");window.__swForce=true;let found=false;
+  try{if(swReg){await withTO(swReg.update(),10000);found=!!(swReg.installing||swReg.waiting)}}catch(e){}
+  if(!found){try{const txt=await (await withTO(fetch("./index.html?u="+Date.now(),{cache:"no-store"}),10000)).text();const m=/const APPV="([^"]+)"/.exec(txt);if(m&&m[1]!==APPV)found=true}catch(e){}}
+  if(found){toast("Update found – loading the new version…");setTimeout(()=>{if(!window.__swReloaded){window.__swReloaded=true;location.reload()}},4000)}
+  else{window.__swForce=false;toast("You have the latest version ("+appVerTxt()+")");if(b)b.disabled=false}}
 let deferredInstall=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e;const b=document.getElementById("installBtn");if(b){b.hidden=false;b.onclick=()=>{deferredInstall.prompt();deferredInstall=null;b.hidden=true}}});
 
 boot();
