@@ -1969,7 +1969,7 @@ function drawCard(want){if(S.current||S.vote||S.players.length<1)return false;
   startTimer();save();render();sfx.draw();vo(S.current.raw||S.current.text);return true}
 function doAccept(auto){const c=S.current;if(!c||c.accepted)return;const p=S.players[c.holder];c.accepted=true;c.so={challengers:[],opp:null,phase:"open",votes:{}};
   if(!auto&&S.timerSec&&tLeftNow()>S.timerSec*2/3)stat(p,"fast");stopTimer();
-  toast(auto?`Time's up – ${p.name} is in!`:`${p.name} accepts – sing!`);if(!auto)sfx.draw();save();render()}
+  toast(S.players.length<2?(auto?"Time's up – you're in!":"Challenge accepted – sing!"):auto?`Time's up – ${p.name} is in!`:`${p.name} accepts – sing!`);if(!auto)sfx.draw();save();render()}
 $("accept").onclick=()=>doAccept(false);
 // ---- Sing-off: challenge the card holder, crowd votes ----
 const SO_STAKE={1:5,2:5,3:5};
@@ -1988,7 +1988,7 @@ function soClose(force){const c=S.current,so=soState();if(!so||so.opp==null)retu
   else if(win==="a"){const pts=c.worth+stake;a.score+=pts;b.score-=5;stat(a,"soWin");S.log.unshift(`⚔️ Sing-off: <b>${esc(a.name)}</b> beats ${esc(b.name)} <span class="up">+${pts}</span> (${c.worth} + ${stake}), ${esc(b.name)} <span class="down">−5</span> – ${esc(c.text)}`);toast(`⚔️ ${a.name} wins the sing-off! +${pts} – ${b.name} −5`)}
   else{const pts=c.worth-stake;a.score+=pts;b.score+=5;S.log.unshift(`⚔️ Sing-off tie: <b>${esc(a.name)}</b> & ${esc(b.name)} – ${esc(a.name)} gets <span class="up">${fmt(pts)}</span> (${c.worth} − ${stake}), ${esc(b.name)} <span class="up">+5</span> – ${esc(c.text)}`);toast(`It's a tie – ${a.name} gets ${pts}, ${b.name} +5`)}
   sfx.win();if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});endCard()}
-function renderSo(){const c=S.current,so=soState();const box=$("sobox");if(!so||S.screen!=="game"){box.hidden=true;return}box.hidden=false;
+function renderSo(){const c=S.current,so=soState();const box=$("sobox");if(!so||S.screen!=="game"||S.players.length<2){box.hidden=true;return}box.hidden=false;
   const H=S.players[c.holder],others=S.players.map((p,i)=>i).filter(i=>i!==c.holder);
   if(so.opp==null){box.innerHTML=`<h3>⚔️ Sing-off?</h3><div class="hint" style="margin:0">Anyone can challenge ${esc(H.name)} on their phone. ${esc(H.name)} picks an opponent – or just sings solo. Stake: ±${SO_STAKE[c.diff]||5} for ${esc(H.name)} – the challenger gets +10 for a win and −5 for a loss.</div>
     ${so.challengers.length?`<div class="hint" style="margin:0">Challengers:</div><div class="row">${so.challengers.map(i=>`<button class="btn btn-gold" data-sopick="${i}">⚔️ ${esc(S.players[i].name)}</button>`).join("")}</div>`:`<div class="hint" style="margin:0">No challengers yet.</div>`}
