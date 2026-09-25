@@ -1,4 +1,4 @@
-const CACHE="gamenight-v1790370490";
+const CACHE="gamenight-v1790372704";
 const ASSETS=["./index.html","./manifest.webmanifest","./icon-192.png","./icon-512.png","./icon-512-maskable.png","./qrcode.min.js","./fonts/anton.woff2","./fonts/caveat.woff2","./fonts/nunito.woff2","./fonts/cinzel.woff2"];
 self.addEventListener("install",e=>{// every file on its own: one failed download (bad mobile network) must not block the whole update
   e.waitUntil(caches.open(CACHE).then(c=>Promise.all(ASSETS.map(u=>c.add(new Request(u,{cache:"reload"})).catch(()=>{})))).then(()=>self.skipWaiting()))});
