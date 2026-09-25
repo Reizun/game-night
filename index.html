@@ -2506,11 +2506,10 @@ $("cardList").onclick=e=>{const b=e.target.closest("[data-oc]");if(!b)return;con
 function renderFan(){const icon={karaoke:"#i-mic",imposter:"#i-mask2",whowould:"#i-question",liars:"#i-cards",undercover:"#i-eye",ballpark:"#i-hash",emoji:"#i-smile",color:"#i-palette",colortoon:"#i-banana",timeimp:"#i-hourglass",music:"#i-notes"};const p=S.plays||{};
   const order=["imposter","karaoke","whowould","liars","undercover","ballpark","emoji","color","colortoon","timeimp","music"].sort((a,b)=>(p[b]||0)-(p[a]||0));
   $("fanF").setAttribute("href",icon[order[0]]);$("fanL").setAttribute("href",icon[order[1]]);$("fanR").setAttribute("href",icon[order[2]])}
-// TV mode: start from a zoom that suits the screen width, then shrink until the whole screen fits without scrolling
-const TV_NOFIT=["settings","players","home"];let tvT=null;
+// TV mode: one fixed zoom that suits the screen size – it stays the same on every screen (no re-fitting while content changes)
+let tvT=null;
 function tvFit(){const el=document.documentElement;if(!el.classList.contains("tv"))return;const set=z=>el.style.setProperty("--tvz",z.toFixed(3));
-  let z=Math.max(1,Math.min(3.2,window.innerWidth/1250,window.innerHeight/620));set(z);if(TV_NOFIT.includes(S.screen))return;
-  const fits=()=>el.scrollHeight<=window.innerHeight+1;if(fits())return;let lo=.7,hi=z;set(lo);if(!fits())return;for(let k=0;k<7;k++){const mid=(lo+hi)/2;set(mid);if(fits())lo=mid;else hi=mid}set(lo)}
+  set(Math.max(1,Math.min(3.2,window.innerWidth/1250,window.innerHeight/620)))}
 function tvApply(){const on=!!S.tvMode&&S.screen!=="phone"&&S.screen!=="join"&&innerWidth>=820;const el=document.documentElement;el.classList.toggle("tv",on);
   if(!on)el.style.setProperty("--tvz","1");else{document.querySelectorAll(".screen>.imp").forEach(x=>x.classList.toggle("tvsolo",!x.querySelector(":scope>section.panel")));requestAnimationFrame(tvFit);clearTimeout(tvT);tvT=setTimeout(tvFit,500)}
   const b=$("tvBtn");if(b){b.hidden=S.screen==="phone"||S.screen==="join";b.textContent=S.tvMode?"📺 TV mode: on":"📺 TV mode";b.classList.toggle("on",!!S.tvMode)}}
