@@ -3342,8 +3342,8 @@ async function muLoad(si,k,alive,maxMs){const tries=Math.ceil((maxMs||30000)/200
   try{id=await Promise.race([muYtId(s[3]),muSleep(6000).then(()=>null)]);if(!alive())return null;if(!id)throw new Error("no id");
     const p=await Promise.race([muPlayer(k),muSleep(8000).then(()=>null)]);if(!alive())return null;if(!p)throw new Error("no player");
     const own=MUX.lid=(MUX.lid||0)+1;P.owner=own;P.err=null;p.mute();try{p.setVolume(0)}catch(e){}p.loadVideoById({videoId:id,startSeconds:0});
-    // wait until the real video runs (ads keep the video time at 0), then park it at the start
-    for(let n=0;n<tries;n++){await muSleep(200);if(!alive()){if(P.owner===own)try{p.stopVideo()}catch(e){}return null}if(P.err)throw new Error("yt "+P.err);let x=0;try{x=p.getCurrentTime()||0}catch(e){}if(x>.35)break;if(n===tries-1)throw new Error("slow")}
+    // wait until the song itself runs (state 1 – during an ad the state stays -1 while the ad's time runs), then park it at the start
+    for(let n=0;n<tries;n++){await muSleep(200);if(!alive()){if(P.owner===own)try{p.stopVideo()}catch(e){}return null}if(P.err)throw new Error("yt "+P.err);let x=0,st=-1;try{x=p.getCurrentTime()||0;st=p.getPlayerState()}catch(e){}if(st===1&&x>.35)break;if(n===tries-1)throw new Error("slow")}
     p.pauseVideo();p.seekTo(0,true);return{src:"yt",ytId:id,audio,k}}
   catch(e){if(!alive())return null;if(id&&P.err&&!MU_YT[s[3]]){try{const c=muYtCache();delete c[s[3]];localStorage.setItem("kc-muyt",JSON.stringify(c))}catch(x){}}
     return audio?{src:"it",ytId:null,audio,k}:{fail:true}}}
@@ -3364,13 +3364,15 @@ async function muPrepare(si){const tok=++MUX.tok;muStop();MUX.ready=false;MUX.sr
   MUX.pi=r.k;MUX.src=r.src;MUX.ytId=r.ytId;MUX.audio=r.audio;MUX.ready=true;return MUX.ready}
 // pause = end of one intro play (the loop goes on) · stop = end of the song
 // ad guard: while a clip should be heard, a playing player whose video time does not move is showing an ad → mute it and hold the clip timer
-function muAdGuard(){if(MUX.adT)return;MUX.adT=setInterval(()=>{if(MUX.src!=="yt"||!MUX.audible)return;const p=muCurP();if(!p)return;let tm=0;try{tm=p.getCurrentTime()||0}catch(e){return}
-  const now=Date.now(),prev=MUX.gT;MUX.gT=tm;if(prev==null){MUX.gMove=now;return}
-  if(tm>prev+.01){MUX.gMove=now;if(MUX.quiet||MUX.adMuted){MUX.quiet=false;try{p.setVolume(Math.round(muVol()*100));p.unMute()}catch(e){}}
+function muAdGuard(){if(MUX.adT)return;MUX.adT=setInterval(()=>{if(MUX.src!=="yt"||!MUX.audible)return;const p=muCurP();if(!p)return;let tm=0,st=-1;try{tm=p.getCurrentTime()||0;st=p.getPlayerState()}catch(e){return}
+  const now=Date.now(),prev=MUX.gT;MUX.gT=tm;if(prev==null)MUX.gMove=now;
+  // the song runs: state 1 and its time moves forward → sound on, clip timer goes on
+  if(st===1&&prev!=null&&tm>prev+.01){MUX.gMove=now;if(MUX.quiet||MUX.adMuted){MUX.quiet=false;try{p.setVolume(Math.round(muVol()*100));p.unMute()}catch(e){}}
     if(MUX.adMuted){MUX.adMuted=false;if(MUX.stopLeft!=null){MUX.stopAt=now+MUX.stopLeft;MUX.stopT=setTimeout(muPause,MUX.stopLeft);MUX.stopLeft=null}}return}
-  if(now-(MUX.gMove||now)<1000)return;
+  // an ad (state -1) or the song standing still for 1 s → sound off, clip timer held
+  const ad=st===-1&&tm>0;if(!ad&&now-(MUX.gMove||now)<1000)return;
   if(!MUX.adMuted){MUX.adMuted=true;MUX.adSince=now;try{p.mute()}catch(e){}if(MUX.stopT){clearTimeout(MUX.stopT);MUX.stopT=null;MUX.stopLeft=Math.max(0,(MUX.stopAt||0)-now)}}
-  else if(now-MUX.adSince>40000&&MUX.audio){const left=MUX.stopLeft;MUX.adMuted=false;MUX.stopLeft=null;try{p.pauseVideo()}catch(e){}MUX.src="it";try{MUX.audio.currentTime=0;MUX.audio.volume=muVol();MUX.audio.play().catch(()=>{})}catch(e){}if(left!=null){MUX.stopAt=now+left;MUX.stopT=setTimeout(muPause,left)}}},150)}
+  else if(now-MUX.adSince>45000&&MUX.audio){const left=MUX.stopLeft;MUX.adMuted=false;MUX.stopLeft=null;try{p.pauseVideo()}catch(e){}MUX.src="it";try{MUX.audio.currentTime=0;MUX.audio.volume=muVol();MUX.audio.play().catch(()=>{})}catch(e){}if(left!=null){MUX.stopAt=now+left;MUX.stopT=setTimeout(muPause,left)}}},150)}
 function muPause(){clearTimeout(MUX.stopT);MUX.stopT=null;MUX.audible=false;MUX.quiet=false;MUX.adMuted=false;MUX.stopLeft=null;MUX.gN=0;const p=muCurP();try{if(p)p.pauseVideo()}catch(e){}try{if(MUX.audio)MUX.audio.pause()}catch(e){}}
 function muStop(){clearTimeout(MUX.loopT);MUX.loopT=null;MUX.rtok=(MUX.rtok||0)+1;MUX.play=(MUX.play||0)+1;muPause()}
 async function muPlayFor(sec,fromStart){clearTimeout(MUX.stopT);const v=muVol();const tok=MUX.tok;const me=MUX.play=(MUX.play||0)+1;const p=muCurP();
@@ -3396,7 +3398,7 @@ function muReplayLater(m){clearTimeout(MUX.loopT);if(m.replayed)return;MUX.loopT
 // play the song from the start for sec seconds – YouTube may need a moment to buffer again after the pause; only if it really does not run, the iTunes preview takes over
 function muReplayPlay(sec){clearTimeout(MUX.stopT);const p=muCurP(),v=muVol(),tok=MUX.tok;MUX.play=(MUX.play||0)+1;const rt=MUX.rtok=(MUX.rtok||0)+1;const live=()=>tok===MUX.tok&&rt===MUX.rtok&&S.screen==="mu"&&S.mu&&S.mu.phase==="play";const it=()=>{if(!MUX.audio)return;MUX.src="it";try{MUX.audio.currentTime=0;MUX.audio.volume=v;MUX.audio.play().catch(()=>{})}catch(e){}};const st=()=>{try{return p.getPlayerState()}catch(e){return -1}};
   if(MUX.src==="yt"&&p){MUX.quiet=true;try{p.mute();p.seekTo(0,true);p.playVideo()}catch(e){}MUX.audible=true;MUX.gN=0;MUX.gT=null;muAdGuard();
-    setTimeout(()=>{if(!live())return;if(st()!==1&&st()!==3){try{p.playVideo()}catch(e){}setTimeout(()=>{if(!live())return;if(st()!==1&&st()!==3)it()},3000)}},3000)}
+    setTimeout(()=>{if(!live())return;if(st()!==1&&st()!==3&&!MUX.adMuted){try{p.playVideo()}catch(e){}setTimeout(()=>{if(!live())return;if(st()!==1&&st()!==3&&!MUX.adMuted)it()},3000)}},3000)}
   else it();
   MUX.stopAt=Date.now()+sec*1000;MUX.stopT=setTimeout(muPause,sec*1000)}
 // ---- typed answers: tolerant matching (case, accents, umlauts, "the", typos, one of several artists, extra brackets, known aliases)
