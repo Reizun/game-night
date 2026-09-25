@@ -6,7 +6,7 @@ Static web app – no build step, no server logic. **Solo mode** runs on one dev
 
 Tonight's totals count placement points per game (1st 10, 2nd 8, 3rd 6, then 5, 4, 3 …), so every game weighs the same. Speed rankings treat answers within 300 ms of each other as a tie. Reconnect: the same phone rejoins automatically; on another device, joining with the same name takes over the player once the old phone has been offline for 30 s (phones send a heartbeat every 10 s).
 
-- **Karaoke Challenge** – draw a card, accept or pass before the timer runs out, sing, get challenged to a sing-off.
+- **Karaoke Challenge** – draw a card, accept or pass, sing, get challenged to a sing-off.
 - **Imposter** – everyone answers a question on their phone, one player secretly got a different one; discuss and vote – votes are final, the fastest correct vote scores most (150 question pairs + 50 deep ones; 18+ mode mixes in 50 spicy pairs).
 - **Who Would** – "Who would most likely …": everyone votes for a player, no points, review at the end (150 questions + 50 deep ones; 18+ mode mixes in 50 spicy ones).
 - **Liar's Cards** – Liar's Bar with points: play 1–3 cards face down as the table card; after every play everyone has 30 s to call liar. The pot grows with every play – first correct caller gets the pot, later callers less, wrong calls cost half the pot plus 5, a lie nobody calls earns +5 and the first player without cards +10. The deck grows with the player count (2–8).
