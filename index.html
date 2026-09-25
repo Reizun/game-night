@@ -306,7 +306,7 @@ h1 span{color:var(--red-2)}
 .settabs{position:sticky;top:0;z-index:3;background:var(--ground);padding:4px 0 10px;margin:-6px 0 -8px}
 /* phones: settings tabs as one swipeable row, no TV mode */
 @media (max-width:819px){.tvbtn{display:none!important}}
-@media (max-width:700px){.settabs{flex-wrap:nowrap!important;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:-6px -16px -4px;padding:6px 16px 8px}.settabs::-webkit-scrollbar{display:none}.settabs .chip{flex:0 0 auto;white-space:nowrap;padding:8px 12px}}.settabs .chip{flex:1 1 auto;padding:10px 8px}
+@media (max-width:700px){.settabs{flex-wrap:nowrap!important;justify-content:flex-start!important;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:-6px -16px -4px;padding:6px 16px 8px}.settabs::-webkit-scrollbar{display:none}.settabs .chip{flex:0 0 auto;white-space:nowrap;padding:8px 12px}}.settabs .chip{flex:1 1 auto;padding:10px 8px}
 .impstage .ballot{width:100%;max-width:420px}.impstage .impans{display:flex;flex-direction:column;gap:8px;width:100%;max-width:420px}
 .impstage .impans input{padding:14px;border-radius:10px;border:2px solid transparent;background:var(--ground);color:var(--ink);font:inherit;font-size:18px;text-align:center}
 .impstage .q.priv{background:var(--card);color:var(--card-ink);border-radius:14px;padding:18px 16px;width:100%;max-width:520px}
@@ -1855,7 +1855,7 @@ function render(){
     $("who").innerHTML=`<b>${esc(holder.name)}</b>, you\'re up`;
     $("sub").textContent=S.current.accepted?"You're in – sing! Then Done it or Failed.":(S.current.chain>0?`Passed on by ${S.current.passedBy.map(i=>S.players[i].name).join(", ")} – now worth ${S.current.worth} points! Accept or pass?`:`Accept the challenge or pass it on.`);
     {const acc=!!S.current.accepted;$("draw").hidden=true;$("accept").hidden=acc;$("pass").hidden=acc;$("done").hidden=!acc;$("fail").hidden=!acc;}$("fail").textContent=`✗ Failed (${FAIL[S.current.diff]?"−"+FAIL[S.current.diff]:"0"})`;$("playBtn").href=ytUrl(S.current.cat,S.current.raw||S.current.text);
-    $("pass").textContent=S.current.chain>=S.players.length-1?"Pass (card is discarded)":"Pass ➜ hand over";
+    $("pass").textContent=(S.current.chain>=S.players.length-1?"Pass – card is discarded":"Pass ➜ hand over")+(S.penalty?` (−${S.penalty})`:"");
     $("done").textContent=`✓ Done it (+${S.current.worth})`;
     resolveText();setPic(S.current.cat,S.current.raw||S.current.text);
     $("picked").hidden=S.current.pick==null||needsPick(S.current.raw||S.current.text);if(S.current.pick!=null){$("pickedName").textContent=S.players[S.current.pick].name;$("pickedLbl").textContent=needsPartner(S.current.raw||S.current.text)?"Partner:":"Player:"}
@@ -2049,7 +2049,7 @@ function ytQuery(cat,text){text=text.replace(/\{P\}/g,"a friend");
 }
 function ytUrl(cat,text){return "https://www.youtube.com/results?search_query="+encodeURIComponent(ytQuery(cat,text))}
 $("draw").onclick=e=>{const b=e.target.closest("[data-diff]");if(!b||b.disabled)return;drawCard(+b.dataset.diff)};
-$("done").onclick=doDone;$("pass").onclick=doPass;
+$("done").onclick=doDone;$("pass").onclick=()=>doPass(false);
 function removePlayer(i){const p=S.players[i];if(!p)return;const kar=S.game==="karaoke";
   if(S.inGame&&kar&&S.players.length<=1){toast("Karaoke needs at least one player");return}
   const need=NEED[S.game]||3;if(S.inGame&&!kar&&impPlayers().filter(x=>x!==i).length<need){toast(GAME_LBL[S.game].replace(/^\S+ /,"")+(need===1?" needs a player"+(S.solo?" – your controls are still connecting, try again in a moment":" with a phone"):" needs at least "+need+" players with phones"));return}
@@ -2430,7 +2430,7 @@ function phAvEditor(){const a=phAv(),cur=a||avDefault();const open=!a||(PH&&PH.a
   return `<details class="aved"${open?" open":""}><summary>${a?avHtml({av:a},true)+" <b>Your avatar</b><span class='hint' style='margin:0 0 0 auto'>change</span>":"👤 <b>Choose your avatar</b>"}</summary>
   <div class="avlbl">Boys</div><div class="avgrid">${thumbs(AV_KINDS.slice(0,10))}</div><div class="avlbl">Girls</div><div class="avgrid">${thumbs(AV_KINDS.slice(10))}</div>
   <div class="avlbl">Skin</div><div class="avrow">${sw("avs",AV_SKIN,a&&a.s)}</div><div class="avlbl">Hair</div><div class="avrow">${sw("avh",AV_HAIR,a&&a.h)}</div><div class="avlbl">Clothes</div><div class="avrow">${sw("avc",AV_CLOTH,a&&a.c)}</div></details>`}
-const APPV="v1790335131";
+const APPV="v1790335429";
 function phVerHint(){let el=$("phVer");const st=PH&&PH.state;const bad=S.screen==="phone"&&!SOLO_PH&&st&&st.av&&st.av!==APPV&&(st.phase==="lobby"||st.phase==="final");if(!bad){if(el)el.remove();return}if(!el){el=document.createElement("div");el.id="phVer";el.className="phver";el.innerHTML='The app was updated – <button class="btn btn-ghost" type="button">Reload</button>';el.querySelector("button").onclick=()=>location.reload();document.body.appendChild(el)}}
 function renderPhone0(){if(S.screen!=="phone"||!PH)return;const st=PH.state;const body=$("phBody");
   $("phRoom").textContent="Room "+PH.code;$("phDot").className="dot"+(st&&!PH.err?" on":"");
@@ -2476,7 +2476,7 @@ function renderPhone0(){if(S.screen!=="phone"||!PH)return;const st=PH.state;cons
       if(so&&so.opp!=null&&so.phase==="sing")sobox=`<div class="sobox"><h3>⚔️ Sing-off</h3><div class="vs"><b>${esc(holder.name)}</b> vs <b>${esc(oppName)}</b></div><div class="hint">${mine||amOpp?(st.mics>1?"Same task, at the same time – grab a mic!":"Same task, one after the other. Give it everything!"):"Both sing the same task – then you vote."}</div>${mine?`<button class="btn btn-gold" data-act="startvote">🗳 Start the vote</button>`:""}</div>`;
       if(so&&so.phase==="vote")sobox=`<div class="sobox"><h3>⚔️ Who won?</h3><div class="vs"><b>${esc(holder.name)}</b> vs <b>${esc(oppName)}</b></div>${mine||amOpp?`<div class="hint">The crowd is voting… ${(so.voted||[]).length} of ${so.total}</div>`:iVoted?`<div class="hint">Vote received – ${(so.voted||[]).length} of ${so.total} voted</div>`:`<div class="ballot"><button class="btn btn-ghost" data-act="vote" data-name="${esc(holder.name)}">👑 ${esc(holder.name)}</button><button class="btn btn-ghost" data-act="vote" data-name="${esc(oppName)}">👑 ${esc(oppName)}</button></div>`}</div>`;
       const duel=so&&so.opp!=null;
-      if(mine)html=`<div class="who">Your turn, <b>${esc(me.name)}</b>!</div>${timer}${card}${sobox}<div class="actions phact">${c.accepted?(duel?"":`<button class="btn btn-green" data-act="done">✓ Done it (+${c.worth})</button><button class="btn btn-fail" data-act="fail">✗ Failed (${FAIL[c.diff]?"−"+FAIL[c.diff]:"0"})</button>`):`<button class="btn btn-gold" data-act="accept">✓ Accept the challenge</button><button class="btn btn-ghost" data-act="pass">${c.chain>=players.length-1?"Pass (card is discarded)":"Pass ➜ hand over"}</button>`}</div>`;
+      if(mine)html=`<div class="who">Your turn, <b>${esc(me.name)}</b>!</div>${timer}${card}${sobox}<div class="actions phact">${c.accepted?(duel?"":`<button class="btn btn-green" data-act="done">✓ Done it (+${c.worth})</button><button class="btn btn-fail" data-act="fail">✗ Failed (${FAIL[c.diff]?"−"+FAIL[c.diff]:"0"})</button>`):`<button class="btn btn-gold" data-act="accept">✓ Accept the challenge</button><button class="btn btn-ghost" data-act="pass">${c.chain>=players.length-1?"Pass – card is discarded":"Pass ➜ hand over"}${st.penalty?` (−${st.penalty})`:""}</button>`}</div>`;
       else html=`<div class="who">${amOpp?"Sing-off, <b>"+esc(me.name)+"</b>!":"<b>"+esc(holder?holder.name:"?")+"</b> is up"}</div>${timer}${card}${sobox}<p class="hint">${c.pick===meI&&!duel?"You're the partner – get ready!":duel?"":"Cheer them on! 🎉"}</p>${board}`}
     else{if(mine)html=`<div class="who">Your turn, <b>${esc(me.name)}</b>!</div><p class="hint">Draw a card – then accept or pass.</p><div class="drawrow phdraw"><button class="btn btn-red" data-act="draw" data-diff="0" style="font-size:20px;padding:18px 28px" ${(st.tiers||[]).includes(0)?"":"disabled"}>🎴 Draw a card</button></div>${board}`;
       else html=`<div class="who">Up next: <b>${esc(holder?holder.name:"?")}</b></div><p class="hint">Waiting for them to draw a card…</p>${st.lastVote&&st.lastVote.win.length&&st.lastVote.round===st.round-1?`<p class="hint">🏅 Best performance in round ${st.lastVote.round}: <b>${st.lastVote.win.map(esc).join(" &amp; ")}</b></p>`:""}${board}`}}
@@ -2532,8 +2532,8 @@ function tvApply(){const on=!!S.tvMode&&S.screen!=="phone"&&S.screen!=="join"&&i
   const b=$("tvBtn");if(b){b.hidden=S.screen==="phone"||S.screen==="join";b.textContent=S.tvMode?"📺 TV mode: on":"📺 TV mode";b.classList.toggle("on",!!S.tvMode)}}
 window.addEventListener("resize",()=>tvApply());
 function appVerTxt(){const n=+String(APPV).slice(1);if(!n)return APPV;const d=new Date(n*1000),p=x=>String(x).padStart(2,"0");return `${p(d.getDate())}.${p(d.getMonth()+1)}. ${p(d.getHours())}:${p(d.getMinutes())}`}
-function renderExtra(){{const uv=$("updVer");if(uv)uv.textContent="Version "+appVerTxt();const ub=$("updBtn");if(ub&&!ub.onclick)ub.onclick=checkUpdates;const av=$("appVer");if(av){av.textContent="Version "+appVerTxt();av.hidden=SOLO_PH||!["home","join","settings","lobby"].includes(S.screen)}}tvApply();renderOwnCards();if(S.screen==="home")renderFan();
-  if(S.screen==="settings"){$("tutOn").checked=S.tutorials!==false;$("voiceOn").checked=S.voiceOn!==false;$("emDe").checked=S.emDe!==false;$("tvOn").checked=!!S.tvMode;const t=S.setTab||"karaoke";[...$("setTabs").querySelectorAll("[data-tab]")].forEach(b=>b.classList.toggle("on",b.dataset.tab===t));document.querySelectorAll("#scrSettings section[data-tab]").forEach(el=>{el.hidden=el.dataset.tab!==t})}
+function renderExtra(){{const uv=$("updVer");if(uv)uv.textContent="Version "+appVerTxt();const ub=$("updBtn");if(ub&&!ub.onclick)ub.onclick=checkUpdates;const av=$("appVer");if(av){av.textContent="Version "+appVerTxt();av.hidden=SOLO_PH||!["home","join","lobby"].includes(S.screen)}}tvApply();renderOwnCards();if(S.screen==="home")renderFan();
+  if(S.screen==="settings"){$("tutOn").checked=S.tutorials!==false;$("voiceOn").checked=S.voiceOn!==false;$("emDe").checked=S.emDe!==false;$("tvOn").checked=!!S.tvMode;const t=S.setTab||"karaoke";[...$("setTabs").querySelectorAll("[data-tab]")].forEach(b=>b.classList.toggle("on",b.dataset.tab===t));if(S.screen==="settings"&&$("setTabs").dataset.shown!==t){$("setTabs").dataset.shown=t;setTimeout(()=>{const on=$("setTabs").querySelector(".on");const bar=$("setTabs");if(on&&bar&&bar.offsetParent)bar.scrollLeft=Math.max(0,on.offsetLeft-(bar.clientWidth-on.offsetWidth)/2)},80)}document.querySelectorAll("#scrSettings section[data-tab]").forEach(el=>{el.hidden=el.dataset.tab!==t})}
   const canResume=(S.inGame&&S.players.length>=1)||(S.mode==="host"&&S.room&&!S.inGame);
   $("homeResume").hidden=!canResume;$("homeResume").textContent=S.inGame?"↩ Resume game":"↩ Back to lobby";
   $("homeHost").disabled=!NET_OK;$("homeJoin").disabled=!NET_OK;if(!NET_OK)$("homeHost").title=$("homeJoin").title="Not set up on this copy yet";
