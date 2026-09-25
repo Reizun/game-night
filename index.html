@@ -2091,6 +2091,8 @@ let VO_IDS=null,voQ=[],voA=null;
 function voId(t){let x=2166136261>>>0;for(let i=0;i<t.length;i++){x^=t.charCodeAt(i);x=Math.imul(x,16777619)>>>0}return x.toString(36)}
 function voLoad(){if(VO_IDS)return;VO_IDS=new Set();fetch("voice/index.json",{cache:"no-cache"}).then(r=>r.ok?r.json():[]).then(a=>{VO_IDS=new Set(Array.isArray(a)?a:[]);if(S.screen==="tut"){tutSaid="";renderTut()}}).catch(()=>{})}
 function vo(text){if(!text||S.voiceOn===false||S.muted||S.screen==="phone"||S.screen==="join")return;voLoad();const id=voId(String(text));if(!VO_IDS.has(id))return;voQ.push(id);if(voQ.length>3)voQ.splice(0,voQ.length-3);if(!voA)voNext()}
+// stop the announcer at once (skipping a tutorial, leaving a screen)
+function voStop(){voQ=[];if(voA){const a=voA;voA=null;a.onended=a.onerror=null;try{a.pause()}catch(e){}}}
 function voNext(){const id=voQ.shift();if(!id){voA=null;return}voA=new Audio("voice/"+id+".mp3");voA.volume=Math.max(0,Math.min(1,S.volume==null?.8:S.volume));voA.onended=voA.onerror=()=>{voA=null;setTimeout(voNext,250)};voA.play().catch(()=>{voA=null;voQ=[]})}
 function countPlay(g){if(g!=="music")muEarlyEnd();S.pre=null;clearInterval(preT);preT=null;evCommit();vo((GAME_LBL[g]||"").replace(/^\S+ /,"")+"!");S.plays=S.plays||{};S.plays[g]=(S.plays[g]||0)+1}
 const AV_KINDS=["b1","b2","b3","b4","b5","b6","b7","b8","b9","b10","g1","g2","g3","g4","g5","g6","g7","g8","g9","g10"];
@@ -3680,8 +3682,8 @@ const TUT_START={karaoke:()=>startGame(),imposter:()=>impStart(),whowould:()=>ww
 function tutSteps(t){return TUT[t.game==="emoji"&&t.mode==="draw"?"emojiDraw":t.game]||[]}
 function tutGate(g){if(g==="music")muEarly();if(S.tutorials===false||!TUT[g])return false;S.tutSeen=S.tutSeen||{};if(Date.now()-(S.tutSeen[g]||0)<TUT_EVENING)return false;
   if(!(S.tut&&S.tut.game===g))S.tut={game:g,start:Date.now(),skip:[],mode:g==="emoji"?(S.emMode||"cards"):null};S.game=g;S.inGame=false;S.next=null;S.screen="tut";save();render();sfx.start();return true}
-function tutDone(){const t=S.tut;if(!t)return;clearInterval(tutT);tutT=null;S.tutSeen=S.tutSeen||{};S.tutSeen[t.game]=Date.now();S.tut=null;const f=TUT_START[t.game];if(f)f();else{S.screen="home";save();render()}}
-function tutCancel(){clearInterval(tutT);tutT=null;S.tut=null;S.screen=S.mode==="host"&&S.room?"lobby":"home";save();render()}
+function tutDone(){const t=S.tut;if(!t)return;voStop();clearInterval(tutT);tutT=null;S.tutSeen=S.tutSeen||{};S.tutSeen[t.game]=Date.now();S.tut=null;const f=TUT_START[t.game];if(f)f();else{S.screen="home";save();render()}}
+function tutCancel(){voStop();clearInterval(tutT);tutT=null;S.tut=null;S.screen=S.mode==="host"&&S.room?"lobby":"home";save();render()}
 function tutSkip(i){const t=S.tut,p=S.players[i];if(!t||!p||!p.pid)return;if(!t.skip.includes(p.pid))t.skip.push(p.pid);const need=impPlayers().map(j=>S.players[j].pid);if(need.length&&need.every(x=>t.skip.includes(x))){tutDone();return}save();render()}
 // every step is read out (pre-generated clip) – it stays on screen as long as the sentence takes, at least TUT_MS
 function tutText(x){return x.t+". "+x.d}
@@ -3696,7 +3698,7 @@ function renderTut(){if(S.screen!=="tut"){clearInterval(tutT);tutT=null;return}c
   if(!st.done){const s=steps[st.k];{const key=t.start+":"+st.k;if(tutSaid!==key){tutSaid=key;vo(tutText(s))}}$("tutStage").innerHTML=`<div class="tutstep">Step ${st.k+1} of ${st.n}</div>${tutVis(t,st.k)?`<div class="tutvis">${tutVis(t,st.k)}</div>`:`<div class="tutscene">${s.s.split(" ").map((a,i)=>`<span style="animation-delay:${(i*.35).toFixed(2)}s,${(i*.35+.9).toFixed(2)}s">${a}</span>`).join("")}</div>`}<div class="tutcap"><b>${esc(s.t)}</b><span>${esc(s.d)}</span></div><div class="tutdots">${steps.map((x,i)=>`<i class="${i<st.k?"done":i===st.k?"on":""}"></i>`).join("")}</div>`}
   else{const left=Math.max(0,Math.ceil((st.total-st.el)/1000));$("tutStage").innerHTML=`<div class="tutscene"><span style="animation-delay:0s,.9s">🎉</span></div><div class="tutcap"><b>Ready?</b><span>The game starts in <b id="tutLeft">${left}</b> s</span></div>`}
   $("tutFoot").innerHTML=`<div class="hint" style="margin:0">${need.length&&!S.solo?`${nS} of ${need.length} tapped Skip on their phones – when everyone has, the game starts`:"Tap Skip to start right away"}</div><div class="row"><button class="btn btn-ghost" id="tutReplay">⏮ Replay</button><button class="btn btn-gold" id="tutSkipBtn">${st.done?"Start now ▸":"Skip tutorial ▸"}</button><button class="btn btn-ghost" id="tutCancel">✕ Cancel</button></div>`;
-  $("tutReplay").onclick=()=>{t.start=Date.now();tutLastK=-1;save();render()};$("tutSkipBtn").onclick=tutDone;$("tutCancel").onclick=tutCancel;
+  $("tutReplay").onclick=()=>{voStop();t.start=Date.now();tutLastK=-1;save();render()};$("tutSkipBtn").onclick=tutDone;$("tutCancel").onclick=tutCancel;
   tutLastK=st.done?st.n:st.k;tutTick();
   if(!tutT)tutT=setInterval(()=>{if(S.screen!=="tut"||!S.tut){clearInterval(tutT);tutT=null;return}const s2=tutState(S.tut);tutTick();const key=s2.done?s2.n:s2.k;if(key!==tutLastK){save();render();return}if(s2.done){const l=Math.max(0,Math.ceil((s2.total-s2.el)/1000));const el=$("tutLeft");if(el)el.textContent=l;const ck=S.tut.start+":"+l;if(l>=1&&l<=3&&tutSaid!==ck){tutSaid=ck;vo(["","One!","Two!","Three!"][l])}if(s2.el>=s2.total)tutDone()}},200)}
 function tutTick(){const t=S.tut;if(!t)return;const st=tutState(t);const b=$("tutBar");if(b)b.style.width=Math.min(100,100*st.el/st.total).toFixed(1)+"%";const tc=$("tutTime");if(tc)tc.textContent=`${tutFmt(Math.min(st.el,st.total))} / ${tutFmt(st.total)}`}
