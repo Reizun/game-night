@@ -2044,7 +2044,7 @@ $("draw").onclick=e=>{const b=e.target.closest("[data-diff]");if(!b||b.disabled)
 $("done").onclick=doDone;$("pass").onclick=doPass;
 function removePlayer(i){const p=S.players[i];if(!p)return;const kar=S.game==="karaoke";
   if(S.inGame&&kar&&S.players.length<=1){toast("Karaoke needs at least one player");return}
-  const need=NEED[S.game]||3;if(S.inGame&&!kar&&impPlayers().filter(x=>x!==i).length<need){toast(GAME_LBL[S.game].replace(/^\S+ /,"")+" needs at least "+need+" players with phones");return}
+  const need=NEED[S.game]||3;if(S.inGame&&!kar&&impPlayers().filter(x=>x!==i).length<need){toast(GAME_LBL[S.game].replace(/^\S+ /,"")+(need===1?" needs a player"+(S.solo?" – your controls are still connecting, try again in a moment":" with a phone"):" needs at least "+need+" players with phones"));return}
   if(p.pid&&S.room)db.del(`rooms/${S.room.code}/members/${p.pid}`).catch(()=>{});
   const sh=x=>x==null?x:(x>i?x-1:x);const c=S.current;
   if(c){const so=c.accepted&&c.so;if(c.holder===i||(so&&so.opp===i)){stopTimer();ytClose();S.current=null;$("card").classList.remove("flipped");S.log.unshift(`${esc(p.name)} left – card discarded: ${esc(c.text)}`)}
@@ -2197,7 +2197,9 @@ $("revealBtn").onclick=revealAward;
 const NEXT_OPTS=["karaoke","imposter","whowould","liars","undercover","ballpark","emoji","color","colortoon","timeimp","music"];
 function soloOK(g){return g==="karaoke"||(NEED[g]||3)<=1}
 function nextGames(){let a=(Array.isArray(S.activeGames)&&S.activeGames.length?S.activeGames:NEXT_OPTS).filter(g=>NEXT_OPTS.includes(g));if(S.solo){a=a.filter(soloOK);return a.length?a:NEXT_OPTS.filter(soloOK)}return a.length?a:NEXT_OPTS.slice()}
-async function soloStart(){let n="You";try{n=localStorage.getItem("kc-name")||"You"}catch(e){}const before=S.room&&S.room.code;await hostCreate();if(!S.room||S.room.code===before)return;S.solo={name:n};save();render()}
+async function soloStart(){let n="You";try{n=localStorage.getItem("kc-name")||"You"}catch(e){}const before=S.room&&S.room.code;await hostCreate();if(!S.room||S.room.code===before)return;
+  const pid="p"+Math.random().toString(36).slice(2,10);S.players=[{name:n,score:0,stats:{},pid,rs:0,seen:Date.now()}];S.solo={name:n,pid};
+  db.put(`rooms/${S.room.code}/members/${pid}`,{name:n,at:TS,seen:TS}).catch(()=>{});save();render()}
 let soloSizeT=null;
 function soloSize(){const pane=$("soloPane"),fr=$("soloFrame");if(!pane||pane.hidden)return;const ph=innerWidth<760;document.documentElement.classList.toggle("soloph",ph);let h=120,empty=false;try{const d=fr.contentDocument;const b=d&&d.getElementById("phBody");if(b){const kids=[...b.querySelectorAll("*")].filter(x=>x.offsetHeight>0&&/^(INPUT|BUTTON|CANVAS|FORM|TEXTAREA|SELECT)$/.test(x.tagName));empty=!kids.length;h=Math.max(60,Math.ceil(b.getBoundingClientRect().bottom)+10)}}catch(e){}
   pane.classList.toggle("empty",empty);if(empty){document.documentElement.style.setProperty("--soloH","0px")}
@@ -2205,7 +2207,7 @@ function soloSize(){const pane=$("soloPane"),fr=$("soloFrame");if(!pane||pane.hi
   // phone: shrink the host view until it fits above the controls
   const app=document.querySelector("body>.app");if(!app)return;const card=document.querySelector(".screen.on .impstage,.screen.on #stage");if(!ph||!innerHeight||!card){if(app.style.zoom)app.style.zoom="";return}let typing=false;try{const a=fr.contentDocument.activeElement;typing=!!a&&/^(INPUT|TEXTAREA)$/.test(a.tagName)&&a.type!=="range"}catch(e){}if(typing&&app.style.zoom)return;app.style.zoom="1";const need=app.scrollHeight+8,avail=innerHeight;app.style.zoom=String(Math.max(.7,Math.min(1,avail/need)).toFixed(3))}
 function renderSolo(){const on=!!(S.solo&&S.room&&S.mode==="host"&&!SOLO_PH&&S.screen!=="home");document.documentElement.classList.toggle("solo",on);if(!on){document.documentElement.classList.remove("soloph");const app=document.querySelector("body>.app");if(app&&app.style.zoom)app.style.zoom=""}const pane=$("soloPane"),fr=$("soloFrame");if(!pane)return;pane.hidden=!on;
-  if(!on){if(pane.dataset.src){pane.dataset.src="";fr.src="about:blank"}return}const src="./?solo="+S.room.code+"&n="+encodeURIComponent(S.solo.name||"You")+"&v="+SOLO_LOADV+(NS?"&ns="+NS:"");{const sc=document.querySelector(".screen.on");const card=sc&&(sc.querySelector(".impstage")||sc.querySelector("#stage"));
+  if(!on){if(pane.dataset.src){pane.dataset.src="";fr.src="about:blank"}return}const src="./?solo="+S.room.code+"&n="+encodeURIComponent(S.solo.name||"You")+(S.solo.pid?"&pid="+S.solo.pid:"")+"&v="+SOLO_LOADV+(NS?"&ns="+NS:"");{const sc=document.querySelector(".screen.on");const card=sc&&(sc.querySelector(".impstage")||sc.querySelector("#stage"));
     if(card){if(card.id==="stage"){if(pane.parentNode!==card)card.appendChild(pane)}else if(card.nextElementSibling!==pane)card.after(pane)}}
   if(pane.dataset.src!==src){pane.dataset.src=src;fr.src=src}
   if(!soloSizeT)soloSizeT=setInterval(()=>{if(!S.solo){clearInterval(soloSizeT);soloSizeT=null;return}soloSize()},400);
@@ -2217,7 +2219,7 @@ function nextTally(){const v=S.next?S.next.votes:{};const cnt={};Object.values(v
 function gDesc(g){const d=GAME_DESC[g]||"";return S.solo?d.replace(/ on (?:your|the) phones?/g,"").replace(/ with your phone/g,""):d}
 function nextFree(){return !!S.solo||impPlayers().length<=2}
 function nextVote(i,choice){if(!S.next||!nextOpts().includes(choice)||!nextAvail(choice))return;const p=S.players[i];if(!p||!p.pid)return;if(nextFree()){nextStart(choice);return}S.next.votes[p.pid]=choice;const t=nextTally();S.next.end=t.nV>=t.total&&t.lead?Date.now()+6000:null;save();render()}
-function nextStart(g){if(g==="random"){const av=nextGames().filter(x=>nextAvail(x));const pool=av.length>1?av.filter(x=>x!==S.game):av;if(!pool.length)return;g=pool[Math.floor(Math.random()*pool.length)];toast("🎲 Random pick: "+GAME_LBL[g].replace(/^\S+ /,""))}if(!NEXT_OPTS.includes(g))return;if(!nextAvail(g)){toast(GAME_LBL[g].replace(/^\S+ /,"")+(g==="karaoke"?" needs a player":" needs at least "+(NEED[g]||3)+" players with phones"));if(S.next){S.next.end=null;save();render()}else if(S.screen==="final"){S.next={votes:{},end:null};save();render()}return}
+function nextStart(g){if(g==="random"){const av=nextGames().filter(x=>nextAvail(x));const pool=av.length>1?av.filter(x=>x!==S.game):av;if(!pool.length)return;g=pool[Math.floor(Math.random()*pool.length)];toast("🎲 Random pick: "+GAME_LBL[g].replace(/^\S+ /,""))}if(!NEXT_OPTS.includes(g))return;if(!nextAvail(g)){toast(GAME_LBL[g].replace(/^\S+ /,"")+(g==="karaoke"||(NEED[g]||3)===1?" needs a player"+(S.solo?" – your controls are still connecting, try again in a moment":""):" needs at least "+(NEED[g]||3)+" players with phones"));if(S.next){S.next.end=null;save();render()}else if(S.screen==="final"){S.next={votes:{},end:null};save();render()}return}
   if(g==="emoji"&&impPlayers().length<2){S.emMode="cards";S.preOk=g}
   if(S.room&&PRE_KIND[g]&&S.preOk!==g){preOpen(g);return}S.preOk=null;clearInterval(nextT);nextT=null;S.next=null;S.game=g;if(g==="imposter")impStart();else if(g==="whowould")wwStart();else if(g==="liars")lcStart();else if(g==="undercover")ucStart();else if(g==="ballpark")bpStart();else if(g==="emoji")emStart();else if(g==="color"||g==="colortoon")cgStart(g);else if(g==="timeimp")tiStart();else if(g==="music")muStart();else startGame()}
 let nextT=null;
@@ -2327,7 +2329,7 @@ function syncMembers(m){let changed=false,seenChanged=false;const seen=new Set()
         pidChanged(p)}}
     if(!p){if(S.players.length>=12)continue;p={name:uniqueName(name),score:0,stats:{},pid,rs:0};if(S.inGame&&S.game!=="karaoke")p.late=true;S.players.push(p);changed=true;if(S.inGame)toast(`${p.name} joined the game${p.late?" – in from the next round":""}`);else sfx.tick()}
     if(p.seen!==mem.seen){p.seen=mem.seen||Date.now();seenChanged=true}const av=avClean(mem.av);if(av&&JSON.stringify(av)!==JSON.stringify(p.av||null)){p.av=av;changed=true}}
-  if(!S.inGame&&S.screen!=="final"){const n=S.players.length;S.players=S.players.filter(p=>!p.pid||seen.has(p.pid));if(S.players.length!==n)changed=true}
+  if(!S.inGame&&S.screen!=="final"){const n=S.players.length;S.players=S.players.filter(p=>!p.pid||seen.has(p.pid)||(S.solo&&p.pid===S.solo.pid));if(S.players.length!==n)changed=true}
   if(changed){save();render()}else if(seenChanged)render()}
 function handleActions(acts){for(const k of Object.keys(acts).sort()){if(doneActions.has(k))continue;doneActions.add(k);const a=acts[k]||{};
   db.del(`rooms/${S.room.code}/actions/${k}`).catch(()=>{});
@@ -2376,7 +2378,7 @@ function renderQr(){const el=$("lobbyQr");if(!S.room)return;const url=joinUrl(S.
 $("lobbyAdd").onsubmit=e=>{e.preventDefault();const n=$("lobbyName").value.trim().slice(0,18);if(!n)return;if(S.players.length>=12){toast("Max 12 players");return}S.players.push({name:uniqueName(n),score:0,stats:{},rs:0});$("lobbyName").value="";save();render()};
 $("lobbyPlayers").onclick=e=>{const b=e.target.closest("[data-kick]");if(!b)return;const i=+b.dataset.kick,p=S.players[i];if(!p)return;if(p.pid&&S.room)db.del(`rooms/${S.room.code}/members/${p.pid}`).catch(()=>{});S.players.splice(i,1);save();render()};
 $("lobbyStart").onclick=()=>{const G=nextGames();if(G.length===1){nextStart(G[0]);return}if(!G.some(g=>nextAvail(g))){toast("Not enough players yet");return}S.next={votes:{},end:null};save();render();sfx.start();vo("Which game do you want to play first? Vote on your phones.")};
-$("lobbyBack").onclick=()=>ask("Close this room? Phones will be disconnected.",()=>{hostClose(true);S.screen="home";save();render()},"Close room");
+$("lobbyBack").onclick=()=>ask(S.solo?"End solo mode?":"Close this room? Phones will be disconnected.",()=>{hostClose(true);S.screen="home";save();render()},"Close room");
 $("lobbySettings").onclick=()=>{S.back="lobby";S.screen="settings";S.setTab=Object.keys(GAME_LBL).includes(S.game)?S.game:"karaoke";save();render()};
 
 // ---- Phone: controller client ----
@@ -2561,7 +2563,8 @@ $("setupBtn").onclick=()=>{S.screen="home";S.current=null;if(S.mode==="host"&&S.
 function boot(){
   try{const j=new URLSearchParams(location.search).get("join");if(j&&/^[A-Z0-9]{4}$/i.test(j)){history.replaceState(null,"",location.pathname);S.screen="join";S.back=null;
     setTimeout(()=>{$("joinCode").value=j.toUpperCase();try{$("joinName").value=localStorage.getItem("kc-name")||""}catch(e){}$("joinName").focus()},0)}}catch(e){}
-  if(SOLO_PH){document.documentElement.classList.add("soloctl");S.muted=true;const q=new URLSearchParams(location.search),code=(q.get("solo")||"").toUpperCase(),n=(q.get("n")||"You").slice(0,18);let p=null;try{p=JSON.parse(localStorage.getItem(PHK))}catch(e){}
+  if(SOLO_PH){document.documentElement.classList.add("soloctl");S.muted=true;const q=new URLSearchParams(location.search),code=(q.get("solo")||"").toUpperCase(),n=(q.get("n")||"You").slice(0,18),qp=(q.get("pid")||"").replace(/[^\w]/g,"").slice(0,16);let p=null;try{p=JSON.parse(localStorage.getItem(PHK))}catch(e){}
+    if(qp&&!(p&&p.code===code&&p.pid===qp)){p={code,pid:qp,name:n};try{localStorage.setItem(PHK,JSON.stringify(p))}catch(e){}}
     if(p&&p.code===code)S.screen="phone";else{S.screen="join";setTimeout(()=>joinRoom(code,n),300)}}
   if(S.screen==="phone"){let p=null;try{p=JSON.parse(localStorage.getItem(PHK))}catch(e){}
     if(p&&p.code&&p.pid&&NET_OK){PH={code:p.code,pid:p.pid,name:p.name,state:undefined};phoneConnect();let av=null;try{av=avClean(JSON.parse(localStorage.getItem("kc-avatar")))}catch(e){}db.patch(`rooms/${p.code}/members/${p.pid}`,av?{name:p.name,seen:TS,av}:{name:p.name,seen:TS}).catch(()=>{})}else S.screen="home"}
@@ -2906,7 +2909,9 @@ $("voiceOn").onchange=e=>{S.voiceOn=e.target.checked;save();if(!S.voiceOn){voQ=[
 $("tvOn").onchange=e=>{S.tvMode=e.target.checked;save();render()};
 $("tutOn").onchange=e=>{S.tutorials=e.target.checked;save()};
 $("tutReset").onclick=()=>{S.tutSeen={};save();toast("Tutorials will show again")};
-$("setTabs").onclick=e=>{const b=e.target.closest("[data-tab]");if(!b)return;S.setTab=b.dataset.tab;save();render()};
+$("setTabs").onclick=e=>{const b=e.target.closest("[data-tab]");if(!b)return;S.setTab=b.dataset.tab;save();render();
+  // jump to the start of that game's settings (just below the sticky tab row) and bring the chip into view
+  requestAnimationFrame(()=>{const sec=document.querySelector('#scrSettings section[data-tab="'+S.setTab+'"]:not([hidden])');const bar=$("setTabs");if(sec){const y=sec.getBoundingClientRect().top+scrollY-(bar?bar.offsetHeight:0)-10;window.scrollTo({top:Math.max(0,y),behavior:"smooth"})}try{b.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"})}catch(x){}})};
 // ---- phone side ----
 function impFetchPriv(round){if(!PH||PH.privBusy)return;PH.privBusy=true;PH.privTries=(PH.privTries||0)+1;
   db.get(`rooms/${PH.code}/private/${PH.pid}`).then(d=>{PH.privBusy=false;if(d&&d.n===round){PH.priv=d;PH.privTries=0;renderPhone()}else if(PH.privTries<8)setTimeout(()=>impFetchPriv(round),1000)}).catch(()=>{PH.privBusy=false;if(PH.privTries<8)setTimeout(()=>impFetchPriv(round),1500)})}
