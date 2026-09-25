@@ -1670,7 +1670,7 @@ const BASE = {1:10,2:10,3:10};
 
 // ---- State ----
 // the embedded solo controller (?solo=CODE) keeps its own saved state and phone login
-const SOLO_PH=/[?&]solo=/.test(location.search);
+const SOLO_PH=/[?&]solo=/.test(location.search);const SOLO_LOADV=Date.now().toString(36);
 const KEY="karaoke-challenge-en-v1"+(SOLO_PH?"-solo":""),PHK="kc-phone"+(SOLO_PH?"-solo":"");
 let S = {players:[], turn:0, cats:[...CATS], penalty:3, bonus:10, current:null, disabledArtists:[], hiddenArtists:[], log:[], used:[], customArtists:[], customCards:[], game:"karaoke", imp:null, impUsed:[], impQ:6, impDiscuss:90, impPts:20, impImpPts:20, ww:null, wwUsed:[], wwQ:10, autoMode:"ready", autoSec:10, auto:null, plays:{}, lcHand:5, lcChambers:6, lcDeals:8, lcTurnSec:30, lcCallSec:30, ucRounds:5, ucTime:180, ucPts:15, ucSpyPts:10, bpQ:8, bpTime:30, coQ:5, coShow:3, coTime:120, ctQ:6, ctTime:30, tiQ:5, tiImps:1, tiDiscuss:60, tiPts:20, tiImpPts:20, tiTurnSec:20, muQ:10, muClip:10, muAns:120, emRounds:1, emTime:60, emPts:5, emCustom:[], emCards:[], emMode:"cards", emQ:10, rounds:3, timerSec:15, mics:1, round:1, started:0, screen:"home", volume:0.7, muted:false, mode:"local", room:null, inGame:false, mvpBonus:10, awardBonus:10, vote:null, awards:null, awardsDone:false, timer:null, timerBuzzed:false, catsV:0, back:null, lastVote:null};
 let draft=null;
@@ -2202,7 +2202,7 @@ function soloSize(){const pane=$("soloPane"),fr=$("soloFrame");if(!pane||pane.hi
   // phone: shrink the host view until it fits above the controls
   const app=document.querySelector("body>.app");if(!app)return;const card=document.querySelector(".screen.on .impstage,.screen.on #stage");if(!ph||!innerHeight||!card){if(app.style.zoom)app.style.zoom="";return}let typing=false;try{const a=fr.contentDocument.activeElement;typing=!!a&&/^(INPUT|TEXTAREA)$/.test(a.tagName)&&a.type!=="range"}catch(e){}if(typing&&app.style.zoom)return;app.style.zoom="1";const need=app.scrollHeight+8,avail=innerHeight;app.style.zoom=String(Math.max(.7,Math.min(1,avail/need)).toFixed(3))}
 function renderSolo(){const on=!!(S.solo&&S.room&&S.mode==="host"&&!SOLO_PH&&S.screen!=="home");document.documentElement.classList.toggle("solo",on);if(!on){document.documentElement.classList.remove("soloph");const app=document.querySelector("body>.app");if(app&&app.style.zoom)app.style.zoom=""}const pane=$("soloPane"),fr=$("soloFrame");if(!pane)return;pane.hidden=!on;
-  if(!on){if(pane.dataset.src){pane.dataset.src="";fr.src="about:blank"}return}const src="./?solo="+S.room.code+"&n="+encodeURIComponent(S.solo.name||"You");{const sc=document.querySelector(".screen.on");const card=sc&&(sc.querySelector(".impstage")||sc.querySelector("#stage"));
+  if(!on){if(pane.dataset.src){pane.dataset.src="";fr.src="about:blank"}return}const src="./?solo="+S.room.code+"&n="+encodeURIComponent(S.solo.name||"You")+"&v="+SOLO_LOADV;{const sc=document.querySelector(".screen.on");const card=sc&&(sc.querySelector(".impstage")||sc.querySelector("#stage"));
     if(card){if(card.id==="stage"){if(pane.parentNode!==card)card.appendChild(pane)}else if(card.nextElementSibling!==pane)card.after(pane)}}
   if(pane.dataset.src!==src){pane.dataset.src=src;fr.src=src}
   if(!soloSizeT)soloSizeT=setInterval(()=>{if(!S.solo){clearInterval(soloSizeT);soloSizeT=null;return}soloSize()},400);
