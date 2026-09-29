@@ -511,6 +511,79 @@ html.soloph .mubox.mupic .mucover img.mufg{max-height:52vh}
 .wwcard .n{font-family:Anton,sans-serif;color:var(--gold);letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px}
 .wwcard ul{margin:0;padding-left:18px;font-size:14px;line-height:1.5}
 .phone .wwreview{grid-template-columns:1fr}
+
+/* ===== motion layer (2026-09): tokens, transitions, micro-interactions – all switched off by prefers-reduced-motion ===== */
+:root{--e-out:cubic-bezier(.22,1,.36,1);--e-spring:cubic-bezier(.34,1.56,.64,1);--e-io:cubic-bezier(.65,0,.35,1)}
+html{color-scheme:dark;-webkit-tap-highlight-color:transparent}
+button,a,input,label,select,.chip{touch-action:manipulation}
+body{min-height:100dvh}
+body::before{content:"";position:fixed;inset:-25%;z-index:-1;pointer-events:none;
+  background:radial-gradient(38% 32% at 18% 12%,rgba(47,111,214,.26),transparent 70%),radial-gradient(34% 30% at 86% 82%,rgba(224,182,76,.13),transparent 70%),radial-gradient(30% 26% at 70% 20%,rgba(91,147,236,.12),transparent 70%);
+  animation:fxAmb 32s var(--e-io) infinite alternate}
+@keyframes fxAmb{to{transform:translate3d(4%,-3%,0) rotate(8deg) scale(1.08)}}
+/* screens: soft scale-in (scale ≤ 1, so the TV auto-fit never measures a bigger page) */
+.screen.on{animation:fxScr .42s var(--e-out) both}
+@keyframes fxScr{from{opacity:0;transform:scale(.985)}}
+.screen.on .panel{animation:fxRise .5s var(--e-out) .06s both}
+@keyframes fxRise{from{opacity:0;transform:translateY(10px)}}
+.panel{border:1px solid rgba(255,255,255,.06);box-shadow:0 10px 30px rgba(0,0,0,.16)}
+/* buttons: lift on hover (pointer devices only), press, gold shine */
+.btn{position:relative;transition:transform .14s var(--e-out),box-shadow .2s ease,filter .2s ease,background-color .2s ease,opacity .2s ease}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important;box-shadow:none!important;filter:none!important}
+@media (hover:hover){.btn:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(0,0,0,.28);filter:brightness(1.07)}
+  .chip:hover{filter:brightness(1.15)}}
+.btn:not(:disabled):active{transform:translateY(0) scale(.96);transition-duration:.06s}
+.btn-gold{background:linear-gradient(180deg,#f2cd6b,var(--gold) 60%,#d3a63a);box-shadow:0 4px 14px rgba(224,182,76,.25);overflow:hidden}
+.btn-gold::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.55) 50%,transparent 65%);transform:translateX(-120%);pointer-events:none}
+@media (hover:hover){.btn-gold:not(:disabled):hover::after{transform:translateX(120%);transition:transform .7s var(--e-out)}}
+.chip{transition:background-color .2s ease,color .2s ease,border-color .2s ease,transform .14s var(--e-out),filter .2s ease}
+.chip:active{transform:scale(.95)}
+input,select,textarea{transition:box-shadow .2s ease,border-color .2s ease,background-color .2s ease}
+input:focus-visible,select:focus-visible,textarea:focus-visible{box-shadow:0 0 0 4px rgba(224,182,76,.25)}
+/* dialog + toast */
+.modal:not([hidden]){animation:fxFade .2s ease both;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.modal:not([hidden]) .box{animation:fxPop .38s var(--e-spring) both}
+@keyframes fxFade{from{opacity:0}}
+@keyframes fxPop{from{opacity:0;transform:translateY(12px) scale(.94)}}
+.toast{transition:opacity .2s ease,transform .45s var(--e-spring);box-shadow:0 12px 30px rgba(0,0,0,.35)}
+/* home */
+.home .deckart{animation:fxFloat 6s ease-in-out infinite}
+@keyframes fxFloat{50%{transform:translateY(-8px)}}
+.home .deckart .fan{transition:transform .5s var(--e-spring)}
+@media (hover:hover){.home .deckart:hover .f1{transform:rotate(-26deg) translateX(-46px)}.home .deckart:hover .f3{transform:rotate(26deg) translateX(46px)}.home .deckart:hover .f2{transform:translateY(-18px)}}
+.screen.on .home .title{animation:fxRise .6s var(--e-out) .08s both}
+.home .title span{text-shadow:0 0 28px rgba(47,111,214,.55)}
+.screen.on .home .menu>*{animation:fxRise .5s var(--e-out) both}
+.screen.on .home .menu>*:nth-child(1){animation-delay:.12s}.screen.on .home .menu>*:nth-child(2){animation-delay:.17s}.screen.on .home .menu>*:nth-child(3){animation-delay:.22s}.screen.on .home .menu>*:nth-child(4){animation-delay:.27s}.screen.on .home .menu>*:nth-child(5){animation-delay:.32s}.screen.on .home .menu>*:nth-child(n+6){animation-delay:.36s}
+/* lists: hover, new entries, score chips */
+@media (hover:hover){.screen li:has(>.name){transition:background-color .2s ease}}
+li.fxin{animation:fxIn .45s var(--e-spring) both}
+@keyframes fxIn{from{opacity:0;transform:translateX(-14px) scale(.96)}}
+li:has(>.fxdelta){position:relative}
+.pts.fxbump{display:inline-block;animation:fxBump .6s var(--e-spring)}
+@keyframes fxBump{35%{transform:scale(1.45);color:var(--gold)}}
+.fxdelta{position:absolute;right:8px;top:50%;pointer-events:none;font-weight:900;font-size:14px;color:#14223f;background:var(--gold);padding:2px 8px;border-radius:999px;box-shadow:0 4px 12px rgba(0,0,0,.3);animation:fxDelta 1.4s var(--e-out) both}
+.fxdelta.neg{background:#e06a6a;color:#fff}
+@keyframes fxDelta{0%{opacity:0;transform:translateY(-10%) scale(.6)}15%{opacity:1;transform:translateY(-60%) scale(1.1)}70%{opacity:1;transform:translateY(-110%) scale(1)}100%{opacity:0;transform:translateY(-170%) scale(.95)}}
+.podium li{animation:fxRise .55s var(--e-spring) both}
+.podium li:nth-child(1){animation-delay:.35s}.podium li:nth-child(2){animation-delay:.2s}.podium li:nth-child(3){animation-delay:.1s}
+.podium li:first-child{background:linear-gradient(110deg,var(--gold) 40%,#fbe7a8 50%,var(--gold) 60%);background-size:250% 100%;animation:fxRise .55s var(--e-spring) .35s both,fxSheen 3.5s linear 1s infinite}
+@keyframes fxSheen{from{background-position:100% 0}to{background-position:-150% 0}}
+/* Guess the Song: reveal + last 10 seconds */
+.mubox.fxrev .mufg{animation:fxZoom .7s var(--e-spring) var(--fxd,0s) both}
+.mubox.fxrev .mubg{animation:fxFade .8s ease var(--fxd,0s) both}
+#muStage.fxrev>*{animation:fxRise .5s var(--e-out) var(--fxd,0s) both}
+#muStage.fxrev>*:nth-child(2){animation-delay:calc(var(--fxd,0s) + .08s)}#muStage.fxrev>*:nth-child(3){animation-delay:calc(var(--fxd,0s) + .14s)}#muStage.fxrev>*:nth-child(n+4){animation-delay:calc(var(--fxd,0s) + .2s)}
+@keyframes fxZoom{from{opacity:0;transform:scale(.8)}}
+#muLeft.urgent{color:#ff7b7b;display:inline-block;animation:fxBeat 1s ease-in-out infinite}
+@keyframes fxBeat{15%{transform:scale(1.12)}30%{transform:scale(1)}}
+/* phone feedback */
+.fxshake{animation:fxShake .42s cubic-bezier(.36,.07,.19,.97) both}
+@keyframes fxShake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.fxok{animation:fxOk .8s var(--e-out) both}
+@keyframes fxOk{0%{box-shadow:0 0 0 0 rgba(63,166,107,.7)}100%{box-shadow:0 0 0 18px rgba(63,166,107,0)}}
+#fxConfetti{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:80}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;animation-delay:0s!important;transition-duration:.01ms!important}body::before{animation:none}}
 </style>
 </head>
 <body>
@@ -2437,7 +2510,7 @@ function phAvEditor(){const a=phAv(),cur=a||avDefault();const open=!a||(PH&&PH.a
   return `<details class="aved"${open?" open":""}><summary>${a?avHtml({av:a},true)+" <b>Your avatar</b><span class='hint' style='margin:0 0 0 auto'>change</span>":"👤 <b>Choose your avatar</b>"}</summary>
   <div class="avlbl">Boys</div><div class="avgrid">${thumbs(AV_KINDS.slice(0,10))}</div><div class="avlbl">Girls</div><div class="avgrid">${thumbs(AV_KINDS.slice(10))}</div>
   <div class="avlbl">Skin</div><div class="avrow">${sw("avs",AV_SKIN,a&&a.s)}</div><div class="avlbl">Hair</div><div class="avrow">${sw("avh",AV_HAIR,a&&a.h)}</div><div class="avlbl">Clothes</div><div class="avrow">${sw("avc",AV_CLOTH,a&&a.c)}</div></details>`}
-const APPV="v1790372704";
+const APPV="v1790697833";
 function phVerHint(){let el=$("phVer");const st=PH&&PH.state;const bad=S.screen==="phone"&&!SOLO_PH&&st&&st.av&&(+String(st.av).slice(1)||0)>(+String(APPV).slice(1)||0)&&(st.phase==="lobby"||st.phase==="final");if(!bad){if(el)el.remove();return}if(!el){el=document.createElement("div");el.id="phVer";el.className="phver";el.innerHTML='The app was updated – <button class="btn btn-ghost" type="button">Reload</button>';el.querySelector("button").onclick=()=>location.reload();document.body.appendChild(el)}}
 function renderPhone0(){if(S.screen!=="phone"||!PH)return;const st=PH.state;const body=$("phBody");
   $("phRoom").textContent="Room "+PH.code;$("phDot").className="dot"+(st&&!PH.err?" on":"");
@@ -3494,11 +3567,11 @@ function renderMu(){if(S.screen!=="mu"||S.game!=="music"){clearInterval(muT);muT
     else if(MUX.busy==null&&MUX.ready&&MUX.readySi===m.si){MUX.busy=m.si;const si0=m.si,r0=MUX.ready;setTimeout(()=>muAfterPrep(si0,r0),0)}box.className="mubox load";cov.innerHTML=`<div class="mueq"><i></i><i></i><i></i><i></i><i></i></div>`;st.innerHTML=`<div class="lbl">🎧 Getting the next song ready…</div><div class="hint" style="margin:0">${esc(s[0])}</div><div class="hint" id="muLoadT" style="margin:0"></div><div class="row"><button class="btn btn-ghost" id="muSkip">Skip</button><button class="btn btn-ghost murep" id="muRepBtn">⚑ Report</button></div>`;clearInterval(MUX.loadIv);const tick=()=>{const q=S.mu,el=$("muLoadT");if(!q||q.phase!=="load"||S.screen!=="mu"||!el){clearInterval(MUX.loadIv);return}const n=Math.floor((Date.now()-(q.loadAt||Date.now()))/1000);el.textContent=n<5?"":n<15?`Still loading… ${n} s`:`Taking long (${n} s) – YouTube may be playing an ad in the background. Tap Skip for another song.`};tick();MUX.loadIv=setInterval(tick,1000)}
   else if(m.phase==="play"||m.phase==="answer"){box.className="mubox play";if(!cov.querySelector(".mueq.on"))cov.innerHTML=`<div class="mueq on"><i></i><i></i><i></i><i></i><i></i></div>`;const left=Math.max(0,Math.ceil(((m.phase==="play"?m.end:m.ansEnd)-Date.now())/1000));
     const rIn=m.replayAt&&!m.replayed&&!m.last?Math.max(0,Math.ceil((m.replayAt-Date.now())/1000)):null;st.innerHTML=`<div class="lbl">${m.last?"Someone got it – last seconds!":m.replayed?"Here it is again – the song plays until the time is up":"Listen! Type "+(m.two?F[0].toLowerCase()+" and "+F[1].toLowerCase():F[0].toLowerCase())+(S.solo?" below":" on your phones")} · ${esc(s[0])}</div><div class="timer"><span id="muLeft">${fmtT(left)}</span></div>${rIn!=null?`<div class="hint" style="margin:0">🔁 The whole song plays in <b id="muRep">${rIn}</b> s if nobody has it yet</div>`:""}<div class="mustat"><span>${esc(F[0])} ✓ <b>${okN("a")}</b></span>${m.two?`<span>${esc(F[1])} ✓ <b>${okN("b")}</b></span>`:""}</div><div class="bar"><i style="width:${pl.length?Math.round(100*nA/pl.length):0}%"></i></div><div class="hint" style="margin:0">${nA} of ${pl.length} done · ${esc(F[0])}: unlimited tries${m.two?` · ${esc(F[1])}: ${MU_TRIES_B} tries`:""}</div><div class="row"><button class="btn btn-ghost" id="muPlayNow">🔊 Play the song</button><button class="btn btn-ghost" id="muRevealNow">Reveal now</button><button class="btn btn-ghost" id="muSkip">Skip song</button><button class="btn btn-ghost murep" id="muRepBtn">⚑ Report</button></div>`}
-  else{box.className="mubox res"+(MU_IMG[s[1]]?" mupic":"");cov.innerHTML=MU_IMG[s[1]]?`<img class="mubg" src="${esc(MU_IMG[s[1]])}" alt="" onerror="this.remove()"><img class="mufg" src="${esc(MU_IMG[s[1]])}" alt="" onerror="const b=this.closest('.mubox');if(b)b.classList.remove('mupic');this.remove()">`:`<div class="mueq"><i></i><i></i><i></i><i></i><i></i></div>`;const r=m.res||{};r.rows=r.rows||[];
+  else{if(MUX.fxRev!==m.si){MUX.fxRev=m.si;MUX.fxRevT=Date.now()}const fage=Date.now()-(MUX.fxRevT||0),fr=fage<1000;box.className="mubox res"+(MU_IMG[s[1]]?" mupic":"")+(fr?" fxrev":"");st.classList.toggle("fxrev",fr);box.style.setProperty("--fxd",-fage+"ms");st.style.setProperty("--fxd",-fage+"ms");cov.innerHTML=MU_IMG[s[1]]?`<img class="mubg" src="${esc(MU_IMG[s[1]])}" alt="" onerror="this.remove()"><img class="mufg" src="${esc(MU_IMG[s[1]])}" alt="" onerror="const b=this.closest('.mubox');if(b)b.classList.remove('mupic');this.remove()">`:`<div class="mueq"><i></i><i></i><i></i><i></i><i></i></div>`;const r=m.res||{};r.rows=r.rows||[];
     const cell=(g,ok,p)=>g?`<span class="${ok?"ok":"no"}">${ok?"✓":"✗"}${p?` <b>+${p}</b>`:""} ${esc(g)}</span>`:`<span class="no">–</span>`;
     st.innerHTML=`<div class="lbl">It was</div><div class="q">${esc(s[4])}</div>${s[5]?`<div class="hint" style="margin:0">${esc(s[5])}</div>`:""}<div class="murows">${r.rows.map(x=>`<div class="murow${m.two?"":" one"}"><b>${esc((S.players[x.i]||{}).name||"?")}</b>${cell(x.ga,x.oka,x.pa)}${m.two?cell(x.gb,x.okb,x.pb):""}</div>`).join("")||`<div class="hint">No answers.</div>`}</div><div class="row"><button class="btn btn-ghost" id="muMore">▶ Keep listening</button><button class="btn btn-ghost murep" id="muRepBtn">⚑ Report song</button><button class="btn btn-gold" id="muNextBtn" style="font-size:18px;padding:14px 22px">${S.round>=S.muQ?"🏆 Show results":"Next song ▸"}</button></div>`+autoHtml()}
   if(!muT&&(m.phase==="play"||m.phase==="answer"))muT=setInterval(()=>{const q=S.mu;if(!q||(q.phase!=="play"&&q.phase!=="answer")||S.screen!=="mu"){clearInterval(muT);muT=null;return}const now=Date.now();
-    const l=Math.max(0,Math.ceil(((q.phase==="play"?q.end:q.ansEnd)-now)/1000));const e=$("muLeft");if(e)e.textContent=fmtT(l);const er=$("muRep");if(er&&q.replayAt)er.textContent=Math.max(0,Math.ceil((q.replayAt-now)/1000));if(now>=(q.phase==="play"?q.end:q.ansEnd)){clearInterval(muT);muT=null;muReveal()}},200);
+    const l=Math.max(0,Math.ceil(((q.phase==="play"?q.end:q.ansEnd)-now)/1000));const e=$("muLeft");if(e){e.textContent=fmtT(l);e.classList.toggle("urgent",l<=10&&l>0)}const er=$("muRep");if(er&&q.replayAt)er.textContent=Math.max(0,Math.ceil((q.replayAt-now)/1000));if(now>=(q.phase==="play"?q.end:q.ansEnd)){clearInterval(muT);muT=null;muReveal()}},200);
   bind("muSkip",()=>ask("Skip this song? The round doesn't count.",()=>{muStop();S.round--;muNext()},"Skip"));bind("muRevealNow",()=>ask("Reveal the song now?",()=>{clearInterval(muT);muT=null;muReveal()},"Reveal"));bind("muPlayNow",()=>{const q=S.mu;if(!q||q.phase!=="play")return;clearTimeout(MUX.loopT);if(!q.replayed){q.replayed=true;save();render()}muReplayPlay(Math.max(1,(q.end-Date.now())/1000+1))});bind("muNextBtn",()=>{muStop();muNext()});bind("muMore",()=>{muPlayFor(20,false)});bind("muRepBtn",()=>{const q=S.mu;if(q){const si=q.si;muReport(si,r=>muSendReport(si,r))}})}
 $("muHome").onclick=()=>{muStop();S.screen="home";save();render()};
 $("muEnd").onclick=()=>ask("End the game now and show the results?",()=>{muStop();finish()},"End game");
@@ -3531,6 +3604,7 @@ function phMuBind(st){const f=$("muForm");if(!f)return;{const cb=f.querySelector
   [A,B].forEach(el=>{if(!el||el.disabled)return;if(!el.value&&PH.muDraft[el.id])el.value=PH.muDraft[el.id];el.addEventListener("input",()=>{PH.muDraft[el.id]=el.value})});const cat=m.cat;const pop=!/^Anime|^Disney|^Studio Ghibli/.test(cat);
   // no suggestions for artist or title
   const fbA=((m.fb||{})[PH.pid]||{}).a,fbB=((m.fb||{})[PH.pid]||{}).b;
+  {const k=(m.round||0)+":"+m.si,pv=PH.fxMu&&PH.fxMu.k===k?PH.fxMu:{k};[[A,fbA,"a"],[B,fbB,"b"]].forEach(([el,x,f])=>{if(!x)return;const p=pv[f];if(p&&el){if(x.ok&&!p.ok)fxGood(el.closest("label")||el);else if(!x.ok&&(x.n||0)>(p.n||0))fxBad(el)}pv[f]={n:x.n||0,ok:!!x.ok}});PH.fxMu=pv}
   // a wrong answer is cleared right away (after the input restore of renderPhone) – title as well as artist / anime / movie
   [[A,fbA,"muA"],[B,fbB,"muB"]].forEach(([el,x,id])=>{if(el&&!el.disabled&&x&&!x.ok&&x.g)setTimeout(()=>{if(el.isConnected&&muSq(el.value)===muSq(x.g)){el.value="";if(PH.muDraft)PH.muDraft[id]=""}},0)});
   // no title suggestions (Quan: players should know the title themselves)
@@ -4075,6 +4149,33 @@ async function checkUpdates(){const b=$("updBtn");if(b)b.disabled=true;toast("Ch
 let deferredInstall=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e;const b=document.getElementById("installBtn");if(b){b.hidden=false;b.onclick=()=>{deferredInstall.prompt();deferredInstall=null;b.hidden=true}}});
 
 boot();
+
+// ===== motion layer: leaderboard FLIP + score chips, new entries, confetti on final/evening, haptics =====
+const FX={rm:window.matchMedia?matchMedia("(prefers-reduced-motion: reduce)"):{matches:false},bump:new Map(),scr:null,phFin:null};
+function fxOff(){return FX.rm.matches}
+function fxVib(p){try{if(navigator.vibrate)navigator.vibrate(p)}catch(e){}}
+function fxAnim(el,cls){if(!el||fxOff())return;el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);setTimeout(()=>el.classList.remove(cls),900)}
+function fxBad(el){fxAnim(el,"fxshake");fxVib(70)}
+function fxGood(el){fxAnim(el,"fxok");fxVib([25,40,25])}
+function fxRows(){const out=new Map();document.querySelectorAll(".screen.on li, #phBody li").forEach(li=>{const n=li.querySelector(".name");if(!n||!li.offsetParent)return;const l=li.parentElement;const key=(l.id||l.className||"list")+"|"+n.textContent.trim();if(!out.has(key))out.set(key,li)});return out}
+function fxNum(li){const p=li.querySelector(".pts");if(!p)return null;const v=parseInt(p.textContent,10);return isNaN(v)?null:v}
+function fxSnap(){const m=new Map();fxRows().forEach((li,k)=>m.set(k,{y:li.getBoundingClientRect().top,v:fxNum(li)}));return m}
+function fxAfter(prev){const now=Date.now();const rows=fxRows();const lists=new Set([...prev.keys()].map(k=>k.split("|")[0]));
+  rows.forEach((li,k)=>{const p=prev.get(k);const v=fxNum(li);
+    if(!p){if(lists.has(k.split("|")[0])&&!fxOff())li.classList.add("fxin");return}
+    const dy=p.y-li.getBoundingClientRect().top;if(Math.abs(dy)>2&&!fxOff()&&li.animate)li.animate([{transform:`translateY(${dy}px)`},{transform:"none"}],{duration:520,easing:"cubic-bezier(.22,1,.36,1)"});
+    if(p.v!=null&&v!=null&&v!==p.v)FX.bump.set(k,{d:v-p.v,t:now})});
+  // score chip stays visible across re-renders for its 1.4 s
+  rows.forEach((li,k)=>{const b=FX.bump.get(k);if(!b)return;const age=now-b.t;if(age>1400){FX.bump.delete(k);return}if(fxOff()||li.querySelector(".fxdelta"))return;
+    const c=document.createElement("span");c.className="fxdelta"+(b.d<0?" neg":"");c.textContent=(b.d>0?"+":"")+b.d;c.style.animationDelay=(-age)+"ms";li.appendChild(c);
+    const pe=li.querySelector(".pts");if(pe&&age<600){pe.classList.add("fxbump");pe.style.animationDelay=(-age)+"ms"}})}
+function fxConfetti(){if(fxOff()||document.getElementById("fxConfetti"))return;const cv=document.createElement("canvas");cv.id="fxConfetti";document.body.appendChild(cv);const dpr=Math.min(2,window.devicePixelRatio||1);const W=cv.width=innerWidth*dpr,H=cv.height=innerHeight*dpr;const g=cv.getContext("2d");
+  const cols=["#e0b64c","#5b93ec","#3fa66b","#f3efe6","#e06a6a","#b98cf0"];const P=[];for(let i=0;i<170;i++){const left=i%2===0;P.push({x:left?-10*dpr:W+10*dpr,y:H*(.55+Math.random()*.35),vx:(left?1:-1)*(6+Math.random()*9)*dpr,vy:-(10+Math.random()*12)*dpr,r:(4+Math.random()*5)*dpr,a:Math.random()*6.3,va:(Math.random()-.5)*.3,c:cols[i%cols.length],s:Math.random()<.5})}
+  const t0=performance.now();const step=t=>{const e=t-t0;g.clearRect(0,0,W,H);for(const p of P){p.vy+=.35*dpr;p.vx*=.992;p.x+=p.vx;p.y+=p.vy;p.a+=p.va;g.save();g.translate(p.x,p.y);g.rotate(p.a);g.globalAlpha=Math.max(0,1-e/3600);g.fillStyle=p.c;if(p.s)g.fillRect(-p.r,-p.r*.45,p.r*2,p.r*.9);else{g.beginPath();g.arc(0,0,p.r*.6,0,6.3);g.fill()}g.restore()}if(e<3600)requestAnimationFrame(step);else cv.remove()};requestAnimationFrame(step)}
+{const r0=render;render=function(){const prev=fxSnap();const out=r0.apply(this,arguments);try{fxAfter(prev);if(S.screen!==FX.scr){const was=FX.scr;FX.scr=S.screen;if(was!==null&&(S.screen==="final"||S.screen==="eve"))setTimeout(fxConfetti,350)}}catch(e){}return out}}
+{const r1=renderPhone;renderPhone=function(){const prev=fxSnap();const out=r1.apply(this,arguments);try{fxAfter(prev);const st=PH&&PH.state;const fin=st&&(st.phase==="final"||st.phase==="evening")?(PH.code||"")+st.phase:null;if(fin&&fin!==FX.phFin){FX.phFin=fin;setTimeout(fxConfetti,350);fxVib([30,50,30,50,60])}if(!fin)FX.phFin=null}catch(e){}return out}}
+// light haptic tick on phones for every button press
+document.addEventListener("pointerdown",e=>{if(e.pointerType!=="touch")return;const b=e.target.closest(".btn,.chip");if(b&&!b.disabled&&(S.screen==="phone"||SOLO_PH))fxVib(8)},{passive:true});
 </script>
 
 </body>
