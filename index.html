@@ -598,6 +598,22 @@ li:has(>.fxdelta){position:relative}
     -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%)}
   .settabs .chip{flex:0 0 auto!important;min-height:40px;padding:8px 14px;scroll-snap-align:center}
   .settabs .chip:first-child{margin-left:10px}.settabs .chip:last-child{margin-right:10px}}
+/* settings: 4 main tabs + game picker */
+.settabs.setcats{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;overflow:visible;-webkit-mask-image:none;mask-image:none;margin:-6px 0 10px}
+.settabs.setcats .chip{flex-direction:row;gap:8px;margin:0!important;min-height:46px}
+.settabs.setcats .chip .ic{font-size:18px;line-height:1}
+@media (max-width:700px){.settabs.setcats{margin:-6px -4px 10px;padding:5px}.settabs.setcats .chip{flex-direction:column;gap:2px;padding:6px 2px;font-size:12px;min-height:52px}.settabs.setcats .chip .ic{font-size:20px}}
+.setgames{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px;margin:0 0 14px}
+.setgames[hidden]{display:none!important}
+.sgame{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:74px;padding:10px 6px;border-radius:14px;background:var(--ground-2);color:var(--muted);font:800 13px Nunito,system-ui,sans-serif;border:2px solid transparent;text-align:center;line-height:1.15;
+  transition:transform .18s var(--e-spring,ease),border-color .2s ease,color .2s ease,background-color .2s ease,box-shadow .2s ease}
+.sgame .ic{font-size:26px;line-height:1;transition:transform .25s var(--e-spring,ease)}
+@media (hover:hover){.sgame:not(.on):hover{color:var(--ink);transform:translateY(-2px);box-shadow:0 8px 18px rgba(0,0,0,.25)}.sgame:hover .ic{transform:scale(1.12) rotate(-4deg)}}
+.sgame:active{transform:scale(.96)}
+.sgame.on{color:var(--ink);border-color:var(--gold);background:linear-gradient(180deg,rgba(224,182,76,.18),rgba(224,182,76,.06)),var(--ground-2);box-shadow:0 6px 18px rgba(224,182,76,.18)}
+.sgame.on .ic{transform:scale(1.1)}
+.sgame:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+@media (max-width:700px){.setgames{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.sgame{min-height:66px;font-size:12px}.sgame .ic{font-size:22px}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;animation-delay:0s!important;transition-duration:.01ms!important}body::before{animation:none}}
 </style>
 </head>
@@ -795,13 +811,14 @@ li:has(>.fxdelta){position:relative}
 <!-- SETTINGS SCREEN -->
 <div class="screen setup" id="scrSettings">
   <div class="topbar"><button class="btn btn-ghost" id="settingsBack">← Back</button><span class="round">Settings</span></div>
-  <div class="gamesel settabs" id="setTabs"><button class="chip" data-tab="karaoke" type="button">🎤 Karaoke</button><button class="chip" data-tab="imposter" type="button">🕵️ Imposter</button><button class="chip" data-tab="whowould" type="button">🤔 Who Would</button><button class="chip" data-tab="liars" type="button">🃏 Liar's Cards</button><button class="chip" data-tab="undercover" type="button">🕶️ Undercover</button><button class="chip" data-tab="ballpark" type="button">📊 Ballpark</button><button class="chip" data-tab="emoji" type="button">🎌 Emoji</button><button class="chip" data-tab="color" type="button">🎨 Color</button><button class="chip" data-tab="colortoon" type="button">🖍️ Color Toon</button><button class="chip" data-tab="timeimp" type="button">⏱️ Time Imposter</button><button class="chip" data-tab="music" type="button">🎵 Guess the Song</button><button class="chip" data-tab="general" type="button">⚙ General</button></div>
-  <section class="panel" data-tab="karaoke">
+  <div class="gamesel settabs setcats" id="setTabs" role="tablist" aria-label="Settings"><button class="chip" data-cat="general" type="button" role="tab"><span class="ic">⚙️</span><span>General</span></button><button class="chip" data-cat="sound" type="button" role="tab"><span class="ic">🔊</span><span>Sound</span></button><button class="chip" data-cat="display" type="button" role="tab"><span class="ic">📺</span><span>Display</span></button><button class="chip" data-cat="gameplay" type="button" role="tab"><span class="ic">🎮</span><span>Gameplay</span></button></div>
+  <div class="setgames" id="setGames" role="tablist" aria-label="Game"><button class="sgame" data-tab="karaoke" type="button" role="tab"><span class="ic">🎤</span><span>Karaoke</span></button><button class="sgame" data-tab="imposter" type="button" role="tab"><span class="ic">🕵️</span><span>Imposter</span></button><button class="sgame" data-tab="whowould" type="button" role="tab"><span class="ic">🤔</span><span>Who Would</span></button><button class="sgame" data-tab="liars" type="button" role="tab"><span class="ic">🃏</span><span>Liar's Cards</span></button><button class="sgame" data-tab="undercover" type="button" role="tab"><span class="ic">🕶️</span><span>Undercover</span></button><button class="sgame" data-tab="ballpark" type="button" role="tab"><span class="ic">📊</span><span>Ballpark</span></button><button class="sgame" data-tab="emoji" type="button" role="tab"><span class="ic">🎌</span><span>Emoji</span></button><button class="sgame" data-tab="color" type="button" role="tab"><span class="ic">🎨</span><span>Color</span></button><button class="sgame" data-tab="colortoon" type="button" role="tab"><span class="ic">🖍️</span><span>Color Toon</span></button><button class="sgame" data-tab="timeimp" type="button" role="tab"><span class="ic">⏱️</span><span>Time Imposter</span></button><button class="sgame" data-tab="music" type="button" role="tab"><span class="ic">🎵</span><span>Guess the Song</span></button></div>
+  <section class="panel" data-tab="karaoke" data-cat="gameplay">
     <h2 style="display:flex;justify-content:space-between;align-items:center">Categories <button class="chip" id="catsAll" type="button">All / none</button></h2>
     <div class="catgrid" id="filters"></div>
     <p class="hint" id="deckSize"></p>
   </section>
-  <section class="panel" data-tab="karaoke">
+  <section class="panel" data-tab="karaoke" data-cat="gameplay">
     <h2 style="display:flex;justify-content:space-between;align-items:center">Artists <button class="chip" id="artistsToggle" type="button">⚙ Config</button></h2>
     <div id="artistsCfg" hidden>
       <p class="hint" style="display:flex;justify-content:space-between;align-items:center;margin:0 0 8px">Built-in artists <span style="display:flex;gap:6px"><button class="chip" id="artistsRestore" type="button" hidden>↩ Restore</button><button class="chip" id="artistsAll" type="button">All / none</button></span></p>
@@ -817,7 +834,7 @@ li:has(>.fxdelta){position:relative}
     </div>
     <p class="hint" id="artistsSummary"></p>
   </section>
-  <section class="panel" data-tab="karaoke">
+  <section class="panel" data-tab="karaoke" data-cat="gameplay">
     <h2>Build your own cards</h2>
     <form class="owncard" id="cardForm">
       <input id="cardText" placeholder="Your challenge, e.g. Sing a love song to {P}" maxlength="120" autocomplete="off">
@@ -829,7 +846,7 @@ li:has(>.fxdelta){position:relative}
     <div class="owncards" id="cardList"></div>
     <p class="hint" id="cardHint">Your cards join the deck under the category you choose (or "Your cards"). They stay on this device. Tip: write {P} where a random player's name should go, e.g. "Sing a duet with {P}".</p>
   </section>
-  <section class="panel" data-tab="imposter">
+  <section class="panel" data-tab="imposter" data-cat="gameplay">
     <h2>🕵️ Imposter</h2>
     <div class="rules">
       <label>Questions per game (rounded up so everyone is the imposter equally often) <input type="number" id="impQ" value="6" min="1" max="150"></label>
@@ -840,14 +857,14 @@ li:has(>.fxdelta){position:relative}
     </div>
     <p class="hint">Everyone answers a question on their phone while one player secretly gets a different question. The real question and all answers are revealed, the group discusses, then everyone votes. Votes are final: like skribbl.io the fastest correct vote gets the full points, later correct votes get less (20, 15, 12, 10 …). The imposter gets points for every player fooled. 150 question pairs.</p>
   </section>
-  <section class="panel" data-tab="whowould">
+  <section class="panel" data-tab="whowould" data-cat="gameplay">
     <h2>🤔 Who Would</h2>
     <div class="rules">
       <label>Questions per game <input type="number" id="wwQ" value="10" min="1" max="150"></label>
     </div>
     <p class="hint">"Who would most likely …" – everyone votes for a player on their phone. No points: whoever gets the most votes collects the card, and the review at the end shows who got what. 150 questions.</p>
   </section>
-  <section class="panel" data-tab="liars">
+  <section class="panel" data-tab="liars" data-cat="gameplay">
     <h2>🃏 Liar's Cards</h2>
     <div class="rules">
       <label>Cards per player <input type="number" id="lcHand" value="5" min="3" max="8"></label>
@@ -858,7 +875,7 @@ li:has(>.fxdelta){position:relative}
     </div>
     <p class="hint">Like Liar's Bar, with points instead of a revolver: a table card (Queen, King or Ace) is announced and everyone gets cards on their phone. On your turn play 1–3 cards face down and claim they are the table card – Jokers count as anything. After every play there is a call window (30 s by default): everyone can call Liar! or tap "I believe it" (it closes early when everyone has decided). The pot starts at 20 points and grows by 5 with every second play in this deal, so the longer nobody calls, the bigger it gets. If it was a lie, the first caller gets the whole pot, the next ones 75 %, 50 %, 25 %, and the liar loses half the pot. If it was honest, every caller loses half the pot plus 5 and the player gets half the pot. Nobody calls? The next player plays. Every bluffed card nobody catches earns +5 – counted secretly and paid at the end of the deal. The first player of a deal to run out of cards gets +10. After a call a new deal starts; after the set number of deals the highest score wins. The deck grows with the player count (2–8 players, one phone each).</p>
   </section>
-  <section class="panel" data-tab="undercover">
+  <section class="panel" data-tab="undercover" data-cat="gameplay">
     <h2>🕶️ Undercover</h2>
     <div class="rules">
       <label>Rounds <input type="number" id="ucRounds" value="5" min="1" max="30"></label>
@@ -869,7 +886,7 @@ li:has(>.fxdelta){position:relative}
     </div>
     <p class="hint">Everyone gets the same secret topic on their phone – except the spy, who gets nothing. A random player asks the first question, then ask each other about the topic: vague enough to keep the spy lost, clear enough not to look like the spy. Then vote. If the spy gets the most votes, everyone who voted for them scores; if the spy gets away, the spy scores (a tie pays nobody). Finally the spy picks the topic from six options: right guess +10, or +5 if they were caught. Feeling brave? During the talk the spy can guess early on their phone (nobody sees it): the sooner, the more points (20 down to 5), but a wrong early guess costs 5 and there is no second chance. The spy role rotates so everyone gets it equally often. 140 topics.</p>
   </section>
-  <section class="panel" data-tab="ballpark">
+  <section class="panel" data-tab="ballpark" data-cat="gameplay">
     <h2>📊 Ballpark</h2>
     <div class="rules">
       <label>Questions per game <input type="number" id="bpQ" value="8" min="1" max="100"></label>
@@ -877,7 +894,7 @@ li:has(>.fxdelta){position:relative}
     </div>
     <p class="hint">A question with a percentage as the answer. Everyone guesses 0–100 on their phone. All guesses appear on a number line, then the truth: points by distance like skribbl.io – closest 20, then 15, 12, 10, 8, 6, 4, 2 (equal distance = equal points). 100 questions.</p>
   </section>
-  <section class="panel" data-tab="emoji">
+  <section class="panel" data-tab="emoji" data-cat="gameplay">
     <h2>🎌 Emoji Pictionary</h2>
     <div class="rules">
       <label>Mode <select id="emMode"><option value="cards">Ready-made emoji cards – guess the movie</option><option value="draw">Players draw live with emojis</option></select></label>
@@ -911,7 +928,7 @@ li:has(>.fxdelta){position:relative}
     <label class="hint" style="display:flex;gap:8px;align-items:center;cursor:pointer"><input type="checkbox" id="emCBuiltin" checked> Also use the built-in anime titles and cards</label>
     <p class="hint">One player secretly gets an anime series or movie and describes it with emojis only. The host screen shows the emojis, everyone else types guesses on their phone. First correct guess: points for the guesser and the artist. Halfway through the time a hint appears (word count and first letter). Five guesses per player and title. Scoring like skribbl.io: after the first correct guess the answer stays hidden and everyone else has 10–30 more seconds (set above); points by order – 1st 20, 2nd 15, 3rd 12, 4th 10, 5th 8 … In draw mode the artist gets the set points per correct guesser, plus one extra bonus if everyone got it. 168 built-in titles (anime and TV series) for draw mode and 172 built-in emoji cards (movies, anime and TV series) for cards mode – add your own (movies, songs, whatever) above, they stay on this device. In cards mode nobody draws: the host shows a card and everyone guesses – every correct guess scores by order.</p>
   </section>
-  <section class="panel" data-tab="color">
+  <section class="panel" data-tab="color" data-cat="gameplay">
     <h2>🎨 Color</h2>
     <div class="rules">
       <label>Rounds <input type="number" id="coQ" value="5" min="1" max="20"></label>
@@ -920,7 +937,7 @@ li:has(>.fxdelta){position:relative}
     </div>
     <p class="hint">Like dialed.gg's color: a color appears on the host screen for a few seconds, then everyone rebuilds it from memory on their phone with hue, saturation and brightness sliders. Scored 0–10 per round by how close it looks (CIEDE2000 color difference) – worth up to 20 points.</p>
   </section>
-  <section class="panel" data-tab="colortoon">
+  <section class="panel" data-tab="colortoon" data-cat="gameplay">
     <h2>🖍️ Color Toon</h2>
     <div class="rules">
       <label>Rounds <input type="number" id="ctQ" value="6" min="1" max="30"></label>
@@ -928,7 +945,7 @@ li:has(>.fxdelta){position:relative}
     </div>
     <p class="hint">A cartoon, game or anime character appears with one part hatched – Pikachu's cheeks, Mario's overalls, Goku's gi, Tanjiro's checks… Everyone colors it in on their phone from memory. Scored like Color: 0–10 per round, worth up to 20 points. 143 official pictures (Pokémon, Nintendo, Sonic, Disney, Digimon, Dragon Ball, Naruto, Demon Slayer …) loaded from Wikipedia and fan wikis while you play (needs internet, nothing is stored in this app). If a picture does not load, another one is chosen.</p>
   </section>
-  <section class="panel" data-tab="timeimp">
+  <section class="panel" data-tab="timeimp" data-cat="gameplay">
     <h2>⏱️ Time Imposter</h2>
     <div class="rules">
       <label>Rounds (rounded up so everyone is the imposter equally often) <input type="number" id="tiQ" value="5" min="1" max="20"></label>
@@ -940,7 +957,7 @@ li:has(>.fxdelta){position:relative}
     </div>
     <p class="hint">Everyone gets a secret time on their phone (2–8 seconds) – except the imposter. One after another, everyone holds their button that long while the host screen shows a growing bar without numbers. The imposter never goes first, so they can watch and copy. Then all times are revealed next to the secret time, you discuss and vote. Votes are final: the fastest correct vote gets the most points. Hitting the time earns up to 10 accuracy points; the imposter gets points for every player fooled.</p>
   </section>
-  <section class="panel" data-tab="music">
+  <section class="panel" data-tab="music" data-cat="gameplay">
     <h2>🎵 Guess the Song</h2>
     <div class="rules">
       <label>Songs per game <input type="number" id="muQ" value="10" min="1" max="40"></label>
@@ -953,28 +970,28 @@ li:has(>.fxdelta){position:relative}
     <div class="filters" id="muCatSel"></div>
     <p class="hint">The host plays the first 10 seconds of a song, then there are 30 seconds to guess; if nobody has the title by then, the song plays again from the start until the time is up (2 minutes). As soon as someone has the title, everyone else gets 10 more seconds (YouTube, the next song is buffered in advance; if a video can't play, a 30-second iTunes preview is used instead – then it's not always the intro). Everyone types the artist (or anime / movie) and the title on their phone – small typos are fine, no suggestions; unlimited tries for the artist / anime / movie, 3 tries for the title. Each right answer scores by speed (title 12, 9, 7 …, artist 8, 6, 5 …, both right = up to 20; songs with only one question: 20, 15, 12 …); a wrong guess locks the player for 2 seconds. A song that can't be loaded is skipped and doesn't count. <span id="muTotal"></span></p>
   </section>
-  <section class="panel" data-tab="general">
+  <section class="panel" data-tab="general" data-cat="general">
     <h2>🔄 App version</h2>
     <div class="row" style="align-items:center;gap:10px;flex-wrap:wrap"><button class="btn btn-gold" id="updBtn" type="button">🔄 Check for updates</button><span class="hint" id="updVer" style="margin:0"></span></div>
     <p class="hint">The app also looks for updates by itself when you come back to it and every few minutes; it only reloads on the start screen, in the lobby or after a game.</p>
   </section>
-  <section class="panel" data-tab="general">
+  <section class="panel" data-tab="general" data-cat="sound">
     <h2>🎙️ Announcer voice</h2>
     <label class="hint" style="display:flex;gap:8px;align-items:center;cursor:pointer;margin:0"><input type="checkbox" id="voiceOn" checked> Read cards, questions and announcements aloud on the host screen</label>
     <p class="hint">Pre-recorded voice, no internet service needed. Player names, your own cards and players' answers are never read aloud. Uses the sound volume below; muting the sound also mutes the voice.</p>
   </section>
-  <section class="panel" data-tab="general">
+  <section class="panel" data-tab="general" data-cat="display">
     <h2>📺 TV mode</h2>
     <label class="hint" style="display:flex;gap:8px;align-items:center;cursor:pointer;margin:0"><input type="checkbox" id="tvOn"> Scale the host screen up for a TV</label>
     <p class="hint">Smart TVs report a very wide screen, so everything looks tiny. TV mode scales the whole host screen to the TV's width and makes the focus frame bigger for remote controls. Phones are not affected. You can also toggle it with the 📺 button in the corner.</p>
   </section>
-  <section class="panel" data-tab="general">
+  <section class="panel" data-tab="general" data-cat="general">
     <h2>Tutorials</h2>
     <label class="hint" style="display:flex;gap:8px;align-items:center;cursor:pointer;margin:0"><input type="checkbox" id="tutOn" checked> Show a short tutorial the first time each game is played in an evening</label>
     <div class="row" style="margin-top:10px"><button class="chip" id="tutReset" type="button">↺ Show all tutorials again</button></div>
     <p class="hint">The tutorial plays on the host screen like a short video (20–30 seconds). It is skipped as soon as everyone taps Skip on their phone, or when the host taps Skip. "Evening" means 12 hours – after that each tutorial shows once again.</p>
   </section>
-  <section class="panel" data-tab="general">
+  <section class="panel" data-tab="general" data-cat="general">
     <h2>Auto-pilot</h2>
     <div class="rules">
       <label>Host screen in Imposter &amp; Who Would <select id="autoMode"><option value="off">Off – host taps Next</option><option value="ready" selected>Players tap Next (half = countdown, all = go)</option><option value="timer">Timer per screen</option></select></label>
@@ -982,7 +999,7 @@ li:has(>.fxdelta){position:relative}
     </div>
     <p class="hint">With phones, players can move the host screen on themselves.</p>
   </section>
-  <section class="panel" data-tab="karaoke">
+  <section class="panel" data-tab="karaoke" data-cat="gameplay">
     <h2>Rules</h2>
     <div class="rules">
       <label>Passing costs <input type="number" id="penalty" value="3" min="0"></label>
@@ -994,7 +1011,7 @@ li:has(>.fxdelta){position:relative}
     </div>
     <p class="hint">Every card is worth 10 points. After drawing you accept or pass – take your time. Passing costs points; the card moves to the next player and is worth more. Once accepted, anyone with a phone can challenge you to a sing-off: you pick a challenger (or sing solo), both sing the same task and the crowd votes. Win the sing-off and you get the card value +5, lose it and you get the card value −5, a tie pays you the card value −5 and the challenger +5. The challenger gets +10 for a win and −5 for a loss, and wins count for the secret "Duel champion" award. Failing a card costs 5 points, passing costs 3. A round is over when every player has started one card. With phones, everyone votes for the best performance after each round. At the end, three secret awards (most cards sung, most passes…) are revealed one by one.</p>
   </section>
-  <section class="panel" data-tab="general">
+  <section class="panel" data-tab="general" data-cat="sound">
     <h2>Sound</h2>
     <div class="soundrow">
       <button class="btn btn-ghost" id="muteBtn">🔊 Sound on</button>
@@ -2482,7 +2499,7 @@ $("lobbyAdd").onsubmit=e=>{e.preventDefault();const n=$("lobbyName").value.trim(
 $("lobbyPlayers").onclick=e=>{const b=e.target.closest("[data-kick]");if(!b)return;const i=+b.dataset.kick,p=S.players[i];if(!p)return;ask(`Remove ${p.name}?`,()=>{if(S.players[i]!==p)return;if(p.pid&&S.room)db.del(`rooms/${S.room.code}/members/${p.pid}`).catch(()=>{});S.players.splice(i,1);save();render()},"Remove")};
 $("lobbyStart").onclick=()=>{const G=nextGames();if(G.length===1){nextStart(G[0]);return}if(!G.some(g=>nextAvail(g))){toast("Not enough players yet");return}S.next={votes:{},end:null};save();render();sfx.start();vo("Which game do you want to play first? Vote on your phones.")};
 $("lobbyBack").onclick=()=>ask(S.solo?"End solo mode?":"Close this room? Phones will be disconnected.",()=>{hostClose(true);S.screen="home";save();render()},"Close room");
-$("lobbySettings").onclick=()=>{S.back="lobby";S.screen="settings";S.setTab=Object.keys(GAME_LBL).includes(S.game)?S.game:"karaoke";save();render()};
+$("lobbySettings").onclick=()=>{S.back="lobby";S.screen="settings";S.setCat="gameplay";S.setTab=Object.keys(GAME_LBL).includes(S.game)?S.game:"karaoke";save();render()};
 
 // ---- Phone: controller client ----
 const SO_STAKE_P={1:5,2:5,3:5};
@@ -2526,7 +2543,7 @@ function phAvEditor(){const a=phAv(),cur=a||avDefault();const open=!a||(PH&&PH.a
   return `<details class="aved"${open?" open":""}><summary>${a?avHtml({av:a},true)+" <b>Your avatar</b><span class='hint' style='margin:0 0 0 auto'>change</span>":"👤 <b>Choose your avatar</b>"}</summary>
   <div class="avlbl">Characters</div><div class="avgrid avpics">${pics}</div><div class="avlbl">Boys</div><div class="avgrid">${thumbs(AV_KINDS.slice(0,10))}</div><div class="avlbl">Girls</div><div class="avgrid">${thumbs(AV_KINDS.slice(10))}</div>
   ${isPic?`<p class="hint" style="margin:10px 0 0">Colours only change the drawn avatars.</p>`:`<div class="avlbl">Skin</div><div class="avrow">${sw("avs",AV_SKIN,a&&a.s)}</div><div class="avlbl">Hair</div><div class="avrow">${sw("avh",AV_HAIR,a&&a.h)}</div><div class="avlbl">Clothes</div><div class="avrow">${sw("avc",AV_CLOTH,a&&a.c)}</div>`}</details>`}
-const APPV="v1790701441";
+const APPV="v1790701727";
 function phVerHint(){let el=$("phVer");const st=PH&&PH.state;const bad=S.screen==="phone"&&!SOLO_PH&&st&&st.av&&(+String(st.av).slice(1)||0)>(+String(APPV).slice(1)||0)&&(st.phase==="lobby"||st.phase==="final");if(!bad){if(el)el.remove();return}if(!el){el=document.createElement("div");el.id="phVer";el.className="phver";el.innerHTML='The app was updated – <button class="btn btn-ghost" type="button">Reload</button>';el.querySelector("button").onclick=()=>location.reload();document.body.appendChild(el)}}
 function renderPhone0(){if(S.screen!=="phone"||!PH)return;const st=PH.state;const body=$("phBody");
   $("phRoom").textContent="Room "+PH.code;$("phDot").className="dot"+(st&&!PH.err?" on":"");
@@ -2633,7 +2650,7 @@ function tvApply(){const on=!!S.tvMode&&S.screen!=="phone"&&S.screen!=="join"&&i
 window.addEventListener("resize",()=>tvApply());
 function appVerTxt(){const n=+String(APPV).slice(1);if(!n)return APPV;const d=new Date(n*1000),p=x=>String(x).padStart(2,"0");return `${p(d.getDate())}.${p(d.getMonth()+1)}. ${p(d.getHours())}:${p(d.getMinutes())}`}
 function renderExtra(){{const uv=$("updVer");if(uv)uv.textContent="Version "+appVerTxt();const ub=$("updBtn");if(ub&&!ub.onclick)ub.onclick=checkUpdates;const av=$("appVer");if(av){av.textContent="Version "+appVerTxt();av.hidden=SOLO_PH||!["home","join","lobby"].includes(S.screen)}}tvApply();renderOwnCards();if(S.screen==="home")renderFan();
-  if(S.screen==="settings"){$("tutOn").checked=S.tutorials!==false;$("voiceOn").checked=S.voiceOn!==false;$("emDe").checked=S.emDe!==false;$("tvOn").checked=!!S.tvMode;const t=S.setTab||"karaoke";[...$("setTabs").querySelectorAll("[data-tab]")].forEach(b=>b.classList.toggle("on",b.dataset.tab===t));if(S.screen==="settings"&&$("setTabs").dataset.shown!==t){$("setTabs").dataset.shown=t;setTimeout(()=>{const on=$("setTabs").querySelector(".on");const bar=$("setTabs");if(on&&bar&&bar.offsetParent)bar.scrollLeft=Math.max(0,on.offsetLeft-(bar.clientWidth-on.offsetWidth)/2)},80)}document.querySelectorAll("#scrSettings section[data-tab]").forEach(el=>{el.hidden=el.dataset.tab!==t})}
+  if(S.screen==="settings"){$("tutOn").checked=S.tutorials!==false;$("voiceOn").checked=S.voiceOn!==false;$("emDe").checked=S.emDe!==false;$("tvOn").checked=!!S.tvMode;const t=S.setTab||"karaoke",cat=S.setCat||"general";[...$("setTabs").querySelectorAll("[data-cat]")].forEach(b=>{b.classList.toggle("on",b.dataset.cat===cat);b.setAttribute("aria-selected",b.dataset.cat===cat)});$("setGames").hidden=cat!=="gameplay";[...$("setGames").querySelectorAll("[data-tab]")].forEach(b=>{b.classList.toggle("on",b.dataset.tab===t);b.setAttribute("aria-selected",b.dataset.tab===t)});if(S.screen==="settings"&&$("setTabs").dataset.shown!==t){$("setTabs").dataset.shown=t;setTimeout(()=>{const on=$("setTabs").querySelector(".on");const bar=$("setTabs");if(on&&bar&&bar.offsetParent)bar.scrollLeft=Math.max(0,on.offsetLeft-(bar.clientWidth-on.offsetWidth)/2)},80)}document.querySelectorAll("#scrSettings section[data-cat]").forEach(el=>{el.hidden=el.dataset.cat!==cat||(cat==="gameplay"&&el.dataset.tab!==t)})}
   const canResume=(S.inGame&&S.players.length>=1)||(S.mode==="host"&&S.room&&!S.inGame);
   $("homeResume").hidden=!canResume;$("homeResume").textContent=S.inGame?"↩ Resume game":"↩ Back to lobby";
   $("homeHost").disabled=!NET_OK;$("homeJoin").disabled=!NET_OK;if(!NET_OK)$("homeHost").title=$("homeJoin").title="Not set up on this copy yet";
@@ -3023,9 +3040,10 @@ $("voiceOn").onchange=e=>{S.voiceOn=e.target.checked;save();if(!S.voiceOn){voQ=[
 $("tvOn").onchange=e=>{S.tvMode=e.target.checked;save();render()};
 $("tutOn").onchange=e=>{S.tutorials=e.target.checked;save()};
 $("tutReset").onclick=()=>{S.tutSeen={};save();toast("Tutorials will show again")};
-$("setTabs").onclick=e=>{const b=e.target.closest("[data-tab]");if(!b)return;S.setTab=b.dataset.tab;save();render();
-  // jump to the start of that game's settings (just below the sticky tab row) and bring the chip into view
-  requestAnimationFrame(()=>{const sec=document.querySelector('#scrSettings section[data-tab="'+S.setTab+'"]:not([hidden])');const bar=$("setTabs");if(sec){const y=sec.getBoundingClientRect().top+scrollY-(bar?bar.offsetHeight:0)-10;window.scrollTo({top:Math.max(0,y),behavior:"smooth"})}try{b.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"})}catch(x){}})};
+$("setTabs").onclick=e=>{const b=e.target.closest("[data-cat]");if(!b)return;S.setCat=b.dataset.cat;save();render();try{window.scrollTo({top:0,behavior:"smooth"})}catch(x){}};
+$("setGames").onclick=e=>{const b=e.target.closest("[data-tab]");if(!b)return;S.setTab=b.dataset.tab;save();render();
+  // keep the picker in view and show the start of that game's settings right below it
+  requestAnimationFrame(()=>{const sec=document.querySelector('#scrSettings section[data-tab="'+S.setTab+'"]:not([hidden])');if(sec){const r=sec.getBoundingClientRect();if(r.top>innerHeight-120||r.top<0)window.scrollTo({top:Math.max(0,r.top+scrollY-140),behavior:"smooth"})}try{b.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"})}catch(x){}})};
 // ---- phone side ----
 function impFetchPriv(round){if(!PH||PH.privBusy)return;PH.privBusy=true;PH.privTries=(PH.privTries||0)+1;
   db.get(`rooms/${PH.code}/private/${PH.pid}`).then(d=>{PH.privBusy=false;if(d&&d.n===round){PH.priv=d;PH.privTries=0;renderPhone()}else if(PH.privTries<8)setTimeout(()=>impFetchPriv(round),1000)}).catch(()=>{PH.privBusy=false;if(PH.privTries<8)setTimeout(()=>impFetchPriv(round),1500)})}
