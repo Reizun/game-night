@@ -2510,7 +2510,7 @@ function phAvEditor(){const a=phAv(),cur=a||avDefault();const open=!a||(PH&&PH.a
   return `<details class="aved"${open?" open":""}><summary>${a?avHtml({av:a},true)+" <b>Your avatar</b><span class='hint' style='margin:0 0 0 auto'>change</span>":"👤 <b>Choose your avatar</b>"}</summary>
   <div class="avlbl">Boys</div><div class="avgrid">${thumbs(AV_KINDS.slice(0,10))}</div><div class="avlbl">Girls</div><div class="avgrid">${thumbs(AV_KINDS.slice(10))}</div>
   <div class="avlbl">Skin</div><div class="avrow">${sw("avs",AV_SKIN,a&&a.s)}</div><div class="avlbl">Hair</div><div class="avrow">${sw("avh",AV_HAIR,a&&a.h)}</div><div class="avlbl">Clothes</div><div class="avrow">${sw("avc",AV_CLOTH,a&&a.c)}</div></details>`}
-const APPV="v1790697833";
+const APPV="v1790699890";
 function phVerHint(){let el=$("phVer");const st=PH&&PH.state;const bad=S.screen==="phone"&&!SOLO_PH&&st&&st.av&&(+String(st.av).slice(1)||0)>(+String(APPV).slice(1)||0)&&(st.phase==="lobby"||st.phase==="final");if(!bad){if(el)el.remove();return}if(!el){el=document.createElement("div");el.id="phVer";el.className="phver";el.innerHTML='The app was updated – <button class="btn btn-ghost" type="button">Reload</button>';el.querySelector("button").onclick=()=>location.reload();document.body.appendChild(el)}}
 function renderPhone0(){if(S.screen!=="phone"||!PH)return;const st=PH.state;const body=$("phBody");
   $("phRoom").textContent="Room "+PH.code;$("phDot").className="dot"+(st&&!PH.err?" on":"");
@@ -3431,7 +3431,7 @@ function muMakePlan(){const cats=muCats();const used=S.muUsed||[];const sh=a=>{f
   const out=[],rest=order.slice();while(rest.length){const recent=new Set(out.slice(-8).map(i=>MU_SONGS[i][1]));let k=rest.findIndex((i,n)=>n<30&&!recent.has(MU_SONGS[i][1]));if(k<0)k=0;out.push(rest.splice(k,1)[0])}return out}
 function muBad(){return MUX.bad||(MUX.bad=[])}
 // start offset per YouTube video (s) – for intros that open with a spoken line giving the answer away
-const MU_START={"cT7xhQUkH7A":29.5,"A1Xw31qQRGo":30.5,"PMyVfQWnwBg":41,"5g5sljn_dNs":17,"2QNkoCaeciQ":17.5,"ui8TACEngBg":16,"_3zRmHWP4EU":16,"2TP2H-QHJGQ":16.5,"BhcogFosHIY":16.5,"R2EjD7pJI_4":16.5,"OmHk3nlQauQ":15.5};
+const MU_START={"PnpSYPaIgHY":31,"cT7xhQUkH7A":29.5,"A1Xw31qQRGo":30.5,"PMyVfQWnwBg":41,"5g5sljn_dNs":17,"2QNkoCaeciQ":17.5,"ui8TACEngBg":16,"_3zRmHWP4EU":16,"2TP2H-QHJGQ":34.5,"BhcogFosHIY":17,"R2EjD7pJI_4":16.5,"OmHk3nlQauQ":15.5};
 function muSt(p){let id="";try{id=(p.getVideoData()||{}).video_id||""}catch(e){}return MU_START[id]||0}
 // reported songs (by query key, stable when songs are added) are left out on this device; reports are collected in rooms/SONG/actions
 const MU_REP_ROOM="SONG";
@@ -3749,7 +3749,7 @@ const TM_HUE="linear-gradient(90deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)";
 const TUT_V={
  music:[
   tmTV('<div class="lb">Listen!</div><div class="eq"><i></i><i style="animation-delay:.2s"></i><i style="animation-delay:.4s"></i><i style="animation-delay:.1s"></i><i style="animation-delay:.3s"></i></div><div class="big">1:52</div><div class="lb">🔁 plays again in 30 s</div>'),
-  tmPH('<div class="lb">Artist <span class="ok">✓ right!</span></div>'+tmIn("Dua Lipa","ok")+'<div class="lb">Title</div>'+tmIn("Levi|")+'<div class="dd"><div class="on">Levitating</div><div>Don\'t Start Now</div><div>New Rules</div></div>'+tmBt("Send")),
+  tmPH('<div class="lb">Artist <span class="ok">✓ right!</span></div>'+tmIn("Dua Lipa","ok")+'<div class="lb">Title</div>'+tmIn("Levitat|")+tmBt("Send")),
   tmTV('<div class="lb">It was</div><div class="q">Levitating · Dua Lipa</div>'+tmRows([["Anna",'<b class="ok">✓ +10 ✓ +10</b>'],["Ben",'<b class="ok">✓ +8</b> <b class="no">✗</b>'],["Cleo",'<b class="no">✗ ✗</b>']]))],
  color:[
   tmTV('<div class="lb">Remember this color!</div><div class="sw" style="background:#2fa4b5"></div><div class="big">3</div>'),
