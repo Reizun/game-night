@@ -648,6 +648,11 @@ li:has(>.fxdelta){position:relative}
 .rkresult li::before{content:counter(rk);font:400 24px Anton,Impact,sans-serif;color:var(--gold);min-width:22px}
 .rkresult li b{flex:1;font-size:18px}.rkresult li span{color:var(--muted);font-weight:700}
 .rkpad{display:flex;flex-direction:column;gap:8px}
+.rkdrag{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;touch-action:none;-webkit-user-select:none;user-select:none}
+.rkrow{display:flex;align-items:center;gap:10px;padding:12px 12px 12px 10px;border-radius:12px;background:var(--ground-2);color:var(--ink);font:800 16px Nunito,system-ui,sans-serif;cursor:grab;border:2px solid transparent;transition:transform .18s var(--e-out,ease),box-shadow .18s ease,border-color .15s;will-change:transform}
+.rkrow .no{display:grid;place-items:center;min-width:28px;height:28px;border-radius:50%;background:var(--gold);color:#14223f;font:400 16px Anton,sans-serif}
+.rkrow .nm{flex:1}.rkrow .grip{color:var(--muted);font-size:20px;line-height:1}
+.rkrow.drag{transition:box-shadow .18s ease;z-index:2;position:relative;cursor:grabbing;border-color:var(--gold);box-shadow:0 14px 28px rgba(0,0,0,.45)}
 .rkbtn{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;background:var(--ground-2);color:var(--ink);font:800 16px Nunito,system-ui,sans-serif;text-align:left;border:2px solid transparent;transition:background-color .15s,border-color .15s,transform .1s}
 .rkbtn:active{transform:scale(.97)}.rkbtn.on{border-color:var(--gold);background:rgba(224,182,76,.14)}
 .rkbtn .no{display:grid;place-items:center;min-width:28px;height:28px;border-radius:50%;background:var(--ground);color:var(--gold);font:400 16px Anton,sans-serif}.rkbtn.on .no{background:var(--gold);color:#14223f}
@@ -1018,7 +1023,7 @@ li:has(>.fxdelta){position:relative}
       <label>Rounds <input type="number" id="rkQ" value="6" min="1" max="30"></label>
       <label>Seconds to answer (0 = wait for all) <input type="number" id="rkTime" value="45" min="0" max="300"></label>
     </div>
-    <p class="hint">Five things appear on the host screen and the announcer says how to order them – by year, height, weight, speed … Everyone taps them in order on their phone. 3 points per thing in the right place; all five right gets a speed bonus of +5, +3, +2, +1 (up to 20). 32 sets.</p>
+    <p class="hint">Five things appear on the host screen and the announcer says how to order them – by year, height, weight, speed … Everyone drags them into order on their phone. 3 points per thing in the right place; all five right gets a speed bonus of +5, +3, +2, +1 (up to 20). 32 sets.</p>
   </section>
   <section class="panel" data-tab="music" data-cat="gameplay">
     <h2>🎵 Guess the Song</h2>
@@ -2648,7 +2653,7 @@ function phAvSet(k,v){const a=phAv()||avDefault();if(k==="avk"&&AV_PICS.includes
 function phAvEditor(){const a=phAv();const open=!a||(PH&&PH.avOpen);const pics=AV_PICS.map(k=>`<button class="avthumb avpt${a&&a.k===k?" on":""}" data-act="avk" data-v="${k}" aria-label="character ${k.slice(1)}"><img src="avatars/${k}.webp" alt="" loading="lazy" decoding="async"></button>`).join("");
   return `<details class="aved"${open?" open":""}><summary>${a?avHtml({av:a},true)+" <b>Your avatar</b><span class='hint' style='margin:0 0 0 auto'>change</span>":"👤 <b>Choose your avatar</b>"}</summary>
   <div class="avgrid avpics">${pics}</div></details>`}
-const APPV="v1790707471";
+const APPV="v1790773831";
 function phVerHint(){let el=$("phVer");const st=PH&&PH.state;const bad=S.screen==="phone"&&!SOLO_PH&&st&&st.av&&(+String(st.av).slice(1)||0)>(+String(APPV).slice(1)||0)&&(st.phase==="lobby"||st.phase==="final");if(!bad){if(el)el.remove();return}if(!el){el=document.createElement("div");el.id="phVer";el.className="phver";el.innerHTML='The app was updated – <button class="btn btn-ghost" type="button">Reload</button>';el.querySelector("button").onclick=()=>location.reload();document.body.appendChild(el)}}
 function renderPhone0(){if(S.screen!=="phone"||!PH)return;const st=PH.state;const body=$("phBody");
   $("phRoom").textContent="Room "+PH.code;$("phDot").className="dot"+(st&&!PH.err?" on":"");
@@ -2667,7 +2672,7 @@ function renderPhone0(){if(S.screen!=="phone"||!PH)return;const st=PH.state;cons
   if(st.game==="timeimp"&&meI>=0&&st.phase!=="final"&&st.phase!=="lobby"){if(PH.tiHolding||(PH.tiFeelUntil&&Date.now()<PH.tiFeelUntil&&st.ti&&st.ti.phase==="hold")){PH.tiPend=true;return}$("phRound").textContent=st.ti?`Round ${st.ti.round} of ${st.tiQ}`:"";body.innerHTML=phoneTiHtml(st,me,meI,players,board);phTiBind(st);return}
   if(st.game==="numrush"&&meI>=0&&st.phase!=="final"&&st.phase!=="lobby"){const m=st.nr;if(m&&m.phase==="tap"&&$("nrPad")&&PH.nr&&PH.nr.r===m.round&&PH.nr.sent==null)return;$("phRound").textContent=m?`Round ${m.round} of ${st.nrQ}`:"";body.innerHTML=phoneNrHtml(st,me,meI,players,board);phoneNrBind(st);return}
   if(st.game==="count"&&meI>=0&&st.phase!=="final"&&st.phase!=="lobby"){const m=st.cn;if(m&&m.phase==="answer"&&$("cnIn")&&PH.cnShown===m.round&&PH.cnR!==m.round)return;$("phRound").textContent=m?`Picture ${m.round} of ${st.cnQ}`:"";body.innerHTML=phoneCnHtml(st,me,meI,players,board);twe(body);if(m)PH.cnShown=m.round;phoneCnBind(st);return}
-  if(st.game==="rankit"&&meI>=0&&st.phase!=="final"&&st.phase!=="lobby"){const m=st.rk;$("phRound").textContent=m?`Round ${m.round} of ${st.rkQ}`:"";body.innerHTML=phoneRkHtml(st,me,meI,players,board);phoneRkBind(st);return}
+  if(st.game==="rankit"&&meI>=0&&st.phase!=="final"&&st.phase!=="lobby"){const m=st.rk;if(PH.rkDrag)return;if(m&&m.phase==="answer"&&$("rkPad")&&PH.rk&&PH.rk.r===m.round&&!PH.rk.sent&&PH.rkShown===m.round+":"+PH.rk.order.join(""))return;if(m&&PH.rk)PH.rkShown=m.round+":"+PH.rk.order.join("");$("phRound").textContent=m?`Round ${m.round} of ${st.rkQ}`:"";body.innerHTML=phoneRkHtml(st,me,meI,players,board);phoneRkBind(st);return}
   if(st.game==="ballpark"&&meI>=0&&st.phase!=="final"&&st.phase!=="lobby"){if(PH.bpDrag){PH.bpPend=true;return}clearTimeout(PH.bpAutoT);$("phRound").textContent=st.bp?`Question ${st.bp.round} of ${st.bpQ}`:"";body.innerHTML=phoneBpHtml(st,me,meI,players,board);const f=$("bpForm");if(f){const r=$("bpRange"),n=$("bpIn"),l=$("bpValLbl");r.oninput=()=>{l.textContent=r.value;n.value=r.value;PH.bpDraft=+r.value;PH.bpDraftRound=st.bp.round};n.oninput=()=>{const v=Math.max(0,Math.min(100,+n.value||0));r.value=v;l.textContent=v;PH.bpDraft=v;PH.bpDraftRound=st.bp.round};f.onsubmit=e=>{e.preventDefault();const v=n.value!==""?+n.value:+r.value;if(!(v>=0&&v<=100))return;PH.bpRound=st.bp.round;clearTimeout(PH.bpAutoT);phoneAct("answer",{text:String(Math.round(v))});renderPhone()};
     r.addEventListener("pointerdown",()=>{PH.bpDrag=true});const endD=()=>{PH.bpDrag=false;if(PH.bpPend){PH.bpPend=false;setTimeout(renderPhone,50)}};r.addEventListener("pointerup",endD);r.addEventListener("pointercancel",endD);r.addEventListener("change",endD);
     if(st.bp.end){const ms=st.bp.end-Date.now()-900;if(ms>0)PH.bpAutoT=setTimeout(()=>{const s2=PH.state&&PH.state.bp;if(!s2||s2.round!==st.bp.round||s2.phase!=="answer"||PH.bpRound===s2.round||PH.bpDraftRound!==s2.round||PH.bpDraft==null)return;PH.bpRound=s2.round;phoneAct("answer",{text:String(Math.round(PH.bpDraft))});renderPhone()},ms)}}return}
@@ -3893,13 +3898,21 @@ function renderRk(){if(S.screen!=="rk"||S.game!=="rankit"){clearInterval(rkT);rk
 function rkSnapOf(){const m=S.game==="rankit"?S.rk:null;if(!m)return null;const q=RK_Q[m.qi];return{phase:m.phase,round:S.round,c:q.c,items:m.order.map(x=>({x,n:q.i[x][0]})),end:m.end||null,total:impPlayers().length,answered:impPlayers().filter(i=>m.answers[i]).map(i=>S.players[i].pid),
   truth:m.phase==="result"?q.i.map(x=>x[0]+" – "+x[1]):null,rows:m.result?m.result.rows.filter(r=>S.players[r.i]).map(r=>({pid:S.players[r.i].pid,name:S.players[r.i].name,right:r.right,pts:r.pts})):null}}
 function phoneRkHtml(st,me,meI,players,board){const m=st.rk;if((st.late||[]).includes(PH.pid))return `<div class="who">You're in!</div><p class="hint">You join from the next round.</p>${board}`;if(!m)return `<div class="who">Rank It</div><p class="hint">Waiting for the host…</p>${board}`;
-  if(!PH.rk||PH.rk.r!==m.round)PH.rk={r:m.round,pick:[],sent:false};const P=PH.rk;const sent=P.sent||(m.answered||[]).includes(PH.pid);
-  if(m.phase==="answer"){if(sent)return `<div class="who">Sent ✓</div><div class="impq"><small>${esc(m.c)}</small>${P.pick.map((x,k)=>`${k+1}. ${esc((m.items.find(it=>it.x===x)||{}).n||"")}`).join("<br>")}</div><p class="hint">${(m.answered||[]).length} of ${m.total} sent…</p>`;
-    return `<div class="who">${esc(m.c)}</div>${m.end?`<div class="timer phtimer" data-end="${m.end}">${fmtT(Math.max(0,Math.ceil((m.end-Date.now())/1000)))}</div>`:""}<p class="hint" style="margin:0 0 6px">Tap them in order – first one first.</p><div class="rkpad" id="rkPad">${m.items.map(it=>{const k=P.pick.indexOf(it.x);return `<button type="button" class="rkbtn${k>=0?" on":""}" data-x="${it.x}"><span class="no">${k>=0?k+1:""}</span>${esc(it.n)}</button>`}).join("")}</div><div class="row" style="margin-top:8px"><button class="btn btn-ghost" id="rkUndo" type="button"${P.pick.length?"":" disabled"}>↶ Undo</button><button class="btn btn-gold" id="rkSend" type="button"${P.pick.length===5?"":" disabled"}>Send order</button></div>`}
+  if(!PH.rk||PH.rk.r!==m.round)PH.rk={r:m.round,order:m.items.map(it=>it.x),sent:false};const P=PH.rk;const name=x=>(m.items.find(it=>it.x===x)||{}).n||"";const sent=P.sent||(m.answered||[]).includes(PH.pid);
+  if(m.phase==="answer"){if(sent)return `<div class="who">Sent ✓</div><div class="impq"><small>${esc(m.c)}</small>${P.order.map((x,k)=>`${k+1}. ${esc(name(x))}`).join("<br>")}</div><p class="hint">${(m.answered||[]).length} of ${m.total} sent…</p>`;
+    return `<div class="who">${esc(m.c)}</div>${m.end?`<div class="timer phtimer" data-end="${m.end}">${fmtT(Math.max(0,Math.ceil((m.end-Date.now())/1000)))}</div>`:""}<p class="hint" style="margin:0 0 6px">Drag them into order – first one at the top.</p><ol class="rkdrag" id="rkPad">${P.order.map((x,k)=>`<li class="rkrow" data-x="${x}"><span class="no">${k+1}</span><span class="nm">${esc(name(x))}</span><span class="grip" aria-hidden="true">⠿</span></li>`).join("")}</ol><button class="btn btn-gold" id="rkSend" type="button" style="width:100%;margin-top:10px">Send order</button>`}
   const mine=(m.rows||[]).find(x=>x.pid===PH.pid);return `<div class="who">${mine?`${mine.right}/5 right · +${mine.pts}`:"No answer"}</div><div class="impq"><small>${esc(m.c)}</small>${(m.truth||[]).map((x,k)=>`${k+1}. ${esc(x)}`).join("<br>")}</div>${autoPhoneHtml(st)}${board}`}
-function phoneRkBind(st){const m=st.rk;const pad=$("rkPad");if(!pad||!m||!PH.rk)return;const P=PH.rk;
-  pad.onclick=e=>{const b=e.target.closest(".rkbtn");if(!b)return;const x=+b.dataset.x;const k=P.pick.indexOf(x);if(k>=0)P.pick.splice(k);else if(P.pick.length<5)P.pick.push(x);fxVib(8);renderPhone()};
-  const u=$("rkUndo");if(u)u.onclick=()=>{P.pick.pop();renderPhone()};const s=$("rkSend");if(s)s.onclick=()=>{if(P.pick.length!==5)return;P.sent=true;phoneAct("rkans",{a:P.pick.slice()});renderPhone()}}
+function phoneRkBind(st){const m=st.rk;const list=$("rkPad");if(!list||!m||!PH.rk)return;const P=PH.rk;
+  const s=$("rkSend");if(s)s.onclick=()=>{if(PH.rkDrag)return;P.sent=true;phoneAct("rkans",{a:P.order.slice()});fxVib([20,30,20]);renderPhone()};
+  // drag: the grabbed row follows the finger, the others slide out of the way; the new order is committed on release
+  list.onpointerdown=e=>{const row=e.target.closest(".rkrow");if(!row||PH.rkDrag)return;e.preventDefault();const rows=[...list.children];const from=rows.indexOf(row);const h=row.getBoundingClientRect().height+8;
+    const D={row,from,to:from,y0:e.clientY,h,rows,id:e.pointerId};PH.rkDrag=D;row.classList.add("drag");try{row.setPointerCapture(e.pointerId)}catch(x){}fxVib(12);
+    const move=ev=>{if(ev.pointerId!==D.id)return;const dy=ev.clientY-D.y0;const to=Math.max(0,Math.min(rows.length-1,Math.round(D.from+dy/D.h)));row.style.transform=`translateY(${dy}px) scale(1.03)`;
+      if(to!==D.to){D.to=to;fxVib(6)}rows.forEach((r,k)=>{if(r===row)return;let sh=0;if(D.from<D.to&&k>D.from&&k<=D.to)sh=-D.h;if(D.from>D.to&&k<D.from&&k>=D.to)sh=D.h;r.style.transform=sh?`translateY(${sh}px)`:""});
+      rows.forEach((r,k)=>{const no=r.querySelector(".no");if(!no)return;let pos=k;if(r===row)pos=D.to;else if(D.from<D.to&&k>D.from&&k<=D.to)pos=k-1;else if(D.from>D.to&&k<D.from&&k>=D.to)pos=k+1;no.textContent=pos+1})};
+    const up=ev=>{if(ev.pointerId!==D.id)return;row.removeEventListener("pointermove",move);row.removeEventListener("pointerup",up);row.removeEventListener("pointercancel",up);
+      const x=P.order.splice(D.from,1)[0];P.order.splice(D.to,0,x);PH.rkDrag=null;renderPhone()};
+    row.addEventListener("pointermove",move);row.addEventListener("pointerup",up);row.addEventListener("pointercancel",up)}}
 
 // ===== Ballpark: percent questions, closest tip wins =====
 function bpStart(){if(tutGate("ballpark"))return;countPlay("ballpark");S.game="ballpark";S.next=null;S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0;delete p.late});S.inGame=true;S.round=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=true;S.log=[];S.bpUsed=S.bpUsed||[];S.bp=null;S.screen="bp";bpNext();sfx.start()}
@@ -4018,7 +4031,7 @@ function phoneEmHtml(st,me,meI,players,board){const m=st.em;if((st.late||[]).inc
 // ===== Tutorials: short animated "video" on the host screen the first time a game is played in an evening =====
 const TUT_MS=5000,TUT_END=4000,TUT_EVENING=12*3600e3;
 const TUT={
- rankit:[{s:"🗼 🏔️ 🦒",t:"Five things",d:"Five things appear on this screen, all mixed up."},{s:"📏 📅 🐆",t:"The order",d:"The announcer says how to sort them – by year, height, weight, speed and more."},{s:"📱 1️⃣ 5️⃣",t:"Tap them in order",d:"Tap them on your phone, first one first, then send. 3 points per thing in the right place, plus a speed bonus if all five are right."}],
+ rankit:[{s:"🗼 🏔️ 🦒",t:"Five things",d:"Five things appear on this screen, all mixed up."},{s:"📏 📅 🐆",t:"The order",d:"The announcer says how to sort them – by year, height, weight, speed and more."},{s:"📱 ↕️ ✅",t:"Drag them into order",d:"Drag them into order on your phone, first one at the top, then send. 3 points per thing in the right place, plus a speed bonus if all five are right."}],
  numrush:[{s:"🔢 👀 📺",t:"Remember the grid",d:"The numbers 1 to 9 appear in a random 3 by 3 grid on this screen for a few seconds."},{s:"📱 👆 1️⃣",t:"Tap them in order",d:"The numbers disappear. Tap the squares on your phone in order, 1 to 9. A wrong square pauses you for half a second."},{s:"🥇 ⏱️ 🥈",t:"Be quick",d:"Your phone measures your time. Fastest gets 20 points, then 15, 12, 10 and so on."}],
  count:[{s:"🐱 🐶 🐱",t:"A busy picture",d:"A picture full of things appears on this screen and stays there. Sometimes they move."},{s:"❓ 🔢 📱",t:"Count them",d:"The announcer says what to count. Type your number on your phone. One answer per picture."},{s:"🎯 ⏱️ 🥈",t:"Points",d:"Exactly right: 20, 15, 12 and so on, by speed. Off by one: 5 points."}],
  music:[{s:"🎧 🎵",t:"Listen",d:"The first 10 seconds of a song play on this screen. Then you have 30 seconds – if nobody has the title, the song plays again."},{s:"📱 ⌨️",t:"Type artist and title",d:"Type the artist (or anime / movie) and the title on your phone. Small typos are fine, there are no suggestions. Artist: as many tries as you like – title: 3 tries."},{s:"🥇 🥈 🥉",t:"Be quick",d:"By speed – title 12, 9, 7 …, artist 8, 6, 5 … (both right = up to 20). Songs with one question: 20, 15, 12 … A wrong guess locks you for 2 seconds."}],
@@ -4044,7 +4057,7 @@ const TM_HUE="linear-gradient(90deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)";
 const TUT_V={
  rankit:[
   tmTV('<div class="lb">Height – tallest first</div><div class="rkmini"><b>Eiffel Tower</b><b>Burj Khalifa</b><b>Big Ben</b><b>Shanghai Tower</b><b>Empire State</b></div>'),
-  tmPH('<div class="lb">Tap them in order</div><div class="rkmini ph"><b class="on">1 Burj Khalifa</b><b class="on">2 Shanghai Tower</b><b>Big Ben</b><b>Eiffel Tower</b><b>Empire State</b></div>'+tmBt("Send order")),
+  tmPH('<div class="lb">Drag into order</div><div class="rkmini ph"><b>1 Burj Khalifa ⠿</b><b class="on">2 Shanghai Tower ⠿</b><b>3 Empire State ⠿</b><b>4 Eiffel Tower ⠿</b><b>5 Big Ben ⠿</b></div>'+tmBt("Send order")),
   tmTV('<div class="lb">Tallest first</div>'+tmRows([["Anna – 5/5",'<b class="ok">+20</b>'],["Ben – 3/5",'<b class="ok">+9</b>'],["Cleo – 1/5",'<b class="ok">+3</b>']]))],
  numrush:[
   tmTV('<div class="lb">Remember!</div><div class="nrmini"><b>7</b><b>2</b><b>9</b><b>4</b><b>1</b><b>6</b><b>3</b><b>8</b><b>5</b></div>'),
@@ -4460,7 +4473,7 @@ boot();
 // ===== motion layer: leaderboard FLIP + score chips, new entries, confetti on final/evening, haptics =====
 const FX={rm:window.matchMedia?matchMedia("(prefers-reduced-motion: reduce)"):{matches:false},bump:new Map(),scr:null,phFin:null};
 function fxOff(){return FX.rm.matches}
-function fxVib(p){try{if(navigator.vibrate)navigator.vibrate(p)}catch(e){}}
+function fxVib(p){try{if(navigator.userActivation&&!navigator.userActivation.hasBeenActive)return;if(navigator.vibrate)navigator.vibrate(p)}catch(e){}}
 function fxAnim(el,cls){if(!el||fxOff())return;el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);setTimeout(()=>el.classList.remove(cls),900)}
 function fxBad(el){fxAnim(el,"fxshake");fxVib(70)}
 function fxGood(el){fxAnim(el,"fxok");fxVib([25,40,25])}
