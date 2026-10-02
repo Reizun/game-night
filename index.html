@@ -713,6 +713,7 @@ button:not(.btn):not(.playbtn):not(.chip):not(.sgame):not(.nrcell):not(.rkbtn):n
 .players .name{display:flex;align-items:center;min-width:4.5em;overflow-wrap:anywhere}
 /* narrow scoreboards (side panel, phone): the "Tonight" total gets its own line so the name keeps its room */
 .screen>.imp>section.panel .players li,aside .players li,.phboard li{flex-wrap:wrap}
+html.tv .screen>.imp>section.panel .players li{flex-wrap:nowrap}html.tv .screen>.imp>section.panel .players li>.tot{order:0;flex:0 0 auto;margin-top:0}
 .screen>.imp>section.panel .players li>.tot,aside .players li>.tot,.phboard li>.tot{order:9;flex:1 0 100%;text-align:right;margin-top:-2px}
 @media (max-width:480px){.players li{gap:6px}.players li>.hint{font-size:12px;max-width:64px;text-align:right;line-height:1.15}}
 /* Number Rush pad: empty squares are visible squares (they used to melt into the panel) */
@@ -734,7 +735,7 @@ html.soloctl .cgsl input[type=range]{height:34px}html.soloctl .cgsl input[type=r
 .oc .t{min-width:0;overflow-wrap:anywhere}
 .soundrow input[type=range]{min-width:0}
 .phboard .name{text-align:left}
-.lcseat .oval .n{display:inline-block;max-width:9ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom}
+.lcseat .oval .n{display:inline-block;max-width:15ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom}
 .btn-gold .gdesc{color:#14223f;opacity:.78}
 .tutvideo{margin-left:auto;margin-right:auto}
 /* version label: bottom left, out of the way of the TV button; hidden where a sticky start bar sits */
@@ -920,7 +921,7 @@ h1,h2,h3,.who,.lbl{text-wrap:balance}
 </svg>
 <div class="app">
 <header>
-  <h1>Game <span>Night</span></h1>
+  <h1 class="notr">Game <span>Night</span></h1>
   <div class="script">Karaoke · Imposter · Who Would · Liar's Cards · Undercover · Ballpark · Emoji · Color · Time Imposter · Songs</div>
   <button class="btn btn-gold" id="installBtn" hidden style="padding:8px 14px;font-size:13px">📲 Install app</button>
 </header>
@@ -929,7 +930,7 @@ h1,h2,h3,.who,.lbl{text-wrap:balance}
 <div class="screen" id="scrHome">
   <div class="home">
     <div class="deckart"><div class="fan f1"><div class="frame"><svg viewBox="0 0 64 64"><use id="fanL" href="#i-mic"/></svg></div></div><div class="fan f3"><div class="frame"><svg viewBox="0 0 64 64"><use id="fanR" href="#i-question"/></svg></div></div><div class="fan f2"><div class="frame"><svg viewBox="0 0 64 64"><use id="fanF" href="#i-mask2"/></svg></div></div></div>
-    <div class="title">Game <span>Night</span></div>
+    <div class="title notr">Game <span>Night</span></div>
     <div class="menu">
       <button class="btn btn-ghost" id="homeResume" hidden>↩ Resume game</button>
       <button class="btn btn-red" id="homeStart">🎧 Solo mode</button>
@@ -1127,6 +1128,11 @@ h1,h2,h3,.who,.lbl{text-wrap:balance}
     <p class="hint" style="margin:14px 0 8px">Categories</p>
     <div class="filters" id="muCatSel"></div>
     <p class="hint">The host plays the first 10 seconds of a song, then there are 30 seconds to guess; if nobody has the title by then, the song plays again from the start until the time is up (2 minutes). As soon as someone has the title, everyone else gets 10 more seconds (YouTube, the next song is buffered in advance; if a video can't play, a 30-second iTunes preview is used instead – then it's not always the intro). Everyone types the artist (or anime / movie) and the title on their phone – small typos are fine, no suggestions; unlimited tries for the artist / anime / movie, 3 tries for the title. Each right answer scores by speed (title 12, 9, 7 …, artist 8, 6, 5 …, both right = up to 20; songs with only one question: 20, 15, 12 …); a wrong guess locks the player for 2 seconds. A song that can't be loaded is skipped and doesn't count. <span id="muTotal"></span></p>
+  </section>
+  <section class="panel" data-tab="general" data-cat="general">
+    <h2>🌐 Language</h2>
+    <div class="rules"><label>App language <select id="langSel"><option value="auto">Automatic (device language)</option><option value="en" class="notr">English</option><option value="de" class="notr">Deutsch</option></select></label></div>
+    <p class="hint">German translates every screen, card and question. Phones in the room follow the host's language. Song titles, artists, movie titles and player names stay as they are.</p>
   </section>
   <section class="panel" data-tab="general" data-cat="general">
     <h2>🔄 App version</h2>
@@ -2107,7 +2113,7 @@ function sfxDraw(){try{sfx.draw()}catch(e){}}
 // host areas are only replaced when their content really changes – on phones a tap on a button that gets rebuilt at that moment is lost
 (function(){const d=Object.getOwnPropertyDescriptor(Element.prototype,"innerHTML");["tutFoot","tutStage","bpStage","cgStage","emStage","impStage","lcStage","muStage","tiStage","ucStage","wwStage","eveStage","bpBoard","cgBoard","emBoard","impBoard","muBoard","tiBoard","ucBoard","lobbyPlayers","nextBoxL","nextBox"].forEach(id=>{const el=document.getElementById(id);if(!el)return;Object.defineProperty(el,"innerHTML",{configurable:true,get(){return d.get.call(el)},set(v){v=String(v);if(el.__lastHtml===v)return;el.__lastHtml=v;d.set.call(el,v)}})})})();
 let lastScreen=null;
-function render(){
+function render(){langApply();if(!(S.turn<S.players.length))S.turn=0;
   if(S.screen!==lastScreen){const first=lastScreen===null;lastScreen=S.screen;if(!first)try{scrollTo(0,0)}catch(e){}}
   $("penalty").value=S.penalty; $("bonus").value=S.bonus; $("rounds").value=S.rounds;
   document.querySelector("header").style.display=["home","phone"].includes(S.screen)?"none":"";
@@ -2305,10 +2311,10 @@ function renderSo(){const c=S.current,so=soState();const box=$("sobox");if(!so||
   else if(so.phase==="sing"){const O=S.players[so.opp];box.innerHTML=`<h3>⚔️ Sing-off</h3><div class="vs"><b>${esc(H.name)}</b> vs <b>${esc(O.name)}</b></div><div class="hint" style="margin:0">Both sing the same task – ${S.mics>1?"at the same time, one mic each":"one after the other"}. Then let the crowd decide.</div><div class="row"><button class="btn btn-gold" id="soVote">🗳 Start the vote</button><button class="btn btn-ghost" id="soCancel">Cancel sing-off</button></div>`;
     $("soVote").onclick=soStartVote;$("soCancel").onclick=soCancel}
   else{const O=S.players[so.opp],need=soVoters(),n=Object.keys(so.votes).length,pct=need.length?Math.round(100*n/need.length):0;
-    box.innerHTML=`<h3>⚔️ Who won?</h3><div class="vs"><b>${esc(H.name)}</b> vs <b>${esc(O.name)}</b></div><div class="bar"><i style="width:${pct}%"></i></div><div class="hint" style="margin:0">${need.length?`${n} of ${need.length} voted`:"Nobody else can vote – decide here who won"} · ${esc(H.name)} gets ${c.worth} − ${SO_STAKE[c.diff]||10} if beaten, ${c.worth} + ${SO_STAKE[c.diff]||10} if not, ${c.worth} − ${SO_STAKE[c.diff]||10} on a tie</div><div class="row"><button class="btn btn-ghost" data-sowin="a">${esc(H.name)} wins</button><button class="btn btn-ghost" data-sowin="tie">Tie</button><button class="btn btn-ghost" data-sowin="b">${esc(O.name)} wins</button></div>${n?`<button class="btn btn-gold" id="soClose">Close vote (${n} votes)</button>`:""}`;
+    box.innerHTML=`<h3>⚔️ Who won?</h3><div class="vs"><b>${esc(H.name)}</b> vs <b>${esc(O.name)}</b></div><div class="bar"><i style="width:${pct}%"></i></div><div class="hint" style="margin:0">${need.length?`${n} of ${need.length} voted`:"Nobody else can vote – decide here who won"} · ${esc(H.name)} gets ${c.worth} − ${SO_STAKE[c.diff]||10} if beaten, ${c.worth} + ${SO_STAKE[c.diff]||10} if not, ${c.worth} − ${SO_STAKE[c.diff]||10} on a tie</div><div class="row"><button class="btn btn-ghost" data-sowin="a" data-n="${esc(H.name)}">${esc(H.name)} wins</button><button class="btn btn-ghost" data-sowin="tie">Tie</button><button class="btn btn-ghost" data-sowin="b" data-n="${esc(O.name)}">${esc(O.name)} wins</button></div>${n?`<button class="btn btn-gold" id="soClose">Close vote (${n} votes)</button>`:""}`;
     const cb=$("soClose");if(cb)cb.onclick=()=>soClose()}
   $("done").hidden=$("fail").hidden=so.opp!=null}
-$("sobox").onclick=e=>{const p=e.target.closest("[data-sopick]");if(p){soPick(+p.dataset.sopick);return}const w=e.target.closest("[data-sowin]");if(w)ask(w.dataset.sowin==="tie"?"Call it a tie?":"Declare "+w.textContent.replace(" wins","")+" the winner?",()=>soClose(w.dataset.sowin),"Yes")};
+$("sobox").onclick=e=>{const p=e.target.closest("[data-sopick]");if(p){soPick(+p.dataset.sopick);return}const w=e.target.closest("[data-sowin]");if(w)ask(w.dataset.sowin==="tie"?"Call it a tie?":"Declare "+(w.dataset.n||"")+" the winner?",()=>soClose(w.dataset.sowin),"Yes")};
 function doDone(){const c=S.current;if(!c)return;const p=S.players[c.holder];p.score+=c.worth;
   stat(p,"done");stat(p,"pts",c.worth);if(c.chain>0)stat(p,"rescue");
   if(c.pick!=null&&(needsPartner(c.raw||c.text)||needsPick(c.raw||c.text)))stat(p,"duet");
@@ -2400,14 +2406,49 @@ function endCard(){stopTimer();ytClose();const c=S.current;S.current=null;$("don
 function nextRound(){S.round++;
   if(S.rounds&&S.round>S.rounds){S.round=S.rounds;save();setTimeout(finish,400);return}
   toast(`Round ${S.round}`);S.players.forEach(p=>p.rs=p.score);save();setTimeout(render,350)}
+// ---- Language: the app is written in English; in German de.js is loaded and everything that lands on screen is translated ----
+// Exact texts first, then patterns ("{0} of {1} voted"); holes are translated again when they are known texts. {n:A|B} in a German pattern picks A when hole n is empty (English plural "s").
+var LANG="en",I18N=null,trPats=null,trLoading=false,trCache=new Map(),trMiss=new Set(),TR_ATTR=["placeholder","title","aria-label","alt"];
+function langWant(host){const st=!host&&(S.screen==="phone"||S.screen==="join"||SOLO_PH)&&typeof PH!=="undefined"&&PH&&PH.state;const l=st&&st.lang?st.lang:S.lang&&S.lang!=="auto"?S.lang:/^de\b/i.test(navigator.language||"")?"de":"en";return l==="de"?"de":"en"}
+function langApply(){const l=langWant();if(l===LANG&&(l==="en"||I18N))return;
+  if(l==="de"&&!I18N){if(trLoading)return;trLoading=true;const sc=document.createElement("script");sc.src="de.js?"+APPV;sc.onload=()=>{I18N=window.I18N_DE||{x:{},p:[]};trLoading=false;langApply()};sc.onerror=()=>{trLoading=false};document.head.appendChild(sc);return}
+  LANG=l;document.documentElement.lang=l;trCache.clear();trWalk(document.body);if(S.screen==="tut"){tutSaid=""}}
+function trCompile(){trPats=(I18N.p||[]).map(([e,d])=>{if(e[0]==="^"){const re=new RegExp(e),n=new RegExp(e+"|").exec("").length-1;return {re,d,order:[...Array(n).keys()],stat:e.replace(/\((?:[^()\\]|\\.)*\)/g,"").replace(/[\\^$]/g,"").length}}const parts=e.split(/\{(\d+)\}/),order=[];let re="^",stat=0;
+    for(let i=0;i<parts.length;i++){if(i%2){const n=+parts[i];order.push(n);re+=d.includes("{"+n+":")?"(s|es|)":"([\\s\\S]*?)"}else{re+=parts[i].replace(/[.*+?^${}()|[\]\\]/g,"\\$&");stat+=parts[i].length}}
+    return {re:new RegExp(re+"$"),d,order,stat}}).sort((a,b)=>b.stat-a.stat)}
+function trLookup(k,dp){const x=I18N.x[k];if(x!=null)return x;if(dp>2)return null;if(!trPats)trCompile();
+  for(const P of trPats){const m=P.re.exec(k);if(!m)continue;const g=[];P.order.forEach((n,i)=>{g[n]=m[i+1]});
+    return P.d.replace(/\{(\d+)(?::([^|}]*)\|([^}]*))?\}/g,(_,n,a,b)=>{const v=g[+n]==null?"":g[+n];return a!=null?(v?b:a):trPart(v,dp+1)})}
+  return /^\d/.test(k)?trNum(k):null}
+function trPart(v,dp){const m=/^(\s*)([\s\S]*?)(\s*)$/.exec(v);if(!m[2]||!/[A-Za-z]{2}/.test(m[2]))return v;const k=m[2].replace(/\s+/g," ");let d=I18N.h&&I18N.h[k]||trLookup(k,dp);
+  if(d==null&&k.includes(" › "))d=k.split(" › ").map(x=>trPart(x,dp)).join(" › ");
+  if(d==null&&/^d/.test(k))d=trNum(k);
+  if(d==null&&k.includes(" – ")){const a=k.split(" – ").map(x=>trPart(x,dp)).join(" – ");if(a!==k)d=a}return d==null?v:m[1]+d+m[3]}
+const TR_UNIT={million:"Mio.",billion:"Mrd.",AD:"n. Chr.",BC:"v. Chr.",years:"Jahre",year:"Jahr",hours:"Stunden",minutes:"Minuten",seconds:"Sekunden",days:"Tage"};
+function trNum(k){const m=/^([d.,]+)((?:s+[A-Za-z°²/]+){0,2})$/.exec(k);if(!m)return null;const n=m[1].replace(/[.,]/g,c=>c==="."?",":".");
+  const u=m[2].replace(/[A-Za-z]+/g,w=>TR_UNIT[w]||w);return n+u}
+// the German for one piece of text (unknown text stays English and is collected in trMiss for the next round of translations)
+function tr(s){if(LANG!=="de"||!I18N||s==null)return s;s=String(s);const m=/^(\s*)([\s\S]*?)(\s*)$/.exec(s);if(!m[2]||!/[A-Za-z]{2}/.test(m[2]))return s;const k=m[2].replace(/\s+/g," ");
+  let d=trCache.get(k);if(d===undefined){d=trLookup(k,0);if(trCache.size>5000)trCache.clear();trCache.set(k,d);if(d==null&&trMiss.size<3000)trMiss.add(k)}return d==null?s:m[1]+d+m[3]}
+function trSkip(el){return !el||!el.closest||!!el.closest("script,style,textarea,.notr")}
+function trNode(n){if(trSkip(n.parentNode))return;const v=n.nodeValue,en=n.__de!=null&&v===n.__de?n.__en:v,d=LANG==="de"?tr(en):en;if(d!==v){n.__en=en;n.__de=d;n.nodeValue=d}}
+function trAttrs(el){for(const a of TR_ATTR){if(!el.hasAttribute(a))continue;const v=el.getAttribute(a),o=el.__ta||(el.__ta={}),r=o[a],en=r&&v===r[1]?r[0]:v,d=LANG==="de"?tr(en):en;if(d!==v){o[a]=[en,d];el.setAttribute(a,d)}}}
+var trFilter={acceptNode:n=>n.nodeType===1&&/^(SCRIPT|STYLE|TEXTAREA)$/.test(n.tagName)||n.nodeType===1&&n.classList.contains("notr")?2:1};
+function trWalk(root){if(!root)return;if(root.nodeType===3){trNode(root);return}if(root.nodeType!==1||trSkip(root))return;trAttrs(root);
+  const w=document.createTreeWalker(root,5,trFilter);let n;while((n=w.nextNode()))n.nodeType===3?trNode(n):trAttrs(n)}
+// translated nodes keep their English (node.__en), so switching back to English restores everything without a reload
+new MutationObserver(ms=>{if(LANG!=="de")return;for(const m of ms){if(m.type==="childList")m.addedNodes.forEach(trWalk);else if(m.type==="characterData")trNode(m.target);else trAttrs(m.target)}})
+  .observe(document.documentElement,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:TR_ATTR});
 // ---- Announcer: pre-generated voice clips ----
-let VO_IDS=null,voQ=[],voA=null;
+let VO_IDS=null,VO_L="",voQ=[],voA=null;
 function voId(t){let x=2166136261>>>0;for(let i=0;i<t.length;i++){x^=t.charCodeAt(i);x=Math.imul(x,16777619)>>>0}return x.toString(36)}
-function voLoad(){if(VO_IDS)return;VO_IDS=new Set();fetch("voice/index.json",{cache:"no-cache"}).then(r=>r.ok?r.json():[]).then(a=>{VO_IDS=new Set(Array.isArray(a)?a:[]);if(S.screen==="tut"){tutSaid="";renderTut()}}).catch(()=>{})}
+function voDir(){return VO_L==="de"?"voice-de/":"voice/"}
+let voNoDe=false;
+function voLoad(){const l=LANG==="de"&&!voNoDe?"de":"en";if(VO_IDS&&VO_L===l)return;VO_L=l;VO_IDS=new Set();fetch(voDir()+"index.json",{cache:"no-cache"}).then(r=>r.ok?r.json():[]).then(a=>{if(VO_L!==l)return;if(l==="de"&&!(Array.isArray(a)&&a.length)){voNoDe=true;VO_IDS=null;voLoad();return}VO_IDS=new Set(Array.isArray(a)?a:[]);if(S.screen==="tut"){tutSaid="";renderTut()}}).catch(()=>{})}
 function vo(text){if(!text||S.voiceOn===false||S.muted||S.screen==="phone"||S.screen==="join")return;voLoad();const id=voId(String(text));if(!VO_IDS.has(id))return;voQ.push(id);if(voQ.length>3)voQ.splice(0,voQ.length-3);if(!voA)voNext()}
 // stop the announcer at once (skipping a tutorial, leaving a screen)
 function voStop(){voQ=[];if(voA){const a=voA;voA=null;a.onended=a.onerror=null;try{a.pause()}catch(e){}}}
-function voNext(){const id=voQ.shift();if(!id){voA=null;return}voA=new Audio("voice/"+id+".mp3");voA.volume=Math.max(0,Math.min(1,S.volume==null?.8:S.volume));voA.onended=voA.onerror=()=>{voA=null;setTimeout(voNext,250)};voA.play().catch(()=>{voA=null;voQ=[]})}
+function voNext(){const id=voQ.shift();if(!id){voA=null;return}voA=new Audio(voDir()+id+".mp3");voA.volume=Math.max(0,Math.min(1,S.volume==null?.8:S.volume));voA.onended=voA.onerror=()=>{voA=null;setTimeout(voNext,250)};voA.play().catch(()=>{voA=null;voQ=[]})}
 function countPlay(g){if(g!=="music")muEarlyEnd();S.pre=null;clearInterval(preT);preT=null;evCommit();vo((GAME_LBL[g]||"").replace(/^\S+ /,"")+"!");S.plays=S.plays||{};S.plays[g]=(S.plays[g]||0)+1}
 const AV_KINDS=["b1","b2","b3","b4","b5","b6","b7","b8","b9","b10","g1","g2","g3","g4","g5","g6","g7","g8","g9","g10"];
 const AV_PICS=["p1","p2","p3","p4","p5","p6","p7","p8","p9"];// picture avatars (chibi, avatars/<k>.webp)
@@ -2589,7 +2630,7 @@ function renderFinal(){const done=!!S.awardsDone;renderNext(done);const sorted=[
 // ---- Host: room lifecycle ----
 let HS=null,pushT=null;const doneActions=new Set();
 function netPush(){if(S.mode!=="host"||!S.room)return;clearTimeout(pushT);pushT=setTimeout(()=>{const code=S.room&&S.room.code;if(!code)return;db.patch(`rooms/${code}`,{state:snapshot(),updatedAt:TS}).catch(()=>{})},60)}
-function snapshot(){const phase=S.screen==="eve"?"evening":S.screen==="final"?"final":S.vote?"vote":S.inGame?"game":"lobby";const c=S.current;const m=S.game==="imposter"?S.imp:null;
+function snapshot(){const lang=langWant(true);const phase=S.screen==="eve"?"evening":S.screen==="final"?"final":S.vote?"vote":S.inGame?"game":"lobby";const c=S.current;const m=S.game==="imposter"?S.imp:null;
   const impSnap=m?{phase:m.phase,round:S.round,total:impPlayers().length,answered:impPlayers().filter(i=>m.answers[i]!=null).map(i=>S.players[i].pid),voted:impPlayers().filter(i=>m.votes[i]!=null).map(i=>S.players[i].pid),
     q:m.phase!=="answer"?IMP_Q[m.qi][0]:null,answers:["discuss","vote","result"].includes(m.phase)?impPlayers().map(i=>({name:S.players[i].name,text:m.answers[i]||"–"})):null,discussEnd:m.discussEnd||null,
     nImp:(m.imps||[m.imposter]).length,result:m.result?{imposter:(S.players[m.result.imposter]||{}).name||"?",imposters:(m.result.imps||[m.result.imposter]).map(j=>(S.players[j]||{}).name||"?"),correct:m.result.correct.map(i=>(S.players[i]||{}).name||"?"),cPts:m.result.cPts||null,missed:m.result.missed.length,impPts:m.result.impPts}:null}:null;
@@ -2607,7 +2648,7 @@ function snapshot(){const phase=S.screen==="eve"?"evening":S.screen==="final"?"f
   const emSnap=em?{phase:em.phase,round:S.round,mode:S.emMode||"draw",artist:pidOf(em.artist),artistName:nameOf(em.artist),emojis:em.emojis,type:emT_[1],end:em.end||null,hint:emHalf&&em.phase==="draw"?emT_[0].split(" ").length+(emT_[0].split(" ").length>1?" words":" word")+", starts with "+emT_[0][0]:null,
     gn:(()=>{const o={};(em.guesses||[]).forEach(g=>{const pid=pidOf(g.i);if(pid)o[pid]=(o[pid]||0)+1});return o})(),guesses:(em.guesses||[]).slice(-10).map(g=>({pid:pidOf(g.i),name:nameOf(g.i),text:g.ok&&em.phase==="draw"?"":g.text,ok:g.ok})),correct:(em.correct||[]).map(c=>({pid:pidOf(c.i),name:nameOf(c.i),pts:c.pts})),artistPts:em.result?em.result.artistPts||0:0,title:em.phase==="result"?emT_[0]:null,titleDe:em.phase==="result"?emDeTitle(emT_[0]):null,winnerName:em.result&&em.result.winner!=null?nameOf(em.result.winner):null}:null;
   autoSync();const au=S.auto?{key:S.auto.key,ready:S.auto.ready,end:S.auto.end||null,mode:S.autoMode,total:impPlayers().length}:null;
-  return{phase,skips:S.skips||0,av:APPV,game:S.game||"karaoke",privV:S.privV||0,eve:S.screen==="eve"&&S.evening?{rank:evRank(),games:S.evening.games.length,leaders:S.evening.leaders.map(l=>({names:l.names,time:evTime(l.at)}))}:null,tut:S.screen==="tut"&&S.tut?{game:S.tut.game,start:S.tut.start,mode:S.tut.mode,skip:S.tut.skip,total:impPlayers().length}:null,imp:impSnap,ww:wwSnap,lc:lcSnap,uc:ucSnap,bp:bpSnap,nr:nrSnap,cn:cnSnap,rk:rkSnap,em:emSnap,cg:cgSnap,ti:tiSnap,mu:muSnap,tiQ:tiTotal(),ucRounds:S.ucRounds,bpQ:S.bpQ,nrQ:S.nrQ,cnQ:S.cnQ,rkQ:S.rkQ,emPts:S.emPts,auto:au,wwQ:S.wwQ,cards:S.game==="whowould"?S.players.map(p=>({name:p.name,cards:p.cards||[]})):null,impQ:impTotal(),impPts:S.impPts,round:S.round,rounds:S.rounds,turn:S.turn,
+  return{phase,lang,skips:S.skips||0,av:APPV,game:S.game||"karaoke",privV:S.privV||0,eve:S.screen==="eve"&&S.evening?{rank:evRank(),games:S.evening.games.length,leaders:S.evening.leaders.map(l=>({names:l.names,time:evTime(l.at)}))}:null,tut:S.screen==="tut"&&S.tut?{game:S.tut.game,start:S.tut.start,mode:S.tut.mode,skip:S.tut.skip,total:impPlayers().length}:null,imp:impSnap,ww:wwSnap,lc:lcSnap,uc:ucSnap,bp:bpSnap,nr:nrSnap,cn:cnSnap,rk:rkSnap,em:emSnap,cg:cgSnap,ti:tiSnap,mu:muSnap,tiQ:tiTotal(),ucRounds:S.ucRounds,bpQ:S.bpQ,nrQ:S.nrQ,cnQ:S.cnQ,rkQ:S.rkQ,emPts:S.emPts,auto:au,wwQ:S.wwQ,cards:S.game==="whowould"?S.players.map(p=>({name:p.name,cards:p.cards||[]})):null,impQ:impTotal(),impPts:S.impPts,round:S.round,rounds:S.rounds,turn:S.turn,
     players:S.players.map(p=>({name:p.name,score:p.score,pid:p.pid||null,on:online(p),av:p.av||null,tot:evTotalOf(p)})),
     current:c?{cat:c.cat,text:c.text,raw:c.raw||c.text,diff:c.diff,accepted:!!c.accepted,so:c.accepted&&c.so?{phase:c.so.phase,opp:c.so.opp,challengers:c.so.challengers.map(i=>S.players[i]&&S.players[i].name).filter(Boolean),voted:Object.keys(c.so.votes||{}),total:soVoters().length}:null,worth:c.worth,chain:c.chain,holder:c.holder,pick:c.pick==null?null:c.pick,partner:c.pick!=null&&needsPartner(c.raw||c.text),inText:needsPick(c.raw||c.text)}:null,
     timer:S.timer||null,timerSec:S.timerSec,mics:S.mics||1,penalty:S.penalty,bonus:S.bonus,mvpBonus:S.mvpBonus,awardBonus:S.awardBonus,tiers:tiersAvail(),
@@ -2726,7 +2767,7 @@ async function joinRoom(code,name){if(PH&&PH.hb){clearInterval(PH.hb);PH.hb=null
 function phSkipReset(st){if(!st||!PH)return;const k=st.skips||0;if(PH.skips==null){PH.skips=k;return}if(PH.skips===k)return;PH.skips=k;
   PH.nr=null;PH.rk=null;PH.rkShown=null;PH.cnR=null;PH.cnV=null;PH.cnShown=null;PH.bpRound=null;PH.bpDraftRound=null;PH.bpDraft=null;PH.answeredRound=null;PH.cgSent=null;PH.myVote=null}
 function phoneConnect(){if(!PH)return;if(PH.es)PH.es.close();clearInterval(PH.hb);
-  PH.es=db.stream(`rooms/${PH.code}/state`,st=>{phSkipReset(st);PH.state=st;PH.stRecv=Date.now();PH.err=false;renderPhoneSoft()},()=>{PH.err=true;renderPhone()});
+  PH.es=db.stream(`rooms/${PH.code}/state`,st=>{phSkipReset(st);PH.state=st;langApply();PH.stRecv=Date.now();PH.err=false;renderPhoneSoft()},()=>{PH.err=true;renderPhone()});
   PH.hb=setInterval(()=>{db.patch(`rooms/${PH.code}/members/${PH.pid}`,{seen:TS}).catch(()=>{})},10000);
   clearInterval(PHt);PHt=setInterval(()=>{if(S.screen==="phone"&&PH&&PH.state&&PH.state.timer)paintPhoneTimer();const it=$("impPhTimer");if(it&&PH&&PH.state&&PH.state.imp&&PH.state.imp.discussEnd)it.textContent=fmtT(Math.max(0,Math.ceil((PH.state.imp.discussEnd-Date.now())/1000)));const lt=$("lcPhTimer");if(lt&&PH&&PH.state&&PH.state.lc&&PH.state.lc.turnEnd)lt.textContent=Math.max(0,Math.ceil((PH.state.lc.turnEnd-Date.now())/1000))+" s";document.querySelectorAll("[data-end]").forEach(el=>{el.textContent=fmtT(Math.max(0,Math.ceil((+el.dataset.end-Date.now())/1000)))});document.querySelectorAll("[data-sec]").forEach(el=>{el.textContent=Math.max(0,Math.ceil((+el.dataset.sec-Date.now())/1000))})},500)}
 function phoneLeave(){if(PH){if(PH.es)PH.es.close();clearInterval(PH.hb);db.del(`rooms/${PH.code}/members/${PH.pid}`).catch(()=>{})}PH=null;phoneSave();clearInterval(PHt);S.screen="home";save();render()}
@@ -2749,7 +2790,7 @@ function phAvSet(k,v){const a=phAv()||avDefault();if(k==="avk"&&AV_PICS.includes
 function phAvEditor(){const a=phAv();const open=!a||(PH&&PH.avOpen);const pics=AV_PICS.map(k=>`<button class="avthumb avpt${a&&a.k===k?" on":""}" data-act="avk" data-v="${k}" aria-label="character ${k.slice(1)}"><img src="avatars/${k}.webp" alt="" loading="lazy" decoding="async"></button>`).join("");
   return `<details class="aved"${open?" open":""}><summary>${a?avHtml({av:a},true)+" <b>Your avatar</b><span class='hint' style='margin:0 0 0 auto'>change</span>":"👤 <b>Choose your avatar</b>"}</summary>
   <div class="avgrid avpics">${pics}</div></details>`}
-const APPV="v1790980116";
+const APPV="v1790982568";
 function phVerHint(){let el=$("phVer");const st=PH&&PH.state;const bad=S.screen==="phone"&&!SOLO_PH&&st&&st.av&&(+String(st.av).slice(1)||0)>(+String(APPV).slice(1)||0)&&(st.phase==="lobby"||st.phase==="final");if(!bad){if(el)el.remove();return}if(!el){el=document.createElement("div");el.id="phVer";el.className="phver";el.innerHTML='The app was updated – <button class="btn btn-ghost" type="button">Reload</button>';el.querySelector("button").onclick=()=>location.reload();document.body.appendChild(el)}}
 function renderPhone0(){if(S.screen!=="phone"||!PH)return;const st=PH.state;const body=$("phBody");
   $("phRoom").textContent="Room "+PH.code;$("phDot").className="dot"+(st&&!PH.err?" on":"");
@@ -2801,7 +2842,7 @@ function renderPhone0(){if(S.screen!=="phone"||!PH)return;const st=PH.state;cons
       if(mine)html=`<div class="who">Your turn, <b>${esc(me.name)}</b>!</div>${timer}${card}${sobox}<div class="actions phact">${c.accepted?(duel?"":`<button class="btn btn-green" data-act="done">✓ Done it (+${c.worth})</button><button class="btn btn-fail" data-act="fail">✗ Failed (${FAIL[c.diff]?"−"+FAIL[c.diff]:"0"})</button>`):`<button class="btn btn-gold" data-act="accept">✓ Accept the challenge</button><button class="btn btn-ghost" data-act="pass">${c.chain>=players.length-1?"Pass – card is discarded":"Pass ➜ hand over"}${st.penalty?` (−${st.penalty})`:""}</button>`}</div>`;
       else html=`<div class="who">${amOpp?"Sing-off, <b>"+esc(me.name)+"</b>!":"<b>"+esc(holder?holder.name:"?")+"</b> is up"}</div>${timer}${card}${sobox}<p class="hint">${c.pick===meI&&!duel?"You're the partner – get ready!":duel?"":"Cheer them on! 🎉"}</p>${board}`}
     else{if(mine)html=`<div class="who">Your turn, <b>${esc(me.name)}</b>!</div><p class="hint">Draw a card – then accept or pass.</p><div class="drawrow phdraw"><button class="btn btn-red" data-act="draw" data-diff="0" style="font-size:20px;padding:18px 28px" ${(st.tiers||[]).includes(0)?"":"disabled"}>🎴 Draw a card</button></div>${board}`;
-      else html=`<div class="who">Up next: <b>${esc(holder?holder.name:"?")}</b></div><p class="hint">Waiting for them to draw a card…</p>${st.lastVote&&st.lastVote.win.length&&st.lastVote.round===st.round-1?`<p class="hint">🏅 Best performance in round ${st.lastVote.round}: <b>${st.lastVote.win.map(esc).join(" &amp; ")}</b></p>`:""}${board}`}}
+      else html=`<div class="who">Up next: <b>${esc(holder?holder.name:"?")}</b></div><p class="hint">Waiting for them to draw a card…</p>${st.lastVote&&(st.lastVote.win||[]).length&&st.lastVote.round===st.round-1?`<p class="hint">🏅 Best performance in round ${st.lastVote.round}: <b>${st.lastVote.win.map(esc).join(" &amp; ")}</b></p>`:""}${board}`}}
   body.innerHTML=html;
   if(c&&$("phPic"))setPic(c.cat,c.text,$("phPic"),holder&&holder.name);
   paintPhoneTimer();
@@ -2859,7 +2900,7 @@ function tvApply(){const on=!!S.tvMode&&S.screen!=="phone"&&S.screen!=="join"&&i
 window.addEventListener("resize",()=>tvApply());
 function appVerTxt(){const n=+String(APPV).slice(1);if(!n)return APPV;const d=new Date(n*1000),p=x=>String(x).padStart(2,"0");return `${p(d.getDate())}.${p(d.getMonth()+1)}. ${p(d.getHours())}:${p(d.getMinutes())}`}
 function renderExtra(){{const uv=$("updVer");if(uv)uv.textContent="Version "+appVerTxt();const ub=$("updBtn");if(ub&&!ub.onclick)ub.onclick=checkUpdates;const av=$("appVer");if(av){av.textContent="Version "+appVerTxt();av.hidden=SOLO_PH||!["home","join","lobby"].includes(S.screen)}}tvApply();renderOwnCards();if(S.screen==="home")renderFan();
-  if(S.screen==="settings"){$("tutOn").checked=S.tutorials!==false;$("voiceOn").checked=S.voiceOn!==false;$("emDe").checked=S.emDe!==false;$("tvOn").checked=!!S.tvMode;const t=S.setTab||"karaoke",cat=S.setCat||"general";[...$("setTabs").querySelectorAll("[data-cat]")].forEach(b=>{b.classList.toggle("on",b.dataset.cat===cat);b.setAttribute("aria-selected",b.dataset.cat===cat)});$("setGames").hidden=cat!=="gameplay";[...$("setGames").querySelectorAll("[data-tab]")].forEach(b=>{b.classList.toggle("on",b.dataset.tab===t);b.setAttribute("aria-selected",b.dataset.tab===t)});if(S.screen==="settings"&&$("setTabs").dataset.shown!==t){$("setTabs").dataset.shown=t;setTimeout(()=>{const on=$("setTabs").querySelector(".on");const bar=$("setTabs");if(on&&bar&&bar.offsetParent)bar.scrollLeft=Math.max(0,on.offsetLeft-(bar.clientWidth-on.offsetWidth)/2)},80)}document.querySelectorAll("#scrSettings section[data-cat]").forEach(el=>{el.hidden=el.dataset.cat!==cat||(cat==="gameplay"&&el.dataset.tab!==t)})}
+  if(S.screen==="settings"){$("tutOn").checked=S.tutorials!==false;$("voiceOn").checked=S.voiceOn!==false;$("emDe").checked=S.emDe!==false;$("tvOn").checked=!!S.tvMode;$("langSel").value=S.lang||"auto";const t=S.setTab||"karaoke",cat=S.setCat||"general";[...$("setTabs").querySelectorAll("[data-cat]")].forEach(b=>{b.classList.toggle("on",b.dataset.cat===cat);b.setAttribute("aria-selected",b.dataset.cat===cat)});$("setGames").hidden=cat!=="gameplay";[...$("setGames").querySelectorAll("[data-tab]")].forEach(b=>{b.classList.toggle("on",b.dataset.tab===t);b.setAttribute("aria-selected",b.dataset.tab===t)});if(S.screen==="settings"&&$("setTabs").dataset.shown!==t){$("setTabs").dataset.shown=t;setTimeout(()=>{const on=$("setTabs").querySelector(".on");const bar=$("setTabs");if(on&&bar&&bar.offsetParent)bar.scrollLeft=Math.max(0,on.offsetLeft-(bar.clientWidth-on.offsetWidth)/2)},80)}document.querySelectorAll("#scrSettings section[data-cat]").forEach(el=>{el.hidden=el.dataset.cat!==cat||(cat==="gameplay"&&el.dataset.tab!==t)})}
   const canResume=(S.inGame&&S.players.length>=1)||(S.mode==="host"&&S.room&&!S.inGame);
   $("homeResume").hidden=!canResume;$("homeResume").textContent=S.inGame?"↩ Resume game":"↩ Back to lobby";
   $("homeHost").disabled=!NET_OK;$("homeJoin").disabled=!NET_OK;if(!NET_OK)$("homeHost").title=$("homeJoin").title="Not set up on this copy yet";
@@ -3247,6 +3288,7 @@ $("tvBtn").onclick=()=>{S.tvMode=!S.tvMode;save();render();toast(S.tvMode?"TV mo
 $("emDe").onchange=e=>{S.emDe=e.target.checked;save()};
 $("voiceOn").onchange=e=>{S.voiceOn=e.target.checked;save();if(!S.voiceOn){voQ=[];if(voA){try{voA.pause()}catch(x){}voA=null}}};
 $("tvOn").onchange=e=>{S.tvMode=e.target.checked;save();render()};
+$("langSel").onchange=e=>{S.lang=e.target.value;save();langApply();render()};
 $("muNoWait").onchange=e=>{S.muNoWait=e.target.checked;save();render()};
 $("tutOn").onchange=e=>{S.tutorials=e.target.checked;save()};
 $("tutReset").onclick=()=>{S.tutSeen={};save();toast("Tutorials will show again")};
@@ -3652,12 +3694,12 @@ function phoneTiHtml(st,me,meI,players,board){const m=st.ti;if((st.late||[]).inc
     if(mine&&!done)return `<div class="who">Your turn!</div>${m.turnEnd?`<div class="timer phtimer" data-end="${m.turnEnd}">${fmtT(Math.max(0,Math.ceil((m.turnEnd-Date.now())/1000)))}</div>`:""}<button class="tihold" id="tiBtn" type="button">HOLD</button><p class="hint">Press and hold – let go when your time is up. Everyone watches the bar on the TV.</p>${role}`;
     return `<div class="who">${done?"Time sent ✓":m.curName?esc(m.curName)+(m.holding?" is holding…":"'s turn"):"…"}</div><p class="hint">${done?"Watch the others.":pos>=0?"You're #"+(pos+1)+" – watch the TV.":""}</p>${role}`}
   const rows=m.rows||[];const mx=Math.max((m.t||1)*1.6,...rows.map(r=>r.ms||0));const res=m.result;
-  const list=`<div class="tirows ph">${rows.map(r=>{const d=r.ms!=null?r.ms-m.t:null;const imp=res&&res.imps.includes(r.pid);return`<div class="tirow${imp?" isimp":""}${r.pid===PH.pid?" me":""}"><b>${esc(r.name)}${imp?" · 🕵️":""}</b><div class="tb">${r.ms!=null?`<i style="width:${Math.min(100,100*r.ms/mx)}%"></i>`:""}<b style="left:${100*m.t/mx}%"></b></div><span class="ms">${r.ms!=null?(r.ms/1000).toFixed(2):"–"}</span><span class="dv">${d!=null?(d>0?"+":d<0?"−":"±")+(Math.abs(d)/1000).toFixed(2):""}</span></div>`}).join("")}</div>`;
+  const list=`<div class="tirows ph">${rows.map(r=>{const d=r.ms!=null?r.ms-m.t:null;const imp=res&&(res.imps||[]).includes(r.pid);return`<div class="tirow${imp?" isimp":""}${r.pid===PH.pid?" me":""}"><b>${esc(r.name)}${imp?" · 🕵️":""}</b><div class="tb">${r.ms!=null?`<i style="width:${Math.min(100,100*r.ms/mx)}%"></i>`:""}<b style="left:${100*m.t/mx}%"></b></div><span class="ms">${r.ms!=null?(r.ms/1000).toFixed(2):"–"}</span><span class="dv">${d!=null?(d>0?"+":d<0?"−":"±")+(Math.abs(d)/1000).toFixed(2):""}</span></div>`}).join("")}</div>`;
   const head=`<div class="impq"><small>The secret time was</small><span style="font-family:Anton,sans-serif;font-size:36px">${tiSec(m.t)}</span></div>`;
   if(m.phase==="discuss")return `<div class="who">Who's the imposter?</div>${m.discussEnd?`<div class="timer phtimer" data-end="${m.discussEnd}">${fmtT(Math.max(0,Math.ceil((m.discussEnd-Date.now())/1000)))}</div>`:""}${head}${list}<p class="hint">Discuss – the vote starts soon.</p>`;
   if(m.phase==="vote"){const voted=(m.voted||[]).includes(PH.pid)||(PH.myVote&&PH.myVote.round==="ti:"+m.round+":"+st.privV);if(voted)return `<div class="who">Vote locked 🔒</div><p class="hint">${(m.voted||[]).length} of ${m.total} voted…</p>${head}${list}`;
     return `<div class="who">Who is the imposter?</div><p class="hint">Your vote is final – the faster you catch the imposter, the more points.</p><div class="ballot">${players.filter(p=>p.pid&&p.pid!==PH.pid).map(p=>`<button class="btn btn-ghost" data-act="vote" data-name="${esc(p.name)}">🕵️ ${esc(p.name)}</button>`).join("")}</div>${head}${list}`}
-  if(res){res.imps=res.imps||[];res.impNames=res.impNames||[];res.correct=res.correct||[];res.cPts=res.cPts||[];res.acc=res.acc||{}}const meImp=res&&res.imps.includes(PH.pid);const k=res?res.correct.indexOf(PH.pid):-1;const a=res&&res.acc[PH.pid];
+  if(res){res.imps=res.imps||[];res.impNames=res.impNames||[];res.correct=res.correct||[];res.cPts=res.cPts||[];res.acc=res.acc||{}}const meImp=res&&(res.imps||[]).includes(PH.pid);const k=res?res.correct.indexOf(PH.pid):-1;const a=res&&res.acc[PH.pid];
   return `<div class="who">${meImp?"You were the imposter 🕵️":(res.impNames.length>1?"The imposters were <b>":"The imposter was <b>")+esc(res.impNames.join(" & "))+"</b>"}</div><p class="hint">${meImp?(res.impPts?"You fooled "+res.fooled+": +"+res.impPts:"Everyone saw through you – no vote points")+(res.comp?" · average accuracy of the others: +"+res.comp:""):(k>=0?"You caught them: +"+res.cPts[k]+(k===0?" – fastest!":" (#"+(k+1)+")"):"Wrong guess – no vote points")+(a?" · accuracy "+a.acc.toFixed(2)+": +"+a.pts:"")}</p>${head}${list}${autoPhoneHtml(st)}${board}`}
 function phTiBind(st){const fb=$("tiFeelBtn");if(fb&&PH.priv&&PH.priv.t)fb.onclick=()=>{const b=$("tiFeelBar");if(!b)return;PH.tiFeelUntil=Date.now()+PH.priv.t+300;setTimeout(()=>{if(PH.tiPend){PH.tiPend=false;renderPhone()}},PH.priv.t+350);b.style.animation="none";void b.offsetWidth;b.style.animation=`tifeel ${(PH.priv.t/1000).toFixed(2)}s linear forwards`};
   const btn=$("tiBtn");if(!btn)return;btn.oncontextmenu=e=>{e.preventDefault()};
