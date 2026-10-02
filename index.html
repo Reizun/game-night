@@ -665,6 +665,27 @@ li:has(>.fxdelta){position:relative}
 .rkbtn:active{transform:scale(.97)}.rkbtn.on{border-color:var(--gold);background:rgba(224,182,76,.14)}
 .rkbtn .no{display:grid;place-items:center;min-width:28px;height:28px;border-radius:50%;background:var(--ground);color:var(--gold);font:400 16px Anton,sans-serif}.rkbtn.on .no{background:var(--gold);color:#14223f}
 .rkmini{display:flex;flex-direction:column;gap:2px;margin:4px 0}.rkmini b{font-size:10px;padding:2px 5px;border-radius:4px;background:var(--card);color:var(--card-ink)}.rkmini.ph b{background:var(--ground-2);color:var(--ink)}.rkmini.ph b.on{outline:1px solid var(--gold)}
+/* ===== wide screens (2026-10): stage + scoreboard side by side, lobby in two columns – the TV-mode layout without its zoom ===== */
+@media (min-width:1024px){
+html:not(.tv) .app{max-width:1280px}
+html:not(.tv) .screen>.imp{max-width:none;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:14px 18px;align-items:start}
+html:not(.tv) .screen>.imp>*{grid-column:1;min-width:0}
+html:not(.tv) .screen>.imp>.topbar{grid-column:1/-1}
+html:not(.tv) .screen>.imp>section.panel{grid-area:2/2;padding:14px;width:auto!important}
+html:not(.tv) .screen>.imp.tvsolo{grid-template-columns:minmax(0,1fr);max-width:1100px;margin:0 auto}
+html:not(.tv) .screen>.imp.tvsolo>*{grid-column:1}
+html:not(.tv) .lobby{max-width:none;display:grid;grid-template-columns:minmax(0,1.8fr) minmax(0,1fr);align-items:start;gap:14px 18px}
+html:not(.tv) .lobby>*{grid-column:1/-1}
+html:not(.tv) .lobby>section.panel{grid-column:auto}
+html:not(.tv) .lobby .panel.center{flex-direction:row;align-items:flex-start;gap:24px}
+html:not(.tv) .lobl{flex:0 0 auto;width:auto;max-width:280px}
+html:not(.tv) .lobr{flex:1 1 0;min-width:0}
+html:not(.tv) .lobr>.round{margin-top:0!important}
+html:not(.tv) .players{gap:6px}
+}
+/* lobby game picker: an even grid of cards instead of a centred cluster of pills (two columns on a phone) */
+#gameSel{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:8px;width:100%;justify-content:stretch}
+#gameSel .gchip{max-width:none;height:100%;border-radius:14px;padding:10px 12px;justify-content:flex-start}
 /* ===== platform polish (2026-10): the phone is a controller, not a document ===== */
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 /* no pull-to-refresh / rubber band behind the game – an accidental reload mid-round is the worst case */
@@ -2692,7 +2713,7 @@ function phAvSet(k,v){const a=phAv()||avDefault();if(k==="avk"&&AV_PICS.includes
 function phAvEditor(){const a=phAv();const open=!a||(PH&&PH.avOpen);const pics=AV_PICS.map(k=>`<button class="avthumb avpt${a&&a.k===k?" on":""}" data-act="avk" data-v="${k}" aria-label="character ${k.slice(1)}"><img src="avatars/${k}.webp" alt="" loading="lazy" decoding="async"></button>`).join("");
   return `<details class="aved"${open?" open":""}><summary>${a?avHtml({av:a},true)+" <b>Your avatar</b><span class='hint' style='margin:0 0 0 auto'>change</span>":"👤 <b>Choose your avatar</b>"}</summary>
   <div class="avgrid avpics">${pics}</div></details>`}
-const APPV="v1790961098";
+const APPV="v1790969645";
 function phVerHint(){let el=$("phVer");const st=PH&&PH.state;const bad=S.screen==="phone"&&!SOLO_PH&&st&&st.av&&(+String(st.av).slice(1)||0)>(+String(APPV).slice(1)||0)&&(st.phase==="lobby"||st.phase==="final");if(!bad){if(el)el.remove();return}if(!el){el=document.createElement("div");el.id="phVer";el.className="phver";el.innerHTML='The app was updated – <button class="btn btn-ghost" type="button">Reload</button>';el.querySelector("button").onclick=()=>location.reload();document.body.appendChild(el)}}
 function renderPhone0(){if(S.screen!=="phone"||!PH)return;const st=PH.state;const body=$("phBody");
   $("phRoom").textContent="Room "+PH.code;$("phDot").className="dot"+(st&&!PH.err?" on":"");
