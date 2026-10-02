@@ -709,7 +709,10 @@ button:not(.btn):not(.playbtn):not(.chip):not(.sgame):not(.nrcell):not(.rkbtn):n
 /* worst-case data: an 18-letter name without a space stays inside its row and the remove button stays reachable */
 .screen{overflow-wrap:break-word}
 .players li>.rank,.players li>.dot,.players li>.hint,.players li>.x,.players li>.pts{flex-shrink:0}
-.players .name{display:flex;align-items:center;min-width:0;overflow-wrap:anywhere}
+.players .name{display:flex;align-items:center;min-width:4.5em;overflow-wrap:anywhere}
+/* narrow scoreboards (side panel, phone): the "Tonight" total gets its own line so the name keeps its room */
+.screen>.imp>section.panel .players li,aside .players li,.phboard li{flex-wrap:wrap}
+.screen>.imp>section.panel .players li>.tot,aside .players li>.tot,.phboard li>.tot{order:9;flex:1 0 100%;text-align:right;margin-top:-2px}
 @media (max-width:480px){.players li{gap:6px}.players li>.hint{font-size:12px;max-width:64px;text-align:right;line-height:1.15}}
 /* last 10 seconds: every countdown turns red and beats (set by fxUrgent) */
 .timer.urgent{color:#ff7b7b;animation:fxBeat 1s ease-in-out infinite}
@@ -2713,7 +2716,7 @@ function phAvSet(k,v){const a=phAv()||avDefault();if(k==="avk"&&AV_PICS.includes
 function phAvEditor(){const a=phAv();const open=!a||(PH&&PH.avOpen);const pics=AV_PICS.map(k=>`<button class="avthumb avpt${a&&a.k===k?" on":""}" data-act="avk" data-v="${k}" aria-label="character ${k.slice(1)}"><img src="avatars/${k}.webp" alt="" loading="lazy" decoding="async"></button>`).join("");
   return `<details class="aved"${open?" open":""}><summary>${a?avHtml({av:a},true)+" <b>Your avatar</b><span class='hint' style='margin:0 0 0 auto'>change</span>":"👤 <b>Choose your avatar</b>"}</summary>
   <div class="avgrid avpics">${pics}</div></details>`}
-const APPV="v1790969645";
+const APPV="v1790978781";
 function phVerHint(){let el=$("phVer");const st=PH&&PH.state;const bad=S.screen==="phone"&&!SOLO_PH&&st&&st.av&&(+String(st.av).slice(1)||0)>(+String(APPV).slice(1)||0)&&(st.phase==="lobby"||st.phase==="final");if(!bad){if(el)el.remove();return}if(!el){el=document.createElement("div");el.id="phVer";el.className="phver";el.innerHTML='The app was updated – <button class="btn btn-ghost" type="button">Reload</button>';el.querySelector("button").onclick=()=>location.reload();document.body.appendChild(el)}}
 function renderPhone0(){if(S.screen!=="phone"||!PH)return;const st=PH.state;const body=$("phBody");
   $("phRoom").textContent="Room "+PH.code;$("phDot").className="dot"+(st&&!PH.err?" on":"");
