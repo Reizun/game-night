@@ -1,8 +1,8 @@
-const CACHE="gamenight-v1790979967";
+const CACHE="gamenight-v1790980116";
 const ASSETS=["./index.html","./manifest.webmanifest","./icon-192.png","./icon-512.png","./icon-512-maskable.png","./qrcode.min.js","./fonts/anton.woff2","./fonts/caveat.woff2","./fonts/nunito.woff2","./fonts/cinzel.woff2","./avatars/p1.webp","./avatars/p2.webp","./avatars/p3.webp","./avatars/p4.webp","./avatars/p5.webp","./avatars/p6.webp","./avatars/p7.webp","./avatars/p8.webp","./avatars/p9.webp"];
 self.addEventListener("install",e=>{// every file on its own: one failed download (bad mobile network) must not block the whole update
   e.waitUntil(caches.open(CACHE).then(c=>Promise.all(ASSETS.map(u=>c.add(new Request(u,{cache:"reload"})).catch(()=>{})))).then(()=>self.skipWaiting()))});
-self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
+self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith("gamenight-")&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 self.addEventListener("fetch",e=>{
   if(e.request.method!=="GET")return;
   const u=new URL(e.request.url);
@@ -13,7 +13,7 @@ self.addEventListener("fetch",e=>{
   }
   if(u.origin===location.origin){
     // app shell: cache-first, fall back to index.html when offline
-    e.respondWith(caches.match(e.request,{ignoreSearch:true}).then(r=>r||fetch(e.request).then(res=>{const cp=res.clone();caches.open(CACHE).then(c=>c.put(e.request,cp));return res})).catch(()=>caches.match("./index.html")));
+    e.respondWith(caches.match(e.request,{ignoreSearch:true}).then(r=>r||fetch(e.request).then(res=>{if(res.status===200){const cp=res.clone();caches.open(CACHE).then(c=>c.put(e.request,cp)).catch(()=>{})}return res})));
     return;
   }
   if(/(^|\.)(fonts\.googleapis\.com|fonts\.gstatic\.com|cdnjs\.cloudflare\.com)$/.test(u.hostname)){
