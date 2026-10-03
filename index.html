@@ -2575,16 +2575,16 @@ function trWalk(root){if(!root)return;if(root.nodeType===3){trNode(root);return}
 new MutationObserver(ms=>{if(LANG!=="de")return;for(const m of ms){if(m.type==="childList")m.addedNodes.forEach(trWalk);else if(m.type==="characterData")trNode(m.target);else trAttrs(m.target)}})
   .observe(document.documentElement,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:TR_ATTR});
 // ---- Announcer: pre-generated voice clips ----
-let VO_IDS=null,VO_L="",voQ=[],voA=null;
+let VO_IDS=null,VO_L="",voQ=[],voA=null,voT=null;
 function voId(t){let x=2166136261>>>0;for(let i=0;i<t.length;i++){x^=t.charCodeAt(i);x=Math.imul(x,16777619)>>>0}return x.toString(36)}
 function voDir(){return VO_L==="de"?"voice-de/":"voice/"}
 let voNoDe=false;
 function voLoad(){const l=LANG==="de"&&!voNoDe?"de":"en";if(VO_IDS&&VO_L===l)return;VO_L=l;VO_IDS=new Set();fetch(voDir()+"index.json",{cache:"no-cache"}).then(r=>r.ok?r.json():[]).then(a=>{if(VO_L!==l)return;if(l==="de"&&!(Array.isArray(a)&&a.length)){voNoDe=true;VO_IDS=null;voLoad();return}VO_IDS=new Set(Array.isArray(a)?a:[]);if(S.screen==="tut"){tutSaid="";renderTut()}}).catch(()=>{})}
-function vo(text){if(!text||S.voiceOn===false||S.muted||S.screen==="phone"||S.screen==="join")return;voLoad();const id=voId(String(text));if(!VO_IDS.has(id))return;voQ.push(id);if(voQ.length>3)voQ.splice(0,voQ.length-3);if(!voA)voNext()}
+function vo(text){if(!text||S.voiceOn===false||S.muted||S.screen==="phone"||S.screen==="join")return;voLoad();const id=voId(String(text));if(!VO_IDS.has(id))return;voQ.push(id);while(voQ.filter(x=>!x.id).length>3)voQ.splice(voQ.findIndex(x=>!x.id),1);if(!voA&&!voT)voNext()}
 // stop the announcer at once (skipping a tutorial, leaving a screen)
-function voStop(){voQ=[];if(voA){const a=voA;voA=null;a.onended=a.onerror=null;try{a.pause()}catch(e){}}}
-function voSeq(texts){if(S.voiceOn===false||S.muted||S.screen==="phone"||S.screen==="join")return;voLoad();const ids=texts.map(x=>voId(String(x))).filter(id=>VO_IDS.has(id));if(!ids.length)return;voQ=voQ.concat(ids.map((id,k)=>({id,tight:k>0})));if(!voA)voNext()}
-function voNext(){const it=voQ.shift();const id=it&&it.id?it.id:it;if(!id){voA=null;return}voA=new Audio(voDir()+id+".mp3");voA.volume=Math.max(0,Math.min(1,S.volume==null?.8:S.volume));voA.onended=voA.onerror=()=>{voA=null;setTimeout(voNext,voQ[0]&&voQ[0].tight?40:250)};voA.play().catch(()=>{voA=null;voQ=[]})}
+function voStop(){voQ=[];clearTimeout(voT);voT=null;if(voA){const a=voA;voA=null;a.onended=a.onerror=null;try{a.pause()}catch(e){}}}
+function voSeq(texts){if(S.voiceOn===false||S.muted||S.screen==="phone"||S.screen==="join")return;voLoad();const ids=texts.map(x=>voId(String(x))).filter(id=>VO_IDS.has(id));if(!ids.length)return;voQ=voQ.concat(ids.map((id,k)=>({id,tight:k>0})));if(!voA&&!voT)voNext()}
+function voNext(){const it=voQ.shift();const id=it&&it.id?it.id:it;if(!id){voA=null;return}voA=new Audio(voDir()+id+".mp3");voA.volume=Math.max(0,Math.min(1,S.volume==null?.8:S.volume));voA.onended=voA.onerror=()=>{voA=null;voT=setTimeout(()=>{voT=null;voNext()},voQ[0]&&voQ[0].tight?40:250)};voA.play().catch(()=>{voA=null;voQ=[]})}
 function countPlay(g){if(g!=="music")muEarlyEnd();S.pre=null;clearInterval(preT);preT=null;evCommit();vo((GAME_LBL[g]||"").replace(/^\S+ /,"")+"!");S.plays=S.plays||{};S.plays[g]=(S.plays[g]||0)+1}
 const AV_KINDS=["b1","b2","b3","b4","b5","b6","b7","b8","b9","b10","g1","g2","g3","g4","g5","g6","g7","g8","g9","g10"];
 const AV_PICS=["p1","p2","p3","p4","p5","p6","p7","p8","p9"];// picture avatars (chibi, avatars/<k>.webp)
@@ -2906,7 +2906,7 @@ async function joinRoom(code,name){if(PH&&PH.hb){clearInterval(PH.hb);PH.hb=null
   jDone()}
 // the host skipped a round: the same round number now holds a new task, so everything this phone remembered for it is void
 function phSkipReset(st){if(!st||!PH)return;const k=st.skips||0;if(PH.skips==null){PH.skips=k;return}if(PH.skips===k)return;PH.skips=k;
-  PH.nr=null;PH.rk=null;PH.rkShown=null;PH.cnR=null;PH.cnV=null;PH.cnShown=null;PH.puSel=null;PH.puSent=null;PH.puVoted=null;PH.puArm=null;PH.bpRound=null;PH.bpDraftRound=null;PH.bpDraft=null;PH.answeredRound=null;PH.cgSent=null;PH.myVote=null}
+  PH.nr=null;PH.rk=null;PH.rkShown=null;PH.cnR=null;PH.cnV=null;PH.cnShown=null;PH.puSel=null;PH.puSent=null;PH.puVoted=null;PH.puArm=null;PH.puWait=null;PH.bpRound=null;PH.bpDraftRound=null;PH.bpDraft=null;PH.answeredRound=null;PH.cgSent=null;PH.myVote=null}
 function phoneConnect(){if(!PH)return;if(PH.es)PH.es.close();clearInterval(PH.hb);
   PH.es=db.stream(`rooms/${PH.code}/state`,st=>{phSkipReset(st);PH.state=st;langApply();PH.stRecv=Date.now();PH.err=false;renderPhoneSoft()},()=>{PH.err=true;renderPhone()});
   PH.hb=setInterval(()=>{db.patch(`rooms/${PH.code}/members/${PH.pid}`,{seen:TS}).catch(()=>{})},10000);
@@ -4242,7 +4242,7 @@ function puDeck(m){const inHand=new Set(Object.values(m.hands).flat());S.puUsedA
 function puDeal(m,i,n){m.hands[i]=m.hands[i]||[];while(m.hands[i].length<n){if(!m.deck||!m.deck.length)m.deck=puDeck(m);if(!m.deck.length)break;m.hands[i].push(m.deck.pop())}}
 function puStart(){if(tutGate("punchline"))return;countPlay("punchline");S.game="punchline";S.next=null;S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0;delete p.late});S.inGame=true;S.round=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=true;S.log=[];
   S.pu={phase:"pick",round:0,rounds:S.puRounds,pi:null,pick:1,start:Date.now(),end:null,hands:{},swapped:{},deck:null,picks:{},order:[],readK:0,readAt:null,said:-1,votes:{},runoff:null,res:null};S.screen="pu";puNext();sfx.start()}
-function puNext(){const m=S.pu;if(!m)return;S.players.forEach(p=>{delete p.late});m.round++;if(m.round>m.rounds){finish();return}S.round=m.round;
+function puNext(force){const m=S.pu;if(!m||(m.round>0&&m.phase!=="reveal"&&!force))return;voStop();S.players.forEach(p=>{delete p.late});m.round++;if(m.round>m.rounds){finish();return}S.round=m.round;
   S.puUsedP=S.puUsedP||[];let pool=PU_PROMPTS.map((x,i)=>i).filter(i=>!S.puUsedP.includes(i));if(!pool.length){S.puUsedP=[];pool=PU_PROMPTS.map((x,i)=>i)}m.pi=pool[Math.floor(Math.random()*pool.length)];S.puUsedP.push(m.pi);m.pick=puPickN(PU_PROMPTS[m.pi]);
   impPlayers().forEach(i=>puDeal(m,i,S.puHand));
   // 5 s for the card to flip and be read, then the pick time
@@ -4255,11 +4255,13 @@ function puSwap(i,round){const m=S.pu;if(!m||m.phase!=="pick"||+round!==m.round|
   S.puUsedA=(S.puUsedA||[]).concat(m.hands[i]||[]);m.hands[i]=[];m.swapped[i]=true;puDeal(m,i,S.puHand);puPushPriv();save();render()}
 function puRead(){const m=S.pu;if(!m||m.phase!=="pick")return;const pl=impPlayers();
   pl.forEach(j=>{if(!m.picks[j]){const h=(m.hands[j]||[]).slice().sort(()=>Math.random()-.5);if(h.length>=m.pick)m.picks[j]=h.slice(0,m.pick)}});
-  const who=pl.filter(j=>m.picks[j]);if(!who.length){puNext();return}
+  const who=pl.filter(j=>m.picks[j]);if(!who.length){puNext(true);return}
   who.forEach(j=>{m.hands[j]=(m.hands[j]||[]).filter(x=>!m.picks[j].includes(x));S.puUsedA=(S.puUsedA||[]).concat(m.picks[j])});
   m.order=who.sort(()=>Math.random()-.5);m.phase="read";m.readK=0;m.readAt=Date.now();m.said=-1;m.end=null;S.auto=null;puPushPriv();save();render()}
-// reading pace: 1.5 s lead-in, then per card 2.6 s plus the length of its sentence
-function puReadMs(m,k){const j=m.order[k];const len=PU_PROMPTS[m.pi].length+(m.picks[j]||[]).reduce((a,x)=>a+PU_ANSWERS[x].length,0);return Math.min(9000,2600+60*len)}
+// reading pace: 1.5 s lead-in, then per card the time the announcer needs for its sentence (about 75 ms per letter plus a pause per clip)
+function puReadMs(m,k){const j=m.order[k],p=m.picks[j]||[];const len=PU_PROMPTS[m.pi].length+p.reduce((a,x)=>a+PU_ANSWERS[x].length,0);return Math.min(20000,1200+75*len+300*(1+2*p.length))}
+// the next card waits while the announcer is still talking (at most 8 s extra per card)
+function puReadHold(m,k){const busy=!!(voA||voQ.length||voT);if(busy&&m.said>=0&&(m.hold||0)<32){m.hold=(m.hold||0)+1;m.readAt+=250;return true}m.hold=0;return false}
 function puReadIdx(m){let el=Date.now()-(m.readAt||Date.now())-1500;if(el<0)return 0;for(let k=0;k<m.order.length;k++){el-=puReadMs(m,k);if(el<0)return k}return null}
 function puVoteOpen(){const m=S.pu;if(!m||m.phase!=="read")return;m.phase="vote";m.readK=m.order.length;m.votes={};m.end=S.puVoteTime?Date.now()+S.puVoteTime*1000:null;S.auto=null;save();render();vo("Vote for the funniest one!")}
 // who may vote: everyone who has at least one card that is not their own to choose from
@@ -4298,32 +4300,36 @@ function renderPu(){if(S.screen!=="pu"||S.game!=="punchline"){clearInterval(puT)
   else info=`<div class="hint" style="margin:0">${m.res.win.length?"Winner: "+m.res.win.map(nm).join(" & "):"No votes – no points"}</div><button class="btn btn-gold" id="puNextBtn" style="font-size:18px;padding:16px 24px">${m.round>=m.rounds?"🏆 Show results":"Next card ▸"}</button>`+autoHtml();
   const ib=$("puInfo");if(ib){ib.innerHTML=info;twe(ib)}
   if(!puT&&(m.end||m.phase==="read"))puT=setInterval(()=>{const q=S.pu;if(!q||S.screen!=="pu"||(!q.end&&q.phase!=="read")){clearInterval(puT);puT=null;return}
-    if(q.phase==="read"){const k=puReadIdx(q);if(k===null){clearInterval(puT);puT=null;puVoteOpen();return}if(q.said!==k){q.said=k;voSeq(puSpeech(PU_PROMPTS[q.pi],(q.picks[q.order[k]]||[]).map(x=>PU_ANSWERS[x])))}if(q.readK!==k+1){q.readK=k+1;save();render()}return}
+    if(q.phase==="read"){const k=puReadIdx(q);if(k!==q.said&&puReadHold(q,k))return;if(k===null){clearInterval(puT);puT=null;puVoteOpen();return}if(q.said!==k){q.said=k;voSeq(puSpeech(PU_PROMPTS[q.pi],(q.picks[q.order[k]]||[]).map(x=>PU_ANSWERS[x])))}if(q.readK!==k+1){q.readK=k+1;save();render()}return}
     const l=Math.max(0,Math.ceil((q.end-Date.now())/1000));const el=$("puLeft");if(el)el.textContent=fmtT(Math.min(l,q.phase==="pick"?S.puPickTime:l));if(l<=0){clearInterval(puT);puT=null;sfx.buzz();if(q.phase==="pick")puRead();else puTally()}},250);
-  const bind=(id,fn)=>{const b=$(id);if(b)b.onclick=fn};bind("puReadBtn",()=>ask("Read the answers now? Players who haven't picked get a random card.",()=>{if(S.pu&&S.pu.phase==="pick")puRead()},"Read"));bind("puSkip",()=>ask("Skip this card?",()=>{S.skips=(S.skips||0)+1;S.pu.round--;puNext()},"Skip"));bind("puVoteBtn",puVoteOpen);bind("puTallyBtn",puTally);bind("puNextBtn",puNext)}
+  const bind=(id,fn)=>{const b=$(id);if(b)b.onclick=fn};bind("puReadBtn",()=>ask("Read the answers now? Players who haven't picked get a random card.",()=>{if(S.pu&&S.pu.phase==="pick")puRead()},"Read"));bind("puSkip",()=>ask("Skip this card?",()=>{if(!S.pu||S.pu.phase!=="pick")return;S.skips=(S.skips||0)+1;S.pu.round--;puNext(true)},"Skip"));bind("puVoteBtn",()=>{voStop();puVoteOpen()});bind("puTallyBtn",puTally);bind("puNextBtn",puNext)}
 // public state: who played which card is added only in the reveal; while reading, unread cards are withheld
 function puSnapOf(){const m=S.game==="punchline"?S.pu:null;if(!m||m.pi==null)return null;const pid=j=>(S.players[j]||{}).pid,pl=impPlayers(),open=m.phase==="reveal",V=m.phase==="runoff"?m.runoff.votes:m.votes;
   const cards=m.phase==="pick"?null:m.order.map((j,k)=>{const shown=m.phase!=="read"||k<m.readK;const c={k,a:shown?(m.picks[j]||[]).slice():null};
     if(open&&S.players[j])Object.assign(c,{pid:pid(j),name:S.players[j].name,votes:(m.res.n||{})[j]||0,pts:(m.res.pts||{})[j]||0,win:m.res.win.includes(j)});return c});
   return {phase:m.phase,round:m.round,rounds:m.rounds,pi:m.pi,pick:m.pick,end:m.end||null,start:m.start,total:pl.length,picked:pl.filter(j=>m.picks[j]).map(pid),voted:pl.filter(j=>V[j]!=null).map(pid),cards,cands:m.runoff?m.runoff.cands.map(j=>m.order.indexOf(j)):null}}
 function phonePuHtml(st,me,meI,players,board){const m=st.pu;if((st.late||[]).includes(PH.pid))return `<div class="who">You're in!</div><p class="hint">You join from the next card.</p>${board}`;if(!m)return `<div class="who">Punchline</div><p class="hint">Waiting for the host…</p>${board}`;
-  if(!(PH.priv&&PH.priv.n===st.privV&&PH.priv.g==="pu"))impFetchPriv(st.privV);const priv=PH.priv&&PH.priv.g==="pu"&&PH.priv.n===st.privV?PH.priv:null;const P=PU_PROMPTS[m.pi]||"",key=m.start+":"+m.round;
+  // private doc: while picking, the last known hand stays on screen until the newer doc arrives; after a swap the old hand is hidden until the host has dealt
+  const pv=PH.priv&&PH.priv.g==="pu"?PH.priv:null,fresh=!!pv&&pv.n===st.privV;if(PH.puWait!=null&&st.privV>PH.puWait)PH.puWait=null;if(!fresh)impFetchPriv(st.privV);
+  const priv=PH.puWait!=null?null:fresh?pv:m.phase==="pick"?pv:null;const P=PU_PROMPTS[m.pi]||"",key=m.start+":"+m.round;
+  // "sent" bridges the few seconds until the host confirms; after that the host's list decides (a lost action can be repeated)
+  const bridged=(f,k)=>!!f&&f.key===k&&Date.now()-f.t<4000;
   const timer=m.end?`<div class="timer phtimer" data-end="${m.end}">${fmtT(Math.max(0,Math.ceil((m.end-Date.now())/1000)))}</div>`:"";const A=c=>(c.a||[]).map(x=>PU_ANSWERS[x]);
-  if(m.phase==="pick"){const sent=(m.picked||[]).includes(PH.pid)||PH.puSent===key;if(!PH.puSel||PH.puSel.key!==key)PH.puSel={key,cards:[]};const sel=PH.puSel.cards;
+  if(m.phase==="pick"){const sent=(m.picked||[]).includes(PH.pid)||bridged(PH.puSent,key);if(!PH.puSel||PH.puSel.key!==key)PH.puSel={key,cards:[]};if(priv&&!sent)PH.puSel.cards=PH.puSel.cards.filter(x=>(priv.hand||[]).includes(x));const sel=PH.puSel.cards;
     if(sent)return `<div class="who">Card played ✓</div>${puCardHtml("black",sel.length?puFillHtml(P,sel.map(x=>PU_ANSWERS[x])):puPromptHtml(P))}<p class="hint">${(m.picked||[]).length} of ${m.total} picked…</p>`;
     if(!priv)return `<div class="who">🎭 Punchline</div>${puCardHtml("black",puPromptHtml(P))}<p class="hint">Loading your cards…</p>`;
-    return `<div class="who">${m.pick>1?"Pick 2 cards, in order":"Pick your funniest card"}</div>${timer}${puCardHtml("black",sel.length?puFillHtml(P,sel.map(x=>PU_ANSWERS[x])):puPromptHtml(P))}<div class="puhand">${(priv.hand||[]).map(x=>{const o=sel.indexOf(x);return `<button type="button" class="pucard white notr${o>=0?" sel":""}" data-pu="${x}">${o>=0&&m.pick>1?`<span class="puno">${o+1}</span>`:""}${esc(PU_ANSWERS[x]||"")}</button>`}).join("")}</div><button class="btn btn-gold" id="puOk" ${sel.length===m.pick?"":"disabled"}>Play</button>${priv.sw?"":`<button class="btn btn-ghost" id="puSwapBtn">${PH.puArm===key?"Tap again: swap all 7 cards":"🔄 Swap my hand (once per game)"}</button>`}`}
+    return `<div class="who">${m.pick>1?"Pick 2 cards, in order":"Pick your funniest card"}</div>${timer}${puCardHtml("black",sel.length?puFillHtml(P,sel.map(x=>PU_ANSWERS[x])):puPromptHtml(P))}<div class="puhand">${(priv.hand||[]).map(x=>{const o=sel.indexOf(x);return `<button type="button" class="pucard white notr${o>=0?" sel":""}" data-pu="${x}">${o>=0&&m.pick>1?`<span class="puno">${o+1}</span>`:""}${esc(PU_ANSWERS[x]||"")}</button>`}).join("")}</div><button class="btn btn-gold" id="puOk" ${sel.length===m.pick?"":"disabled"}>Play</button>${priv.sw?"":`<button class="btn btn-ghost" id="puSwapBtn">${PH.puArm===key?"Tap again to swap your whole hand":"🔄 Swap my hand (once per game)"}</button>`}`}
   if(m.phase==="read")return `<div class="who">Listen…</div>${puCardHtml("black",puPromptHtml(P))}<div class="puhand">${(m.cards||[]).filter(c=>c.a).map(c=>puCardHtml("white",puFillHtml(P,A(c)))).join("")}</div>`;
-  if(m.phase==="vote"||m.phase==="runoff"){const vk=key+":"+m.phase,voted=(m.voted||[]).includes(PH.pid)||PH.puVoted===vk,mine=priv?priv.k:-2;const list=(m.cards||[]).filter(c=>m.phase!=="runoff"||(m.cands||[]).includes(c.k));
+  if(m.phase==="vote"||m.phase==="runoff"){const vk=key+":"+m.phase,voted=(m.voted||[]).includes(PH.pid)||bridged(PH.puVoted,vk),mine=priv?priv.k:-2;const list=(m.cards||[]).filter(c=>m.phase!=="runoff"||(m.cands||[]).includes(c.k));
     const canVote=list.some(c=>c.k!==mine);
-    return `<div class="who">${voted?"Voted ✓":m.phase==="runoff"?"Tie-break – vote again":"Which one is the funniest?"}</div>${timer}${puCardHtml("black",puPromptHtml(P))}<div class="puhand">${list.map(c=>c.k===mine?puCardHtml("white",puFillHtml(P,A(c))+`<div class="pumeta"><span>Your card</span></div>`,"own"):voted||!priv?puCardHtml("white",puFillHtml(P,A(c))):`<button type="button" class="pucard white notr" data-puv="${c.k}">${puFillHtml(P,A(c))}</button>`).join("")}</div>${!canVote&&!voted?`<p class="hint">Only your own card is left – you sit this vote out.</p>`:""}`}
+    return `<div class="who">${voted?"Voted ✓":m.phase==="runoff"?"Tie-break – vote again":"Which one is the funniest?"}</div>${timer}${puCardHtml("black",puPromptHtml(P))}<div class="puhand">${list.map(c=>c.k===mine?puCardHtml("white",puFillHtml(P,A(c)),"own")+`<p class="hint" style="margin:-4px 0 4px">Your card</p>`:voted||!priv?puCardHtml("white",puFillHtml(P,A(c))):`<button type="button" class="pucard white notr" data-puv="${c.k}">${puFillHtml(P,A(c))}</button>`).join("")}</div>${!canVote&&!voted?`<p class="hint">Only your own card is left – you sit this vote out.</p>`:""}`}
   const my=(m.cards||[]).find(c=>c.pid===PH.pid),win=(m.cards||[]).filter(c=>c.win);
   return `<div class="who">${my?(my.win?"🏆 You won the round! ":"")+"+"+my.pts:"Round over"}</div>${win.length?puCardHtml("black",puFillHtml(P,A(win[0]))):puCardHtml("black",puPromptHtml(P))}<p class="hint">${win.length?"Winner: "+win.map(c=>esc(c.name)).join(" & "):"No votes – no points"}${my?` · your card got ${my.votes} ${my.votes===1?"vote":"votes"}`:""}</p>${autoPhoneHtml(st)}${board}`}
 function phonePuBind(st){const m=st.pu;if(!m)return;const body=$("phBody"),key=m.start+":"+m.round;
   body.querySelectorAll("[data-pu]").forEach(b=>b.onclick=()=>{const x=+b.dataset.pu,a=PH.puSel.cards,k=a.indexOf(x);if(k>=0)a.splice(k,1);else{if(a.length>=m.pick)a.shift();a.push(x)}if(navigator.vibrate)try{navigator.vibrate(8)}catch(e){}renderPhone()});
-  const ok=$("puOk");if(ok)ok.onclick=()=>{if(PH.puSel.cards.length!==m.pick)return;PH.puSent=key;phoneAct("pupick",{r:m.round,cards:PH.puSel.cards.slice()});renderPhone()};
-  const sw=$("puSwapBtn");if(sw)sw.onclick=()=>{if(PH.puArm!==key){PH.puArm=key;renderPhone();return}PH.puArm=null;PH.puSel={key,cards:[]};PH.priv=null;phoneAct("puswap",{r:m.round});renderPhone()};
-  body.querySelectorAll("[data-puv]").forEach(b=>b.onclick=()=>{PH.puVoted=key+":"+m.phase;phoneAct("puvote",{r:m.round,k:+b.dataset.puv});renderPhone()})}
+  const ok=$("puOk");if(ok)ok.onclick=()=>{if(PH.puSel.cards.length!==m.pick)return;PH.puSent={key,t:Date.now()};phoneAct("pupick",{r:m.round,cards:PH.puSel.cards.slice()});renderPhone()};
+  const sw=$("puSwapBtn");if(sw)sw.onclick=()=>{if(PH.puArm!==key){PH.puArm=key;renderPhone();return}PH.puArm=null;PH.puSel={key,cards:[]};PH.puWait=st.privV;phoneAct("puswap",{r:m.round});renderPhone()};
+  body.querySelectorAll("[data-puv]").forEach(b=>b.onclick=()=>{PH.puVoted={key:key+":"+m.phase,t:Date.now()};phoneAct("puvote",{r:m.round,k:+b.dataset.puv});renderPhone()})}
 
 // ===== Rank It: 5 things, one criterion (year, size, speed …) – put them in order on the phone =====
 // items are listed in the correct order; the label is shown at the reveal
