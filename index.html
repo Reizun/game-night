@@ -2420,7 +2420,7 @@ function soChallenge(i){const c=S.current,so=soState();if(!so||so.opp!=null||so.
 function soPick(i){const c=S.current,so=soState();if(!so||so.phase!=="open"||i===c.holder||!S.players[i])return;so.opp=i;so.phase="sing";sfx.start();toast(`Sing-off: ${S.players[c.holder].name} vs ${S.players[i].name} – same task!`);save();render()}
 function soCancel(){const so=soState();if(!so)return;so.opp=null;so.phase="open";so.votes={};save();render()}
 function soVoters(){const c=S.current,so=soState();if(!so)return[];return S.players.map((p,i)=>i).filter(i=>i!==c.holder&&i!==so.opp&&S.players[i].pid&&online(S.players[i]))}
-function soStartVote(){const so=soState();if(!so||so.opp==null)return;so.phase="vote";so.votes={};if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});sfx.start();toast(soVoters().length?"Who won the sing-off? Vote on your phones!":"Who won the sing-off? Decide on this screen");save();render()}
+function soStartVote(){const so=soState();if(!so||so.opp==null)return;so.phase="vote";so.votes={};if(S.room)votesClear();sfx.start();toast(soVoters().length?"Who won the sing-off? Vote on your phones!":"Who won the sing-off? Decide on this screen");save();render()}
 function soCheck(){const so=soState();if(!so||so.phase!=="vote")return;const need=soVoters();if(need.length&&need.every(i=>so.votes[S.players[i].pid]!=null))soClose()}
 function soClose(force){const c=S.current,so=soState();if(!so||so.opp==null)return;const a=S.players[c.holder],b=S.players[so.opp];
   let va=0,vb=0;Object.values(so.votes).forEach(n=>{n=String(n).toLowerCase();if(n===a.name.toLowerCase())va++;else if(n===b.name.toLowerCase())vb++});
@@ -2429,7 +2429,7 @@ function soClose(force){const c=S.current,so=soState();if(!so||so.opp==null)retu
   if(win==="b"){const pts=c.worth-stake;a.score+=pts;b.score+=10;stat(b,"pts",10);stat(b,"soWin");S.log.unshift(`⚔️ Sing-off: <b>${esc(b.name)}</b> beats ${esc(a.name)} – ${esc(a.name)} gets <span class="up">${fmt(pts)}</span> (${c.worth} − ${stake}), ${esc(b.name)} <span class="up">+10</span> – ${esc(c.text)}`);toast(`⚔️ ${b.name} wins the sing-off: +10 – ${a.name} gets ${pts} instead of ${c.worth}`)}
   else if(win==="a"){const pts=c.worth+stake;a.score+=pts;b.score-=5;stat(a,"soWin");S.log.unshift(`⚔️ Sing-off: <b>${esc(a.name)}</b> beats ${esc(b.name)} <span class="up">+${pts}</span> (${c.worth} + ${stake}), ${esc(b.name)} <span class="down">−5</span> – ${esc(c.text)}`);toast(`⚔️ ${a.name} wins the sing-off! +${pts} – ${b.name} −5`)}
   else{const pts=c.worth-stake;a.score+=pts;b.score+=5;S.log.unshift(`⚔️ Sing-off tie: <b>${esc(a.name)}</b> & ${esc(b.name)} – ${esc(a.name)} gets <span class="up">${fmt(pts)}</span> (${c.worth} − ${stake}), ${esc(b.name)} <span class="up">+5</span> – ${esc(c.text)}`);toast(`It's a tie – ${a.name} gets ${pts}, ${b.name} +5`)}
-  sfx.win();if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});endCard()}
+  sfx.win();if(S.room)votesClear();endCard()}
 function renderSo(){const c=S.current,so=soState();const box=$("sobox");if(!so||S.screen!=="game"||S.players.length<2){box.hidden=true;return}box.hidden=false;
   const H=S.players[c.holder],others=S.players.map((p,i)=>i).filter(i=>i!==c.holder);
   if(so.opp==null){box.innerHTML=`<h3>⚔️ Sing-off?</h3><div class="hint" style="margin:0">Anyone can challenge ${esc(H.name)} on their phone. ${esc(H.name)} picks an opponent – or just sings solo. Stake: ±${SO_STAKE[c.diff]||5} for ${esc(H.name)} – the challenger gets +10 for a win and −5 for a loss.</div>
@@ -2489,15 +2489,16 @@ function removePlayer(i){const p=S.players[i];if(!p)return;const kar=S.game==="k
   if(p.pid&&S.room)db.del(`rooms/${S.room.code}/members/${p.pid}`).catch(()=>{});
   const sh=x=>x==null?x:(x>i?x-1:x);const c=S.current;
   if(c){const so=c.accepted&&c.so;if(c.holder===i||(so&&so.opp===i)){stopTimer();ytClose();S.current=null;$("card").classList.remove("flipped");S.log.unshift(`${esc(p.name)} left – card discarded: ${esc(c.text)}`)}
-    else{c.holder=sh(c.holder);c.starter=sh(c.starter);c.pick=c.pick===i?null:sh(c.pick);c.passedBy=c.passedBy.filter(x=>x!==i).map(sh);if(so){so.challengers=so.challengers.filter(x=>x!==i).map(sh);so.opp=sh(so.opp)}}}
+    else{c.holder=sh(c.holder);c.starter=c.starter===i?(i+S.players.length-2)%(S.players.length-1):sh(c.starter);c.pick=c.pick===i?null:sh(c.pick);c.passedBy=c.passedBy.filter(x=>x!==i).map(sh);if(so){so.challengers=so.challengers.filter(x=>x!==i).map(sh);so.opp=sh(so.opp)}}}
   const remap=o=>{const r={};for(const [k,v] of Object.entries(o||{})){const kk=+k;if(kk===i||v===i)continue;r[sh(kk)]=sh(v)}return r};
   const remapKeys=o=>{const r={};for(const [k,v] of Object.entries(o||{})){const kk=+k;if(kk===i)continue;r[sh(kk)]=v}return r};
   if(S.vote&&p.pid)delete S.vote.votes[p.pid];
-  if(S.imp&&(S.imp.imps||[S.imp.imposter]).includes(i)){S.imp=null;S.round--;S.players.splice(i,1);if(S.turn>i)S.turn--;if(S.turn>=S.players.length)S.turn=0;toast(`${p.name} was the imposter – new question`);impNext();return}
-  if(S.imp){S.imp.imposter=sh(S.imp.imposter);S.imp.imps=(S.imp.imps||[]).map(sh);S.imp.answers=remapKeys(S.imp.answers);S.imp.votes=remap(S.imp.votes);if(S.imp.order)S.imp.order=S.imp.order.filter(x=>x!==i).map(sh);if(S.imp.vt)S.imp.vt=remapKeys(S.imp.vt)}
+  if(S.imp&&(S.imp.imps||[S.imp.imposter]).includes(i)){const done=S.imp.phase==="result";S.imp=null;if(!done)S.round--;S.players.splice(i,1);if(S.turn>i)S.turn--;if(S.turn>=S.players.length)S.turn=0;toast(done?`${p.name} removed – next question`:`${p.name} was the imposter – new question`);impNext();return}
+  if(S.imp){S.imp.imposter=sh(S.imp.imposter);S.imp.imps=(S.imp.imps||[]).map(sh);S.imp.answers=remapKeys(S.imp.answers);S.imp.votes=remap(S.imp.votes);if(S.imp.order)S.imp.order=S.imp.order.filter(x=>x!==i).map(sh);if(S.imp.vt)S.imp.vt=remapKeys(S.imp.vt);
+    if(S.imp.result){const r=S.imp.result,keep=(r.correct||[]).map((v,k)=>k).filter(k=>r.correct[k]!==i);r.cPts=keep.map(k=>(r.cPts||[])[k]);r.correct=keep.map(k=>sh(r.correct[k]));r.missed=(r.missed||[]).filter(v=>v!==i).map(sh);r.imps=(r.imps||[r.imposter]).filter(v=>v!==i).map(sh);r.imposter=sh(r.imposter)}}
   if(S.ww)S.ww.votes=remap(S.ww.votes);
   const fixTurn=()=>{if(S.turn>i)S.turn--;if(S.turn>=S.players.length)S.turn=0};
-  if(S.uc){if((S.uc.spies||[S.uc.spy]).includes(i)){S.uc=null;S.round--;S.players.splice(i,1);fixTurn();toast(`${p.name} was the spy – new round`);ucNext();return}S.uc.spy=sh(S.uc.spy);S.uc.spies=(S.uc.spies||[]).map(sh);if(S.uc.early){const e2={};for(const [k,v] of Object.entries(S.uc.early)){if(+k!==i)e2[sh(+k)]=v}S.uc.early=e2}if(S.uc.guesses){const g2={};for(const [k,v] of Object.entries(S.uc.guesses)){if(+k!==i)g2[sh(+k)]=v}S.uc.guesses=g2}S.uc.first=S.uc.first===i?null:sh(S.uc.first);S.uc.votes=remap(S.uc.votes);if(S.uc.result)S.uc.result.correct=S.uc.result.correct.filter(x=>x!==i).map(sh)}
+  if(S.uc){if((S.uc.spies||[S.uc.spy]).includes(i)){const done=S.uc.phase==="result";S.uc=null;if(!done)S.round--;S.players.splice(i,1);fixTurn();toast(done?`${p.name} removed – next round`:`${p.name} was the spy – new round`);ucNext();return}S.uc.spy=sh(S.uc.spy);S.uc.spies=(S.uc.spies||[]).map(sh);if(S.uc.early){const e2={};for(const [k,v] of Object.entries(S.uc.early)){if(+k!==i)e2[sh(+k)]=v}S.uc.early=e2}if(S.uc.guesses){const g2={};for(const [k,v] of Object.entries(S.uc.guesses)){if(+k!==i)g2[sh(+k)]=v}S.uc.guesses=g2}S.uc.first=S.uc.first===i?null:sh(S.uc.first);S.uc.votes=remap(S.uc.votes);if(S.uc.result){const r=S.uc.result;r.correct=r.correct.filter(x=>x!==i).map(sh);r.caughtSet=(r.caughtSet||[]).filter(x=>x!==i).map(sh);r.spyRes=remapKeys(r.spyRes)}}
   if(S.nr){S.nr.done=remapKeys(S.nr.done);if(S.nr.result){S.nr.result.rows=S.nr.result.rows.filter(r=>r.i!==i).map(r=>({...r,i:sh(r.i)}));S.nr.result.miss=S.nr.result.miss.filter(x=>x!==i).map(sh)}}
   if(S.rk){S.rk.answers=remapKeys(S.rk.answers);if(S.rk.result)S.rk.result.rows=S.rk.result.rows.filter(r=>r.i!==i).map(r=>({...r,i:sh(r.i)}))}
   if(S.pu){const m=S.pu;["hands","swapped","picks"].forEach(k=>{m[k]=remapKeys(m[k])});const pos=m.order.indexOf(i);if(pos>=0&&pos<m.readK)m.readK--;m.order=m.order.filter(j=>j!==i).map(sh);
@@ -2513,7 +2514,7 @@ function removePlayer(i){const p=S.players[i];if(!p)return;const kar=S.game==="k
   if(S.ti){const m=S.ti;if(m.imps.includes(i)&&m.phase!=="result"){S.ti=null;S.round--;S.players.splice(i,1);fixTurn();toast(`${p.name} was the imposter – new round`);tiNext();return}const pos=m.order.indexOf(i);if(pos>=0&&pos<m.k)m.k--;if(m.holding&&m.holding.i===i)m.holding=null;m.order=m.order.filter(x=>x!==i).map(sh);m.imps=m.imps.filter(x=>x!==i).map(sh);m.times=remapKeys(m.times);m.votes=remap(m.votes);m.vorder=m.vorder.filter(x=>x!==i).map(sh);if(m.vt)m.vt=remapKeys(m.vt);if(m.result){m.result.correct=m.result.correct.filter(x=>x!==i).map(sh);m.result.acc=remapKeys(m.result.acc)}}
   if(S.mu){S.mu.answers=remapKeys(S.mu.answers);if(S.mu.res)S.mu.res.rows=S.mu.res.rows.filter(r=>r.i!==i).map(r=>({...r,i:sh(r.i)}))}
   if(S.awards){S.awards.forEach(a=>{a.winners=a.winners.filter(x=>x!==i).map(sh)});S.awards=S.awards.filter(a=>a.winners.length)}if(S.lastVote)S.lastVote.win=(S.lastVote.win||[]).filter(x=>x!==i).map(sh);
-  if(S.lc){const m=S.lc;const nxTurn=m.turn===i?lcNextActor(i):null;m.hands=remapKeys(m.hands);m.alive=remapKeys(m.alive);m.pulls=remapKeys(m.pulls);m.bullet=remapKeys(m.bullet);m.pile=m.pile.filter(x=>x.by!==i).map(x=>({...x,by:sh(x.by)}));m.calls=(m.calls||[]).filter(c=>c.i!==i).map(c=>({i:sh(c.i)}));
+  if(S.lc){const m=S.lc;const nxTurn=m.turn===i?lcNextActor(i):null;m.hands=remapKeys(m.hands);m.alive=remapKeys(m.alive);m.pulls=remapKeys(m.pulls);m.bullet=remapKeys(m.bullet);m.pile=m.pile.filter(x=>x.by!==i).map(x=>({...x,by:sh(x.by)}));m.calls=(m.calls||[]).filter(c=>c.i!==i).map(c=>({i:sh(c.i)}));m.sneak=remapKeys(m.sneak);m.firstOut=m.firstOut===i?null:sh(m.firstOut);if(m.act)m.act.by=m.act.by===i?null:sh(m.act.by);
     if(m.last&&m.last.by===i)m.last=null;else if(m.last)m.last.by=sh(m.last.by);m.turn=m.turn===i?(nxTurn==null?null:sh(nxTurn)):sh(m.turn);if(nxTurn!=null)m.turnEnd=null;
     if(m.reveal){const r=m.reveal;if(r.by===i){m.reveal=null;m.last=null}else{r.by=sh(r.by);r.results=(r.results||[]).filter(x=>x.i!==i).map(x=>({...x,i:sh(x.i)}))}}}
   S.players.splice(i,1);if(S.turn>i)S.turn--;if(S.turn>=S.players.length)S.turn=0;S.auto=null;toast(`${p.name} removed`);
@@ -2655,7 +2656,7 @@ function startGame(){if(tutGate("karaoke"))return;countPlay("karaoke");S.game="k
 
 // ---- Round vote: best performance (phones) ----
 function voters(){return S.players.map((p,i)=>i).filter(i=>online(S.players[i]))}
-function openVote(){S.vote={round:S.round,votes:{}};save();render();sfx.start();if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});toast(`Round ${S.round} done – vote on your phones!`)}
+function openVote(){S.vote={round:S.round,votes:{}};save();render();sfx.start();if(S.room)votesClear();toast(`Round ${S.round} done – vote on your phones!`)}
 function tallyVote(){const v=S.vote,t={};Object.values(v.votes).forEach(n=>{n=String(n).toLowerCase();t[n]=(t[n]||0)+1});
   let max=0;Object.values(t).forEach(n=>max=Math.max(max,n));const win=S.players.map((p,i)=>i).filter(i=>max>0&&t[S.players[i].name.toLowerCase()]===max);return{t,max,win}}
 function closeVote(){const v=S.vote;if(!v)return;const {t,max,win}=tallyVote();
@@ -2663,7 +2664,7 @@ function closeVote(){const v=S.vote;if(!v)return;const {t,max,win}=tallyVote();
   if(win.length){win.forEach(i=>{const p=S.players[i];p.score+=S.mvpBonus;p.rs=(p.rs||0)+S.mvpBonus;stat(p,"mvpWins")});const names=win.map(i=>S.players[i].name).join(" & ");
     S.log.unshift(`🏅 Best performance in round ${v.round}: <b>${esc(names)}</b> <span class="up">+${S.mvpBonus}</span>`);toast(`🏅 ${names} +${S.mvpBonus} – best performance!`);sfx.win()}
   else toast("No votes came in – no bonus this round");
-  S.lastVote={round:v.round,win};S.vote=null;if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});nextRound()}
+  S.lastVote={round:v.round,win};S.vote=null;if(S.room)votesClear();nextRound()}
 function checkVote(){const v=S.vote;if(!v)return;const need=voters().filter(i=>S.players[i].pid);if(need.length&&need.every(i=>v.votes[S.players[i].pid]!=null))closeVote()}
 
 // ---- Secret end-of-game awards (Mario Party style) ----
@@ -2851,7 +2852,7 @@ function handleActions(acts){for(const k of Object.keys(acts).sort()){if(doneAct
   else if(a.type==="bzshot"){if(S.game==="blast")bzShot(i,a.r,a.cells||[],!!a.final)}
   else if(a.type==="rkans"){if(S.game==="rankit")rkAnswer(i,a.a)}
   else if(a.type==="muans"){if(S.game==="music")muAnswer(i,a)}
-  else if(a.type==="mureport"){if(MU_SONGS[a.si])muSendReport(+a.si,String(a.reason||""),(S.players[i]||{}).name||"phone")}
+  else if(a.type==="mureport"){const now=Date.now();if(S.game==="music"&&S.mu&&+a.si===S.mu.si&&MU_SONGS[a.si]&&!(now-(muRepAt[a.pid]||0)<5000)){muRepAt[a.pid]=now;muSendReport(+a.si,String(a.reason||""),(S.players[i]||{}).name||"phone")}}
   else if(a.type==="ready"){autoReady(i,String(a.key||""))}
   else if(a.type==="tutskip"){if(S.screen==="tut")tutSkip(i)}
   else if(a.type==="play"){if(S.game==="liars")lcPlay(i,Object.values(a.cards||{}))}
@@ -2862,7 +2863,9 @@ function handleActions(acts){for(const k of Object.keys(acts).sort()){if(doneAct
   else if(a.type==="challenge"){soChallenge(i)}
   else if(a.type==="pick"){if(S.current&&S.current.holder===i){const j=S.players.findIndex(p=>p.name===a.name);if(j>=0)soPick(j)}}
   else if(a.type==="startvote"){if(S.current&&S.current.holder===i)soStartVote()}}}
-function syncVotes(v){if(S.game==="timeimp"&&S.ti&&S.ti.phase==="vote"){let ch=false;for(const [pid,target] of Object.entries(v)){const vi=S.players.findIndex(p=>p.pid===pid);if(vi<0||S.ti.votes[vi]!=null||typeof target!=="string")continue;const j=S.players.findIndex(p=>p.name.toLowerCase()===target.toLowerCase());if(j<0||j===vi)continue;S.ti.votes[vi]=j;S.ti.vorder.push(vi);(S.ti.vt=S.ti.vt||{})[vi]=Date.now();ch=true}if(ch){if(impPlayers().every(x=>S.ti.votes[x]!=null))tiResult();else{save();render()}}return}if(S.game==="undercover"&&S.uc&&S.uc.phase==="vote"){let changed=false;for(const [pid,target] of Object.entries(v)){const vi=S.players.findIndex(p=>p.pid===pid);if(vi<0||S.uc.votes[vi]!=null||typeof target!=="string")continue;const j=S.players.findIndex(p=>p.name.toLowerCase()===target.toLowerCase());if(j<0||j===vi)continue;S.uc.votes[vi]=j;changed=true}
+let voteStale=0,voteHeld=null,voteT=null;
+function votesClear(){if(!S.room)return;voteStale=Date.now();voteHeld=null;clearTimeout(voteT);voteT=setTimeout(()=>{if(!voteStale)return;voteStale=0;const h=voteHeld;voteHeld=null;if(h)syncVotes(h)},1200);db.del(`rooms/${S.room.code}/votes`).catch(()=>{})}
+function syncVotes(v){if(voteStale){if(!Object.keys(v||{}).length||Date.now()-voteStale>1200){voteStale=0;voteHeld=null}else{voteHeld=v;return}}if(S.game==="timeimp"&&S.ti&&S.ti.phase==="vote"){let ch=false;for(const [pid,target] of Object.entries(v)){const vi=S.players.findIndex(p=>p.pid===pid);if(vi<0||S.ti.votes[vi]!=null||typeof target!=="string")continue;const j=S.players.findIndex(p=>p.name.toLowerCase()===target.toLowerCase());if(j<0||j===vi)continue;S.ti.votes[vi]=j;S.ti.vorder.push(vi);(S.ti.vt=S.ti.vt||{})[vi]=Date.now();ch=true}if(ch){if(impPlayers().every(x=>S.ti.votes[x]!=null))tiResult();else{save();render()}}return}if(S.game==="undercover"&&S.uc&&S.uc.phase==="vote"){let changed=false;for(const [pid,target] of Object.entries(v)){const vi=S.players.findIndex(p=>p.pid===pid);if(vi<0||S.uc.votes[vi]!=null||typeof target!=="string")continue;const j=S.players.findIndex(p=>p.name.toLowerCase()===target.toLowerCase());if(j<0||j===vi)continue;S.uc.votes[vi]=j;changed=true}
     if(changed){if(impPlayers().every(x=>S.uc.votes[x]!=null))ucCloseVote();else{save();render()}}return}
   if(S.game==="whowould"&&S.ww&&S.ww.phase==="vote"){let changed=false;for(const [pid,target] of Object.entries(v)){const vi=S.players.findIndex(p=>p.pid===pid);if(vi<0||S.ww.votes[vi]!=null||typeof target!=="string")continue;const j=S.players.findIndex(p=>p.name.toLowerCase()===target.toLowerCase());if(j<0||j===vi)continue;S.ww.votes[vi]=j;changed=true}
     if(changed){if(impPlayers().every(x=>S.ww.votes[x]!=null))wwResult();else{save();render()}}return}
@@ -2931,7 +2934,7 @@ function phAvSet(k,v){const a=phAv()||avDefault();if(k==="avk"&&AV_PICS.includes
 function phAvEditor(){const a=phAv();const open=!a||(PH&&PH.avOpen);const pics=AV_PICS.map(k=>`<button class="avthumb avpt${a&&a.k===k?" on":""}" data-act="avk" data-v="${k}" aria-label="character ${k.slice(1)}"><img src="avatars/${k}.webp" alt="" loading="lazy" decoding="async"></button>`).join("");
   return `<details class="aved"${open?" open":""}><summary>${a?avHtml({av:a},true)+" <b>Your avatar</b><span class='hint' style='margin:0 0 0 auto'>change</span>":"👤 <b>Choose your avatar</b>"}</summary>
   <div class="avgrid avpics">${pics}</div></details>`}
-const APPV="v1791036813";
+const APPV="v1791037655";
 function phVerHint(){let el=$("phVer");const st=PH&&PH.state;const bad=S.screen==="phone"&&!SOLO_PH&&st&&st.av&&(+String(st.av).slice(1)||0)>(+String(APPV).slice(1)||0)&&(st.phase==="lobby"||st.phase==="final");if(!bad){if(el)el.remove();return}if(!el){el=document.createElement("div");el.id="phVer";el.className="phver";el.innerHTML='The app was updated – <button class="btn btn-ghost" type="button">Reload</button>';el.querySelector("button").onclick=()=>location.reload();document.body.appendChild(el)}}
 function renderPhone0(){if(S.screen!=="phone"||!PH)return;const st=PH.state;const body=$("phBody");
   $("phRoom").textContent="Room "+PH.code;$("phDot").className="dot"+(st&&!PH.err?" on":"");
@@ -3056,7 +3059,7 @@ function renderExtra(){{const uv=$("updVer");if(uv)uv.textContent="Version "+app
   $("stage").classList.toggle("voting",!!S.vote);
   if(S.vote){const v=S.vote,need=voters().filter(i=>S.players[i].pid),n=Object.keys(v.votes).length,pct=need.length?Math.round(100*n/need.length):0;
     $("votebox").hidden=false;$("votebox").innerHTML=`<h3>Round ${v.round} done!</h3><div>Vote on your phones: who had the best performance?</div><div class="bar"><i style="width:${pct}%"></i></div><div class="hint" style="margin:0">${n} of ${need.length} voted · winner gets +${S.mvpBonus}</div><div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:6px"><button class="btn btn-gold" id="voteClose" ${n?"":"disabled"}>Close vote now</button><button class="btn btn-ghost" id="voteSkip">Skip vote</button></div>`;
-    $("voteClose").onclick=closeVote;$("voteSkip").onclick=()=>{S.vote=null;if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});nextRound()}}
+    $("voteClose").onclick=closeVote;$("voteSkip").onclick=()=>{S.vote=null;if(S.room)votesClear();nextRound()}}
   else{$("votebox").hidden=true}
   renderSo();renderImp();renderWw();renderLc();renderUc();renderBp();renderNr();renderCn();renderBz();renderPu();renderRk();renderEm();if(S.screen==="em")twe($("emStage"));renderCg();renderTi();renderMu();renderTut();renderEve();renderSolo();{const b=$("lobbyEve");if(b)b.hidden=!((S.evening&&S.evening.games&&S.evening.games.length)||S.evPending)}
   if(S.screen==="final")renderFinal();
@@ -3374,13 +3377,13 @@ function impNext(){S.round++;S.players.forEach(p=>{delete p.late});
   const qi=qPick(IMP_Q.length,IMP_SP0,S.impUsed,S.impMode==="spicy");S.impUsed.push(qi);
   const pl=impPlayers();const nImp=Math.max(1,Math.min(S.impCount||1,Math.floor((pl.length-1)/2)));const prev=(S.imp&&(S.imp.imps||[S.imp.imposter]))||[];let cand=pl.filter(i=>!prev.includes(i));if(cand.length<nImp)cand=pl.slice();S.impN=S.impN||{};const cnt=i=>S.impN[S.players[i].pid]||0;const imps=[];while(imps.length<nImp&&cand.length){const mn=Math.min(...cand.map(cnt));const c2=cand.filter(i=>cnt(i)===mn);const pick=c2[Math.floor(Math.random()*c2.length)];imps.push(pick);cand=cand.filter(i=>i!==pick)}imps.forEach(j=>{S.impN[S.players[j].pid]=cnt(j)+1});const imp=imps[0];
   S.imp={phase:"answer",qi,imposter:imp,imps,answers:{},votes:{},discussEnd:null,result:null};
-  if(S.room){db.del(`rooms/${S.room.code}/answers`).catch(()=>{});db.del(`rooms/${S.room.code}/votes`).catch(()=>{});
+  if(S.room){db.del(`rooms/${S.room.code}/answers`).catch(()=>{});votesClear();
     S.privV=(S.privV||0)+1;const priv={};S.players.forEach((p,i)=>{if(p.pid)priv[p.pid]={q:imps.includes(i)?IMP_Q[qi][1]:IMP_Q[qi][0],n:S.privV}});db.put(`rooms/${S.room.code}/private`,priv).catch(()=>{})}
   save();render()}
 function impAnswer(i,text){const m=S.imp;if(!m||m.phase!=="answer")return;text=String(text||"").trim().slice(0,80);if(!text)return;m.answers[i]=text;
   if(impPlayers().every(j=>m.answers[j]!=null)){m.phase="reveal";sfx.draw();toast("Everyone answered!");vo("Everyone answered. Here is the real question.");vo(IMP_Q[m.qi][0])}save();render()}
 function impShowAnswers(){const m=S.imp;if(!m||m.phase!=="reveal")return;m.phase="discuss";m.discussEnd=S.impDiscuss?Date.now()+S.impDiscuss*1000:null;sfx.start();save();render()}
-function impStartVote(){if(S.imp&&S.imp.phase==="discuss")vo("Who is the imposter? Vote now.");const m=S.imp;if(!m||m.phase!=="discuss")return;m.phase="vote";m.votes={};if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});sfx.tick();m.order=[];toast("Vote on your phones: who is the imposter?");save();render()}
+function impStartVote(){if(S.imp&&S.imp.phase==="discuss")vo("Who is the imposter? Vote now.");const m=S.imp;if(!m||m.phase!=="discuss")return;m.phase="vote";m.votes={};if(S.room)votesClear();sfx.tick();m.order=[];toast("Vote on your phones: who is the imposter?");save();render()}
 function impVote(i,name){const m=S.imp;if(!m||m.phase!=="vote")return;const j=S.players.findIndex(p=>p.name.toLowerCase()===String(name).toLowerCase());if(j<0||j===i)return;if(m.votes[i]!=null)return;m.votes[i]=j;(m.order=m.order||[]).push(i);(m.vt=m.vt||{})[i]=Date.now();
   const voters=impPlayers();if(voters.every(v=>m.votes[v]!=null))impResult();else{save();render()}}
 function impRankPts(k){return S.impPts?Math.max(1,Math.round(S.impPts*RANK_PTS[Math.min(k,RANK_PTS.length-1)]/RANK_PTS[0])):0}
@@ -3600,9 +3603,9 @@ function ucNext(){S.round++;S.players.forEach(p=>{delete p.late});if(S.round>S.u
   const ti=pool[Math.floor(Math.random()*pool.length)];S.ucUsed.push(ti);const pl=impPlayers();S.ucSpyN=S.ucSpyN||{};const cnt=i=>S.ucSpyN[S.players[i].pid]||0;const nSpy=Math.max(1,Math.min(S.ucSpies||1,Math.floor((pl.length-1)/2)));const prevS=(S.uc&&(S.uc.spies||[S.uc.spy]))||[];const spies=[];let pool2=pl.filter(i=>!prevS.includes(i));if(pool2.length<nSpy)pool2=pl.slice();while(spies.length<nSpy&&pool2.length){const mn=Math.min(...pool2.map(cnt));const c2=pool2.filter(i=>cnt(i)===mn);const pick=c2[Math.floor(Math.random()*c2.length)];spies.push(pick);pool2=pool2.filter(i=>i!==pick)}spies.forEach(j=>{S.ucSpyN[S.players[j].pid]=cnt(j)+1});const spy=spies[0];
   const decoys=pool.filter(i=>i!==ti).sort(()=>Math.random()-.5).slice(0,5);const options=[ti,...decoys].sort(()=>Math.random()-.5).map(i=>UC_TOPICS[i]);
   const ucFirstPick=(()=>{const prev=S.uc&&S.uc.first;let c=pl.filter(i=>i!==prev);if(!c.length)c=pl;return c[Math.floor(Math.random()*c.length)]})();S.uc={phase:"play",topic:UC_TOPICS[ti],spy,spies,guesses:{},early:{},start:Date.now(),first:ucFirstPick,end:S.ucTime?Date.now()+S.ucTime*1000:null,votes:{},options,guess:null,result:null};S.auto=null;vo("Everyone knows the topic – except the spy. Start talking!");
-  if(S.room){db.del(`rooms/${S.room.code}/votes`).catch(()=>{});S.privV=(S.privV||0)+1;const priv={};S.players.forEach((p,i)=>{if(p.pid)priv[p.pid]={topic:spies.includes(i)?null:S.uc.topic,spy:spies.includes(i),opts:spies.includes(i)?options:null,n:S.privV,g:"uc"}});db.put(`rooms/${S.room.code}/private`,priv).catch(()=>{})}
+  if(S.room){votesClear();S.privV=(S.privV||0)+1;const priv={};S.players.forEach((p,i)=>{if(p.pid)priv[p.pid]={topic:spies.includes(i)?null:S.uc.topic,spy:spies.includes(i),opts:spies.includes(i)?options:null,n:S.privV,g:"uc"}});db.put(`rooms/${S.room.code}/private`,priv).catch(()=>{})}
   save();render()}
-function ucStartVote(){if(S.uc&&S.uc.phase==="play")vo("Who is the spy? Vote now.");const m=S.uc;if(!m||m.phase!=="play")return;m.phase="vote";m.votes={};m.end=null;if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});sfx.tick();toast("Vote on your phones: who is the spy?");save();render()}
+function ucStartVote(){if(S.uc&&S.uc.phase==="play")vo("Who is the spy? Vote now.");const m=S.uc;if(!m||m.phase!=="play")return;m.phase="vote";m.votes={};m.end=null;if(S.room)votesClear();sfx.tick();toast("Vote on your phones: who is the spy?");save();render()}
 function ucVote(i,name){const m=S.uc;if(!m||m.phase!=="vote")return;const j=S.players.findIndex(p=>p.name.toLowerCase()===String(name).toLowerCase());if(j<0||j===i)return;m.votes[i]=j;if(impPlayers().every(v=>m.votes[v]!=null))ucCloseVote();else{save();render()}}
 function ucCloseVote(){const m=S.uc;if(!m||m.phase!=="vote")return;const spies=m.spies||[m.spy];const voters=impPlayers().filter(v=>!spies.includes(v));const cnt={};voters.forEach(v=>{if(m.votes[v]!=null)cnt[m.votes[v]]=(cnt[m.votes[v]]||0)+1});
   let max=0;Object.values(cnt).forEach(n=>max=Math.max(max,n));const top=Object.keys(cnt).filter(k=>cnt[k]===max).map(Number);const caughtSet=top.length===1&&spies.includes(top[0])?[top[0]]:[];const caught=caughtSet.length>0;const tie=top.length>1&&top.some(t=>spies.includes(t));const correct=voters.filter(v=>spies.includes(m.votes[v]));
@@ -3784,7 +3787,7 @@ function tiNext(){S.round++;S.players.forEach(p=>{delete p.late});if(S.round>tiT
   while(imps.length<n&&pool.length){const mn=Math.min(...pool.map(cnt));const c=pool.filter(i=>cnt(i)===mn);const pick=c[Math.floor(Math.random()*c.length)];imps.push(pick);pool=pool.filter(i=>i!==pick)}imps.forEach(j=>{S.tiImpN[S.players[j].pid]=cnt(j)+1});
   const crew=pl.filter(i=>!imps.includes(i)).sort(()=>Math.random()-.5);const minPos=pl.length>=4?2:1;const order=crew.slice();imps.forEach(j=>{const lo=Math.min(minPos,order.length);const pos=lo+Math.floor(Math.random()*(order.length-lo+1));order.splice(pos,0,j)});
   const t=Math.round(200+Math.random()*600)*10;S.ti={phase:"hold",t,imps,order,k:0,holding:null,times:{},votes:{},vorder:[],discussEnd:null,result:null,turnEnd:tiTurnEnd()};
-  if(S.room){db.del(`rooms/${S.room.code}/votes`).catch(()=>{});S.privV=(S.privV||0)+1;const priv={};S.players.forEach((p,i)=>{if(p.pid)priv[p.pid]={t:imps.includes(i)?null:t,imp:imps.includes(i),n:S.privV,g:"ti"}});db.put(`rooms/${S.room.code}/private`,priv).catch(()=>{})}
+  if(S.room){votesClear();S.privV=(S.privV||0)+1;const priv={};S.players.forEach((p,i)=>{if(p.pid)priv[p.pid]={t:imps.includes(i)?null:t,imp:imps.includes(i),n:S.privV,g:"ti"}});db.put(`rooms/${S.room.code}/private`,priv).catch(()=>{})}
   save();render();vo("Everyone has a secret time – except the imposter!")}
 function tiTurnEnd(){return S.tiTurnSec?Date.now()+S.tiTurnSec*1000:null}
 function tiCur(){const m=S.ti;return m&&m.phase==="hold"?m.order[m.k]:null}
@@ -3794,7 +3797,7 @@ function tiHold(i,a){const m=S.ti;if(!m||m.phase!=="hold"||tiCur()!==i||!a)retur
   if(a.s==="up"){const ms=Math.round(+a.ms);m.holding=null;if(!(ms>=100&&ms<=60000)){m.turnEnd=tiTurnEnd();save();render();return}m.times[i]=ms;m.k++;sfx.tick();tiAfterTurn()}}
 function tiAfterTurn(){const m=S.ti;if(!m)return;while(m.k<m.order.length&&!S.players[m.order[m.k]])m.k++;m.turnEnd=tiTurnEnd();if(m.k>=m.order.length){m.phase="discuss";m.discussEnd=S.tiDiscuss?Date.now()+S.tiDiscuss*1000:null;sfx.draw();save();render();vo("Here are the times. Who is the imposter?");return}save();render()}
 function tiSkipTurn(){const m=S.ti;if(!m||m.phase!=="hold")return;m.holding=null;m.k++;tiAfterTurn()}
-function tiStartVote(){const m=S.ti;if(!m||m.phase!=="discuss")return;m.phase="vote";m.votes={};m.vorder=[];m.discussEnd=null;if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});sfx.tick();toast("Vote on your phones: who is the imposter?");save();render();vo("Who is the imposter? Vote now.")}
+function tiStartVote(){const m=S.ti;if(!m||m.phase!=="discuss")return;m.phase="vote";m.votes={};m.vorder=[];m.discussEnd=null;if(S.room)votesClear();sfx.tick();toast("Vote on your phones: who is the imposter?");save();render();vo("Who is the imposter? Vote now.")}
 function tiVote(i,name){const m=S.ti;if(!m||m.phase!=="vote")return;const j=S.players.findIndex(p=>p.name.toLowerCase()===String(name).toLowerCase());if(j<0||j===i||m.votes[i]!=null)return;m.votes[i]=j;m.vorder.push(i);(m.vt=m.vt||{})[i]=Date.now();if(impPlayers().every(x=>m.votes[x]!=null))tiResult();else{save();render()}}
 function tiResult(){const m=S.ti;if(!m||m.phase!=="vote")return;const imps=m.imps,crew=impPlayers().filter(i=>!imps.includes(i));const oi=v=>{const x=m.vorder.indexOf(v);return x<0?999:x};
   const correct=crew.filter(v=>imps.includes(m.votes[v])).sort((a,b)=>oi(a)-oi(b));const cPos=lagPos(correct.map(v=>(m.vt||{})[v]));const cPts=correct.map((v,k)=>tiRank(cPos[k]));correct.forEach((v,k)=>{S.players[v].score+=cPts[k];stat(S.players[v],"tiCatch")});
@@ -3879,6 +3882,7 @@ function muReport(si,onPick){const s=MU_SONGS[si];if(!s)return;$("repMsg").inner
   $("repOpts").innerHTML=MU_REASONS.map(([k,l])=>`<button class="btn btn-ghost" type="button" data-rep="${k}">${esc(l)}</button>`).join("");$("repModal").hidden=false;
   $("repOpts").onclick=e=>{const b=e.target.closest("[data-rep]");if(!b)return;$("repModal").hidden=true;onPick(b.dataset.rep)};$("repNo").onclick=()=>{$("repModal").hidden=true}}
 $("repModal").onclick=e=>{if(e.target.id==="repModal")$("repModal").hidden=true};
+var muRepAt={};
 function muSendReport(si,reason,who){const s=MU_SONGS[si];if(!s||!MU_REASONS.some(r=>r[0]===reason))return;
   db.post(`rooms/${MU_REP_ROOM}/actions`,{type:"songreport",key:s[3],yt:MU_YT[s[3]]||"",cat:s[0],a:s[1],t:s[2]||"",show:s[4],sub:s[5]||"",reason,who:who||"host",v:APPV,at:TS}).then(r=>{if(!r.ok)throw 0;if(!who)toast("Thanks – reported. This song won't come up again here.")}).catch(()=>{if(!who)toast("Couldn't send the report – check the internet")});
   if(!muReported().includes(s[3]))muReported().push(s[3]);if(Array.isArray(S.muPlan))S.muPlan=S.muPlan.filter(i=>muOk(i));
@@ -4861,7 +4865,7 @@ WW_Q.push(...WW_DEEP);const WW_SP0=WW_Q.length;WW_Q.push(...WW_SPICY);
 function wwStart(){if(tutGate("whowould"))return;countPlay("whowould");S.game="whowould";S.next=null;S.players.forEach(p=>{p.score=0;p.stats={};p.rs=0;p.cards=[]});S.inGame=true;S.round=0;S.current=null;S.vote=null;S.awards=null;S.awardsDone=true;S.log=[];S.wwUsed=S.wwUsed||[];S.ww=null;S.screen="ww";wwNext();sfx.start()}
 function wwNext(){S.round++;S.players.forEach(p=>{delete p.late});if(S.round>S.wwQ){finish();return}
   const qi=qPick(WW_Q.length,WW_SP0,S.wwUsed,S.wwMode==="spicy");S.wwUsed.push(qi);S.ww={phase:"vote",qi,votes:{},result:null};vo("Who would most likely "+WW_Q[qi].replace(/^…/,""));
-  if(S.room)db.del(`rooms/${S.room.code}/votes`).catch(()=>{});save();render()}
+  if(S.room)votesClear();save();render()}
 function wwVote(i,name){const m=S.ww;if(!m||m.phase!=="vote")return;const j=S.players.findIndex(p=>p.name.toLowerCase()===String(name).toLowerCase());if(j<0||j===i)return;m.votes[i]=j;
   if(impPlayers().every(v=>m.votes[v]!=null))wwResult();else{save();render()}}
 function wwResult(){const m=S.ww;if(!m||m.phase!=="vote")return;const cnt={};Object.values(m.votes).forEach(j=>{cnt[j]=(cnt[j]||0)+1});let max=0;Object.values(cnt).forEach(n=>max=Math.max(max,n));
