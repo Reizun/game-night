@@ -1,11 +1,11 @@
 {
   "name": "Game Night",
   "short_name": "Game Night",
-  "description": "Party games for one screen and everyone's phones: Karaoke Challenge, Imposter, Who Would.",
+  "description": "Sixteen party games for one screen and everyone's phone – karaoke, guessing, bluffing and drawing games. Join with a room code.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "orientation": "portrait",
+  "orientation": "any",
   "background_color": "#14223f",
   "theme_color": "#14223f",
   "lang": "en",
