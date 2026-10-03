@@ -437,7 +437,7 @@ h1 span{color:var(--red-2)}
 .av{display:inline-flex;align-items:center;justify-content:center;width:1.7em;height:1.7em;border-radius:50%;margin-right:6px;font-size:.95em;line-height:1;vertical-align:middle;flex:none;color:#fff;font-weight:900}
 .av.big{width:2.4em;height:2.4em;font-size:1.3em;margin-right:8px}.av.pic{background:none;overflow:hidden}.av.pic svg{width:100%;height:100%;display:block}
 .avlbl{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:10px 0 4px}.avgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.avthumb{padding:0;border:3px solid transparent;border-radius:50%;background:none;aspect-ratio:1;overflow:hidden}.avthumb svg{width:100%;height:100%;display:block}.avthumb.on{border-color:var(--gold)}
-.av.avp,.avthumb.avpt{background:radial-gradient(circle at 50% 38%,#3f5d9c,#22345c)}.av.avp img,.avthumb.avpt img{width:100%;height:100%;object-fit:cover;display:block}
+.av.avp,.avthumb.avpt{background:#fff}.av.avp img,.avthumb.avpt img{width:100%;height:100%;object-fit:cover;display:block}
 .avthumb.avpt{transition:transform .2s var(--e-spring,ease)}.avthumb.avpt.on{transform:scale(1.06)}.av.f-gold{box-shadow:0 0 0 2px var(--gold)}.av.f-neon{box-shadow:0 0 0 2px #5df2ff,0 0 10px #5df2ff}.av.f-fire{box-shadow:0 0 0 2px #ff7a3c,0 0 12px #ff5a1f}
 .aved{background:var(--ground-2);border-radius:14px;padding:10px 12px;margin:10px 0;text-align:left}.aved summary{display:flex;align-items:center;cursor:pointer;list-style:none}.aved summary::-webkit-details-marker{display:none}
 .avrow{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.avopt{font-size:24px;width:42px;height:42px;border-radius:10px;background:var(--ground);border:2px solid transparent;padding:0}.avopt.on{border-color:var(--gold)}
@@ -2587,12 +2587,12 @@ function voSeq(texts){if(S.voiceOn===false||S.muted||S.screen==="phone"||S.scree
 function voNext(){const it=voQ.shift();const id=it&&it.id?it.id:it;if(!id){voA=null;return}voA=new Audio(voDir()+id+".mp3");voA.volume=Math.max(0,Math.min(1,S.volume==null?.8:S.volume));voA.onended=voA.onerror=()=>{voA=null;voT=setTimeout(()=>{voT=null;voNext()},voQ[0]&&voQ[0].tight?40:250)};voA.play().catch(()=>{voA=null;voQ=[]})}
 function countPlay(g){if(g!=="music")muEarlyEnd();S.pre=null;clearInterval(preT);preT=null;evCommit();vo((GAME_LBL[g]||"").replace(/^\S+ /,"")+"!");S.plays=S.plays||{};S.plays[g]=(S.plays[g]||0)+1}
 const AV_KINDS=["b1","b2","b3","b4","b5","b6","b7","b8","b9","b10","g1","g2","g3","g4","g5","g6","g7","g8","g9","g10"];
-const AV_PICS=["p1","p2","p3","p4","p5","p6","p7","p8","p9"];// picture avatars (chibi, avatars/<k>.webp)
+const AV_PICS=["a1","a2","a3","a4","a5","a6","a7","a8","a9","a10","a11","a12","a13","a14","a15","a16","a17","a18","a19","a20","a21","a22","a23","a24","a25","a26","a27","a28","a29","a30","a31","a32","a33"];// picture avatars (chibi, avatars/<k>.webp)
 const AV_SKIN=["#f9dcc4","#f1c27d","#e0ac69","#c68642","#8d5524","#5c3a21"];
 const AV_HAIR=["#1f1a17","#4a2c1a","#8b5a2b","#d9a441","#f2e2a0","#b7472a","#9aa0a6","#7b4fd6","#2f9bd6","#e0508a"];
 const AV_CLOTH=["#e0506a","#f08a3c","#e0b64c","#3cb371","#2fa4b5","#5b93ec","#8e6be0","#d05bb0","#f3efe6","#2a2f3a"];
 const AV_COLORS=AV_CLOTH;
-function avClean(a){if(!a||typeof a!=="object")return null;if(AV_KINDS.includes(a.k))a={...a,k:AV_PICS[AV_KINDS.indexOf(a.k)%AV_PICS.length]};if(!AV_PICS.includes(a.k))return null;return{k:a.k,s:AV_SKIN.includes(a.s)?a.s:AV_SKIN[1],h:AV_HAIR.includes(a.h)?a.h:AV_HAIR[1],c:AV_CLOTH.includes(a.c)?a.c:AV_CLOTH[5]}}
+function avClean(a){if(!a||typeof a!=="object")return null;if(AV_KINDS.includes(a.k))a={...a,k:AV_PICS[AV_KINDS.indexOf(a.k)%AV_PICS.length]};else if(/^p[1-9]$/.test(a.k))a={...a,k:AV_PICS[(+a.k.slice(1)-1)%AV_PICS.length]};if(!AV_PICS.includes(a.k))return null;return{k:a.k,s:AV_SKIN.includes(a.s)?a.s:AV_SKIN[1],h:AV_HAIR.includes(a.h)?a.h:AV_HAIR[1],c:AV_CLOTH.includes(a.c)?a.c:AV_CLOTH[5]}}
 function avDefault(){return{k:"p1",s:AV_SKIN[1],h:AV_HAIR[1],c:AV_CLOTH[5]}}
 // pixel-art avatars (Stardew Valley / Harvest Moon look): 24×24 grid, automatic dark outline, shaded hair and clothes (same kinds and colours as before)
 function avShade(hex,f){const n=parseInt(hex.slice(1),16);const ch=v=>Math.max(0,Math.min(255,Math.round(v*f)));return "#"+((1<<24)|(ch(n>>16)<<16)|(ch(n>>8&255)<<8)|ch(n&255)).toString(16).slice(1)}
