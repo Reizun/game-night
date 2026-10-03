@@ -795,6 +795,14 @@ html.tv .cnscene.reveal{max-width:640px}
 .lcclaim{max-width:70%;margin-left:auto;margin-right:auto}
 @media(min-width:820px){html:not(.tv) .screen>.imp{padding-bottom:46px}}
 .bpmark[data-lv]{top:calc(var(--lv) * -40px)}.bpmark[data-lv]::after{content:"";position:absolute;left:50%;top:100%;width:1px;height:calc(var(--lv) * 40px + 12px);background:rgba(255,255,255,.2)}
+/* bug hunt 2026-10, part 3: short wide screens (laptop, 720p) without TV mode keep the main button in view */
+@media(min-width:820px) and (max-height:800px){html:not(.tv) .deck{width:min(300px,calc((100dvh - 382px) * 5 / 7))}html:not(.tv) .tutvideo.vis{max-height:calc(100dvh - 320px)}}
+/* TV mode: the home menu with "Resume" fits; a long podium runs in two columns */
+html.tv .home{gap:18px}html.tv .home:has(#homeResume:not([hidden])) .deckart{zoom:.7}
+html.tv .podium:has(li:nth-child(9)){display:grid;grid-template-columns:1fr 1fr;gap:6px 10px}
+/* finger-sized targets on phones */
+.phone .cgptoon{height:clamp(130px,calc(100dvh - 620px),240px)}#phLeave{min-height:44px}.phone summary{min-height:40px;display:flex;align-items:center;justify-content:center}
+.phone .btn{min-height:40px}
 /* Punchline cards (host + phone) */
 .pucard{border-radius:18px;padding:18px 20px;font-weight:700;line-height:1.3;text-align:left;box-sizing:border-box;text-wrap:balance}
 .pucard.black{background:#0b0d17;color:#fff;font-size:clamp(20px,3.4vw,34px);width:min(100%,640px);min-height:4.2em;border:1px solid rgba(255,255,255,.12);box-shadow:0 20px 44px -22px rgba(0,0,0,.9)}
@@ -2349,7 +2357,7 @@ $("filters").onclick=e=>{const b=e.target.closest("[data-cat]");if(!b)return;con
   S.cats=S.cats.includes(c)?S.cats.filter(x=>x!==c):[...S.cats,c];save();render()};
 $("artistsToggle").onclick=()=>{$("artistsCfg").hidden=!$("artistsCfg").hidden;if(!$("artistsCfg").hidden)$("artistIn").focus()};
 $("artistForm").onsubmit=e=>{e.preventDefault();const a=$("artistIn").value.trim();if(!a)return;
-  if(S.customArtists.some(x=>x.toLowerCase()===a.toLowerCase())){toast("Already added");return}
+  if(S.customArtists.some(x=>x.toLowerCase()===a.toLowerCase())||deck().some(c=>String(c[1]).toLowerCase()===(`Sing ${art(a)} ${a} song`).toLowerCase())){toast("Already added");return}
   S.customArtists.push(a);$("artistIn").value="";save();render();toast(`Added: Sing ${art(a)} ${a} song`)};
 $("artistList").onclick=e=>{const b=e.target.closest("[data-art]");if(!b)return;S.customArtists.splice(+b.dataset.art,1);save();render()};
 $("builtinList").onclick=e=>{const d=e.target.closest("[data-del]");if(d){e.stopPropagation();const a=d.dataset.del;if(!artistHidden(a))S.hiddenArtists.push(a);save();render();toast(`${a} removed – restore anytime`);return}
@@ -2982,7 +2990,7 @@ function phAvSet(k,v){const a=phAv()||avDefault();if(k==="avk"&&AV_PICS.includes
 function phAvEditor(){const a=phAv();const open=!a||(PH&&PH.avOpen);const pics=AV_PICS.map(k=>`<button class="avthumb avpt${a&&a.k===k?" on":""}" data-act="avk" data-v="${k}" aria-label="character ${k.slice(1)}"><img src="avatars/${k}.webp" alt="" loading="lazy" decoding="async"></button>`).join("");
   return `<details class="aved"${open?" open":""}><summary>${a?avHtml({av:a},true)+" <b>Your avatar</b><span class='hint' style='margin:0 0 0 auto'>change</span>":"👤 <b>Choose your avatar</b>"}</summary>
   <div class="avgrid avpics">${pics}</div></details>`}
-const APPV="v1791046813";
+const APPV="v1791047302";
 function phVerHint(){let el=$("phVer");const st=PH&&PH.state;const bad=S.screen==="phone"&&!SOLO_PH&&st&&st.av&&(+String(st.av).slice(1)||0)>(+String(APPV).slice(1)||0)&&(st.phase==="lobby"||st.phase==="final");if(!bad){if(el)el.remove();return}if(!el){el=document.createElement("div");el.id="phVer";el.className="phver";el.innerHTML='The app was updated – <button class="btn btn-ghost" type="button">Reload</button>';el.querySelector("button").onclick=()=>location.reload();document.body.appendChild(el)}}
 function renderPhone0(){if(S.screen!=="phone"||!PH)return;const st=PH.state;const body=$("phBody");
   $("phRoom").textContent="Room "+PH.code;$("phDot").className="dot"+(st&&!PH.err?" on":"");
@@ -3069,6 +3077,7 @@ $("emCForm").onsubmit=e=>{e.preventDefault();const t=$("emCT").value.trim().repl
 $("emCList").onclick=e=>{const b=e.target.closest("[data-emc]");if(!b)return;const c=S.emCustom[+b.dataset.emc];if(!c)return;ask(`Remove "${c.t}"?`,()=>{S.emCustom.splice(+b.dataset.emc,1);S.emUsed=[];save();render()},"Remove")};
 $("emCBuiltin").onchange=e=>{S.emBuiltin=e.target.checked;S.emUsed=[];S.emUsedC=[];save()};
 $("emKForm").onsubmit=e=>{e.preventDefault();const eIn=$("emKE").value.replace(/[\p{L}\p{N}]/gu,"").trim().slice(0,40),t=$("emKT").value.trim().replace(/\s+/g," ");if(!eIn){toast("Type some emojis");return}if(t.length<2){toast("Write the answer");return}
+  if(emCardsAll().some(c=>emNorm(c[1])===emNorm(t)||String(c[0]).replace(/\s+/g,"")===eIn.replace(/\s+/g,""))){toast("That card already exists");return}
   const al=$("emKAl").value.split(",").map(x=>x.trim()).filter(Boolean).slice(0,6);S.emCards.push({e:eIn,t,type:"other",al});$("emKE").value="";$("emKT").value="";$("emKAl").value="";save();render();toast(`Added: ${eIn} ${t}`);sfx.tick()};
 $("emKList").onclick=e=>{const b=e.target.closest("[data-emk]");if(!b)return;const c=S.emCards[+b.dataset.emk];if(!c)return;ask(`Remove "${c.e} ${c.t}"?`,()=>{S.emCards.splice(+b.dataset.emk,1);S.emUsedC=[];save();render()},"Remove")};
 function renderOwnCards(){renderEmCustom();const sel=$("cardCat");if(!sel.options.length)sel.innerHTML=CATS.map(c=>`<option value="${esc(c)}"${c==="Your cards"?" selected":""}>${esc(c)}</option>`).join("");
